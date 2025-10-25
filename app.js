@@ -58,7 +58,8 @@ StorageAPI.init({
   storageKey,
   tableStorageKey,
   nameEl,
-  propsStorageKey: `unit-props:${ns}` // <-- передаём ключ для свойств здесь
+  propsStorageKey: `unit-props:${ns}`, // <-- передаём ключ для свойств
+  linksStorageKey: `unit-links:${ns}`  // <-- новый ключ для связей
 });
 
 // Запоминаем выбранную строку (для вставки разделителя «после» неё)
@@ -261,6 +262,8 @@ function buildUnitCell(captionText = 'untitled', imgSrc = '') {
   caption.textContent = (captionText && captionText.trim()) ? captionText : 'untitled';
   caption.contentEditable = 'true';
   caption.spellcheck = false;
+  // стабильный id для связи
+  caption.dataset.unitId = caption.dataset.unitId || genId();
 
   wrapper.appendChild(zone);
   wrapper.appendChild(caption);
@@ -337,6 +340,9 @@ addSepBtn?.addEventListener('click', () => addSeparator(currentRowIndex));
 restoreTable();
 recalculateGroupLabels();
 initAllFirstCells();
+// синхронизируем id и перерисовываем связи при старте
+window.UnitLinks?.ensureUnitIds?.();
+window.UnitLinks?.updateAll?.();
 
 // Снятие выделения по клику ВНЕ таблицы и ВНЕ панели (capture для надёжности)
 document.addEventListener('click', (e) => {
@@ -363,7 +369,7 @@ function exportTable() {
 function importTableFromFile(file) {
   StorageAPI.importTableFromFile(file, (rows) => {
     renderTable(rows);
-  }, window.UnitProps?.renderProps);
+  }, window.UnitProps?.renderProps, window.UnitLinks?.renderLinks);
 }
 
 // подключение обработчиков экспорта/импорта
@@ -385,22 +391,12 @@ function renderTable(rows) {
     const td1 = buildUnitCell(r?.caption, r?.imgSrc);
     tr.appendChild(td1);
 
-    // если это первая строка группы — добавим вертикальную метку типа
-    const groupStart = (i === 0 || rows[i - 1]?.type === 'separator');
-    if (groupStart) {
-      let length = 1;
-      for (let j = i + 1; j < rows.length && rows[j]?.type !== 'separator'; j++) {
-        length++;
-      }
-      const tdLabel = document.createElement('td');
-      tdLabel.className = 'type-label';
-      tdLabel.rowSpan = length;
-      tdLabel.contentEditable = 'true';
-      tdLabel.spellcheck = false;
-      tdLabel.textContent = r?.groupLabel || '';
-      tr.appendChild(tdLabel);
+    // если id юнита есть — назначим его для подписи
+    const captionEl = td1.querySelector('.unit-caption');
+    if (captionEl) {
+      captionEl.dataset.unitId = r?.unitId || captionEl.dataset.unitId || genId();
+      if (r && r.caption) captionEl.textContent = r.caption;
     }
-
     for (let k = 0; k < 3; k++) {
       const td = document.createElement('td');
       td.contentEditable = 'true';
@@ -413,13 +409,13 @@ function renderTable(rows) {
 
     const imgEl = td1.querySelector('.unit-image');
     if (imgEl && r && r.imgSrc) imgEl.src = r.imgSrc;
-
-    const captionEl = td1.querySelector('.unit-caption');
-    if (captionEl && r && r.caption) captionEl.textContent = r.caption;
   });
 
   initAllFirstCells();
   recalculateGroupLabels();
+  // актуализируем id и перерисуем связи
+  window.UnitLinks?.ensureUnitIds?.();
+  window.UnitLinks?.updateAll?.();
 }
 
 // helper: создание строки-данных с дропзон в первой колонке
@@ -477,6 +473,10 @@ function ensureDropzone(cell) {
     if (!captionEl.textContent.trim()) {
       captionEl.textContent = 'untitled';
     }
+    // стабильный id для подписи
+    if (!captionEl.dataset.unitId) {
+      captionEl.dataset.unitId = genId();
+    }
     initDropzone(dropzone);
     return;
   }
@@ -497,4 +497,8 @@ function ensureDropzone(cell) {
   while (tdBuilt.firstChild) {
     cell.appendChild(tdBuilt.firstChild);
   }
+}
+// Генератор уникальных ID (объявлён как function, не попадает в TDZ)
+function genId() {
+  return crypto?.randomUUID?.() || ('uid-' + Math.random().toString(36).slice(2));
 }

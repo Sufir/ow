@@ -25,15 +25,17 @@
     storageKey: '',
     tableStorageKey: '',
     nameEl: null,
-    propsStorageKey: '' // ключ для блоков свойств
+    propsStorageKey: '', // ключ для блоков свойств
+    linksStorageKey: ''  // ключ для связей свойство↔юнит
   };
 
-  function init({ ns, storageKey, tableStorageKey, nameEl, propsStorageKey }) {
+  function init({ ns, storageKey, tableStorageKey, nameEl, propsStorageKey, linksStorageKey }) {
     cfg.ns = ns;
     cfg.storageKey = storageKey;
     cfg.tableStorageKey = tableStorageKey;
     cfg.nameEl = nameEl;
     cfg.propsStorageKey = propsStorageKey || '';
+    cfg.linksStorageKey = linksStorageKey || '';
   }
 
   function buildRowsFromTbody(tbody) {
@@ -49,12 +51,13 @@
       const imgSrc = imgEl?.src || '';
       const captionEl = firstTd?.querySelector('.unit-caption');
       const caption = captionEl?.textContent.trim() || '';
+      const unitId = captionEl?.dataset?.unitId || '';
 
       const tdList = Array.from(tr.querySelectorAll('td'));
       const dataCells = tdList.slice(-3);
       const cells = dataCells.map((td) => td.textContent.trim());
 
-      const obj = { type: 'data', imgSrc, caption, cells };
+      const obj = { type: 'data', imgSrc, caption, cells, unitId };
 
       const labelCell = tr.querySelector('td.type-label');
       if (labelCell) obj.groupLabel = labelCell.textContent.trim();
@@ -104,10 +107,20 @@
       unitProps = [];
     }
 
+    // читаем связи
+    let unitLinks = [];
+    try {
+      const linksRaw = lsGet(cfg.linksStorageKey);
+      unitLinks = linksRaw ? JSON.parse(linksRaw) : [];
+    } catch {
+      unitLinks = [];
+    }
+
     const payload = {
       factionName: cfg.nameEl?.textContent.trim() || '',
       rows,
-      unitProps
+      unitProps,
+      unitLinks
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -120,7 +133,7 @@
     URL.revokeObjectURL(url);
   }
 
-  function importTableFromFile(file, renderTableFn, renderPropsFn) {
+  function importTableFromFile(file, renderTableFn, renderPropsFn, renderLinksFn) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
@@ -155,6 +168,15 @@
         renderPropsFn(unitProps);
       }
 
+      // восстановление связей, если присутствуют
+      const unitLinks = Array.isArray(parsed) ? [] : (Array.isArray(parsed?.unitLinks) ? parsed.unitLinks : []);
+      if (cfg.linksStorageKey) {
+        lsSet(cfg.linksStorageKey, JSON.stringify(unitLinks));
+      }
+      if (typeof renderLinksFn === 'function') {
+        renderLinksFn(unitLinks);
+      }
+
       renderTableFn(rows);
     };
     reader.readAsText(file);
@@ -169,7 +191,8 @@
       const desc  = prop.querySelector('.prop-desc')?.textContent || ''; // сохраняем переносы
       const yStr = prop.style.top || '';
       const y = yStr.endsWith('px') ? parseFloat(yStr) : (prop.offsetTop || 0);
-      return { title, note, desc, y };
+      const id = prop.dataset?.propId || '';
+      return { id, title, note, desc, y };
     });
   }
 
@@ -199,6 +222,24 @@
     }
   }
 
+  // Связи: геттер/сеттер
+  function getUnitLinks() {
+    if (!cfg.linksStorageKey) return [];
+    const raw = lsGet(cfg.linksStorageKey);
+    if (!raw) return [];
+    try {
+      const links = JSON.parse(raw);
+      return Array.isArray(links) ? links : [];
+    } catch {
+      return [];
+    }
+  }
+  function setUnitLinks(list) {
+    if (!cfg.linksStorageKey) return;
+    const safe = Array.isArray(list) ? list : [];
+    lsSet(cfg.linksStorageKey, JSON.stringify(safe));
+  }
+
   global.StorageAPI = {
     init,
     saveTableNowFrom,
@@ -212,5 +253,8 @@
     savePropsNowFrom,
     makeSavePropsDebounced,
     restorePropsInto,
+    // связи
+    getUnitLinks,
+    setUnitLinks,
   };
 })(window);

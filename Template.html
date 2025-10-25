@@ -15,6 +15,7 @@
     <button id="export-btn" type="button">⤴ Экспорт</button>
     <button id="import-btn" type="button">⤵ Импорт</button>
     <input id="import-file" type="file" accept="application/json" hidden>
+    <button id="link-mode-btn" type="button">↗ Связь</button>
   </div>
   <div class="page">
     <aside class="unit-props-panel" aria-label="Свойства юнитов">
@@ -25,6 +26,7 @@
         <div class="prop-desc" contenteditable="true" spellcheck="false">Полное описание…</div>
       </div>
     </aside>
+    <svg id="link-overlay" class="link-overlay" xmlns="http://www.w3.org/2000/svg"></svg>
   
   <!-- Название фракции -->
     <div class="faction-name" contenteditable="true" spellcheck="false">
@@ -83,5 +85,6 @@
   <script src="storage.js"></script>
   <script src="app.js"></script>
   <script src="props.js"></script>
+  <script src="links.js"></script>
 </body>
 </html>

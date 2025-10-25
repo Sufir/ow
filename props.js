@@ -4,6 +4,9 @@
   const deleteBtn = document.getElementById('delete-prop-btn');
   if (!panelEl) return;
 
+  // локальный генератор id для свойств
+  const genId = () => (crypto?.randomUUID?.() || ('pid-' + Math.random().toString(36).slice(2)));
+
   // Дебаунс сохранения при вводе
   const saveDebounced = StorageAPI.makeSavePropsDebounced(panelEl);
 
@@ -53,6 +56,11 @@
     if (!propEl || propEl.dataset?.inited === '1') return;
     propEl.dataset.inited = '1';
 
+    // присваиваем стабильный id, если не задан
+    if (!propEl.dataset.propId) {
+      propEl.dataset.propId = genId();
+    }
+
     // измеряем текущую позицию в потоке и переводим блок в абсолют с тем же top
     const initialTop = propEl.offsetTop;
     propEl.style.position = 'absolute';
@@ -90,13 +98,15 @@
   }
 
   // Создание нового блока свойства
-  function createProp({ title = 'Новое свойство', note = 'Кратко', desc = 'Полное описание…', y } = {}) {
+  function createProp({ id, title = 'Новое свойство', note = 'Кратко', desc = 'Полное описание…', y } = {}) {
     const box = document.createElement('div');
     box.className = 'unit-prop';
     box.style.position = 'absolute';
     box.style.left = '0';
     box.style.right = '0';
     box.style.top = `${typeof y === 'number' ? Math.max(0, y) : 0}px`;
+    // стабильный id для линков
+    box.dataset.propId = id || genId();
 
     const handle = document.createElement('div');
     handle.className = 'prop-handle';
@@ -248,7 +258,7 @@
       return;
     }
     list.forEach((p) => {
-      const el = createProp(p); // p может содержать y
+      const el = createProp(p); // p может содержать y и id
       panelEl.appendChild(el);
     });
     updateHandlesVisibility();
