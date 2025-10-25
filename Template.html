@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Faction Card — печать A4</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="toolbar">
+    <button id="add-row-btn" type="button">+ Добавить юнит</button>
+    <button id="add-separator-btn" type="button">— Добавить разделитель</button>
+    <button id="delete-row-btn" type="button">× Удалить выбранное</button>
+    <button id="add-prop-btn" type="button">+ Свойство</button>
+    <button id="delete-prop-btn" type="button">× Удалить свойство</button>
+    <button id="export-btn" type="button">⤴ Экспорт</button>
+    <button id="import-btn" type="button">⤵ Импорт</button>
+    <input id="import-file" type="file" accept="application/json" hidden>
+  </div>
+  <div class="page">
+    <aside class="unit-props-panel" aria-label="Свойства юнитов">
+      <div class="unit-prop">
+        <div class="prop-handle">⋮⋮</div>
+        <div class="prop-title" contenteditable="true" spellcheck="false">Новое свойство</div>
+        <div class="prop-note" contenteditable="true" spellcheck="false">Кратко</div>
+        <div class="prop-desc" contenteditable="true" spellcheck="false">Полное описание…</div>
+      </div>
+    </aside>
+  
+  <!-- Название фракции -->
+    <div class="faction-name" contenteditable="true" spellcheck="false">
+      ОСТРОВНАЯ ИМПЕРИЯ
+    </div>
+  
+  <!-- Таблица отрядов -->
+    <table class="unit-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <!-- Фрагмент первой строки -->
+          <td>
+            <div class="unit-icon">
+              <div class="unit-dropzone">
+                <img src="Units/adept.png" alt="Рекрут" class="unit-image">
+                <input type="file" accept="image/*" class="unit-file" hidden>
+              </div>
+              <div class="unit-caption" contenteditable="true" spellcheck="false">Рекрут</div>
+            </div>
+          </td>
+          <td class="type-label" rowspan="2" contenteditable="true" spellcheck="false">Пехотинцы</td>
+          <td contenteditable="true" class="unit-stat">6</td>
+          <td contenteditable="true" class="unit-stat">1</td>
+          <td contenteditable="true" class="unit-stat">0</td>
+        </tr>
+        <tr>
+          <!-- Фрагмент второй строки -->
+          <td>
+            <div class="unit-icon">
+              <div class="unit-dropzone">
+                <img src="Units/colonel.png" alt="Полковник" class="unit-image">
+                <input type="file" accept="image/*" class="unit-file" hidden>
+              </div>
+              <div class="unit-caption" contenteditable="true" spellcheck="false">Полковник</div>
+            </div>
+          </td>
+          <td contenteditable="true" class="unit-stat">1</td>
+          <td contenteditable="true" class="unit-stat">3</td>
+          <td contenteditable="true" class="unit-stat">0</td>
+        </tr>
+        <tr class="unit-separator"><td colspan="5"><div class="separator-line"></div></td></tr>
+      </tbody>
+    </table>
+</div>
+
+  <!-- Подключаем внешний скрипт вместо inline -->
+  <script src="storage.js"></script>
+  <script src="app.js"></script>
+  <script src="props.js"></script>
+</body>
+</html>
