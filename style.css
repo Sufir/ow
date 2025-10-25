@@ -87,24 +87,11 @@ body {
   background: transparent;
 }
 
-/* Колонки 3+ (цифры) — крупнее и полужирные */
-
-.unit-table th:first-child,
-.unit-table td:first-child {
-  width: 25mm;
-  vertical-align: middle;
-  padding-left: 0;
-  padding-right: 0;
-}
-}
-
-/* Новая узкая колонка с вертикальным названием типа */
+/* Узкая 2-я колонка (вертикальная метка типа) */
 .unit-table th:nth-child(2),
 .unit-table td:nth-child(2) {
-  #width: 7mm;
+  width: 7mm; /* фиксируем задуманный узкий столбец */
 }
-
-
 
 .unit-table td[contenteditable="true"] {
   cursor: text;
@@ -124,15 +111,14 @@ body {
   align-items: center;
 }
 
-/* Квадратная дропзона 12×12 мм для изображения */
 /* Дропзона: по ширине ячейки, фиксированная высота */
 .unit-table td:first-child .unit-dropzone {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;     /* ширина по ячейке */
-  height: 12mm;    /* фиксированная высота */
-  margin: 0;       /* авто-отступы не нужны при ширине 100% */
+  width: 100%;
+  height: 12mm;
+  margin: 0;
   cursor: pointer;
 }
 
@@ -150,7 +136,7 @@ body {
   outline-offset: 1px;
 }
 
-/* Подпись под картинкой: мелкий стандартный шрифт, не наезжает */
+/* Подпись под картинкой */
 .unit-table td:first-child .unit-caption {
   margin-top: 1mm;
   font-size: 9pt;
@@ -159,7 +145,6 @@ body {
   color: #11c5ff;
   line-height: 1;
   text-align: center;
-  #opacity: 0.9;
 }
 
 /* Редактируемая подпись: без рамок, курсор ввода */
@@ -167,176 +152,6 @@ body {
   cursor: text;
   outline: none;
   user-select: text;
-}
-
-/* === Для печати === */
-@media print {
-  body, .page {
-    margin: 0;
-    box-shadow: none;
-  }
-
-  .faction-name {
-    cursor: default;
-    outline: none;
-  }
-  
-  .unit-table th, .unit-table td {
-    border: none;
-  }
-  .toolbar { display: none; }
-  .unit-props-panel { border: none; }
-}
-
-/* Боковая панель свойств юнитов (слева от таблицы) */
-.unit-props-panel {
-  position: absolute;
-  top: 58mm;
-  left: calc(175mm - 79.375mm);
-  width: 79.375mm;
-  height: calc(210mm - 58mm);
-  box-sizing: border-box;
-  border: 0.3mm solid rgba(255, 255, 255, 0.2);
-  background: transparent;
-  padding: 2mm;
-  overflow: auto;
-}
-/* призрак перетаскивания — поверх панели, без событий мыши */
-.drag-ghost {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-  background: rgba(17, 197, 255, 0.04);
-  border-radius: 2px;
-  opacity: 0.95;
-}
-
-/* на время drag блокируем выделение во всём документе */
-body.dragging-props {
-  user-select: none;
-}
-
-/* плейсхолдер под будущую позицию */
-.prop-placeholder {
-  width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 2mm;
-  border: 0.2mm dashed rgba(17, 197, 255, 0.3);
-  background: rgba(17, 197, 255, 0.06);
-}
-
-/* верх/комментарий/описание — как раньше */
-.unit-prop .prop-title {
-  font-size: 13pt;
-  font-weight: 600;
-  color: #fff;
-  line-height: 1.2;
-}
-.unit-prop .prop-note {
-  font-size: 11pt;
-  font-weight: 700;
-  color: #25a4ee;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-}
-.unit-prop .prop-desc {
-  font-size: 11pt;
-  font-weight: 400;
-  color: #fff;
-  white-space: pre-wrap;
-  line-height: 1.25;
-  min-height: 6mm;
-}
-
-.unit-prop.prop-selected {
-  outline: 1px solid rgba(17, 197, 255, 0.6);
-  outline-offset: 0;
-  background: rgba(17, 197, 255, 0.06);
-}
-
-@media print {
-  .unit-props-panel { border: none; }
-  .unit-prop.prop-selected { outline: none; background: transparent; }
-  .unit-prop .prop-handle { display: none; }
-}
-
-.unit-table th img {
-  width: 12mm;
-  height: 12mm;
-  vertical-align: middle;
-}
-
-/* Контейнер и подпись под иконкой в первой колонке */
-.unit-table td:first-child .unit-icon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Квадратная дропзона 12×12 мм для изображения */
-/* Дропзона: по ширине ячейки, фиксированная высота */
-.unit-table td:first-child .unit-dropzone {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;     /* ширина по ячейке */
-  height: 12mm;    /* фиксированная высота */
-  margin: 0;       /* авто-отступы не нужны при ширине 100% */
-  cursor: pointer;
-}
-
-/* Картинка: вписывается по ширине ячейки, высота 12 мм, без искажений */
-.unit-table td:first-child .unit-image {
-  display: block;
-  width: 100%;
-  height: 12mm;
-  object-fit: contain;
-  object-position: center;
-}
-
-.unit-table td:first-child .unit-dropzone.dragover {
-  outline: 1px dashed rgba(0, 255, 255, 0.6);
-  outline-offset: 1px;
-}
-
-/* Подпись под картинкой: мелкий стандартный шрифт, не наезжает */
-.unit-table td:first-child .unit-caption {
-  margin-top: 1mm;
-  font-size: 9pt;
-  font-weight: 400;
-  font-family: Arial, "Segoe UI", sans-serif;
-  color: #11c5ff;
-  line-height: 1;
-  text-align: center;
-  #opacity: 0.9;
-}
-
-/* Редактируемая подпись: без рамок, курсор ввода */
-.unit-table td:first-child .unit-caption[contenteditable="true"] {
-  cursor: text;
-  outline: none;
-  user-select: text;
-}
-
-/* === Для печати === */
-@media print {
-  body, .page {
-    margin: 0;
-    box-shadow: none;
-  }
-
-  .faction-name {
-    cursor: default;
-    outline: none;
-  }
-  
-  .unit-table th, .unit-table td {
-    border: none;
-  }
-  .toolbar { display: none; }
-  .unit-props-panel { border: none; }
-  .unit-prop.prop-selected { outline: none; background: transparent; }
-  .unit-prop .prop-handle { display: none; } /* хэндл не печатаем */
 }
 
 /* Подсветка выбранной строки */
@@ -361,7 +176,7 @@ body.dragging-props {
   background: transparent;
 }
 
-/* Горизонтальная линия: насыщенный центр #11c5ff, плавный градиент к краям */
+/* Горизонтальная линия: базовая версия для экрана */
 .unit-table .separator-line {
   height: 1mm;
   width: 100%;
@@ -393,20 +208,16 @@ body.dragging-props {
 .unit-table td.type-label {
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  #font-family: "OpenGostTypeB", Arial, "Segoe UI", sans-serif;
   font-size: 8pt;
-  #font-weight: 600;
-  #line-height: 1;
   white-space: nowrap;
   text-align: center;
   vertical-align: middle;
   color: #25a4ee;
-  #opacity: 0.8;
   cursor: text;
   outline: none;
   user-select: text;
   background: transparent;
-  width: 7;
+  width: 7mm;
   padding: 0; /* убираем внутренние отступы, делаем колонку тоньше */
 }
 
@@ -430,47 +241,34 @@ body.dragging-props {
   height: 13.2mm; /* сохраняем пропорции за счёт object-fit */
 }
 
-.unit-table .separator-line {
-    /* для печати делаем слои чуть плотнее, чтобы края не терялись */
-    background:
-      linear-gradient(
-        to right,
-        rgba(17, 197, 255, 0) 0%,
-        rgba(17, 197, 255, 0.28) 8%,
-        rgba(17, 197, 255, 0.40) 22%,
-        rgba(17, 197, 255, 0.52) 38%,
-        #11c5ff 50%,
-        rgba(17, 197, 255, 0.52) 62%,
-        rgba(17, 197, 255, 0.40) 78%,
-        rgba(17, 197, 255, 0.28) 92%,
-        rgba(17, 197, 255, 0) 100%
-      ),
-      linear-gradient(
-        to right,
-        rgba(17, 197, 255, 0.20),
-        rgba(17, 197, 255, 0.20)
-      );
-  }
-}
-
-/* Элементы блока свойств */
-.unit-prop {
-  width: 100%;
+/* Боковая панель свойств юнитов (слева от таблицы) */
+.unit-props-panel {
+  position: absolute;
+  top: 66mm;
+  left: calc(175mm - 74.375mm);
+  width: 74.375mm;
+  height: calc(210mm - 58mm);
   box-sizing: border-box;
-  margin-bottom: 2mm;
-  padding-bottom: 2mm;
-  border-bottom: 0.2mm solid rgba(255, 255, 255, 0.08);
-  position: relative; /* контекст для абсолютного хэндла */
-  position: relative; /* для трансформации при перетаскивании */
+  border: 0.3mm solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  padding: 2mm;
+  overflow: auto;
 }
 
-.unit-prop.dragging {
-  opacity: 0.85;
-  z-index: 1;
-  /* плавное следование за курсором */
-  transition: transform 0s;
+/* призрак перетаскивания — поверх панели, без событий мыши */
+.drag-ghost {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  background: rgba(17, 197, 255, 0.04);
+  border-radius: 2px;
+  opacity: 0.95;
 }
 
+/* на время drag блокируем выделение во всём документе */
+body.dragging-props {
+  user-select: none;
+}
+
+/* плейсхолдер под будущую позицию */
 .prop-placeholder {
   width: 100%;
   box-sizing: border-box;
@@ -479,11 +277,30 @@ body.dragging-props {
   background: rgba(17, 197, 255, 0.06);
 }
 
+/* элементы блока свойств */
+.unit-prop {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 2mm;
+  padding-bottom: 2mm;
+  border-bottom: 0.2mm solid rgba(255, 255, 255, 0.08);
+  position: absolute; /* контекст для абсолютного позиционирования */
+  left: 0;
+  right: 0;
+}
+
+/* на время drag — без анимаций top */
+.unit-prop.dragging {
+  opacity: 0.85;
+  z-index: 1;
+  transition: top 0s;
+}
+
 .unit-prop .prop-handle {
   position: absolute;
   top: 2px;
   right: 2px;
-  padding: 2px 4px;
+  padding: 0px 2px;
   font-size: 12pt;
   color: rgba(255, 255, 255, 0.5);
   cursor: grab;
@@ -505,26 +322,30 @@ body.dragging-props {
 
 /* верхняя часть — название свойства */
 .unit-prop .prop-title {
-  font-size: 13pt;          /* чуть крупнее стандартного */
+  font-size: 10pt;          /* чуть крупнее стандартного */
   font-weight: 600;
   color: #fff;
   line-height: 1.2;
+  text-align: right;
+  border-top: #25a4ee 0.5mm solid;
+  border-left: #25a4ee 0.5mm solid;
 }
 
 /* краткий комментарий — одна строка, #25a4ee, полужирный */
 .unit-prop .prop-note {
-  font-size: 11pt;
+  font-size: 9pt;
   font-weight: 700;
   color: #25a4ee;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.2;
+  text-align: right;
 }
 
 /* полное описание — многострочный, обычный */
 .unit-prop .prop-desc {
-  font-size: 11pt;
+  font-size: 9pt;
   font-weight: 400;
   color: #fff;
   white-space: pre-wrap;     /* сохраняем переносы */
@@ -538,4 +359,47 @@ body.dragging-props {
   outline-offset: 0;
   background: rgba(17, 197, 255, 0.06);
 }
+
+/* === Для печати === */
+@media print {
+  body, .page {
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .faction-name {
+    cursor: default;
+    outline: none;
+  }
+
+  .unit-table th, .unit-table td {
+    border: none;
+  }
+
+  .toolbar { display: none; }
+  .unit-props-panel { border: none; }
+  .unit-prop.prop-selected { outline: none; background: transparent; }
+  .unit-prop .prop-handle { display: none; } /* хэндл не печатаем */
+
+  /* версия separator-line для печати — слои чуть плотнее */
+  .unit-table .separator-line {
+    background:
+      linear-gradient(
+        to right,
+        rgba(17, 197, 255, 0) 0%,
+        rgba(17, 197, 255, 0.28) 8%,
+        rgba(17, 197, 255, 0.40) 22%,
+        rgba(17, 197, 255, 0.52) 38%,
+        #11c5ff 50%,
+        rgba(17, 197, 255, 0.52) 62%,
+        rgba(17, 197, 255, 0.40) 78%,
+        rgba(17, 197, 255, 0.28) 92%,
+        rgba(17, 197, 255, 0) 100%
+      ),
+      linear-gradient(
+        to right,
+        rgba(17, 197, 255, 0.20),
+        rgba(17, 197, 255, 0.20)
+      );
+  }
 }

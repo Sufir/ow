@@ -167,7 +167,9 @@
       const title = prop.querySelector('.prop-title')?.textContent?.trim() || '';
       const note  = prop.querySelector('.prop-note')?.textContent?.trim() || '';
       const desc  = prop.querySelector('.prop-desc')?.textContent || ''; // сохраняем переносы
-      return { title, note, desc };
+      const yStr = prop.style.top || '';
+      const y = yStr.endsWith('px') ? parseFloat(yStr) : (prop.offsetTop || 0);
+      return { title, note, desc, y };
     });
   }
 

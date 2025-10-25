@@ -16,13 +16,51 @@
     });
   }
 
+  // Вспомогательная: следующая координата Y (нижний край + небольшой зазор)
+  function getNextY() {
+    const props = Array.from(panelEl.querySelectorAll('.unit-prop'));
+    if (props.length === 0) return 0;
+    const bottoms = props
+      .map(p => (parseFloat(p.style.top || '0') || p.offsetTop) + p.offsetHeight);
+    const maxBottom = Math.max(...bottoms);
+    return Math.max(0, Math.round(maxBottom + 8)); // зазор 8px
+  }
+
+  // Инициализируем контекст для абсолютного позиционирования блоков
+  panelEl.style.position = 'relative';
+
+  // Управление видимостью хэндлов: показываем только у выбранного блока
+  function updateHandlesVisibility() {
+    panelEl.querySelectorAll('.unit-prop').forEach((p) => {
+      const h = p.querySelector('.prop-handle');
+      if (!h) return;
+      h.style.display = p.classList.contains('prop-selected') ? 'block' : 'none';
+    });
+  }
+
+  // Вспомогательная: следующая координата Y (нижний край + небольшой зазор)
+  function getNextY() {
+    const props = Array.from(panelEl.querySelectorAll('.unit-prop'));
+    if (props.length === 0) return 0;
+    const bottoms = props
+      .map(p => (parseFloat(p.style.top || '0') || p.offsetTop) + p.offsetHeight);
+    const maxBottom = Math.max(...bottoms);
+    return Math.max(0, Math.round(maxBottom + 8)); // зазор 8px
+  }
+
   // Инициализация одного блока свойства: выбор, ввод, drag
   function hydratePropItem(propEl) {
     if (!propEl || propEl.dataset?.inited === '1') return;
     propEl.dataset.inited = '1';
 
-    // фиксация контекста позиционирования для хэндла
-    propEl.style.position = 'relative';
+    // измеряем текущую позицию в потоке и переводим блок в абсолют с тем же top
+    const initialTop = propEl.offsetTop;
+    propEl.style.position = 'absolute';
+    propEl.style.left = '0';
+    propEl.style.right = '0';
+    if (!propEl.style.top) {
+      propEl.style.top = `${initialTop}px`;
+    }
 
     // Выбор блока по клику
     propEl.addEventListener('click', () => {
@@ -52,10 +90,13 @@
   }
 
   // Создание нового блока свойства
-  function createProp({ title = 'Новое свойство', note = 'Кратко', desc = 'Полное описание…' } = {}) {
+  function createProp({ title = 'Новое свойство', note = 'Кратко', desc = 'Полное описание…', y } = {}) {
     const box = document.createElement('div');
     box.className = 'unit-prop';
-    box.style.position = 'relative';
+    box.style.position = 'absolute';
+    box.style.left = '0';
+    box.style.right = '0';
+    box.style.top = `${typeof y === 'number' ? Math.max(0, y) : 0}px`;
 
     const handle = document.createElement('div');
     handle.className = 'prop-handle';
@@ -117,30 +158,25 @@
   document.getElementById('add-prop-btn')?.addEventListener('click', () => addProp());
   document.getElementById('delete-prop-btn')?.addEventListener('click', () => deleteSelectedProp());
 
-  // Drag & drop: свободное вертикальное движение внутри панели
+  // Drag & drop: свободное вертикальное движение внутри панели по top
   let dragging = null;
-  let startOffsetY = 0;
-  let placeholder = null;
+  let startPointerY = 0;
+  let dragStartTop = 0;
+  let startScrollTop = 0;
 
   function startDrag(e, el) {
-    // блокируем drag, если не выбран
     if (!el.classList.contains('prop-selected')) return;
 
     e.preventDefault();
     dragging = el;
     document.body.classList.add('dragging-props');
 
-    const rect = el.getBoundingClientRect();
-    const panelRect = panelEl.getBoundingClientRect();
-    startOffsetY = e.clientY - rect.top;
-
-    placeholder = document.createElement('div');
-    placeholder.className = 'prop-placeholder';
-    placeholder.style.height = rect.height + 'px';
-    panelEl.insertBefore(placeholder, el.nextSibling);
+    startPointerY = e.clientY;
+    const topStr = getComputedStyle(el).top || el.style.top || '0px';
+    dragStartTop = topStr.endsWith('px') ? parseFloat(topStr) : 0;
+    startScrollTop = panelEl.scrollTop;
 
     el.classList.add('dragging');
-    el.style.willChange = 'transform';
 
     el.setPointerCapture && el.setPointerCapture(e.pointerId);
     document.addEventListener('pointermove', onDragMove);
@@ -154,53 +190,27 @@
 
     // Автопрокрутка панели у краёв
     if (e.clientY < panelRect.top + 24) {
-      panelEl.scrollTop -= 12;
+      panelEl.scrollTop = Math.max(0, panelEl.scrollTop - 12);
     } else if (e.clientY > panelRect.bottom - 24) {
-      panelEl.scrollTop += 12;
+      panelEl.scrollTop = panelEl.scrollTop + 12;
     }
 
-    // Текущая позиция указателя относительно панели (учитывая scroll)
-    const panelY = e.clientY - panelRect.top + panelEl.scrollTop;
+    // Смещение указателя + учёт прокрутки панели
+    const deltaY = (e.clientY - startPointerY) + (panelEl.scrollTop - startScrollTop);
+    let newTop = dragStartTop + deltaY;
 
-    // Исходная позиция dragged относительно панели
-    const elTopPanel = dragging.offsetTop;
-    const translateY = panelY - startOffsetY - elTopPanel;
-    dragging.style.transform = `translateY(${translateY}px)`;
+    // Кламп по всей высоте контента панели
+    const minTop = 0;
+    const maxTop = Math.max(0, panelEl.scrollHeight - dragging.offsetHeight);
+    newTop = Math.min(Math.max(newTop, minTop), maxTop);
 
-    // Перестановка плейсхолдера по центрам соседей
-    const props = Array.from(panelEl.querySelectorAll('.unit-prop')).filter(p => p !== dragging);
-    const yCenter = panelY - startOffsetY + (dragging.offsetHeight / 2);
-
-    let targetIndex = props.length;
-    for (let i = 0; i < props.length; i++) {
-      const p = props[i];
-      const mid = p.offsetTop + p.offsetHeight / 2;
-      if (yCenter < mid) {
-        targetIndex = i;
-        break;
-      }
-    }
-
-    const ref = props[targetIndex] || null;
-    if (ref) {
-      panelEl.insertBefore(placeholder, ref);
-    } else {
-      panelEl.appendChild(placeholder);
-    }
+    dragging.style.top = `${Math.round(newTop)}px`;
   }
 
   function endDrag(e) {
     if (!dragging) return;
 
-    // Закрепляем блок на месте плейсхолдера
     dragging.classList.remove('dragging');
-    dragging.style.transform = '';
-    dragging.style.willChange = '';
-    if (placeholder) {
-      panelEl.insertBefore(dragging, placeholder);
-      placeholder.remove();
-      placeholder = null;
-    }
 
     dragging.releasePointerCapture && dragging.releasePointerCapture(e.pointerId);
     dragging = null;
@@ -217,7 +227,12 @@
   });
 
   // Инициализация существующих блоков из шаблона + актуализация хэндлов
-  Array.from(panelEl.querySelectorAll('.unit-prop')).forEach(hydratePropItem);
+  Array.from(panelEl.querySelectorAll('.unit-prop')).forEach((el) => {
+    hydratePropItem(el);
+    if (!el.style.top) {
+      el.style.top = getNextY() + 'px';
+    }
+  });
   updateHandlesVisibility();
 
   // Обновляем видимость хэндлов после глобального снятия выделений (клик вне)
@@ -233,7 +248,7 @@
       return;
     }
     list.forEach((p) => {
-      const el = createProp(p);
+      const el = createProp(p); // p может содержать y
       panelEl.appendChild(el);
     });
     updateHandlesVisibility();
