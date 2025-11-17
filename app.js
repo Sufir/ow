@@ -28,19 +28,69 @@ const debounce = (fn, ms = 150) => {
   };
 };
 
+// Добавлено: учёт несохранённых изменений и подавление предупреждения после экспорта
+let hasUnsavedChanges = false;
+
+function markUnsaved() {
+  hasUnsavedChanges = true;
+}
+
+function markExported() {
+  hasUnsavedChanges = false;
+}
+
+window.addEventListener('beforeunload', (e) => {
+  if (!hasUnsavedChanges) return;
+  e.preventDefault();
+  e.returnValue = ''; // стандартный способ показать диалог подтверждения
+});
+
 // === Сохранение заголовка фракции ===
 const storageKey = `faction-name:${ns}`;
 const nameEl = document.querySelector('.faction-name');
 const savedName = lsGet(storageKey);
 if (nameEl && savedName) nameEl.textContent = savedName;
+
+function fitFactionName() {
+  if (!nameEl) return;
+  const MAX_PT = 20;
+  const MIN_PT = 8;
+  const available = nameEl.clientWidth;
+
+  nameEl.style.fontSize = `${MAX_PT}pt`;
+  if (nameEl.scrollWidth <= available) return;
+
+  let low = MIN_PT;
+  let high = MAX_PT;
+  while (high - low > 0.1) {
+    const mid = (low + high) / 2;
+    nameEl.style.fontSize = `${mid}pt`;
+    if (nameEl.scrollWidth <= available) {
+      low = mid;
+    } else {
+      high = mid;
+    }
+  }
+  nameEl.style.fontSize = `${Math.max(MIN_PT, Math.floor(low * 100) / 100)}pt`;
+}
 if (nameEl) {
+  const applyFit = debounce(() => fitFactionName(), 100);
+
   nameEl.addEventListener('input', () => {
     lsSet(storageKey, nameEl.textContent.trim());
+    applyFit();
   });
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(applyFit);
+  } else {
+    applyFit();
+  }
+
+  window.addEventListener('resize', applyFit);
 }
 
 // === Таблица и панель ===
-// Инициализация элементов панели
 const table = document.querySelector('.unit-table');
 const tbody = table?.querySelector('tbody');
 const addRowBtn = document.getElementById('add-row-btn');
@@ -52,17 +102,20 @@ const importFileInput = document.getElementById('import-file');
 const tableStorageKey = `unit-table:${ns}`;
 let currentRowIndex = null;
 
-// Инициализация StorageAPI с ключами
+// === Инициализация StorageAPI с ключами ===
+// Top-level initialization near StorageAPI.init
 StorageAPI.init({
   ns,
   storageKey,
   tableStorageKey,
   nameEl,
-  propsStorageKey: `unit-props:${ns}`, // <-- передаём ключ для свойств
-  linksStorageKey: `unit-links:${ns}`  // <-- новый ключ для связей
+  propsStorageKey: `unit-props:${ns}`,
+  linksStorageKey: `unit-links:${ns}`,
+  factionInfoStorageKey: `faction-info:${ns}`,
+  backInfoStorageKey: `back-info:${ns}` // добавлено
 });
 
-// Запоминаем выбранную строку (для вставки разделителя «после» неё)
+// Запоминаем выбранную строку (для вставки разделителя «после» неёй)
 // Выделение строки и удаление
 function selectRow(tr) {
   if (!tbody) return;
@@ -223,6 +276,7 @@ function initDropzone(zone) {
       imgEl.style.display = 'block';
       imgEl.alt = 'image';
       saveTable();
+      markUnsaved();
     }
   });
 
@@ -303,15 +357,54 @@ function addSeparator(afterIndex = null) {
   saveTable();
 }
 
-// === Сохранение/восстановление таблицы ===
-function saveTableNow() {
-  StorageAPI.saveTableNowFrom(tbody);
-}
-const saveTable = StorageAPI.makeSaveTableDebounced(tbody);
+// === Задник: загрузка иллюстрации и сохранение текста ===
+const backPage = document.querySelector('.page-back');
+const backPanel = backPage?.querySelector('.back-content');
 
-function restoreTable() {
-  StorageAPI.restoreTableInto(tbody, renderTable);
+function initBackImage() {
+  if (!backPage) return;
+  const dz = backPage.querySelector('.back-dropzone');
+  const fileInput = backPage.querySelector('.back-file');
+  const img = backPage.querySelector('.back-image');
+  if (!dz || !fileInput || !img) return;
+
+  function loadBackImageFile(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      img.src = reader.result;
+      StorageAPI?.saveBackInfoNowFrom?.(backPanel);
+      markUnsaved();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  dz.addEventListener('click', () => fileInput.click());
+  dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dz.classList.remove('dragover');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) loadBackImageFile(file);
+  });
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files?.[0];
+    if (file) loadBackImageFile(file);
+  });
 }
+initBackImage();
+
+// дебаунс сохранения задника при вводе
+const saveBackInfo = backPanel ? StorageAPI?.makeSaveBackInfoDebounced?.(backPanel) : null;
+backPanel?.addEventListener('input', (e) => {
+  if (e.target.closest('.back-desc') || e.target.closest('.back-guide-title') || e.target.closest('.back-guide-text')) {
+    saveBackInfo?.();
+    markUnsaved();
+  }
+});
+
+// восстановление задника при старте
+StorageAPI?.restoreBackInfoInto?.(backPanel);
 
 // === Слушатели ===
 if (tbody) {
@@ -321,6 +414,7 @@ if (tbody) {
       e.target.matches('.unit-caption[contenteditable="true"]')
     ) {
       saveTable();
+      markUnsaved(); // Добавлено: любые изменения в таблице считаем несохранёнными
     }
   });
 }
@@ -336,8 +430,9 @@ addRowBtn?.addEventListener('click', () => {
 
 addSepBtn?.addEventListener('click', () => addSeparator(currentRowIndex));
 
+// Initialization block
 // === Инициализация ===
-restoreTable();
+StorageAPI.restoreTableInto(tbody, renderTable);
 recalculateGroupLabels();
 initAllFirstCells();
 // синхронизируем id и перерисовываем связи при старте
@@ -362,15 +457,35 @@ function clearSelection() {
 
 // экспорт/импорт JSON с заголовком фракции
 function exportTable() {
-  saveTableNow(); // гарантируем сохранение
+  StorageAPI.saveTableNowFrom(tbody); // гарантируем сохранение таблицы
+  StorageAPI.saveFactionInfoNowFrom(factionInfoPanel); // сохраняем подготовку
+  StorageAPI?.saveBackInfoNowFrom?.(backPanel);        // сохраняем задник
   StorageAPI.exportTable();
+  markExported(); // экспорт выполнен — не тревожим при закрытии вкладки
 }
 
-function importTableFromFile(file) {
-  StorageAPI.importTableFromFile(file, (rows) => {
-    renderTable(rows);
-  }, window.UnitProps?.renderProps, window.UnitLinks?.renderLinks);
+function renderBackInfo(info = {}) {
+  if (!backPanel) return;
+  const descEl = backPanel.querySelector('.back-desc');
+  const titleEl = backPanel.querySelector('.back-guide-title');
+  const textEl = backPanel.querySelector('.back-guide-text');
+  const imgEl = backPanel.querySelector('.back-image');
+  if (descEl) descEl.innerHTML = info.desc ?? '';
+  if (titleEl) titleEl.textContent = info.guideTitle ?? 'Как играть за данную фракцию';
+  if (textEl) textEl.innerHTML = info.guideText ?? '';
+  if (imgEl && info.imgSrc) imgEl.src = info.imgSrc;
 }
+
+// импорт: добавляем рендер задника как доп. аргумент
+// Import wiring — keep the listener that provides all renderers
+importFileInput?.addEventListener('change', () => importTableFromFile(
+  importFileInput.files?.[0],
+  (rows) => { renderTable(rows); },
+  window.UnitProps?.renderProps,
+  window.UnitLinks?.renderLinks,
+  renderFactionInfo,
+  renderBackInfo
+));
 
 // подключение обработчиков экспорта/импорта
 exportBtn?.addEventListener('click', exportTable);
@@ -380,10 +495,17 @@ importFileInput?.addEventListener('change', () => importTableFromFile(importFile
 // единый рендер таблицы по массиву rows
 function renderTable(rows) {
   if (!tbody) return;
+  // ... existing code ...
+  if (!tbody) return;
+  // добавляем контроль начала группы
+  let inGroup = false;
+
   tbody.innerHTML = '';
   rows.forEach((r, i) => {
     if (r && r.type === 'separator') {
       tbody.appendChild(createSeparatorRow());
+      // новая группа начнётся после разделителя
+      inGroup = false;
       return;
     }
     const tr = document.createElement('tr');
@@ -403,6 +525,13 @@ function renderTable(rows) {
       td.classList.add('unit-stat'); // числовая ячейка — стабильный шрифт
       td.textContent = (r && r.cells && r.cells[k]) ? r.cells[k] : '';
       tr.appendChild(td);
+    }
+
+    // восстановление вертикальной метки типа из сохранённых данных
+    if (!inGroup) {
+      const labelCell = ensureTypeLabelCell(tr);
+      labelCell.textContent = (r && r.groupLabel) ? r.groupLabel : '';
+      inGroup = true;
     }
 
     tbody.appendChild(tr);
@@ -501,4 +630,141 @@ function ensureDropzone(cell) {
 // Генератор уникальных ID (объявлён как function, не попадает в TDZ)
 function genId() {
   return crypto?.randomUUID?.() || ('uid-' + Math.random().toString(36).slice(2));
+}
+
+// Панель подготовки фракции: сохранение/восстановление
+const factionInfoPanel = document.querySelector('.faction-info-panel');
+
+function renderFactionInfo(info = {}) {
+  if (!factionInfoPanel) return;
+  const qEl = factionInfoPanel.querySelector('.prep-value[data-key="queue"]');
+  const oEl = factionInfoPanel.querySelector('.prep-value[data-key="oil"]');
+  const rEl = factionInfoPanel.querySelector('.prep-value[data-key="region"]');
+  const nEl = factionInfoPanel.querySelector('.prep-notes[data-key="notes"]');
+  if (qEl) qEl.textContent = (info.queue ?? '0');
+  if (oEl) oEl.textContent = (info.oil ?? '8');
+  if (rEl) rEl.textContent = (info.region ?? '');
+  if (nEl) nEl.innerHTML = (info.notes ?? '');
+  // добавлено: рендер нового блока
+  const rtEl = factionInfoPanel.querySelector('.robot-title');
+  const rsEl = factionInfoPanel.querySelector('.robot-steps');
+  if (rtEl) rtEl.textContent = (info.robotTitle ?? 'Создание боевого робота');
+  if (rsEl) rsEl.innerHTML = (info.robotSteps ?? `
+    <li>В стартовом регионе Островной Империи должна быть фабрика (может быть свободной или контролироваться врагом).</li>
+    <li>Заплатите 10 нефти, или 4 если создаете не первый раз.</li>
+    <li>“Краб” появляется в стартовом регионе фракции.</li>
+  `);
+
+  // Санитизация и гарантия наличия хотя бы одного пункта
+  if (rsEl) {
+    sanitizeRobotSteps(rsEl);
+    ensureRobotStepsNotEmpty(rsEl);
+  }
+}
+
+// дебаунс сохранения при вводе
+const saveFactionInfo = factionInfoPanel ? StorageAPI.makeSaveFactionInfoDebounced(factionInfoPanel) : null;
+
+// Санитизируем вставки и не даём удалить весь список
+const robotOl = factionInfoPanel?.querySelector('.robot-steps');
+if (robotOl) {
+  // Вставка только как простой текст
+  robotOl.addEventListener('paste', (e) => {
+    const cd = e.clipboardData;
+    if (!cd) return;
+    const text = cd.getData('text/plain') || '';
+    const html = cd.getData('text/html') || '';
+    e.preventDefault();
+    const plain = text || (new DOMParser().parseFromString(html, 'text/html').body.textContent || '');
+    document.execCommand('insertText', false, plain);
+    requestAnimationFrame(() => {
+      sanitizeRobotSteps(robotOl);
+      ensureRobotStepsNotEmpty(robotOl);
+      saveFactionInfo?.();
+      markUnsaved();
+    });
+  });
+
+  // Любое редактирование — санитизируем и сохраняем пустой li при необходимости
+  robotOl.addEventListener('input', () => {
+    sanitizeRobotSteps(robotOl);
+    ensureRobotStepsNotEmpty(robotOl);
+  });
+}
+
+factionInfoPanel?.addEventListener('input', (e) => {
+  if (e.target.matches('.prep-value[contenteditable="true"], .prep-notes[contenteditable="true"], .robot-title[contenteditable="true"], .robot-steps[contenteditable="true"]')) {
+    saveFactionInfo?.();
+    markUnsaved();
+  }
+});
+
+// восстановление при старте
+StorageAPI.restoreFactionInfoInto(factionInfoPanel, renderFactionInfo);
+
+// Дебаунс сохранения таблицы — единая точка вызова
+const saveTable = tbody ? StorageAPI.makeSaveTableDebounced(tbody) : () => {};
+StorageAPI.init({
+  ns,
+  storageKey,
+  tableStorageKey,
+  nameEl,
+  propsStorageKey: `unit-props:${ns}`,
+  linksStorageKey: `unit-links:${ns}`,
+  factionInfoStorageKey: `faction-info:${ns}`,
+  backInfoStorageKey: `back-info:${ns}` // добавлено
+});
+
+// Всегда держим хотя бы один элемент списка
+function ensureRobotStepsNotEmpty(ol) {
+  if (!ol) return;
+  if (!ol.querySelector('li')) {
+    const li = document.createElement('li');
+    li.textContent = '';
+    ol.appendChild(li);
+  }
+}
+
+// Санитизация содержимого списка: только li + простой текст
+function sanitizeRobotSteps(ol) {
+  if (!ol) return;
+  Array.from(ol.childNodes).forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = (node.nodeValue || '').trim();
+      if (text) {
+        const li = document.createElement('li');
+        li.textContent = text;
+        ol.replaceChild(li, node);
+      } else {
+        ol.removeChild(node);
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      const el = node;
+      if (el.tagName !== 'LI') {
+        const li = document.createElement('li');
+        li.textContent = el.textContent || '';
+        ol.replaceChild(li, el);
+      } else {
+        const raw = el.textContent || '';
+        const lines = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        if (lines.length <= 1) {
+          el.textContent = lines[0] || '';
+        } else {
+          const frag = document.createDocumentFragment();
+          lines.forEach((s) => {
+            const li = document.createElement('li');
+            li.textContent = s;
+            frag.appendChild(li);
+          });
+          ol.insertBefore(frag, el);
+          ol.removeChild(el);
+        }
+      }
+    }
+  });
+  // Убираем возможные классы/стили
+  Array.from(ol.querySelectorAll('li')).forEach((li) => {
+    li.removeAttribute('style');
+    li.removeAttribute('class');
+  });
 }

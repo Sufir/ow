@@ -18,6 +18,33 @@
     <button id="link-mode-btn" type="button">↗ Связь</button>
   </div>
   <div class="page">
+    <aside class="faction-info-panel" aria-label="Информация о фракции">
+      <div class="prep-panel">
+        <div class="prep-title">Подготовка</div>
+        <div class="prep-item">
+          <span class="prep-label">Очередь:</span>
+          <span class="prep-value" contenteditable="true" spellcheck="false" data-key="queue">0</span>
+        </div>
+        <div class="prep-item">
+          <span class="prep-label">Запас нефти:</span>
+          <span class="prep-value" contenteditable="true" spellcheck="false" data-key="oil">8</span>
+        </div>
+        <div class="prep-item">
+          <span class="prep-label">Регион:</span>
+          <span class="prep-value" contenteditable="true" spellcheck="false" data-key="region">юг Тихого океана</span>
+        </div>
+        <div class="prep-notes" contenteditable="true" spellcheck="false" data-key="notes">1 фабрика под контролем и 6 рекрутов в стартовом регионе
+        </div>
+      </div>
+      <div class="robot-panel">
+        <div class="prep-title robot-title" contenteditable="true" spellcheck="false">Создание боевого робота</div>
+        <ol class="robot-steps" contenteditable="true" spellcheck="false">
+          <li>В стартовом регионе Островной Империи должна быть фабрика (может быть свободной или контролироваться врагом).</li>
+          <li>Заплатите 10 нефти, или 4 если создаете не первый раз.</li>
+          <li>“Краб” появляется в стартовом регионе фракции.</li>
+        </ol>
+      </div>
+    </aside>
     <aside class="unit-props-panel" aria-label="Свойства юнитов">
       <div class="unit-prop">
         <div class="prop-handle">⋮⋮</div>
@@ -79,9 +106,29 @@
         <tr class="unit-separator"><td colspan="5"><div class="separator-line"></div></td></tr>
       </tbody>
     </table>
+<!-- Закрытие основной страницы -->
 </div>
+<!-- Задняя сторона планшета -->
+<div class="page page-back" aria-label="Задник планшета">
+  <div class="back-content" aria-label="Задник: контент с полями 20 мм">
+    <!-- Верхняя треть: слева квадратная иллюстрация, справа художественное описание -->
+    <section class="back-top">
+      <div class="back-illustration">
+        <div class="back-dropzone" title="Клик или перетаскивание для загрузки изображения">
+          <img class="back-image" alt="Иллюстрация фракции">
+          <input type="file" accept="image/*" class="back-file" hidden>
+        </div>
+      </div>
+      <div class="back-desc" contenteditable="true" spellcheck="false" aria-label="Описание фракции"></div>
+    </section>
 
-  <!-- Подключаем внешний скрипт вместо inline -->
+    <!-- Нижние две трети: гайд «Как играть за данную фракцию» -->
+    <section class="back-guide" aria-label="Гайд фракции">
+      <div class="back-guide-title" contenteditable="true" spellcheck="false">Как играть за данную фракцию</div>
+      <div class="back-guide-text" contenteditable="true" spellcheck="false"></div>
+    </section>
+  </div>
+</div>
   <script src="storage.js"></script>
   <script src="app.js"></script>
   <script src="props.js"></script>

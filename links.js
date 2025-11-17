@@ -44,31 +44,46 @@
     const propEl = panelEl.querySelector(`.unit-prop[data-prop-id="${propId}"]`);
     const capEl  = tableEl.querySelector(`.unit-caption[data-unit-id="${unitId}"]`);
     if (!propEl || !capEl) return null;
-  
+
     const pageRect = pageEl.getBoundingClientRect();
     const propRect = propEl.getBoundingClientRect();
     const capRect  = capEl.getBoundingClientRect();
-  
+
     // начало: правый верхний угол unit-prop
     const x1 = propRect.right - pageRect.left;
     const y1 = propRect.top   - pageRect.top;
     // конец: левый край unit-caption (по вертикали — центр)
     const x2 = capRect.left - pageRect.left;
     const y2 = (capRect.top + capRect.height / 2) - pageRect.top;
-  
+
     return { x1, y1, x2, y2 };
   }
 
   function updateAll() {
     resizeOverlay();
-    const pageRect = pageEl.getBoundingClientRect();
+    const elbow = 6; // длина короткого горизонтального «заломного» участка у подписи
     links.forEach((ln) => {
       const anchors = getAnchors(ln.propId, ln.unitId);
       if (!anchors) return;
-      ln.el.setAttribute('x1', String(anchors.x1));
-      ln.el.setAttribute('y1', String(anchors.y1));
-      ln.el.setAttribute('x2', String(anchors.x2));
-      ln.el.setAttribute('y2', String(anchors.y2));
+  
+      // Прямой участок от unit-prop → точка у подписи, затем горизонтально в левый край подписи
+      const points = `${anchors.x1},${anchors.y1} ${anchors.x2 - elbow},${anchors.y2} ${anchors.x2},${anchors.y2}`;
+  
+      if (ln.el.tagName.toLowerCase() === 'polyline') {
+        ln.el.setAttribute('points', points);
+      } else {
+        // конвертация старых <line> → <polyline>
+        const newEl = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        newEl.setAttribute('points', points);
+        newEl.setAttribute('fill', 'none');
+        newEl.setAttribute('stroke', '#25a4ee');
+        newEl.setAttribute('stroke-width', '1.5');
+        newEl.setAttribute('shape-rendering', 'crispEdges');
+        newEl.setAttribute('stroke-linecap', 'round');
+        newEl.setAttribute('stroke-linejoin', 'round');
+        svg.replaceChild(newEl, ln.el);
+        ln.el = newEl;
+      }
     });
   }
 
@@ -82,15 +97,18 @@
     const anchors = getAnchors(propId, unitId);
     if (!anchors) return;
   
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', String(anchors.x1));
-    line.setAttribute('y1', String(anchors.y1));
-    line.setAttribute('x2', String(anchors.x2));
-    line.setAttribute('y2', String(anchors.y2));
+    const elbow = 6; // длина «заломного» участка
+    // Диагональ от prop → точка залома у подписи → горизонтальный вход под прямым углом
+    const points = `${anchors.x1},${anchors.y1} ${anchors.x2 - elbow},${anchors.y2} ${anchors.x2},${anchors.y2}`;
+  
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    line.setAttribute('points', points);
+    line.setAttribute('fill', 'none');
     line.setAttribute('stroke', '#25a4ee');
-    line.setAttribute('stroke-width', '1.5');
+    line.setAttribute('stroke-width', '1.5'); // толще на 50%
     line.setAttribute('shape-rendering', 'crispEdges');
     line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('stroke-linejoin', 'round');
   
     svg.appendChild(line);
     links.push({ propId, unitId, el: line });

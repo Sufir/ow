@@ -79,10 +79,40 @@
 
     // Сохранение при вводе текста в редактируемых полях
     propEl.addEventListener('input', (e) => {
-      if (e.target.matches('.prop-title, .prop-note, .prop-desc')) {
-        saveDebounced();
-      }
+        if (e.target.matches('.prop-title, .prop-note, .prop-desc')) {
+            saveDebounced();
+        }
     });
+
+    // Удаляем размер шрифта при вставке в note/desc
+    propEl.querySelectorAll('.prop-note, .prop-desc').forEach((editable) => {
+        editable.addEventListener('paste', (e) => {
+            const cd = e.clipboardData;
+            if (!cd) return;
+            const html = cd.getData('text/html');
+            const text = cd.getData('text/plain');
+            if (!html && !text) return;
+            e.preventDefault();
+            const sanitized = html ? sanitizeNoFontSize(html) : textToHtml(text);
+            document.execCommand('insertHTML', false, sanitized);
+            saveDebounced();
+        });
+    });
+
+    // Санитайзер HTML: убираем inline font-size и <font size=...>
+    function sanitizeNoFontSize(html) {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = html || '';
+        wrapper.querySelectorAll('*').forEach((el) => {
+            if (el.style && el.style.fontSize) el.style.fontSize = '';
+            if (el.tagName === 'FONT') el.removeAttribute('size');
+        });
+        return wrapper.innerHTML;
+    }
+
+    function textToHtml(text) {
+        return (text || '').replace(/\r\n/g, '<br>').replace(/\n/g, '<br>');
+    }
 
     // Drag & drop через хэндл, только если блок выбран
     const handle = propEl.querySelector('.prop-handle');
@@ -123,13 +153,13 @@
     noteEl.className = 'prop-note';
     noteEl.contentEditable = 'true';
     noteEl.spellcheck = false;
-    noteEl.textContent = note || '';
+    noteEl.innerHTML = note || '';
 
     const descEl = document.createElement('div');
     descEl.className = 'prop-desc';
     descEl.contentEditable = 'true';
     descEl.spellcheck = false;
-    descEl.textContent = desc || '';
+    descEl.innerHTML = desc || '';
 
     box.appendChild(handle);
     box.appendChild(titleEl);
