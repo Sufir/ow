@@ -345,6 +345,10 @@ body.dragging-props {
   right: 0;
 }
 
+.unit-prop.bottom-link {
+  border-bottom: #25a4ee 0.5mm solid;
+}
+
 /* на время drag — без анимаций top */
 .unit-prop.dragging {
   opacity: 0.85;

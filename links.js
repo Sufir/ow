@@ -49,22 +49,28 @@
     const propRect = propEl.getBoundingClientRect();
     const capRect  = capEl.getBoundingClientRect();
 
-    // начало: правый верхний угол unit-prop
+    // начало: правый угол unit-prop (верхний/нижний выбирается по близости к центру подписи)
     const x1 = propRect.right - pageRect.left;
-    const y1 = propRect.top   - pageRect.top;
+    const capCenterY = capRect.top + capRect.height / 2;
+    const distTop = Math.abs(capCenterY - propRect.top);
+    const distBottom = Math.abs(capCenterY - propRect.bottom);
+    const bottom = distTop > distBottom;
+    const y1 = (bottom ? propRect.bottom : propRect.top) - pageRect.top;
     // конец: левый край unit-caption (по вертикали — центр)
     const x2 = capRect.left - pageRect.left;
-    const y2 = (capRect.top + capRect.height / 2) - pageRect.top;
+    const y2 = capCenterY - pageRect.top;
 
-    return { x1, y1, x2, y2 };
+    return { x1, y1, x2, y2, bottom };
   }
 
   function updateAll() {
     resizeOverlay();
     const elbow = 6; // длина короткого горизонтального «заломного» участка у подписи
+    const bottomProps = new Set();
     links.forEach((ln) => {
       const anchors = getAnchors(ln.propId, ln.unitId);
       if (!anchors) return;
+      if (anchors.bottom) bottomProps.add(ln.propId);
   
       // Прямой участок от unit-prop → точка у подписи, затем горизонтально в левый край подписи
       const points = `${anchors.x1},${anchors.y1} ${anchors.x2 - elbow},${anchors.y2} ${anchors.x2},${anchors.y2}`;
@@ -83,6 +89,13 @@
         newEl.setAttribute('stroke-linejoin', 'round');
         svg.replaceChild(newEl, ln.el);
         ln.el = newEl;
+      }
+    });
+    panelEl.querySelectorAll('.unit-prop').forEach((el) => {
+      if (bottomProps.has(el.dataset.propId)) {
+        el.classList.add('bottom-link');
+      } else {
+        el.classList.remove('bottom-link');
       }
     });
   }
