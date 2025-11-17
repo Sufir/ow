@@ -290,10 +290,10 @@
     const oil = panelEl.querySelector('.prep-value[data-key="oil"]')?.textContent?.trim() || '';
     const region = panelEl.querySelector('.prep-value[data-key="region"]')?.textContent?.trim() || '';
     const notes = panelEl.querySelector('.prep-notes[data-key="notes"]')?.innerHTML || '';
-    // добавлено: чтение нового блока
     const robotTitle = panelEl.querySelector('.robot-title')?.textContent?.trim() || '';
     const robotSteps = panelEl.querySelector('.robot-steps')?.innerHTML || '';
-    return { queue, oil, region, notes, robotTitle, robotSteps };
+    const logoSrc = document.querySelector('.faction-logo .faction-logo-image')?.getAttribute('src') || '';
+    return { queue, oil, region, notes, robotTitle, robotSteps, logoSrc };
   }
 
   function saveFactionInfoNowFrom(panelEl) {
@@ -339,6 +339,8 @@
       <li>Заплатите 10 нефти, или 4 если создаете не первый раз.</li>
       <li>“Краб” появляется в стартовом регионе фракции.</li>
     `);
+    const logoImg = document.querySelector('.faction-logo .faction-logo-image');
+    if (logoImg && info.logoSrc) logoImg.src = info.logoSrc;
   }
 
   // Работа с задником
@@ -425,3 +427,42 @@ function sanitizeNoFontSize(html) {
     });
     return wrapper.innerHTML;
 }
+
+(function(){
+  const zone = document.querySelector('.faction-logo .faction-logo-dropzone');
+  const input = document.querySelector('.faction-logo .faction-logo-file');
+  const img = document.querySelector('.faction-logo .faction-logo-image');
+  if (!zone || !input || !img) return;
+  function loadLogoFile(file){
+    if (!file || !file.type?.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      img.src = reader.result;
+      const panelEl = document.querySelector('.faction-info-panel');
+      StorageAPI?.saveFactionInfoNowFrom?.(panelEl);
+    };
+    reader.readAsDataURL(file);
+  }
+  zone.addEventListener('click', () => input.click());
+  zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) loadLogoFile(file);
+  });
+  zone.addEventListener('paste', (e) => {
+    const text = (e.clipboardData || window.clipboardData)?.getData('text');
+    if (text && /^(https?:\/\/|data:image)/i.test(text)) {
+      e.preventDefault();
+      img.src = text;
+      const panelEl = document.querySelector('.faction-info-panel');
+      StorageAPI?.saveFactionInfoNowFrom?.(panelEl);
+    }
+  });
+  input.addEventListener('change', () => {
+    const file = input.files?.[0];
+    if (file) loadLogoFile(file);
+  });
+})();

@@ -279,6 +279,40 @@ body {
   font-size: 9pt; /* компактный базовый размер для всех элементов */
 }
 
+/* Логотип фракции */
+.faction-logo {
+  position: absolute;
+  top: calc(66mm - 17.462mm);
+  left: calc(175mm - 120.75mm);
+  width: 16.933mm;
+  height: 16.933mm;
+  box-sizing: border-box;
+}
+.faction-logo .faction-logo-dropzone {
+  width: 100%;
+  height: 100%;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  cursor: pointer;
+  background: transparent;
+}
+.faction-logo .faction-logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.faction-logo .faction-logo-dropzone.dragover {
+  outline: 1px dashed rgba(0, 255, 255, 0.6);
+  outline-offset: 1px;
+}
+@media print {
+  .faction-logo .faction-logo-dropzone { border: none; }
+  .faction-logo .faction-logo-file { display: none !important; }
+}
+
 /* Элементы панели подготовки */
 .faction-info-panel .prep-title {
   font-size: 12pt;

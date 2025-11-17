@@ -478,7 +478,7 @@ function renderBackInfo(info = {}) {
 
 // импорт: добавляем рендер задника как доп. аргумент
 // Import wiring — keep the listener that provides all renderers
-importFileInput?.addEventListener('change', () => importTableFromFile(
+importFileInput?.addEventListener('change', () => StorageAPI.importTableFromFile(
   importFileInput.files?.[0],
   (rows) => { renderTable(rows); },
   window.UnitProps?.renderProps,
@@ -490,7 +490,7 @@ importFileInput?.addEventListener('change', () => importTableFromFile(
 // подключение обработчиков экспорта/импорта
 exportBtn?.addEventListener('click', exportTable);
 importBtn?.addEventListener('click', () => importFileInput?.click());
-importFileInput?.addEventListener('change', () => importTableFromFile(importFileInput.files?.[0]));
+
 
 // единый рендер таблицы по массиву rows
 function renderTable(rows) {
@@ -660,6 +660,8 @@ function renderFactionInfo(info = {}) {
     sanitizeRobotSteps(rsEl);
     ensureRobotStepsNotEmpty(rsEl);
   }
+  const logoImg = document.querySelector('.faction-logo .faction-logo-image');
+  if (logoImg && info.logoSrc) logoImg.src = info.logoSrc;
 }
 
 // дебаунс сохранения при вводе
