@@ -149,7 +149,12 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `unit-table-${cfg.ns}.json`;
+    const rawName = (cfg.nameEl?.textContent || '').trim();
+    const safeName = (rawName || `unit-table-${cfg.ns}`)
+      .replace(/[<>:"/\\|?*\u0000-\u001F]/g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/[. ]+$/g, '');
+    a.download = `${safeName || `unit-table-${cfg.ns}`}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

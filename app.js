@@ -51,6 +51,12 @@ const nameEl = document.querySelector('.faction-name');
 const savedName = lsGet(storageKey);
 if (nameEl && savedName) nameEl.textContent = savedName;
 
+function updateDocumentTitle() {
+  const fallback = 'Без названия';
+  const factionName = (nameEl?.textContent || '').trim() || fallback;
+  document.title = `Faction Card — ${factionName}`;
+}
+
 function fitFactionName() {
   if (!nameEl) return;
   const MAX_PT = 20;
@@ -75,10 +81,19 @@ function fitFactionName() {
 }
 if (nameEl) {
   const applyFit = debounce(() => fitFactionName(), 100);
+  updateDocumentTitle();
 
   nameEl.addEventListener('input', () => {
     lsSet(storageKey, nameEl.textContent.trim());
+    updateDocumentTitle();
     applyFit();
+  });
+
+  const titleObserver = new MutationObserver(() => updateDocumentTitle());
+  titleObserver.observe(nameEl, {
+    childList: true,
+    characterData: true,
+    subtree: true
   });
 
   if (document.fonts && document.fonts.ready) {

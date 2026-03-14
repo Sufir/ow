@@ -165,7 +165,55 @@ body {
   position: fixed;
   top: 8px;
   left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 12px;
+  background: rgba(6, 14, 26, 0.68);
+  border: 1px solid rgba(37, 164, 238, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   z-index: 10;
+}
+
+.toolbar button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(37, 164, 238, 0.35);
+  border-radius: 9px;
+  background: linear-gradient(180deg, rgba(16, 40, 66, 0.95), rgba(9, 25, 44, 0.95));
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.toolbar button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(120, 220, 255, 0.7);
+  box-shadow: 0 0 0 1px rgba(17, 197, 255, 0.25), 0 6px 12px rgba(0, 0, 0, 0.28);
+  background: linear-gradient(180deg, rgba(22, 53, 84, 0.96), rgba(12, 30, 52, 0.96));
+}
+
+.toolbar button:active {
+  transform: translateY(0);
+}
+
+.toolbar button:focus-visible {
+  outline: 2px solid rgba(17, 197, 255, 0.9);
+  outline-offset: 1px;
+}
+
+body.link-mode #link-mode-btn {
+  border-color: rgba(17, 197, 255, 0.9);
+  box-shadow: 0 0 0 1px rgba(17, 197, 255, 0.35), inset 0 0 10px rgba(17, 197, 255, 0.25);
+  background: linear-gradient(180deg, rgba(14, 64, 94, 0.98), rgba(9, 44, 71, 0.98));
 }
 
 /* Оверлей для связей свойства↔юнит */
