@@ -284,16 +284,47 @@
   }
 
   // Работа с блоком подготовки фракции
+  function getRobotPanelsFromInfo(info = {}) {
+    const list = Array.isArray(info?.robotPanels) ? info.robotPanels : null;
+    if (list && list.length) {
+      const normalized = list
+        .filter((item) => item && typeof item === 'object')
+        .map((item) => ({
+          title: typeof item.title === 'string' ? item.title : '',
+          stepsHtml: typeof item.stepsHtml === 'string'
+            ? item.stepsHtml
+            : (typeof item.steps === 'string' ? item.steps : '')
+        }));
+      if (normalized.length) return normalized;
+    }
+    return [{
+      title: typeof info?.robotTitle === 'string' ? info.robotTitle : 'Создание боевого робота',
+      stepsHtml: typeof info?.robotSteps === 'string'
+        ? info.robotSteps
+        : '<li>В стартовом регионе Островной Империи должна быть фабрика (может быть свободной или контролироваться врагом).</li><li>Заплатите 10 нефти, или 4 если создаете не первый раз.</li><li>“Краб” появляется в стартовом регионе фракции.</li>'
+    }];
+  }
+
   function buildFactionInfoFromPanel(panelEl) {
-    if (!panelEl) return { queue: '', oil: '', region: '', notes: '' };
+    if (!panelEl) return { queue: '', oil: '', region: '', notes: '', robotPanels: [], robotTitle: '', robotSteps: '', logoSrc: '' };
     const queue = panelEl.querySelector('.prep-value[data-key="queue"]')?.textContent?.trim() || '';
     const oil = panelEl.querySelector('.prep-value[data-key="oil"]')?.textContent?.trim() || '';
     const region = panelEl.querySelector('.prep-value[data-key="region"]')?.textContent?.trim() || '';
     const notes = panelEl.querySelector('.prep-notes[data-key="notes"]')?.innerHTML || '';
-    const robotTitle = panelEl.querySelector('.robot-title')?.textContent?.trim() || '';
-    const robotSteps = panelEl.querySelector('.robot-steps')?.innerHTML || '';
+    const robotPanelsRaw = Array.from(panelEl.querySelectorAll('.robot-panels .robot-panel'));
+    const robotPanels = (robotPanelsRaw.length ? robotPanelsRaw : Array.from(panelEl.querySelectorAll('.robot-panel')))
+      .map((robotPanel) => {
+        const title = robotPanel.querySelector('.robot-title')?.textContent?.trim() || '';
+        const stepsHtml = robotPanel.querySelector('.robot-steps')?.innerHTML || '';
+        return { title, stepsHtml };
+      });
+    if (!robotPanels.length) {
+      robotPanels.push({ title: 'Создание боевого робота', stepsHtml: '' });
+    }
+    const robotTitle = robotPanels[0]?.title || '';
+    const robotSteps = robotPanels[0]?.stepsHtml || '';
     const logoSrc = document.querySelector('.faction-logo .faction-logo-image')?.getAttribute('src') || '';
-    return { queue, oil, region, notes, robotTitle, robotSteps, logoSrc };
+    return { queue, oil, region, notes, robotPanels, robotTitle, robotSteps, logoSrc };
   }
 
   function saveFactionInfoNowFrom(panelEl) {
@@ -331,14 +362,56 @@
     if (rEl) rEl.textContent = info.region ?? '';
     if (nEl) nEl.innerHTML = info.notes ?? '';
     // добавлено: восстановление нового блока
-    const rtEl = panelEl.querySelector('.robot-title');
-    const rsEl = panelEl.querySelector('.robot-steps');
-    if (rtEl) rtEl.textContent = (info.robotTitle ?? 'Создание боевого робота');
-    if (rsEl) rsEl.innerHTML = (info.robotSteps ?? `
-      <li>В стартовом регионе Островной Империи должна быть фабрика (может быть свободной или контролироваться врагом).</li>
-      <li>Заплатите 10 нефти, или 4 если создаете не первый раз.</li>
-      <li>“Краб” появляется в стартовом регионе фракции.</li>
-    `);
+    const robotPanelsContainer = panelEl.querySelector('.robot-panels');
+    const robotPanels = getRobotPanelsFromInfo(info);
+    if (robotPanelsContainer) {
+      robotPanelsContainer.innerHTML = '';
+      robotPanels.forEach((item) => {
+        const robotPanel = document.createElement('div');
+        robotPanel.className = 'robot-panel';
+
+        const header = document.createElement('div');
+        header.className = 'robot-header';
+
+        const rtEl = document.createElement('div');
+        rtEl.className = 'prep-title robot-title';
+        rtEl.contentEditable = 'true';
+        rtEl.spellcheck = false;
+        rtEl.textContent = typeof item.title === 'string' ? item.title : '';
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'robot-remove-btn';
+        removeBtn.setAttribute('aria-label', 'Удалить панель робота');
+        removeBtn.textContent = '×';
+
+        const rsEl = document.createElement('ol');
+        rsEl.className = 'robot-steps';
+        rsEl.contentEditable = 'true';
+        rsEl.spellcheck = false;
+        rsEl.innerHTML = typeof item.stepsHtml === 'string' ? item.stepsHtml : '';
+
+        header.appendChild(rtEl);
+        header.appendChild(removeBtn);
+        robotPanel.appendChild(header);
+        robotPanel.appendChild(rsEl);
+        robotPanelsContainer.appendChild(robotPanel);
+      });
+      const allPanels = Array.from(robotPanelsContainer.querySelectorAll('.robot-panel'));
+      const single = allPanels.length <= 1;
+      allPanels.forEach((panel) => {
+        const btn = panel.querySelector('.robot-remove-btn');
+        if (!btn) return;
+        btn.disabled = single;
+        btn.style.visibility = single ? 'hidden' : 'visible';
+      });
+    } else {
+      const rtEl = panelEl.querySelector('.robot-title');
+      const rsEl = panelEl.querySelector('.robot-steps');
+      const first = robotPanels[0] || { title: 'Создание боевого робота', stepsHtml: '' };
+      if (rtEl) rtEl.textContent = first.title ?? 'Создание боевого робота';
+      if (rsEl) rsEl.innerHTML = first.stepsHtml ?? '';
+    }
     const logoImg = document.querySelector('.faction-logo .faction-logo-image');
     if (logoImg && info.logoSrc) logoImg.src = info.logoSrc;
   }

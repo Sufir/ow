@@ -634,6 +634,93 @@ function genId() {
 
 // Панель подготовки фракции: сохранение/восстановление
 const factionInfoPanel = document.querySelector('.faction-info-panel');
+const DEFAULT_ROBOT_TITLE = 'Создание боевого робота';
+const DEFAULT_ROBOT_STEPS_HTML = `
+  <li>В стартовом регионе Островной Империи должна быть фабрика (может быть свободной или контролироваться врагом).</li>
+  <li>Заплатите 10 нефти, или 4 если создаете не первый раз.</li>
+  <li>“Краб” появляется в стартовом регионе фракции.</li>
+`;
+
+function normalizeRobotPanelsInfo(info = {}) {
+  const list = Array.isArray(info?.robotPanels) ? info.robotPanels : null;
+  if (list && list.length) {
+    return list
+      .filter((item) => item && typeof item === 'object')
+      .map((item) => ({
+        title: typeof item.title === 'string' ? item.title : '',
+        stepsHtml: typeof item.stepsHtml === 'string'
+          ? item.stepsHtml
+          : (typeof item.steps === 'string' ? item.steps : '')
+      }));
+  }
+  return [{
+    title: typeof info?.robotTitle === 'string' ? info.robotTitle : DEFAULT_ROBOT_TITLE,
+    stepsHtml: typeof info?.robotSteps === 'string' ? info.robotSteps : DEFAULT_ROBOT_STEPS_HTML
+  }];
+}
+
+function createRobotPanelElement(title = '', stepsHtml = '') {
+  const panel = document.createElement('div');
+  panel.className = 'robot-panel';
+
+  const header = document.createElement('div');
+  header.className = 'robot-header';
+
+  const titleEl = document.createElement('div');
+  titleEl.className = 'prep-title robot-title';
+  titleEl.contentEditable = 'true';
+  titleEl.spellcheck = false;
+  titleEl.textContent = title;
+
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'robot-remove-btn';
+  removeBtn.setAttribute('aria-label', 'Удалить панель робота');
+  removeBtn.textContent = '×';
+
+  const stepsEl = document.createElement('ol');
+  stepsEl.className = 'robot-steps';
+  stepsEl.contentEditable = 'true';
+  stepsEl.spellcheck = false;
+  stepsEl.innerHTML = stepsHtml;
+
+  header.appendChild(titleEl);
+  header.appendChild(removeBtn);
+  panel.appendChild(header);
+  panel.appendChild(stepsEl);
+
+  sanitizeRobotSteps(stepsEl);
+  ensureRobotStepsNotEmpty(stepsEl);
+  return panel;
+}
+
+function updateRobotRemoveButtonsState() {
+  const panels = factionInfoPanel ? Array.from(factionInfoPanel.querySelectorAll('.robot-panels .robot-panel')) : [];
+  const single = panels.length <= 1;
+  panels.forEach((panel) => {
+    const btn = panel.querySelector('.robot-remove-btn');
+    if (!btn) return;
+    btn.disabled = single;
+    btn.style.visibility = single ? 'hidden' : 'visible';
+  });
+}
+
+function renderRobotPanels(info = {}) {
+  if (!factionInfoPanel) return;
+  const container = factionInfoPanel.querySelector('.robot-panels');
+  if (!container) return;
+  const normalized = normalizeRobotPanelsInfo(info);
+  container.innerHTML = '';
+  normalized.forEach((item) => {
+    const title = typeof item.title === 'string' ? item.title : '';
+    const stepsHtml = typeof item.stepsHtml === 'string' ? item.stepsHtml : DEFAULT_ROBOT_STEPS_HTML;
+    container.appendChild(createRobotPanelElement(title, stepsHtml));
+  });
+  if (!container.querySelector('.robot-panel')) {
+    container.appendChild(createRobotPanelElement(DEFAULT_ROBOT_TITLE, DEFAULT_ROBOT_STEPS_HTML));
+  }
+  updateRobotRemoveButtonsState();
+}
 
 function renderFactionInfo(info = {}) {
   if (!factionInfoPanel) return;
@@ -645,60 +732,85 @@ function renderFactionInfo(info = {}) {
   if (oEl) oEl.textContent = (info.oil ?? '8');
   if (rEl) rEl.textContent = (info.region ?? '');
   if (nEl) nEl.innerHTML = (info.notes ?? '');
-  // добавлено: рендер нового блока
-  const rtEl = factionInfoPanel.querySelector('.robot-title');
-  const rsEl = factionInfoPanel.querySelector('.robot-steps');
-  if (rtEl) rtEl.textContent = (info.robotTitle ?? 'Создание боевого робота');
-  if (rsEl) rsEl.innerHTML = (info.robotSteps ?? `
-    <li>В стартовом регионе Островной Империи должна быть фабрика (может быть свободной или контролироваться врагом).</li>
-    <li>Заплатите 10 нефти, или 4 если создаете не первый раз.</li>
-    <li>“Краб” появляется в стартовом регионе фракции.</li>
-  `);
-
-  // Санитизация и гарантия наличия хотя бы одного пункта
-  if (rsEl) {
-    sanitizeRobotSteps(rsEl);
-    ensureRobotStepsNotEmpty(rsEl);
-  }
+  renderRobotPanels(info);
   const logoImg = document.querySelector('.faction-logo .faction-logo-image');
   if (logoImg && info.logoSrc) logoImg.src = info.logoSrc;
 }
 
-// дебаунс сохранения при вводе
 const saveFactionInfo = factionInfoPanel ? StorageAPI.makeSaveFactionInfoDebounced(factionInfoPanel) : null;
+updateRobotRemoveButtonsState();
 
-// Санитизируем вставки и не даём удалить весь список
-const robotOl = factionInfoPanel?.querySelector('.robot-steps');
-if (robotOl) {
-  // Вставка только как простой текст
-  robotOl.addEventListener('paste', (e) => {
-    const cd = e.clipboardData;
-    if (!cd) return;
-    const text = cd.getData('text/plain') || '';
-    const html = cd.getData('text/html') || '';
-    e.preventDefault();
-    const plain = text || (new DOMParser().parseFromString(html, 'text/html').body.textContent || '');
-    document.execCommand('insertText', false, plain);
-    requestAnimationFrame(() => {
-      sanitizeRobotSteps(robotOl);
-      ensureRobotStepsNotEmpty(robotOl);
-      saveFactionInfo?.();
-      markUnsaved();
-    });
-  });
-
-  // Любое редактирование — санитизируем и сохраняем пустой li при необходимости
-  robotOl.addEventListener('input', () => {
-    sanitizeRobotSteps(robotOl);
-    ensureRobotStepsNotEmpty(robotOl);
-  });
+function addRobotPanel() {
+  if (!factionInfoPanel) return;
+  const container = factionInfoPanel.querySelector('.robot-panels');
+  if (!container) return;
+  container.appendChild(createRobotPanelElement(DEFAULT_ROBOT_TITLE, DEFAULT_ROBOT_STEPS_HTML));
+  updateRobotRemoveButtonsState();
+  saveFactionInfo?.();
+  markUnsaved();
 }
 
-factionInfoPanel?.addEventListener('input', (e) => {
-  if (e.target.matches('.prep-value[contenteditable="true"], .prep-notes[contenteditable="true"], .robot-title[contenteditable="true"], .robot-steps[contenteditable="true"]')) {
+function removeRobotPanel(panel) {
+  if (!factionInfoPanel || !panel) return;
+  const container = factionInfoPanel.querySelector('.robot-panels');
+  if (!container) return;
+  const allPanels = Array.from(container.querySelectorAll('.robot-panel'));
+  if (allPanels.length <= 1) return;
+  panel.remove();
+  updateRobotRemoveButtonsState();
+  saveFactionInfo?.();
+  markUnsaved();
+}
+
+factionInfoPanel?.addEventListener('click', (e) => {
+  const target = e.target instanceof Element ? e.target : null;
+  if (!target) return;
+  if (target.closest('.robot-add-btn')) {
+    addRobotPanel();
+    return;
+  }
+  const removeBtn = target.closest('.robot-remove-btn');
+  if (!removeBtn) return;
+  removeRobotPanel(removeBtn.closest('.robot-panel'));
+});
+
+factionInfoPanel?.addEventListener('paste', (e) => {
+  const target = e.target instanceof Element ? e.target : null;
+  const robotOl = target?.closest('.robot-steps');
+  if (!robotOl) return;
+  const cd = e.clipboardData;
+  if (!cd) return;
+  const text = cd.getData('text/plain') || '';
+  const html = cd.getData('text/html') || '';
+  e.preventDefault();
+  const plain = text || (new DOMParser().parseFromString(html, 'text/html').body.textContent || '');
+  const sel = window.getSelection();
+  if (sel && sel.rangeCount) {
+    sel.deleteFromDocument();
+    sel.getRangeAt(0).insertNode(document.createTextNode(plain));
+    sel.collapseToEnd();
+  } else {
+    document.execCommand('insertText', false, plain);
+  }
+  requestAnimationFrame(() => {
+    sanitizeRobotSteps(robotOl);
+    ensureRobotStepsNotEmpty(robotOl);
     saveFactionInfo?.();
     markUnsaved();
+  });
+});
+
+factionInfoPanel?.addEventListener('input', (e) => {
+  const target = e.target instanceof Element ? e.target : null;
+  if (!target) return;
+  if (!target.closest('.prep-value[contenteditable="true"], .prep-notes[contenteditable="true"], .robot-title[contenteditable="true"], .robot-steps[contenteditable="true"]')) return;
+  const robotOl = target.closest('.robot-steps');
+  if (robotOl) {
+    sanitizeRobotSteps(robotOl);
+    ensureRobotStepsNotEmpty(robotOl);
   }
+  saveFactionInfo?.();
+  markUnsaved();
 });
 
 // восстановление при старте

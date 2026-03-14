@@ -530,12 +530,49 @@ body.dragging-props {
 }
 
 /* === Блок «Создание боевого робота» === */
-.faction-info-panel .robot-panel {
-  margin-top: 3mm; /* отступ сверху от prep-panel */
+.faction-info-panel .robot-panels {
+  margin-top: 3mm;
 }
 
-.faction-info-panel .robot-panel .robot-title {
-  /* стиль заголовка уже берётся из .prep-title */
+.faction-info-panel .robot-panel + .robot-panel {
+  margin-top: 2.5mm;
+  padding-top: 2mm;
+  border-top: 0.2mm solid rgba(255, 255, 255, 0.14);
+}
+
+.faction-info-panel .robot-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 2mm;
+}
+
+.faction-info-panel .robot-title {
+  flex: 1 1 auto;
+}
+
+.faction-info-panel .robot-remove-btn {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0 1.5mm;
+  line-height: 1.2;
+  font-size: 9pt;
+  border: 0.2mm solid rgba(37, 164, 238, 0.35);
+  background: rgba(37, 164, 238, 0.08);
+  color: #25a4ee;
+  cursor: pointer;
+}
+
+.faction-info-panel .robot-add-btn {
+  display: block;
+  margin: 2.5mm 0 0;
+  padding: 0.8mm 1.6mm;
+  width: 100%;
+  line-height: 1.2;
+  font-size: 9pt;
+  border: 0.2mm solid rgba(37, 164, 238, 0.35);
+  background: rgba(37, 164, 238, 0.08);
+  color: #25a4ee;
+  cursor: pointer;
 }
 
 .faction-info-panel .robot-panel .robot-steps {
@@ -560,6 +597,13 @@ body.dragging-props {
   color: inherit !important;
   background: none !important;
   text-decoration: none !important;
+}
+
+@media print {
+  .faction-info-panel .robot-remove-btn,
+  .faction-info-panel .robot-add-btn {
+    display: none !important;
+  }
 }
 
 /* фиксируем размер шрифта из вёрстки внутри любого вложенного тега */
