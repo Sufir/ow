@@ -202,13 +202,13 @@ body {
       rgba(17, 197, 255, 0.34) 75%,
       rgba(17, 197, 255, 0.24) 90%,
       rgba(17, 197, 255, 0) 100%
-    ),
+    )/*,*/
     /* нижний слой — тонкая равномерная линия по всей ширине */
-    linear-gradient(
+    /*linear-gradient(
       to right,
       rgba(17, 197, 255, 0.16),
       rgba(17, 197, 255, 0.16)
-    );
+    )*/;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
