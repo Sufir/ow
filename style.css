@@ -233,6 +233,19 @@ body.link-mode #link-mode-btn {
   background: transparent;
 }
 
+.unit-table tr.unit-comment td.comment-cell {
+  padding: 1.5mm 2mm;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.3;
+  text-align: left;
+  outline: none;
+  white-space: pre-wrap;
+}
+
 /* Горизонтальная линия: базовая версия для экрана */
 .unit-table .separator-line {
   height: 1mm;

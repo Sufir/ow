@@ -50,6 +50,11 @@
         rows.push({ type: 'separator' });
         return;
       }
+      if (tr.classList.contains('unit-comment')) {
+        const text = tr.querySelector('.comment-cell')?.textContent?.trim() || '';
+        rows.push({ type: 'comment', text });
+        return;
+      }
       const firstTd = tr.querySelector('td:first-child');
       const imgEl = firstTd?.querySelector('.unit-image');
       const imgSrc = imgEl?.src || '';

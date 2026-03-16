@@ -110,6 +110,7 @@ const table = document.querySelector('.unit-table');
 const tbody = table?.querySelector('tbody');
 const addRowBtn = document.getElementById('add-row-btn');
 const addSepBtn = document.getElementById('add-separator-btn');
+const addCommentBtn = document.getElementById('add-comment-btn');
 const deleteRowBtn = document.getElementById('delete-row-btn');
 const exportBtn = document.getElementById('export-btn');
 const importBtn = document.getElementById('import-btn');
@@ -169,7 +170,7 @@ function recalculateGroupLabels() {
 
   for (let i = 0; i < rows.length; i++) {
     const tr = rows[i];
-    if (tr.classList.contains('unit-separator')) {
+    if (tr.classList.contains('unit-separator') || tr.classList.contains('unit-comment')) {
       inGroup = false;
       continue;
     }
@@ -182,7 +183,7 @@ function recalculateGroupLabels() {
 
       // посчитать длину группы до ближайшего разделителя
       let length = 1;
-      for (let j = i + 1; j < rows.length && !rows[j].classList.contains('unit-separator'); j++) {
+      for (let j = i + 1; j < rows.length && !rows[j].classList.contains('unit-separator') && !rows[j].classList.contains('unit-comment'); j++) {
         length++;
       }
       labelCell.rowSpan = length;
@@ -208,7 +209,7 @@ function deleteRow(index = currentRowIndex) {
   // перенесём метку на новый старт группы, если есть следующий ряд и он не разделитель
   if (deletedLabelText) {
     const next = tbody.rows[index] || null;
-    if (next && !next.classList.contains('unit-separator')) {
+    if (next && !next.classList.contains('unit-separator') && !next.classList.contains('unit-comment')) {
       const labelCell = ensureTypeLabelCell(next);
       labelCell.textContent = deletedLabelText;
     }
@@ -345,7 +346,7 @@ function buildUnitCell(captionText = 'untitled', imgSrc = '') {
 // упрощённая инициализация дропзон в первой колонке
 function initAllFirstCells() {
   if (!tbody) return;
-  tbody.querySelectorAll('tr:not(.unit-separator) td:first-child').forEach(ensureDropzone);
+  tbody.querySelectorAll('tr:not(.unit-separator):not(.unit-comment) td:first-child').forEach(ensureDropzone);
 }
 
 // === Разделители ===
@@ -362,6 +363,32 @@ function createSeparatorRow() {
 function addSeparator(afterIndex = null) {
   if (!tbody) return;
   const tr = createSeparatorRow();
+  if (afterIndex !== null && afterIndex >= 0 && afterIndex < tbody.rows.length) {
+    const ref = tbody.rows[afterIndex];
+    ref?.parentNode.insertBefore(tr, ref.nextSibling);
+  } else {
+    tbody.appendChild(tr);
+  }
+  recalculateGroupLabels();
+  saveTable();
+}
+
+function createCommentRow(text = 'Комментарий…') {
+  const tr = document.createElement('tr');
+  tr.className = 'unit-comment';
+  const td = document.createElement('td');
+  td.colSpan = 5;
+  td.className = 'comment-cell';
+  td.contentEditable = 'true';
+  td.spellcheck = false;
+  td.textContent = text;
+  tr.appendChild(td);
+  return tr;
+}
+
+function addComment(afterIndex = null) {
+  if (!tbody) return;
+  const tr = createCommentRow();
   if (afterIndex !== null && afterIndex >= 0 && afterIndex < tbody.rows.length) {
     const ref = tbody.rows[afterIndex];
     ref?.parentNode.insertBefore(tr, ref.nextSibling);
@@ -444,6 +471,7 @@ addRowBtn?.addEventListener('click', () => {
 });
 
 addSepBtn?.addEventListener('click', () => addSeparator(currentRowIndex));
+addCommentBtn?.addEventListener('click', () => addComment(currentRowIndex));
 
 // Initialization block
 // === Инициализация ===
@@ -523,7 +551,13 @@ function renderTable(rows) {
       inGroup = false;
       return;
     }
+    if (r && r.type === 'comment') {
+      tbody.appendChild(createCommentRow(r.text || ''));
+      inGroup = false;
+      return;
+    }
     const tr = document.createElement('tr');
+    tr.className = 'unit-data';
 
     const td1 = buildUnitCell(r?.caption, r?.imgSrc);
     tr.appendChild(td1);
@@ -565,6 +599,7 @@ function renderTable(rows) {
 // helper: создание строки-данных с дропзон в первой колонке
 function createDataRow(cells = ['', '', ''], imgSrc = '') {
   const tr = document.createElement('tr');
+  tr.className = 'unit-data';
 
   const td1 = buildUnitCell('untitled', imgSrc);
   tr.appendChild(td1);
