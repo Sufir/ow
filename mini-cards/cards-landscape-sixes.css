@@ -145,11 +145,47 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   background-color: #fff;
   background-image: url("../Goals-Tachs/face.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.text-size-controls {
+  position: absolute;
+  right: 1.4mm;
+  top: 1.4mm;
+  display: flex;
+  gap: 1mm;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.front-card.controls-visible .text-size-controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.text-size-btn {
+  width: 4.2mm;
+  height: 4.2mm;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 1mm;
+  background: rgba(15, 18, 24, 0.45);
+  color: #fff;
+  font-family: Arial, "Segoe UI", sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.text-size-btn:hover {
+  background: rgba(15, 18, 24, 0.7);
 }
 
 .goal-text {
@@ -159,8 +195,8 @@ body {
   top: 50%;
   transform: translate(-50%, -50%);
   font-family: Arial, "Segoe UI", sans-serif;
-  font-size: 14px;
-  line-height: 1.2;
+  font-size: 13px;
+  line-height: 1.1;
   color: #fc1a24;
   text-shadow: 0 0 8px rgba(255, 92, 92, 0.55);
   width: calc(100% - 12mm);
@@ -187,7 +223,7 @@ body {
 
 .tech-content {
   display: none;
-  width: calc(100% - 12mm);
+  width: calc(100% - 10mm);
   padding: 0;
   align-self: center;
 }
@@ -201,34 +237,36 @@ body {
 
 .tech-title {
   color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border-bottom: #25a4ee 0.5mm solid;
-  border-left: #25a4ee 0.5mm solid;
-}
-
-.tech-note {
-  color: #25a4ee;
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-right: #25a4ee 0.5mm solid;
+  /*border-top: #25a4ee 0.5mm solid;
+  border-right: #25a4ee 0.5mm solid;*/
+}
+
+.tech-note {
+  color: #25a4ee;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /*border-right: #25a4ee 0.5mm solid;*/
 }
 
 .tech-desc {
   margin-top: 1.3mm;
   color: #fff;
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1.25;
   text-align: justify;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .front-card.is-goal .goal-text {
@@ -255,7 +293,7 @@ body {
 }
 
 .back-card.is-tech {
-  background-image: url("../Goals-Tachs/tesch-back.png");
+  background-image: url("../Goals-Tachs/tech-back2.png");
 }
 
 .back-center-icon {
@@ -302,6 +340,8 @@ body {
     background: #fff;
     margin: 0;
     padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .no-print {
@@ -359,7 +399,7 @@ body {
   }
 
   .back-card {
-    border: 1px solid #888;
+    border: none;
   }
 
   .card.current-pack {

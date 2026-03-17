@@ -45,15 +45,19 @@
     const cardType = type === 'tech' ? 'tech' : 'goal';
     const defaultTechCards = Array.from({ length: PACK_SIZE }, (_, index) => ({
       title: `Технология ${index + 1}`,
+      titleFontPx: null,
       note: 'Базовый модуль',
-      desc: 'Короткое описание эффекта технологии для примера.'
+      noteFontPx: null,
+      desc: 'Короткое описание эффекта технологии для примера.',
+      descFontPx: null
     }));
     return {
       cardType,
       frontTexts: Array.from({ length: PACK_SIZE }, () => DEFAULT_NUMBER),
+      goalTextFontPx: Array.from({ length: PACK_SIZE }, () => null),
       techCards: cardType === 'tech'
         ? defaultTechCards
-        : Array.from({ length: PACK_SIZE }, () => ({ title: '', note: '', desc: '' })),
+        : Array.from({ length: PACK_SIZE }, () => ({ title: '', titleFontPx: null, note: '', noteFontPx: null, desc: '', descFontPx: null })),
       frontImageId: '',
       backImageId: ''
     };
@@ -102,16 +106,22 @@
     const cardType = pack.cardType === 'tech' ? 'tech' : 'goal';
     const frontTexts = Array.isArray(pack.frontTexts) ? pack.frontTexts.slice(0, PACK_SIZE) : [];
     while (frontTexts.length < PACK_SIZE) frontTexts.push(DEFAULT_NUMBER);
+    const goalTextFontPx = Array.isArray(pack.goalTextFontPx) ? pack.goalTextFontPx.slice(0, PACK_SIZE) : [];
+    while (goalTextFontPx.length < PACK_SIZE) goalTextFontPx.push(null);
     const techCardsRaw = Array.isArray(pack.techCards) ? pack.techCards.slice(0, PACK_SIZE) : [];
     while (techCardsRaw.length < PACK_SIZE) techCardsRaw.push({});
     const techCards = techCardsRaw.map((card) => ({
       title: String(card && card.title != null ? card.title : ''),
+      titleFontPx: Number.isFinite(Number(card && card.titleFontPx)) ? Number(card.titleFontPx) : null,
       note: String(card && card.note != null ? card.note : ''),
-      desc: String(card && card.desc != null ? card.desc : '')
+      noteFontPx: Number.isFinite(Number(card && card.noteFontPx)) ? Number(card.noteFontPx) : null,
+      desc: String(card && card.desc != null ? card.desc : ''),
+      descFontPx: Number.isFinite(Number(card && card.descFontPx)) ? Number(card.descFontPx) : null
     }));
     return {
       cardType,
       frontTexts: frontTexts.map((v) => String(v ?? DEFAULT_NUMBER)),
+      goalTextFontPx: goalTextFontPx.map((v) => (Number.isFinite(Number(v)) ? Number(v) : null)),
       techCards,
       frontImageId: typeof pack.frontImageId === 'string' ? pack.frontImageId : '',
       backImageId: typeof pack.backImageId === 'string' ? pack.backImageId : ''
@@ -155,11 +165,24 @@
       packs: state.packs.map((pack) => ({
         cardType: pack.cardType === 'tech' ? 'tech' : 'goal',
         frontTexts: pack.frontTexts.slice(0, PACK_SIZE),
-        techCards: pack.techCards.slice(0, PACK_SIZE).map((card) => ({
-          title: String(card.title || ''),
-          note: String(card.note || ''),
-          desc: String(card.desc || '')
-        })),
+        goalTextFontPx: pack.goalTextFontPx.slice(0, PACK_SIZE),
+        techCards: pack.techCards.slice(0, PACK_SIZE).map((card) => {
+          const normalizedCard = {
+            title: String(card.title || ''),
+            note: String(card.note || ''),
+            desc: String(card.desc || '')
+          };
+          if (Number.isFinite(card.titleFontPx) && card.titleFontPx > 0) {
+            normalizedCard.titleFontPx = Number(card.titleFontPx);
+          }
+          if (Number.isFinite(card.noteFontPx) && card.noteFontPx > 0) {
+            normalizedCard.noteFontPx = Number(card.noteFontPx);
+          }
+          if (Number.isFinite(card.descFontPx) && card.descFontPx > 0) {
+            normalizedCard.descFontPx = Number(card.descFontPx);
+          }
+          return normalizedCard;
+        }),
         frontImageId: pack.frontImageId || '',
         backImageId: pack.backImageId || ''
       })),
@@ -315,6 +338,95 @@
     return String(node.innerText || '').replace(/\r\n/g, '\n');
   }
 
+  function normalizePastedText(text, singleLine) {
+    const normalized = String(text || '').replace(/\r\n?/g, '\n');
+    if (!singleLine) return normalized;
+    return normalized.replace(/\n+/g, ' ');
+  }
+
+  function insertPlainTextAtCursor(node, text) {
+    if (!node) return;
+    node.focus();
+    if (document.queryCommandSupported && document.queryCommandSupported('insertText')) {
+      document.execCommand('insertText', false, text);
+      return;
+    }
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) {
+      node.textContent = `${node.textContent || ''}${text}`;
+      return;
+    }
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+    const textNode = document.createTextNode(text);
+    range.insertNode(textNode);
+    range.setStartAfter(textNode);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function attachPlainTextPaste(node, singleLine) {
+    if (!node) return;
+    node.addEventListener('paste', (event) => {
+      event.preventDefault();
+      const clipboard = event.clipboardData || window.clipboardData;
+      const raw = clipboard ? (clipboard.getData('text/plain') || clipboard.getData('text') || '') : '';
+      const text = normalizePastedText(raw, !!singleLine);
+      insertPlainTextAtCursor(node, text);
+    });
+  }
+
+  function getCurrentFontPx(node) {
+    if (!node) return 12;
+    const inlinePx = parseFloat(node.style.fontSize);
+    if (Number.isFinite(inlinePx) && inlinePx > 0) return inlinePx;
+    const cssPx = parseFloat(window.getComputedStyle(node).fontSize);
+    return Number.isFinite(cssPx) && cssPx > 0 ? cssPx : 12;
+  }
+
+  function showCardControls(cardNode, activeClassName) {
+    if (!cardNode) return;
+    cardNode.classList.add('controls-visible');
+    cardNode.dataset.activeField = activeClassName;
+  }
+
+  function hideCardControls(cardNode) {
+    if (!cardNode) return;
+    cardNode.classList.remove('controls-visible');
+    delete cardNode.dataset.activeField;
+  }
+
+  function fitTechDescFont(node) {
+    if (!node) return null;
+    const maxLines = 6;
+    const minFontPx = 8;
+    const stepPx = 0.5;
+
+    node.style.fontSize = '';
+    const computed = window.getComputedStyle(node);
+    const cssFontPx = parseFloat(computed.fontSize);
+    const maxFontPx = Number.isFinite(cssFontPx) && cssFontPx > 0 ? cssFontPx : 12;
+    let lineHeightPx = parseFloat(computed.lineHeight);
+    if (!Number.isFinite(lineHeightPx) || lineHeightPx <= 0) {
+      lineHeightPx = maxFontPx * 1.25;
+    }
+    const maxHeightPx = lineHeightPx * maxLines;
+    if (node.scrollHeight <= maxHeightPx + 0.5) {
+      node.style.fontSize = '';
+      return null;
+    }
+    let fontPx = maxFontPx;
+
+    while (fontPx > minFontPx && node.scrollHeight > maxHeightPx + 0.5) {
+      fontPx -= stepPx;
+      node.style.fontSize = `${fontPx}px`;
+    }
+    if (fontPx < maxFontPx - 0.01) return Math.round(fontPx * 100) / 100;
+    node.style.fontSize = '';
+    return null;
+  }
+
   function renderAll() {
     sheetsRoot.innerHTML = '';
     const pairCount = Math.max(1, Math.ceil(state.packs.length / 3));
@@ -356,11 +468,85 @@
         const techTitle = node.querySelector('.tech-title');
         const techNote = node.querySelector('.tech-note');
         const techDesc = node.querySelector('.tech-desc');
+        const controls = node.querySelector('.text-size-controls');
+        const decBtn = node.querySelector('.text-size-dec');
+        const incBtn = node.querySelector('.text-size-inc');
+
+        attachPlainTextPaste(goalText, false);
+        attachPlainTextPaste(techTitle, true);
+        attachPlainTextPaste(techNote, true);
+        attachPlainTextPaste(techDesc, false);
 
         goalText.textContent = source.text;
         techTitle.textContent = source.techCard.title || '';
         techNote.textContent = source.techCard.note || '';
         techDesc.textContent = source.techCard.desc || '';
+        const presetGoalFont = Number.isFinite(state.packs[source.packIndex].goalTextFontPx[source.innerIndex])
+          ? Number(state.packs[source.packIndex].goalTextFontPx[source.innerIndex])
+          : null;
+        const presetTitleFont = Number.isFinite(source.techCard.titleFontPx) ? Number(source.techCard.titleFontPx) : null;
+        const presetNoteFont = Number.isFinite(source.techCard.noteFontPx) ? Number(source.techCard.noteFontPx) : null;
+        const presetDescFont = Number.isFinite(source.techCard.descFontPx) ? Number(source.techCard.descFontPx) : null;
+        goalText.style.fontSize = presetGoalFont ? `${presetGoalFont}px` : '';
+        techTitle.style.fontSize = presetTitleFont ? `${presetTitleFont}px` : '';
+        techNote.style.fontSize = presetNoteFont ? `${presetNoteFont}px` : '';
+        techDesc.style.fontSize = presetDescFont ? `${presetDescFont}px` : '';
+
+        const editableNodes = [goalText, techTitle, techNote, techDesc];
+        editableNodes.forEach((editableNode) => {
+          editableNode.addEventListener('focus', () => showCardControls(node, editableNode.className));
+          editableNode.addEventListener('click', () => showCardControls(node, editableNode.className));
+          editableNode.addEventListener('blur', () => {
+            setTimeout(() => {
+              const active = document.activeElement;
+              if (active && controls && controls.contains(active)) return;
+              if (active && editableNodes.includes(active)) return;
+              hideCardControls(node);
+            }, 0);
+          });
+        });
+
+        function updateFontByButton(deltaPx) {
+          const pack = state.packs[source.packIndex];
+          if (!pack) return;
+          const activeField = node.dataset.activeField || '';
+          const targetNode =
+            activeField.indexOf('goal-text') >= 0 ? goalText :
+              activeField.indexOf('tech-title') >= 0 ? techTitle :
+                activeField.indexOf('tech-note') >= 0 ? techNote :
+                  activeField.indexOf('tech-desc') >= 0 ? techDesc : null;
+          if (!targetNode) return;
+          const currentFontPx = getCurrentFontPx(targetNode);
+          const nextFontPx = Math.max(8, Math.min(28, currentFontPx + deltaPx));
+          targetNode.style.fontSize = `${nextFontPx}px`;
+          if (targetNode === goalText) {
+            pack.goalTextFontPx[source.innerIndex] = nextFontPx;
+          } else if (targetNode === techTitle) {
+            const target = pack.techCards[source.innerIndex];
+            if (!target) return;
+            target.titleFontPx = nextFontPx;
+          } else if (targetNode === techNote) {
+            const target = pack.techCards[source.innerIndex];
+            if (!target) return;
+            target.noteFontPx = nextFontPx;
+          } else if (targetNode === techDesc) {
+            const target = pack.techCards[source.innerIndex];
+            if (!target) return;
+            target.descFontPx = nextFontPx;
+          }
+          scheduleSave();
+        }
+
+        decBtn.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          updateFontByButton(-0.5);
+        });
+        incBtn.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          updateFontByButton(0.5);
+        });
 
         goalText.addEventListener('focus', () => {
           if (!setCurrentPackByIndex(source.packIndex)) return;
@@ -406,6 +592,7 @@
           const target = pack.techCards[source.innerIndex];
           if (!target) return;
           target.desc = readMultilineEditableText(techDesc);
+          target.descFontPx = fitTechDescFont(techDesc);
           scheduleSave();
         });
         frontGrid.appendChild(node);
