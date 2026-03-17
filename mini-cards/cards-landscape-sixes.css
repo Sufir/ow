@@ -154,6 +154,10 @@ body {
 
 .goal-text {
   display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   font-family: Arial, "Segoe UI", sans-serif;
   font-size: 14px;
   line-height: 1.2;
@@ -161,8 +165,24 @@ body {
   text-shadow: 0 0 8px rgba(255, 92, 92, 0.55);
   width: calc(100% - 12mm);
   text-align: center;
+  white-space: pre-wrap;
   outline: none;
-  align-self: center;
+}
+
+.goal-text::before {
+  content: '⚠️';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 1.2mm);
+  transform: translateX(-50%);
+  font-size: 16px;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+}
+
+.goal-emoji {
+  display: none !important;
 }
 
 .tech-content {
@@ -208,6 +228,7 @@ body {
   font-size: 12px;
   line-height: 1.25;
   text-align: justify;
+  white-space: pre-wrap;
 }
 
 .front-card.is-goal .goal-text {
@@ -230,7 +251,7 @@ body {
 }
 
 .back-card.is-goal {
-  background-image: url("../Goals-Tachs/goal-back.png");
+  background-image: url("../Goals-Tachs/goal-back2.png");
 }
 
 .back-card.is-tech {
@@ -258,6 +279,10 @@ body {
 .empty-card .tech-content,
 .empty-card .back-center-icon {
   pointer-events: none;
+  opacity: 0;
+}
+
+.empty-card .goal-emoji {
   opacity: 0;
 }
 

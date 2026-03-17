@@ -310,6 +310,11 @@
     return changed;
   }
 
+  function readMultilineEditableText(node) {
+    if (!node) return '';
+    return String(node.innerText || '').replace(/\r\n/g, '\n');
+  }
+
   function renderAll() {
     sheetsRoot.innerHTML = '';
     const pairCount = Math.max(1, Math.ceil(state.packs.length / 3));
@@ -364,7 +369,7 @@
         goalText.addEventListener('input', () => {
           const pack = state.packs[source.packIndex];
           if (!pack) return;
-          pack.frontTexts[source.innerIndex] = goalText.textContent || '';
+          pack.frontTexts[source.innerIndex] = readMultilineEditableText(goalText);
           scheduleSave();
         });
         techTitle.addEventListener('focus', () => {
@@ -400,7 +405,7 @@
           if (!pack) return;
           const target = pack.techCards[source.innerIndex];
           if (!target) return;
-          target.desc = techDesc.textContent || '';
+          target.desc = readMultilineEditableText(techDesc);
           scheduleSave();
         });
         frontGrid.appendChild(node);
