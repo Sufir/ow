@@ -15,6 +15,7 @@
   const nextPairBtn = document.getElementById('nextPairBtn');
   const prevPackBtn = document.getElementById('prevPackBtn');
   const nextPackBtn = document.getElementById('nextPackBtn');
+  const newPackTypeSelect = document.getElementById('newPackTypeSelect');
   const addSixBtn = document.getElementById('addSixBtn');
   const removeSixBtn = document.getElementById('removeSixBtn');
   const loadFrontBgBtn = document.getElementById('loadFrontBgBtn');
@@ -37,12 +38,22 @@
     mirrorBacks: true,
     localStorageAvailable: true,
     imagePool: {},
-    packs: [createDefaultPack()]
+    packs: [createDefaultPack('goal')]
   };
 
-  function createDefaultPack() {
+  function createDefaultPack(type) {
+    const cardType = type === 'tech' ? 'tech' : 'goal';
+    const defaultTechCards = Array.from({ length: PACK_SIZE }, (_, index) => ({
+      title: `Технология ${index + 1}`,
+      note: 'Базовый модуль',
+      desc: 'Короткое описание эффекта технологии для примера.'
+    }));
     return {
+      cardType,
       frontTexts: Array.from({ length: PACK_SIZE }, () => DEFAULT_NUMBER),
+      techCards: cardType === 'tech'
+        ? defaultTechCards
+        : Array.from({ length: PACK_SIZE }, () => ({ title: '', note: '', desc: '' })),
       frontImageId: '',
       backImageId: ''
     };
@@ -88,10 +99,20 @@
 
   function normalizePack(input) {
     const pack = input && typeof input === 'object' ? input : {};
+    const cardType = pack.cardType === 'tech' ? 'tech' : 'goal';
     const frontTexts = Array.isArray(pack.frontTexts) ? pack.frontTexts.slice(0, PACK_SIZE) : [];
     while (frontTexts.length < PACK_SIZE) frontTexts.push(DEFAULT_NUMBER);
+    const techCardsRaw = Array.isArray(pack.techCards) ? pack.techCards.slice(0, PACK_SIZE) : [];
+    while (techCardsRaw.length < PACK_SIZE) techCardsRaw.push({});
+    const techCards = techCardsRaw.map((card) => ({
+      title: String(card && card.title != null ? card.title : ''),
+      note: String(card && card.note != null ? card.note : ''),
+      desc: String(card && card.desc != null ? card.desc : '')
+    }));
     return {
+      cardType,
       frontTexts: frontTexts.map((v) => String(v ?? DEFAULT_NUMBER)),
+      techCards,
       frontImageId: typeof pack.frontImageId === 'string' ? pack.frontImageId : '',
       backImageId: typeof pack.backImageId === 'string' ? pack.backImageId : ''
     };
@@ -110,7 +131,7 @@
 
     const srcPacks = Array.isArray(data.packs) ? data.packs : [];
     const normalized = srcPacks.map(normalizePack).filter(Boolean);
-    state.packs = normalized.length ? normalized : [createDefaultPack()];
+    state.packs = normalized.length ? normalized : [createDefaultPack('goal')];
     state.mirrorBacks = data.mirrorBacks !== false;
 
     const idx = Number.isInteger(data.currentPackIndex) ? data.currentPackIndex : 0;
@@ -132,7 +153,13 @@
       cardSizeMm: { width: 63, height: 41 },
       mirrorBacks: state.mirrorBacks,
       packs: state.packs.map((pack) => ({
+        cardType: pack.cardType === 'tech' ? 'tech' : 'goal',
         frontTexts: pack.frontTexts.slice(0, PACK_SIZE),
+        techCards: pack.techCards.slice(0, PACK_SIZE).map((card) => ({
+          title: String(card.title || ''),
+          note: String(card.note || ''),
+          desc: String(card.desc || '')
+        })),
         frontImageId: pack.frontImageId || '',
         backImageId: pack.backImageId || ''
       })),
@@ -264,7 +291,9 @@
           packIndex,
           innerIndex: i,
           globalIndex: packIndex * PACK_SIZE + i,
+          cardType: pack.cardType === 'tech' ? 'tech' : 'goal',
           text: pack.frontTexts[i] || DEFAULT_NUMBER,
+          techCard: pack.techCards[i] || { title: '', note: '', desc: '' },
           frontImageId: pack.frontImageId || '',
           backImageId: pack.backImageId || ''
         });
@@ -308,6 +337,9 @@
         }
         node.dataset.cardIndex = String(source.globalIndex);
         node.dataset.packIndex = String(source.packIndex);
+        node.dataset.cardType = source.cardType;
+        node.classList.toggle('is-goal', source.cardType === 'goal');
+        node.classList.toggle('is-tech', source.cardType === 'tech');
         if (source.packIndex === state.currentPackIndex) node.classList.add('current-pack');
         const frontImage = getImageDataUrl(source.frontImageId);
         node.style.backgroundImage = frontImage ? `url("${frontImage}")` : '';
@@ -315,16 +347,60 @@
           if (!setCurrentPackByIndex(source.packIndex)) return;
           renderAll();
         });
-        const editable = node.querySelector('.card-number');
-        editable.textContent = source.text;
-        editable.addEventListener('focus', () => {
+        const goalText = node.querySelector('.goal-text');
+        const techTitle = node.querySelector('.tech-title');
+        const techNote = node.querySelector('.tech-note');
+        const techDesc = node.querySelector('.tech-desc');
+
+        goalText.textContent = source.text;
+        techTitle.textContent = source.techCard.title || '';
+        techNote.textContent = source.techCard.note || '';
+        techDesc.textContent = source.techCard.desc || '';
+
+        goalText.addEventListener('focus', () => {
           if (!setCurrentPackByIndex(source.packIndex)) return;
           renderAll();
         });
-        editable.addEventListener('input', () => {
+        goalText.addEventListener('input', () => {
           const pack = state.packs[source.packIndex];
           if (!pack) return;
-          pack.frontTexts[source.innerIndex] = editable.textContent || '';
+          pack.frontTexts[source.innerIndex] = goalText.textContent || '';
+          scheduleSave();
+        });
+        techTitle.addEventListener('focus', () => {
+          if (!setCurrentPackByIndex(source.packIndex)) return;
+          renderAll();
+        });
+        techNote.addEventListener('focus', () => {
+          if (!setCurrentPackByIndex(source.packIndex)) return;
+          renderAll();
+        });
+        techDesc.addEventListener('focus', () => {
+          if (!setCurrentPackByIndex(source.packIndex)) return;
+          renderAll();
+        });
+        techTitle.addEventListener('input', () => {
+          const pack = state.packs[source.packIndex];
+          if (!pack) return;
+          const target = pack.techCards[source.innerIndex];
+          if (!target) return;
+          target.title = techTitle.textContent || '';
+          scheduleSave();
+        });
+        techNote.addEventListener('input', () => {
+          const pack = state.packs[source.packIndex];
+          if (!pack) return;
+          const target = pack.techCards[source.innerIndex];
+          if (!target) return;
+          target.note = techNote.textContent || '';
+          scheduleSave();
+        });
+        techDesc.addEventListener('input', () => {
+          const pack = state.packs[source.packIndex];
+          if (!pack) return;
+          const target = pack.techCards[source.innerIndex];
+          if (!target) return;
+          target.desc = techDesc.textContent || '';
           scheduleSave();
         });
         frontGrid.appendChild(node);
@@ -463,7 +539,8 @@
   });
 
   addSixBtn.addEventListener('click', () => {
-    state.packs.push(createDefaultPack());
+    const type = newPackTypeSelect && newPackTypeSelect.value === 'tech' ? 'tech' : 'goal';
+    state.packs.push(createDefaultPack(type));
     setCurrentPackByIndex(state.packs.length - 1);
     renderAll();
     scrollToCurrentPair();

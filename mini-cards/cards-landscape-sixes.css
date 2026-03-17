@@ -152,14 +152,70 @@ body {
   background-repeat: no-repeat;
 }
 
-.card-number {
+.goal-text {
+  display: none;
   font-family: Arial, "Segoe UI", sans-serif;
   font-size: 14px;
   line-height: 1.2;
-  color: #111;
-  min-width: 20px;
+  color: #ff1c14;
+  text-shadow: 0 0 8px rgba(255, 92, 92, 0.55);
+  width: calc(100% - 12mm);
   text-align: center;
   outline: none;
+  align-self: center;
+}
+
+.tech-content {
+  display: none;
+  width: calc(100% - 12mm);
+  padding: 0;
+  align-self: center;
+}
+
+.tech-title,
+.tech-note,
+.tech-desc {
+  font-family: Arial, "Segoe UI", sans-serif;
+  outline: none;
+}
+
+.tech-title {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: #25a4ee 0.5mm solid;
+  border-left: #25a4ee 0.5mm solid;
+}
+
+.tech-note {
+  color: #25a4ee;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-right: #25a4ee 0.5mm solid;
+}
+
+.tech-desc {
+  margin-top: 1.3mm;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.25;
+  text-align: justify;
+}
+
+.front-card.is-goal .goal-text {
+  display: block;
+}
+
+.front-card.is-tech .tech-content {
+  display: block;
 }
 
 .back-card {
@@ -180,7 +236,8 @@ body {
   border: 1px dashed #ddd;
 }
 
-.empty-card .card-number {
+.empty-card .goal-text,
+.empty-card .tech-content {
   pointer-events: none;
   opacity: 0;
 }
