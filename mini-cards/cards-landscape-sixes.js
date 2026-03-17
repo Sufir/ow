@@ -431,9 +431,13 @@
         }
         node.dataset.cardIndex = String(source.globalIndex);
         node.dataset.packIndex = String(source.packIndex);
+        node.dataset.cardType = source.cardType;
+        node.classList.toggle('is-goal', source.cardType === 'goal');
+        node.classList.toggle('is-tech', source.cardType === 'tech');
         if (source.packIndex === state.currentPackIndex) node.classList.add('current-pack');
         const backImage = getImageDataUrl(source.backImageId);
-        node.style.backgroundImage = backImage ? `url("${backImage}")` : '';
+        const centerIcon = node.querySelector('.back-center-icon');
+        centerIcon.style.backgroundImage = backImage ? `url("${backImage}")` : '';
         node.addEventListener('click', () => {
           if (!setCurrentPackByIndex(source.packIndex)) return;
           renderAll();

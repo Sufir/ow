@@ -157,7 +157,7 @@ body {
   font-family: Arial, "Segoe UI", sans-serif;
   font-size: 14px;
   line-height: 1.2;
-  color: #ff1c14;
+  color: #fc1a24;
   text-shadow: 0 0 8px rgba(255, 92, 92, 0.55);
   width: calc(100% - 12mm);
   text-align: center;
@@ -221,10 +221,28 @@ body {
 .back-card {
   border: 1px solid #888;
   background-color: #fff;
-  background-image: var(--back-pack-bg, none);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.back-card.is-goal {
+  background-image: url("../Goals-Tachs/goal-back.png");
+}
+
+.back-card.is-tech {
+  background-image: url("../Goals-Tachs/tesch-back.png");
+}
+
+.back-center-icon {
+  width: 14mm;
+  height: 14mm;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .card.current-pack {
@@ -237,7 +255,8 @@ body {
 }
 
 .empty-card .goal-text,
-.empty-card .tech-content {
+.empty-card .tech-content,
+.empty-card .back-center-icon {
   pointer-events: none;
   opacity: 0;
 }
