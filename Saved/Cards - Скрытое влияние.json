@@ -1,0 +1,62 @@
+{
+  "type": "mini-american-cards",
+  "version": 1,
+  "ns": "MiniAmericanCards",
+  "currentPairIndex": 1,
+  "cardsPerSheet": 20,
+  "cardSizeMm": {
+    "width": 41,
+    "height": 63
+  },
+  "mirrorBacks": false,
+  "pairs": [
+    {
+      "frontTexts": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "frontTexts": [
+        "2",
+        "2",
+        "2",
+        "3",
+        "3",
+        "2",
+        "2",
+        "2",
+        "3",
+        "3",
+        "2",
+        "2",
+        "2",
+        "3",
+        "3",
+        "2",
+        "2",
+        "2",
+        "2",
+        "3"
+      ]
+    }
+  ]
+}

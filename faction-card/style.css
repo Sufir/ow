@@ -6,7 +6,7 @@
 /* === Подключаем кастомный шрифт только для заголовка === */
 @font-face {
   font-family: "AlienEncounters";
-  src: url("Fonts/AlienEncounters.ttf") format("truetype");
+  src: url("../Fonts/AlienEncounters.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 /* === Шрифт для таблицы (колонки 2+) === */
 @font-face {
   font-family: "OpenGostTypeB";
-  src: url("Fonts/OpenGostTypeB.ttf") format("truetype");
+  src: url("../Fonts/OpenGostTypeB.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -22,7 +22,7 @@
 /* === Новый шрифт для параметров юнитов === */
 @font-face {
   font-family: "AgencyFBCyrillic";
-  src: url("Fonts/agencyfbcyrillic.ttf") format("truetype");
+  src: url("../Fonts/agencyfbcyrillic.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -38,7 +38,7 @@ body {
   position: relative;
   width: 297mm;
   height: 210mm;
-  background: url("./background.png") no-repeat center center;
+  background: url("../background-alt5.png") no-repeat center center;
   background-size: cover;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
@@ -241,7 +241,7 @@ body.link-mode #link-mode-btn {
   font-size: 12px;
   font-style: italic;
   line-height: 1.3;
-  text-align: left;
+  text-align: center;
   outline: none;
   white-space: pre-wrap;
 }
@@ -255,13 +255,13 @@ body.link-mode #link-mode-btn {
     linear-gradient(
       to right,
       rgba(17, 197, 255, 0) 0%,
-      rgba(17, 197, 255, 0.24) 10%,
+      rgba(17, 197, 255, 0.14) 10%,
       rgba(17, 197, 255, 0.34) 25%,
       rgba(17, 197, 255, 0.46) 40%,
       #11c5ff 50%,
       rgba(17, 197, 255, 0.46) 60%,
       rgba(17, 197, 255, 0.34) 75%,
-      rgba(17, 197, 255, 0.24) 90%,
+      rgba(17, 197, 255, 0.14) 90%,
       rgba(17, 197, 255, 0) 100%
     )/*,*/
     /* нижний слой — тонкая равномерная линия по всей ширине */
@@ -300,6 +300,11 @@ body.link-mode #link-mode-btn {
   width: 11mm;
   padding-left: 4px;
   padding-right: 4px;
+}
+
+.unit-table td.unit-stat-cost,
+.unit-table td.unit-stat-power {
+  color: #ffffff;
 }
 
 /* Босс — визуальное выделение и немного больше */
@@ -566,23 +571,25 @@ body.dragging-props {
   /* версия separator-line для печати — слои чуть плотнее */
   .unit-table .separator-line {
     background:
-      linear-gradient(
-        to right,
-        rgba(17, 197, 255, 0) 0%,
-        rgba(17, 197, 255, 0.28) 8%,
-        rgba(17, 197, 255, 0.40) 22%,
-        rgba(17, 197, 255, 0.52) 38%,
-        #11c5ff 50%,
-        rgba(17, 197, 255, 0.52) 62%,
-        rgba(17, 197, 255, 0.40) 78%,
-        rgba(17, 197, 255, 0.28) 92%,
-        rgba(17, 197, 255, 0) 100%
-      ),
-      linear-gradient(
-        to right,
-        rgba(17, 197, 255, 0.20),
-        rgba(17, 197, 255, 0.20)
-      );
+      /* верхний слой — плавное усиление к центру */
+    linear-gradient(
+      to right,
+      rgba(17, 197, 255, 0) 0%,
+      rgba(17, 197, 255, 0.14) 10%,
+      rgba(17, 197, 255, 0.34) 25%,
+      rgba(17, 197, 255, 0.46) 40%,
+      #11c5ff 50%,
+      rgba(17, 197, 255, 0.46) 60%,
+      rgba(17, 197, 255, 0.34) 75%,
+      rgba(17, 197, 255, 0.14) 90%,
+      rgba(17, 197, 255, 0) 100%
+    )/*,*/
+    /* нижний слой — тонкая равномерная линия по всей ширине */
+    /*linear-gradient(
+      to right,
+      rgba(17, 197, 255, 0.16),
+      rgba(17, 197, 255, 0.16)
+    )*/;
   }
 
   .faction-info-panel {

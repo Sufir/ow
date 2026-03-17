@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mini American Cards Template</title>
+  <link rel="stylesheet" href="mini-cards/cards.css">
+</head>
+<body>
+  <div class="toolbar no-print">
+    <div class="toolbar-group">
+      <button id="prevPairBtn" type="button">← Пара</button>
+      <span id="pairInfo">Пара 1 / 1</span>
+      <button id="nextPairBtn" type="button">Пара →</button>
+    </div>
+    <div class="toolbar-group">
+      <button id="addPairBtn" type="button">+ Добавить пару</button>
+      <button id="removePairBtn" type="button">− Удалить текущую пару</button>
+    </div>
+    <div class="toolbar-group">
+      <button id="exportBtn" type="button">Экспорт JSON</button>
+      <button id="importBtn" type="button">Импорт JSON</button>
+      <input id="importInput" type="file" accept="application/json" hidden>
+    </div>
+    <div class="toolbar-group">
+      <label class="mirror-toggle">
+        <input id="mirrorBacksInput" type="checkbox" checked>
+        <span>Зеркалить рубашку по X</span>
+      </label>
+    </div>
+    <div class="toolbar-group">
+      <span class="hint">A4 portrait · Mini American 41×63 мм · 20 карт на лист</span>
+    </div>
+  </div>
+
+  <main id="sheetsRoot"></main>
+
+  <template id="frontCardTemplate">
+    <div class="card front-card" data-card-index="">
+      <div class="crop crop-tl"></div>
+      <div class="crop crop-tr"></div>
+      <div class="crop crop-bl"></div>
+      <div class="crop crop-br"></div>
+      <div class="card-number" contenteditable="true" spellcheck="false">3</div>
+    </div>
+  </template>
+
+  <template id="backCardTemplate">
+    <div class="card back-card" data-card-index="">
+      <div class="crop crop-tl"></div>
+      <div class="crop crop-tr"></div>
+      <div class="crop crop-bl"></div>
+      <div class="crop crop-br"></div>
+    </div>
+  </template>
+
+  <script src="mini-cards/cards.js"></script>
+</body>
+</html>

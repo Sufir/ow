@@ -1,0 +1,398 @@
+@font-face {
+  font-family: 'AlienEncounters';
+  src: url('../Fonts/AlienEncounters.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --a4-w: 210mm;
+  --a4-h: 297mm;
+  --card-w: 63mm;
+  --card-h: 41mm;
+  --cols: 3;
+  --rows: 6;
+  --crop-len: 2.6mm;
+  --crop-thick: 0.25mm;
+  --trim-guard: 1.2mm;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #e8e8e8;
+  color: #1b1b1b;
+  font-family: Arial, sans-serif;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  background: #111;
+  color: #f4f4f4;
+  border-bottom: 1px solid #333;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar button {
+  border: 1px solid #525252;
+  background: #1f1f1f;
+  color: #f4f4f4;
+  border-radius: 8px;
+  height: 34px;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: #2a2a2a;
+}
+
+.toolbar button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.mirror-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  user-select: none;
+}
+
+.hint {
+  opacity: 0.85;
+  font-size: 13px;
+}
+
+.save-size-info {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+#sheetsRoot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+}
+
+.sheet {
+  width: var(--a4-w);
+  height: var(--a4-h);
+  background: #fff;
+  position: relative;
+  box-shadow: 0 5px 22px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  page-break-after: always;
+}
+
+.sheet.current {
+  outline: 2px solid #4f80ff;
+  outline-offset: -2px;
+}
+
+.sheet-title {
+  position: absolute;
+  left: 8mm;
+  top: 6mm;
+  font-size: 12px;
+  color: #7a7a7a;
+}
+
+.card-grid {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: calc(var(--cols) * var(--card-w));
+  height: calc(var(--rows) * var(--card-h));
+  display: grid;
+  grid-template-columns: repeat(var(--cols), var(--card-w));
+  grid-template-rows: repeat(var(--rows), var(--card-h));
+}
+
+.card {
+  position: relative;
+  width: var(--card-w);
+  min-width: var(--card-w);
+  max-width: var(--card-w);
+  height: var(--card-h);
+  min-height: var(--card-h);
+  max-height: var(--card-h);
+  overflow: hidden;
+}
+
+.front-card {
+  border: 1px solid #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  background-image: url("../Goals-Tachs/face.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.card-number {
+  font-family: Arial, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #111;
+  min-width: 20px;
+  text-align: center;
+  outline: none;
+}
+
+.back-card {
+  border: 1px solid #888;
+  background-color: #fff;
+  background-image: var(--back-pack-bg, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.card.current-pack {
+  box-shadow: inset 0 0 0 2px #2f6dff;
+}
+
+.empty-card {
+  background: #fff;
+  border: 1px dashed #ddd;
+}
+
+.empty-card .card-number {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.crop {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: var(--a4-w);
+    background: #fff;
+    margin: 0;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  #sheetsRoot {
+    display: block;
+    width: var(--a4-w);
+    padding: 0;
+    margin: 0;
+  }
+
+  .sheet {
+    width: var(--a4-w);
+    height: var(--a4-h);
+    box-shadow: none;
+    margin: 0;
+    break-after: page;
+  }
+
+  .card-grid {
+    width: calc(var(--cols) * var(--card-w));
+    min-width: calc(var(--cols) * var(--card-w));
+    max-width: calc(var(--cols) * var(--card-w));
+    height: calc(var(--rows) * var(--card-h));
+    min-height: calc(var(--rows) * var(--card-h));
+    max-height: calc(var(--rows) * var(--card-h));
+    background: #fff;
+  }
+
+  .card-grid::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: 0 0 0 var(--trim-guard) #fff;
+    pointer-events: none;
+  }
+
+  .card {
+    width: var(--card-w);
+    min-width: var(--card-w);
+    max-width: var(--card-w);
+    height: var(--card-h);
+    min-height: var(--card-h);
+    max-height: var(--card-h);
+  }
+
+  .sheet-title {
+    display: none;
+  }
+
+  .front-card {
+    border: none;
+  }
+
+  .back-card {
+    border: 1px solid #888;
+  }
+
+  .card.current-pack {
+    box-shadow: none;
+  }
+
+  .empty-card {
+    border: none;
+    background: transparent;
+  }
+
+  .crop {
+    display: none !important;
+  }
+
+  .cut-marks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .cut-mark {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  .cut-mark::before,
+  .cut-mark::after {
+    content: '';
+    position: absolute;
+    background: #000;
+  }
+
+  .cross::before {
+    left: calc(-1 * var(--crop-len));
+    top: calc(-0.5 * var(--crop-thick));
+    width: calc(2 * var(--crop-len));
+    height: var(--crop-thick);
+  }
+
+  .cross::after {
+    left: calc(-0.5 * var(--crop-thick));
+    top: calc(-1 * var(--crop-len));
+    width: var(--crop-thick);
+    height: calc(2 * var(--crop-len));
+  }
+
+  .edge-top::after {
+    left: calc(-0.5 * var(--crop-thick));
+    top: 0;
+    width: var(--crop-thick);
+    height: var(--crop-len);
+  }
+
+  .edge-bottom::after {
+    left: calc(-0.5 * var(--crop-thick));
+    top: calc(-1 * var(--crop-len));
+    width: var(--crop-thick);
+    height: var(--crop-len);
+  }
+
+  .edge-left::before {
+    left: 0;
+    top: calc(-0.5 * var(--crop-thick));
+    width: var(--crop-len);
+    height: var(--crop-thick);
+  }
+
+  .edge-right::before {
+    left: calc(-1 * var(--crop-len));
+    top: calc(-0.5 * var(--crop-thick));
+    width: var(--crop-len);
+    height: var(--crop-thick);
+  }
+
+  .corner-tl::before {
+    left: 0;
+    top: calc(-0.5 * var(--crop-thick));
+    width: var(--crop-len);
+    height: var(--crop-thick);
+  }
+
+  .corner-tl::after {
+    left: calc(-0.5 * var(--crop-thick));
+    top: 0;
+    width: var(--crop-thick);
+    height: var(--crop-len);
+  }
+
+  .corner-tr::before {
+    left: calc(-1 * var(--crop-len));
+    top: calc(-0.5 * var(--crop-thick));
+    width: var(--crop-len);
+    height: var(--crop-thick);
+  }
+
+  .corner-tr::after {
+    left: calc(-0.5 * var(--crop-thick));
+    top: 0;
+    width: var(--crop-thick);
+    height: var(--crop-len);
+  }
+
+  .corner-bl::before {
+    left: 0;
+    top: calc(-0.5 * var(--crop-thick));
+    width: var(--crop-len);
+    height: var(--crop-thick);
+  }
+
+  .corner-bl::after {
+    left: calc(-0.5 * var(--crop-thick));
+    top: calc(-1 * var(--crop-len));
+    width: var(--crop-thick);
+    height: var(--crop-len);
+  }
+
+  .corner-br::before {
+    left: calc(-1 * var(--crop-len));
+    top: calc(-0.5 * var(--crop-thick));
+    width: var(--crop-len);
+    height: var(--crop-thick);
+  }
+
+  .corner-br::after {
+    left: calc(-0.5 * var(--crop-thick));
+    top: calc(-1 * var(--crop-len));
+    width: var(--crop-thick);
+    height: var(--crop-len);
+  }
+
+  .back-sheet .cut-marks {
+    display: none;
+  }
+}

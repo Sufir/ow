@@ -117,6 +117,7 @@ const importBtn = document.getElementById('import-btn');
 const importFileInput = document.getElementById('import-file');
 const tableStorageKey = `unit-table:${ns}`;
 let currentRowIndex = null;
+const unitStatClasses = ['unit-stat-count', 'unit-stat-cost', 'unit-stat-power'];
 
 // === Инициализация StorageAPI с ключами ===
 // Top-level initialization near StorageAPI.init
@@ -571,7 +572,7 @@ function renderTable(rows) {
     for (let k = 0; k < 3; k++) {
       const td = document.createElement('td');
       td.contentEditable = 'true';
-      td.classList.add('unit-stat'); // числовая ячейка — стабильный шрифт
+      td.classList.add('unit-stat', unitStatClasses[k]); // числовая ячейка — стабильный шрифт
       td.textContent = (r && r.cells && r.cells[k]) ? r.cells[k] : '';
       tr.appendChild(td);
     }
@@ -607,7 +608,7 @@ function createDataRow(cells = ['', '', ''], imgSrc = '') {
   for (let i = 0; i < 3; i++) {
     const td = document.createElement('td');
     td.contentEditable = 'true';
-    td.className = 'unit-stat'; // числовая ячейка — стабильный шрифт
+    td.className = `unit-stat ${unitStatClasses[i]}`; // числовая ячейка — стабильный шрифт
     td.textContent = cells && cells[i] ? cells[i] : '';
     tr.appendChild(td);
   }

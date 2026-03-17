@@ -14,12 +14,12 @@
 
 ## Состав проекта
 - Точка входа: [Template.html](file:///c:/YandexDisk/Oil%20Wars/Templates/Template.html) — разметка страницы и задника, подключение скриптов и стилей.
-- Стили: [style.css](file:///c:/YandexDisk/Oil%20Wars/Templates/style.css) — экран и печать, шрифты, сетка, safe area задника.
+- Стили: [style.css](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/style.css) — экран и печать, шрифты, сетка, safe area задника.
 - Логика:
-  - [app.js](file:///c:/YandexDisk/Oil%20Wars/Templates/app.js) — основная логика интерфейса: таблица, разделители, выбор/удаление, экспорт/импорт, задник, дебаунс сохранений.
-  - [storage.js](file:///c:/YandexDisk/Oil%20Wars/Templates/storage.js) — StorageAPI: работа с localStorage, форматы сохранения/экспорта/импорта.
-  - [props.js](file:///c:/YandexDisk/Oil%20Wars/Templates/props.js) — боковая панель свойств юнитов: создание, редактирование, drag&drop по вертикали.
-  - [links.js](file:///c:/YandexDisk/Oil%20Wars/Templates/links.js) — связи «свойство ↔ юнит» с SVG-полилиниями.
+  - [app.js](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/app.js) — основная логика интерфейса: таблица, разделители, выбор/удаление, экспорт/импорт, задник, дебаунс сохранений.
+  - [storage.js](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/storage.js) — StorageAPI: работа с localStorage, форматы сохранения/экспорта/импорта.
+  - [props.js](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/props.js) — боковая панель свойств юнитов: создание, редактирование, drag&drop по вертикали.
+  - [links.js](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/links.js) — связи «свойство ↔ юнит» с SVG-полилиниями.
 - Ресурсы:
   - Изображения: Units/, BattleRobots/, background.png
   - Шрифты: Fonts/ (AlienEncounters, OpenGostTypeB, AgencyFBCyrillic)
@@ -39,7 +39,7 @@
 - Задняя сторона: верх — квадратная иллюстрация слева и художественное описание справа; низ — гайд «Как играть…». Вся разметка внутри «safe area» с полями 20 мм; избыточный текст прокручивается внутри областей.
 
 ## Сохранение и неймспейсы
-- Неймспейс ns берётся из ?id=…; если нет — из имени файла; иначе 'default' ([app.js:1–4](file:///c:/YandexDisk/Oil%20Wars/Templates/app.js#L1-L4)).
+- Неймспейс ns берётся из ?id=…; если нет — из имени файла; иначе 'default' ([app.js:1–4](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/app.js#L1-L4)).
 - Ключи localStorage формируются от ns:
   - faction-name:${ns}
   - unit-table:${ns}
@@ -51,9 +51,9 @@
 
 ## Экспорт / импорт
 - Экспорт собирает всё состояние в один JSON и скачивает файл (включая изображения как data URL):
-  - [storage.js:94–157](file:///c:/YandexDisk/Oil%20Wars/Templates/storage.js#L94-L157)
+  - [storage.js:94–157](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/storage.js#L94-L157)
 - Импорт принимает либо «плоский» массив rows, либо полный объект; применяет: таблицу, название фракции, свойства, связи, подготовку и задник:
-  - [storage.js:159–223](file:///c:/YandexDisk/Oil%20Wars/Templates/storage.js#L159-L223)
+  - [storage.js:159–223](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/storage.js#L159-L223)
 
 Мини-спецификация экспортируемого JSON:
 ```json
@@ -94,25 +94,25 @@
 - Группы и метки типов:
   - Разделитель (tr.unit-separator) завершает текущую группу.
   - Лейбл типа добавляется/пересчитывается при любом изменении:
-    - [recalculateGroupLabels](file:///c:/YandexDisk/Oil%20Wars/Templates/app.js#L150-L180)
+    - [recalculateGroupLabels](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/app.js#L150-L180)
 - Дропзоны и подписи:
   - Единый конструктор ячейки с дропзоной + подписью:
-    - [buildUnitCell](file:///c:/YandexDisk/Oil%20Wars/Templates/app.js#L289-L328)
+    - [buildUnitCell](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/app.js#L289-L328)
   - Нормализация «первой колонки»:
-    - [ensureDropzone](file:///c:/YandexDisk/Oil%20Wars/Templates/app.js#L593-L629)
+    - [ensureDropzone](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/app.js#L593-L629)
 - Связи «свойство ↔ юнит»:
   - Пересчёт и отрисовка полилиний:
-    - [updateAll](file:///c:/YandexDisk/Oil%20Wars/Templates/links.js#L66-L101)
+    - [updateAll](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/links.js#L66-L101)
   - Восстановление сохранённых связей:
-    - [renderLinks](file:///c:/YandexDisk/Oil%20Wars/Templates/links.js#L187-L196)
+    - [renderLinks](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/links.js#L187-L196)
 - Таблица (рендер и сохранение):
   - Единый рендер таблицы из rows:
-    - [renderTable](file:///c:/YandexDisk/Oil%20Wars/Templates/app.js#L496-L548)
+    - [renderTable](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/app.js#L496-L548)
   - Построение rows при сохранении:
-    - [buildRowsFromTbody](file:///c:/YandexDisk/Oil%20Wars/Templates/storage.js#L45-L72)
+    - [buildRowsFromTbody](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/storage.js#L45-L72)
 - Задник:
   - Сохранение/восстановление:
-    - [restoreBackInfoInto](file:///c:/YandexDisk/Oil%20Wars/Templates/storage.js#L372-L390)
+    - [restoreBackInfoInto](file:///c:/YandexDisk/Oil%20Wars/Templates/faction-card/storage.js#L372-L390)
 
 ## Печать
 - Формат: @page A4 landscape; нулевые поля, фон страницы — background.png.

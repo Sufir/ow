@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mini American Cards Landscape Sixes</title>
+  <link rel="stylesheet" href="mini-cards/cards-landscape-sixes.css">
+</head>
+<body>
+  <div class="toolbar no-print">
+    <div class="toolbar-group">
+      <button id="prevPairBtn" type="button">← Пара</button>
+      <span id="pairInfo">Пара 1 / 1</span>
+      <button id="nextPairBtn" type="button">Пара →</button>
+    </div>
+    <div class="toolbar-group">
+      <button id="prevPackBtn" type="button">← Шестёрка</button>
+      <span id="packInfo">Шестёрка 1 / 1</span>
+      <button id="nextPackBtn" type="button">Шестёрка →</button>
+    </div>
+    <div class="toolbar-group">
+      <button id="addSixBtn" type="button">+ Добавить 6 карт</button>
+      <button id="removeSixBtn" type="button">− Удалить шестёрку</button>
+    </div>
+    <div class="toolbar-group">
+      <button id="loadFrontBgBtn" type="button">Фон лица шестёрки</button>
+      <button id="clearFrontBgBtn" type="button">Очистить фон лица</button>
+      <input id="frontBgInput" type="file" accept="image/*" hidden>
+    </div>
+    <div class="toolbar-group">
+      <button id="loadBackBgBtn" type="button">Рубашка шестёрки</button>
+      <button id="clearBackBgBtn" type="button">Очистить рубашку</button>
+      <input id="backBgInput" type="file" accept="image/*" hidden>
+    </div>
+    <div class="toolbar-group">
+      <button id="exportBtn" type="button">Экспорт JSON</button>
+      <span id="saveSizeInfo" class="save-size-info">Вес: 0 KB</span>
+      <button id="importBtn" type="button">Импорт JSON</button>
+      <input id="importInput" type="file" accept="application/json" hidden>
+    </div>
+    <div class="toolbar-group">
+      <label class="mirror-toggle">
+        <input id="mirrorBacksInput" type="checkbox" checked>
+        <span>Зеркалить рубашку по X</span>
+      </label>
+    </div>
+    <div class="toolbar-group">
+      <span class="hint">A4 portrait · Mini American 41×63 мм · 3×6 · добавление по 6</span>
+    </div>
+  </div>
+
+  <main id="sheetsRoot"></main>
+
+  <template id="frontCardTemplate">
+    <div class="card front-card" data-card-index="">
+      <div class="crop crop-tl"></div>
+      <div class="crop crop-tr"></div>
+      <div class="crop crop-bl"></div>
+      <div class="crop crop-br"></div>
+      <div class="card-number" contenteditable="true" spellcheck="false">3</div>
+    </div>
+  </template>
+
+  <template id="backCardTemplate">
+    <div class="card back-card" data-card-index="">
+      <div class="crop crop-tl"></div>
+      <div class="crop crop-tr"></div>
+      <div class="crop crop-bl"></div>
+      <div class="crop crop-br"></div>
+    </div>
+  </template>
+
+  <script src="mini-cards/cards-landscape-sixes.js"></script>
+</body>
+</html>
