@@ -5,6 +5,27 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'OilWars';
+  src: url('../Fonts/Oil Wars.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OpenGostTypeB';
+  src: url('../Fonts/OpenGostTypeB.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AgencyFBCyrillic';
+  src: url('../Fonts/agencyfbcyrillic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --a4-w: 210mm;
   --a4-h: 297mm;
@@ -151,6 +172,7 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  padding-bottom: 3mm;
 }
 
 .text-size-controls {
@@ -168,6 +190,58 @@ body {
 .front-card.controls-visible .text-size-controls {
   opacity: 1;
   pointer-events: auto;
+}
+
+.text-format-controls {
+  position: absolute;
+  left: 1.4mm;
+  top: 1.4mm;
+  display: flex;
+  align-items: center;
+  gap: 1mm;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.front-card.controls-visible .text-format-controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.text-font-select {
+  height: 4.2mm;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 1mm;
+  background: rgba(15, 18, 24, 0.45);
+  color: #fff;
+  font-family: Arial, "Segoe UI", sans-serif;
+  font-size: 9px;
+  padding: 0 1.1mm;
+  min-width: 18mm;
+}
+
+.text-style-btn {
+  width: 4.2mm;
+  height: 4.2mm;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 1mm;
+  background: rgba(15, 18, 24, 0.45);
+  color: #fff;
+  font-family: Arial, "Segoe UI", sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.text-style-btn:hover {
+  background: rgba(15, 18, 24, 0.7);
+}
+
+.text-italic-btn {
+  font-style: italic;
 }
 
 .text-size-btn {
@@ -406,6 +480,10 @@ body {
     box-shadow: none;
   }
 
+  .card:not(.empty-card) {
+    box-shadow: 0 0 0 2mm #070e2f;
+  }
+
   .empty-card {
     border: none;
     background: transparent;
@@ -432,7 +510,7 @@ body {
   .cut-mark::after {
     content: '';
     position: absolute;
-    background: #000;
+    background: #c3c3c3;
   }
 
   .cross::before {
@@ -449,11 +527,25 @@ body {
     height: calc(2 * var(--crop-len));
   }
 
+  .edge-top::before {
+    left: calc(-1 * var(--crop-len));
+    top: calc(-0.5 * var(--crop-thick));
+    width: calc(2 * var(--crop-len));
+    height: var(--crop-thick);
+  }
+
   .edge-top::after {
     left: calc(-0.5 * var(--crop-thick));
     top: 0;
     width: var(--crop-thick);
     height: var(--crop-len);
+  }
+
+  .edge-bottom::before {
+    left: calc(-1 * var(--crop-len));
+    top: calc(-0.5 * var(--crop-thick));
+    width: calc(2 * var(--crop-len));
+    height: var(--crop-thick);
   }
 
   .edge-bottom::after {
@@ -470,11 +562,25 @@ body {
     height: var(--crop-thick);
   }
 
+  .edge-left::after {
+    left: calc(-0.5 * var(--crop-thick));
+    top: calc(-1 * var(--crop-len));
+    width: var(--crop-thick);
+    height: calc(2 * var(--crop-len));
+  }
+
   .edge-right::before {
     left: calc(-1 * var(--crop-len));
     top: calc(-0.5 * var(--crop-thick));
     width: var(--crop-len);
     height: var(--crop-thick);
+  }
+
+  .edge-right::after {
+    left: calc(-0.5 * var(--crop-thick));
+    top: calc(-1 * var(--crop-len));
+    width: var(--crop-thick);
+    height: calc(2 * var(--crop-len));
   }
 
   .corner-tl::before {
