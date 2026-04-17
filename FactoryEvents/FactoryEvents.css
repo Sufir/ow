@@ -36,7 +36,7 @@ body {
 body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 10pt;
-  background: #0f1112;
+  background: #f0f2f5;
 }
 
 .page {
@@ -102,9 +102,9 @@ body {
   }
 
   .sheet {
-    background: #161819;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
-    outline: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
+    outline: 1px solid rgba(0, 0, 0, 0.1);
   }
 
   .card {
