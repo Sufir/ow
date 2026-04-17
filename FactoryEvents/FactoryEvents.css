@@ -21,6 +21,9 @@ body {
 
   --ink: #292a2c;
   --text: #ffffff;
+
+  --cross-v: linear-gradient(to right, transparent calc(5mm - 0.3mm), #fff calc(5mm - 0.3mm), #fff calc(5mm - 0.1mm), #000 calc(5mm - 0.1mm), #000 calc(5mm + 0.1mm), #fff calc(5mm + 0.1mm), #fff calc(5mm + 0.3mm), transparent calc(5mm + 0.3mm));
+  --cross-h: linear-gradient(to bottom, transparent calc(5mm - 0.3mm), #fff calc(5mm - 0.3mm), #fff calc(5mm - 0.1mm), #000 calc(5mm - 0.1mm), #000 calc(5mm + 0.1mm), #fff calc(5mm + 0.1mm), #fff calc(5mm + 0.3mm), transparent calc(5mm + 0.3mm));
 }
 
 @page {
@@ -72,60 +75,43 @@ body {
 .cards-grid::after {
   content: "";
   position: absolute;
-  top: -8mm;
-  left: -8mm;
-  right: -8mm;
-  bottom: -8mm;
+  top: -5mm;
+  left: -5mm;
+  right: -5mm;
+  bottom: -5mm;
   pointer-events: none;
   z-index: 10;
   
   background-image:
-    /* Top marks */
-    linear-gradient(to bottom, #000 5mm, #fff 5mm),
-    linear-gradient(to bottom, #000 5mm, #fff 5mm),
-    linear-gradient(to bottom, #000 5mm, #fff 5mm),
-    /* Bottom marks */
-    linear-gradient(to bottom, #fff 3mm, #000 3mm),
-    linear-gradient(to bottom, #fff 3mm, #000 3mm),
-    linear-gradient(to bottom, #fff 3mm, #000 3mm),
-    /* Left marks */
-    linear-gradient(to right, #000 5mm, #fff 5mm),
-    linear-gradient(to right, #000 5mm, #fff 5mm),
-    linear-gradient(to right, #000 5mm, #fff 5mm),
-    /* Right marks */
-    linear-gradient(to right, #fff 3mm, #000 3mm),
-    linear-gradient(to right, #fff 3mm, #000 3mm),
-    linear-gradient(to right, #fff 3mm, #000 3mm);
+    /* Top row */
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h),
+    /* Middle row */
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h),
+    /* Bottom row */
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h);
 
-  background-size:
-    /* Top */
-    0.2mm 8mm, 0.2mm 8mm, 0.2mm 8mm,
-    /* Bottom */
-    0.2mm 8mm, 0.2mm 8mm, 0.2mm 8mm,
-    /* Left */
-    8mm 0.2mm, 8mm 0.2mm, 8mm 0.2mm,
-    /* Right */
-    8mm 0.2mm, 8mm 0.2mm, 8mm 0.2mm;
+  background-size: 10mm 10mm;
+  background-repeat: no-repeat;
 
   background-position:
-    /* Top */
-    calc(8mm - 0.1mm) 0,
-    calc(88mm - 0.1mm) 0,
-    calc(168mm - 0.1mm) 0,
-    /* Bottom */
-    calc(8mm - 0.1mm) 100%,
-    calc(88mm - 0.1mm) 100%,
-    calc(168mm - 0.1mm) 100%,
-    /* Left */
-    0 calc(8mm - 0.1mm),
-    0 calc(128mm - 0.1mm),
-    0 calc(248mm - 0.1mm),
-    /* Right */
-    100% calc(8mm - 0.1mm),
-    100% calc(128mm - 0.1mm),
-    100% calc(248mm - 0.1mm);
-
-  background-repeat: no-repeat;
+    /* Top row */
+    0 0, 0 0,
+    calc(80mm) 0, calc(80mm) 0,
+    calc(160mm) 0, calc(160mm) 0,
+    /* Middle row */
+    0 calc(120mm), 0 calc(120mm),
+    calc(80mm) calc(120mm), calc(80mm) calc(120mm),
+    calc(160mm) calc(120mm), calc(160mm) calc(120mm),
+    /* Bottom row */
+    0 calc(240mm), 0 calc(240mm),
+    calc(80mm) calc(240mm), calc(80mm) calc(240mm),
+    calc(160mm) calc(240mm), calc(160mm) calc(240mm);
 }
 
 .card {
