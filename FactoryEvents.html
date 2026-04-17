@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Factory Events</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --a4-w: 210mm;
+        --a4-h: 297mm;
+
+        --card-w: 80mm;
+        --card-h: 120mm;
+
+        --bleed: 3mm;
+
+        --ink: #191b1c;
+        --text: #ffffff;
+
+        --mark-color: #aaa;
+        --mark-l: 5mm;
+        --mark-t: 0.2mm;
+        --mark-gap: 1mm;
+      }
+
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10pt;
+        background: #0f1112;
+      }
+
+      .page {
+        width: var(--a4-w);
+        height: var(--a4-h);
+        page-break-after: always;
+        position: relative;
+      }
+
+      .page:last-child {
+        page-break-after: auto;
+      }
+
+      .sheet {
+        width: var(--a4-w);
+        height: var(--a4-h);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      .bleed-wrap {
+        background: var(--ink);
+        padding: var(--bleed);
+        position: relative;
+        overflow: visible;
+      }
+
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(2, var(--card-w));
+        grid-template-rows: repeat(2, var(--card-h));
+        gap: 0;
+        position: relative;
+      }
+
+      .card {
+        width: var(--card-w);
+        height: var(--card-h);
+        background: var(--ink);
+        color: var(--text);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card-inner {
+        width: 100%;
+        height: 100%;
+      }
+
+      .tech {
+        display: none;
+      }
+
+      @media screen {
+        body {
+          padding: 24px;
+        }
+
+        .page {
+          margin: 0 auto 24px auto;
+        }
+
+        .sheet {
+          background: #161819;
+          box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+          outline: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .card {
+          outline: 1px dashed rgba(255, 255, 255, 0.12);
+        }
+      }
+
+      @media print {
+        body {
+          background: #ffffff;
+        }
+
+        .page {
+          margin: 0;
+        }
+
+        .sheet {
+          background: transparent;
+        }
+
+        .card {
+          overflow: visible;
+        }
+
+        .tech {
+          display: block;
+          position: absolute;
+          left: 6mm;
+          bottom: 6mm;
+          font-size: 7pt;
+          color: #9a9a9a;
+          letter-spacing: 0.2mm;
+          user-select: none;
+        }
+
+        .pos-tl::before,
+        .pos-tl::after,
+        .pos-tr::before,
+        .pos-tr::after,
+        .pos-bl::before,
+        .pos-bl::after,
+        .pos-br::before,
+        .pos-br::after {
+          content: "";
+          position: absolute;
+          background: var(--mark-color);
+          z-index: 5;
+          pointer-events: none;
+        }
+
+        .pos-tl::before {
+          width: var(--mark-l);
+          height: var(--mark-t);
+          top: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
+          left: calc(-1 * (var(--mark-l) + var(--mark-gap)));
+        }
+
+        .pos-tl::after {
+          width: var(--mark-t);
+          height: var(--mark-l);
+          left: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
+          top: calc(-1 * (var(--mark-l) + var(--mark-gap)));
+        }
+
+        .pos-tr::before {
+          width: var(--mark-l);
+          height: var(--mark-t);
+          top: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
+          right: calc(-1 * (var(--mark-l) + var(--mark-gap)));
+        }
+
+        .pos-tr::after {
+          width: var(--mark-t);
+          height: var(--mark-l);
+          right: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
+          top: calc(-1 * (var(--mark-l) + var(--mark-gap)));
+        }
+
+        .pos-bl::before {
+          width: var(--mark-l);
+          height: var(--mark-t);
+          bottom: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
+          left: calc(-1 * (var(--mark-l) + var(--mark-gap)));
+        }
+
+        .pos-bl::after {
+          width: var(--mark-t);
+          height: var(--mark-l);
+          left: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
+          bottom: calc(-1 * (var(--mark-l) + var(--mark-gap)));
+        }
+
+        .pos-br::before {
+          width: var(--mark-l);
+          height: var(--mark-t);
+          bottom: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
+          right: calc(-1 * (var(--mark-l) + var(--mark-gap)));
+        }
+
+        .pos-br::after {
+          width: var(--mark-t);
+          height: var(--mark-l);
+          right: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
+          bottom: calc(-1 * (var(--mark-l) + var(--mark-gap)));
+        }
+      }
+
+      .page-1 .card-inner {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 6mm 6mm;
+      }
+
+      .page-1 .card-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1.2mm;
+        height: 100%;
+      }
+
+      .page-1 p {
+        margin: 0;
+        text-align: justify;
+        hyphens: auto;
+        line-height: 1.15;
+      }
+
+      .page-1 p::before {
+        content: "●";
+        margin-right: 4px;
+      }
+
+      .page-1 p:nth-child(1) {
+        color: #4aa3ff;
+      }
+      .page-1 p:nth-child(2) {
+        color: #5fdc8f;
+      }
+      .page-1 p:nth-child(3) {
+        color: #ffb347;
+      }
+      .page-1 p:nth-child(4) {
+        color: #b388ff;
+      }
+      .page-1 p:nth-child(5) {
+        color: #ff6b6b;
+      }
+      .page-1 p:nth-child(6) {
+        color: #ff8ad6;
+      }
+      .page-1 p:nth-child(7) {
+        color: #6fe7ff;
+      }
+      .page-1 p:nth-child(8) {
+        color: #ffe066;
+      }
+      .page-1 p:nth-child(9) {
+        color: #4de0c7;
+      }
+      .page-1 p:nth-child(10) {
+        color: #ffffff;
+      }
+
+      .page-2 .card-inner {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 6mm 6mm;
+        gap: 3mm;
+      }
+
+      .factory-figure {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .factory-figure img {
+        width: 88%;
+        height: auto;
+        display: block;
+        -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
+      }
+
+      .page-2 .card-copy {
+        color: #cccccc;
+        text-align: justify;
+        hyphens: auto;
+        line-height: 1.15;
+      }
+
+      .page-2 .card-copy p {
+        margin: 0;
+      }
+
+      .page-back .card-inner {
+        padding: 2mm;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .page-back .card-inner img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page front page-1">
+      <div class="sheet">
+        <div class="bleed-wrap">
+          <div class="cards-grid">
+            <div class="card pos-tl">
+              <div class="card-inner">
+                <div class="card-text">
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                </div>
+              </div>
+            </div>
+            <div class="card pos-tr">
+              <div class="card-inner">
+                <div class="card-text">
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                </div>
+              </div>
+            </div>
+            <div class="card pos-bl">
+              <div class="card-inner">
+                <div class="card-text">
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                </div>
+              </div>
+            </div>
+            <div class="card pos-br">
+              <div class="card-inner">
+                <div class="card-text">
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tech">Factory Events · Front · 1/3</div>
+      </div>
+    </div>
+
+    <div class="page front page-2">
+      <div class="sheet">
+        <div class="bleed-wrap">
+          <div class="cards-grid">
+            <div class="card pos-tl">
+              <div class="card-inner">
+                <div class="factory-figure">
+                  <img src="FactoryEvents/factory.png" alt="" />
+                </div>
+                <div class="card-copy">
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                </div>
+              </div>
+            </div>
+            <div class="card pos-tr">
+              <div class="card-inner">
+                <div class="factory-figure">
+                  <img src="FactoryEvents/factory.png" alt="" />
+                </div>
+                <div class="card-copy">
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                </div>
+              </div>
+            </div>
+            <div class="card pos-bl">
+              <div class="card-inner">
+                <div class="factory-figure">
+                  <img src="FactoryEvents/factory.png" alt="" />
+                </div>
+                <div class="card-copy">
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                </div>
+              </div>
+            </div>
+            <div class="card pos-br">
+              <div class="card-inner">
+                <div class="factory-figure">
+                  <img src="FactoryEvents/factory.png" alt="" />
+                </div>
+                <div class="card-copy">
+                  <p>Хруст французских булок да запах свежесваренного кофе наполнял воздух…</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tech">Factory Events · Front · 2/3</div>
+      </div>
+    </div>
+
+    <div class="page page-back back">
+      <div class="sheet">
+        <div class="bleed-wrap">
+          <div class="cards-grid">
+            <div class="card pos-tl">
+              <div class="card-inner">
+                <img src="FactoryEvents/back.webp" alt="" />
+              </div>
+            </div>
+            <div class="card pos-tr">
+              <div class="card-inner">
+                <img src="FactoryEvents/back.webp" alt="" />
+              </div>
+            </div>
+            <div class="card pos-bl">
+              <div class="card-inner">
+                <img src="FactoryEvents/back.webp" alt="" />
+              </div>
+            </div>
+            <div class="card pos-br">
+              <div class="card-inner">
+                <img src="FactoryEvents/back.webp" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tech">Factory Events · Back · 3/3</div>
+      </div>
+    </div>
+  </body>
+</html>
