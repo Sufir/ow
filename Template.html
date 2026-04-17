@@ -11,6 +11,8 @@
     <button id="add-separator-btn" type="button" aria-label="Добавить разделитель" title="Добавить разделитель">➖</button>
     <button id="add-comment-btn" type="button" aria-label="Добавить комментарий" title="Добавить комментарий">💬</button>
     <button id="delete-row-btn" type="button" aria-label="Удалить выбранное" title="Удалить выбранное">🗑️</button>
+    <button id="unit-scale-dec-btn" type="button" aria-label="Уменьшить иконку юнита" title="Уменьшить иконку юнита" hidden>➖</button>
+    <button id="unit-scale-inc-btn" type="button" aria-label="Увеличить иконку юнита" title="Увеличить иконку юнита" hidden>➕</button>
     <button id="add-prop-btn" type="button" aria-label="Добавить свойство" title="Добавить свойство">🧩</button>
     <button id="delete-prop-btn" type="button" aria-label="Удалить свойство" title="Удалить свойство">❌</button>
     <button id="link-mode-btn" type="button" aria-label="Режим связи" title="Режим связи">🔗</button>
@@ -57,6 +59,19 @@
         </div>
       </div>
       <button type="button" class="robot-add-btn">+ Робот</button>
+      <div class="robot-format-controls" aria-label="Форматирование робота">
+        <select class="robot-font-select">
+          <option value="Arial">Arial</option>
+          <option value="AlienEncounters">Alien Encounters</option>
+          <option value="OilWars">Oil Wars</option>
+          <option value="OpenGostTypeB">OpenGost Type B</option>
+          <option value="AgencyFBCyrillic">Agency FB Cyrillic</option>
+        </select>
+        <button type="button" class="robot-style-btn robot-bold-btn">B</button>
+        <button type="button" class="robot-style-btn robot-italic-btn">I</button>
+        <button type="button" class="robot-size-btn robot-size-dec">−</button>
+        <button type="button" class="robot-size-btn robot-size-inc">+</button>
+      </div>
     </aside>
     <aside class="unit-props-panel" aria-label="Свойства юнитов">
       <div class="unit-prop">

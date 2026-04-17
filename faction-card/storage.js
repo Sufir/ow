@@ -61,12 +61,15 @@
       const captionEl = firstTd?.querySelector('.unit-caption');
       const caption = captionEl?.textContent.trim() || '';
       const unitId = captionEl?.dataset?.unitId || '';
+      const unitScaleRaw = tr?.dataset?.unitScale;
+      const unitScaleNum = Number(unitScaleRaw);
+      const unitScale = Number.isFinite(unitScaleNum) ? unitScaleNum : 1;
 
       const tdList = Array.from(tr.querySelectorAll('td'));
       const dataCells = tdList.slice(-3);
       const cells = dataCells.map((td) => td.textContent.trim());
 
-      const obj = { type: 'data', imgSrc, caption, cells, unitId };
+      const obj = { type: 'data', imgSrc, caption, cells, unitId, unitScale };
 
       const labelCell = tr.querySelector('td.type-label');
       if (labelCell) obj.groupLabel = labelCell.textContent.trim();
@@ -300,7 +303,9 @@
       const normalized = list
         .filter((item) => item && typeof item === 'object')
         .map((item) => ({
-          title: typeof item.title === 'string' ? item.title : '',
+          titleHtml: typeof item.titleHtml === 'string'
+            ? item.titleHtml
+            : (typeof item.title === 'string' ? item.title : ''),
           stepsHtml: typeof item.stepsHtml === 'string'
             ? item.stepsHtml
             : (typeof item.steps === 'string' ? item.steps : '')
@@ -308,7 +313,9 @@
       if (normalized.length) return normalized;
     }
     return [{
-      title: typeof info?.robotTitle === 'string' ? info.robotTitle : 'Создание боевого робота',
+      titleHtml: typeof info?.robotTitleHtml === 'string'
+        ? info.robotTitleHtml
+        : (typeof info?.robotTitle === 'string' ? info.robotTitle : 'Создание боевого робота'),
       stepsHtml: typeof info?.robotSteps === 'string'
         ? info.robotSteps
         : '<li>В стартовом регионе Островной Империи должна быть фабрика (может быть свободной или контролироваться врагом).</li><li>Заплатите 10 нефти, или 4 если создаете не первый раз.</li><li>“Краб” появляется в стартовом регионе фракции.</li>'
@@ -316,7 +323,7 @@
   }
 
   function buildFactionInfoFromPanel(panelEl) {
-    if (!panelEl) return { queue: '', oil: '', region: '', notes: '', robotPanels: [], robotTitle: '', robotSteps: '', logoSrc: '' };
+    if (!panelEl) return { queue: '', oil: '', region: '', notes: '', robotPanels: [], robotTitle: '', robotTitleHtml: '', robotSteps: '', logoSrc: '' };
     const queue = panelEl.querySelector('.prep-value[data-key="queue"]')?.textContent?.trim() || '';
     const oil = panelEl.querySelector('.prep-value[data-key="oil"]')?.textContent?.trim() || '';
     const region = panelEl.querySelector('.prep-value[data-key="region"]')?.textContent?.trim() || '';
@@ -324,17 +331,20 @@
     const robotPanelsRaw = Array.from(panelEl.querySelectorAll('.robot-panels .robot-panel'));
     const robotPanels = (robotPanelsRaw.length ? robotPanelsRaw : Array.from(panelEl.querySelectorAll('.robot-panel')))
       .map((robotPanel) => {
-        const title = robotPanel.querySelector('.robot-title')?.textContent?.trim() || '';
+        const titleEl = robotPanel.querySelector('.robot-title');
+        const title = titleEl?.textContent?.trim() || '';
+        const titleHtml = titleEl?.innerHTML || '';
         const stepsHtml = robotPanel.querySelector('.robot-steps')?.innerHTML || '';
-        return { title, stepsHtml };
+        return { title, titleHtml, stepsHtml };
       });
     if (!robotPanels.length) {
-      robotPanels.push({ title: 'Создание боевого робота', stepsHtml: '' });
+      robotPanels.push({ title: 'Создание боевого робота', titleHtml: 'Создание боевого робота', stepsHtml: '' });
     }
     const robotTitle = robotPanels[0]?.title || '';
+    const robotTitleHtml = robotPanels[0]?.titleHtml || robotTitle;
     const robotSteps = robotPanels[0]?.stepsHtml || '';
     const logoSrc = document.querySelector('.faction-logo .faction-logo-image')?.getAttribute('src') || '';
-    return { queue, oil, region, notes, robotPanels, robotTitle, robotSteps, logoSrc };
+    return { queue, oil, region, notes, robotPanels, robotTitle, robotTitleHtml, robotSteps, logoSrc };
   }
 
   function saveFactionInfoNowFrom(panelEl) {
@@ -387,7 +397,7 @@
         rtEl.className = 'prep-title robot-title';
         rtEl.contentEditable = 'true';
         rtEl.spellcheck = false;
-        rtEl.textContent = typeof item.title === 'string' ? item.title : '';
+        rtEl.innerHTML = typeof item.titleHtml === 'string' ? item.titleHtml : '';
 
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
@@ -418,8 +428,8 @@
     } else {
       const rtEl = panelEl.querySelector('.robot-title');
       const rsEl = panelEl.querySelector('.robot-steps');
-      const first = robotPanels[0] || { title: 'Создание боевого робота', stepsHtml: '' };
-      if (rtEl) rtEl.textContent = first.title ?? 'Создание боевого робота';
+      const first = robotPanels[0] || { titleHtml: 'Создание боевого робота', stepsHtml: '' };
+      if (rtEl) rtEl.innerHTML = first.titleHtml ?? 'Создание боевого робота';
       if (rsEl) rsEl.innerHTML = first.stepsHtml ?? '';
     }
     const logoImg = document.querySelector('.faction-logo .faction-logo-image');

@@ -112,12 +112,17 @@ const addRowBtn = document.getElementById('add-row-btn');
 const addSepBtn = document.getElementById('add-separator-btn');
 const addCommentBtn = document.getElementById('add-comment-btn');
 const deleteRowBtn = document.getElementById('delete-row-btn');
+const unitScaleDecBtn = document.getElementById('unit-scale-dec-btn');
+const unitScaleIncBtn = document.getElementById('unit-scale-inc-btn');
 const exportBtn = document.getElementById('export-btn');
 const importBtn = document.getElementById('import-btn');
 const importFileInput = document.getElementById('import-file');
 const tableStorageKey = `unit-table:${ns}`;
 let currentRowIndex = null;
 const unitStatClasses = ['unit-stat-count', 'unit-stat-cost', 'unit-stat-power'];
+const UNIT_ICON_SCALE_STEP = 0.05;
+const UNIT_ICON_SCALE_MIN = 0.5;
+const UNIT_ICON_SCALE_MAX = 1.8;
 
 // === Инициализация StorageAPI с ключами ===
 // Top-level initialization near StorageAPI.init
@@ -139,10 +144,59 @@ function selectRow(tr) {
   Array.from(tbody.rows).forEach(r => r.classList.remove('row-selected'));
   if (!tr) {
     currentRowIndex = null;
+    updateUnitScaleButtonsState();
     return;
   }
   tr.classList.add('row-selected');
   currentRowIndex = Array.from(tbody.rows).indexOf(tr);
+  updateUnitScaleButtonsState();
+}
+
+function isDataRow(tr) {
+  return !!tr && !tr.classList.contains('unit-separator') && !tr.classList.contains('unit-comment');
+}
+
+function getSelectedDataRow() {
+  if (!tbody || currentRowIndex == null) return null;
+  const tr = tbody.rows[currentRowIndex];
+  return isDataRow(tr) ? tr : null;
+}
+
+function clampUnitScale(value) {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return 1;
+  return Math.min(UNIT_ICON_SCALE_MAX, Math.max(UNIT_ICON_SCALE_MIN, num));
+}
+
+function normalizeUnitScale(value) {
+  return Math.round(clampUnitScale(value) * 100) / 100;
+}
+
+function applyUnitScaleToRow(tr, scale = 1) {
+  if (!isDataRow(tr)) return;
+  const normalized = normalizeUnitScale(scale);
+  tr.dataset.unitScale = String(normalized);
+  tr.style.setProperty('--unit-icon-scale', String(normalized));
+}
+
+function updateUnitScaleButtonsState() {
+  const dataRow = getSelectedDataRow();
+  const visible = !!dataRow;
+  [unitScaleDecBtn, unitScaleIncBtn].forEach((btn) => {
+    if (!btn) return;
+    btn.hidden = !visible;
+    btn.disabled = !visible;
+  });
+}
+
+function changeSelectedUnitScale(delta) {
+  const tr = getSelectedDataRow();
+  if (!tr) return;
+  const current = normalizeUnitScale(tr.dataset.unitScale || 1);
+  const next = normalizeUnitScale(current + delta);
+  applyUnitScaleToRow(tr, next);
+  saveTable();
+  markUnsaved();
 }
 
 // Пересчёт вертикальных меток типа и их rowspan по группам (между разделителями)
@@ -218,6 +272,7 @@ function deleteRow(index = currentRowIndex) {
 
   recalculateGroupLabels();
   saveTable();
+  updateUnitScaleButtonsState();
 }
 
 // Навешиваем события выбора и удаления
@@ -229,6 +284,8 @@ if (tbody) {
   });
 }
 deleteRowBtn?.addEventListener('click', () => deleteRow());
+unitScaleDecBtn?.addEventListener('click', () => changeSelectedUnitScale(-UNIT_ICON_SCALE_STEP));
+unitScaleIncBtn?.addEventListener('click', () => changeSelectedUnitScale(UNIT_ICON_SCALE_STEP));
 
 // объединённый обработчик клавиш Escape и Delete
 document.addEventListener('keydown', (e) => {
@@ -497,6 +554,7 @@ function clearSelection() {
   document.querySelectorAll('.unit-table tr.row-selected').forEach(r => r.classList.remove('row-selected'));
   document.querySelectorAll('.unit-prop.prop-selected').forEach(p => p.classList.remove('prop-selected'));
   currentRowIndex = null;
+  updateUnitScaleButtonsState();
 }
 
 // экспорт/импорт JSON с заголовком фракции
@@ -559,6 +617,7 @@ function renderTable(rows) {
     }
     const tr = document.createElement('tr');
     tr.className = 'unit-data';
+    applyUnitScaleToRow(tr, r?.unitScale ?? 1);
 
     const td1 = buildUnitCell(r?.caption, r?.imgSrc);
     tr.appendChild(td1);
@@ -592,6 +651,7 @@ function renderTable(rows) {
 
   initAllFirstCells();
   recalculateGroupLabels();
+  updateUnitScaleButtonsState();
   // актуализируем id и перерисуем связи
   window.UnitLinks?.ensureUnitIds?.();
   window.UnitLinks?.updateAll?.();
@@ -601,6 +661,7 @@ function renderTable(rows) {
 function createDataRow(cells = ['', '', ''], imgSrc = '') {
   const tr = document.createElement('tr');
   tr.className = 'unit-data';
+  applyUnitScaleToRow(tr, 1);
 
   const td1 = buildUnitCell('untitled', imgSrc);
   tr.appendChild(td1);
@@ -691,6 +752,119 @@ const DEFAULT_ROBOT_STEPS_HTML = `
   <li>Заплатите 10 нефти, или 4 если создаете не первый раз.</li>
   <li>“Краб” появляется в стартовом регионе фракции.</li>
 `;
+const robotFormatControls = factionInfoPanel?.querySelector('.robot-format-controls');
+const robotFontSelect = factionInfoPanel?.querySelector('.robot-font-select');
+const robotBoldBtn = factionInfoPanel?.querySelector('.robot-bold-btn');
+const robotItalicBtn = factionInfoPanel?.querySelector('.robot-italic-btn');
+const robotSizeDecBtn = factionInfoPanel?.querySelector('.robot-size-dec');
+const robotSizeIncBtn = factionInfoPanel?.querySelector('.robot-size-inc');
+const ROBOT_FONT_STEP = 0.5;
+const ROBOT_FONT_MIN = 8;
+const ROBOT_FONT_MAX = 28;
+let robotActiveEditable = null;
+let robotLastRange = null;
+let robotControlsMouseDown = false;
+
+function isRobotEditableElement(el) {
+  if (!(el instanceof Element)) return null;
+  return el.closest('.robot-title[contenteditable="true"], .robot-steps[contenteditable="true"]');
+}
+
+function showRobotFormatControls(editable) {
+  if (!factionInfoPanel || !editable) return;
+  robotActiveEditable = editable;
+  factionInfoPanel.classList.add('robot-format-visible');
+}
+
+function hideRobotFormatControls() {
+  if (!factionInfoPanel) return;
+  factionInfoPanel.classList.remove('robot-format-visible');
+  robotActiveEditable = null;
+  robotLastRange = null;
+}
+
+function saveRobotSelection(editable = robotActiveEditable) {
+  if (!editable) return;
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+  const range = sel.getRangeAt(0);
+  const root = range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+    ? range.commonAncestorContainer
+    : range.commonAncestorContainer.parentElement;
+  if (!root || !editable.contains(root)) return;
+  robotLastRange = range.cloneRange();
+}
+
+function restoreRobotSelection(editable = robotActiveEditable) {
+  if (!editable || !robotLastRange) return;
+  const sel = window.getSelection();
+  if (!sel) return;
+  sel.removeAllRanges();
+  sel.addRange(robotLastRange);
+}
+
+function getCurrentFontPxForNode(node) {
+  if (!node) return 12;
+  const inlinePx = parseFloat(node.style?.fontSize || '');
+  if (Number.isFinite(inlinePx) && inlinePx > 0) return inlinePx;
+  const cssPx = parseFloat(window.getComputedStyle(node).fontSize);
+  return Number.isFinite(cssPx) && cssPx > 0 ? cssPx : 12;
+}
+
+function getSelectionFontPx(editable) {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return getCurrentFontPxForNode(editable);
+  const range = sel.getRangeAt(0);
+  const node = range.startContainer.nodeType === Node.ELEMENT_NODE
+    ? range.startContainer
+    : range.startContainer.parentElement;
+  if (node instanceof Element && editable?.contains(node)) {
+    return getCurrentFontPxForNode(node);
+  }
+  return getCurrentFontPxForNode(editable);
+}
+
+function applyRobotRichCommand(command, value) {
+  const editable = robotActiveEditable;
+  if (!editable) return;
+  editable.focus();
+  restoreRobotSelection(editable);
+  if (command === 'fontName') {
+    document.execCommand('styleWithCSS', false, true);
+  }
+  if (value != null) document.execCommand(command, false, value);
+  else document.execCommand(command, false);
+  saveRobotSelection(editable);
+}
+
+function normalizeRobotFontTags(editable, fontPx) {
+  if (!editable || !Number.isFinite(fontPx)) return;
+  editable.querySelectorAll('font[size]').forEach((fontEl) => {
+    const span = document.createElement('span');
+    span.style.fontSize = `${fontPx}px`;
+    span.innerHTML = fontEl.innerHTML;
+    fontEl.replaceWith(span);
+  });
+}
+
+function applyRobotFontDelta(delta) {
+  const editable = robotActiveEditable;
+  if (!editable) return;
+  editable.focus();
+  restoreRobotSelection(editable);
+  const current = getSelectionFontPx(editable);
+  const next = Math.max(ROBOT_FONT_MIN, Math.min(ROBOT_FONT_MAX, Math.round((current + delta) * 100) / 100));
+  document.execCommand('styleWithCSS', false, true);
+  document.execCommand('fontSize', false, '7');
+  normalizeRobotFontTags(editable, next);
+  saveRobotSelection(editable);
+}
+
+function encodeTextAsHtml(text = '') {
+  const tmp = document.createElement('div');
+  tmp.textContent = text;
+  return tmp.innerHTML;
+}
 
 function normalizeRobotPanelsInfo(info = {}) {
   const list = Array.isArray(info?.robotPanels) ? info.robotPanels : null;
@@ -698,19 +872,23 @@ function normalizeRobotPanelsInfo(info = {}) {
     return list
       .filter((item) => item && typeof item === 'object')
       .map((item) => ({
-        title: typeof item.title === 'string' ? item.title : '',
+        titleHtml: typeof item.titleHtml === 'string'
+          ? item.titleHtml
+          : encodeTextAsHtml(typeof item.title === 'string' ? item.title : ''),
         stepsHtml: typeof item.stepsHtml === 'string'
           ? item.stepsHtml
           : (typeof item.steps === 'string' ? item.steps : '')
       }));
   }
   return [{
-    title: typeof info?.robotTitle === 'string' ? info.robotTitle : DEFAULT_ROBOT_TITLE,
+    titleHtml: typeof info?.robotTitleHtml === 'string'
+      ? info.robotTitleHtml
+      : encodeTextAsHtml(typeof info?.robotTitle === 'string' ? info.robotTitle : DEFAULT_ROBOT_TITLE),
     stepsHtml: typeof info?.robotSteps === 'string' ? info.robotSteps : DEFAULT_ROBOT_STEPS_HTML
   }];
 }
 
-function createRobotPanelElement(title = '', stepsHtml = '') {
+function createRobotPanelElement(titleHtml = '', stepsHtml = '') {
   const panel = document.createElement('div');
   panel.className = 'robot-panel';
 
@@ -721,7 +899,7 @@ function createRobotPanelElement(title = '', stepsHtml = '') {
   titleEl.className = 'prep-title robot-title';
   titleEl.contentEditable = 'true';
   titleEl.spellcheck = false;
-  titleEl.textContent = title;
+  titleEl.innerHTML = titleHtml || encodeTextAsHtml(DEFAULT_ROBOT_TITLE);
 
   const removeBtn = document.createElement('button');
   removeBtn.type = 'button';
@@ -760,12 +938,13 @@ function renderRobotPanels(info = {}) {
   if (!factionInfoPanel) return;
   const container = factionInfoPanel.querySelector('.robot-panels');
   if (!container) return;
+  hideRobotFormatControls();
   const normalized = normalizeRobotPanelsInfo(info);
   container.innerHTML = '';
   normalized.forEach((item) => {
-    const title = typeof item.title === 'string' ? item.title : '';
+    const titleHtml = typeof item.titleHtml === 'string' ? item.titleHtml : '';
     const stepsHtml = typeof item.stepsHtml === 'string' ? item.stepsHtml : DEFAULT_ROBOT_STEPS_HTML;
-    container.appendChild(createRobotPanelElement(title, stepsHtml));
+    container.appendChild(createRobotPanelElement(titleHtml, stepsHtml));
   });
   if (!container.querySelector('.robot-panel')) {
     container.appendChild(createRobotPanelElement(DEFAULT_ROBOT_TITLE, DEFAULT_ROBOT_STEPS_HTML));
@@ -816,6 +995,11 @@ function removeRobotPanel(panel) {
 factionInfoPanel?.addEventListener('click', (e) => {
   const target = e.target instanceof Element ? e.target : null;
   if (!target) return;
+  const editable = isRobotEditableElement(target);
+  if (editable) {
+    showRobotFormatControls(editable);
+    saveRobotSelection(editable);
+  }
   if (target.closest('.robot-add-btn')) {
     addRobotPanel();
     return;
@@ -823,6 +1007,104 @@ factionInfoPanel?.addEventListener('click', (e) => {
   const removeBtn = target.closest('.robot-remove-btn');
   if (!removeBtn) return;
   removeRobotPanel(removeBtn.closest('.robot-panel'));
+});
+
+factionInfoPanel?.addEventListener('focusin', (e) => {
+  const target = e.target instanceof Element ? e.target : null;
+  const editable = isRobotEditableElement(target);
+  if (!editable) return;
+  showRobotFormatControls(editable);
+  saveRobotSelection(editable);
+});
+
+factionInfoPanel?.addEventListener('focusout', () => {
+  setTimeout(() => {
+    if (robotControlsMouseDown) return;
+    const active = document.activeElement;
+    if (active instanceof Element) {
+      if (active.closest('.robot-format-controls')) return;
+      if (isRobotEditableElement(active)) return;
+    }
+    hideRobotFormatControls();
+  }, 0);
+});
+
+['mouseup', 'keyup'].forEach((eventName) => {
+  factionInfoPanel?.addEventListener(eventName, (e) => {
+    const target = e.target instanceof Element ? e.target : null;
+    const editable = isRobotEditableElement(target);
+    if (!editable) return;
+    showRobotFormatControls(editable);
+    saveRobotSelection(editable);
+  });
+});
+
+document.addEventListener('selectionchange', () => {
+  if (!robotActiveEditable) return;
+  saveRobotSelection(robotActiveEditable);
+});
+
+if (robotFormatControls) {
+  ['mousedown', 'pointerdown'].forEach((eventName) => {
+    robotFormatControls.addEventListener(eventName, () => {
+      robotControlsMouseDown = true;
+    });
+  });
+  ['mouseup', 'mouseleave', 'pointerup'].forEach((eventName) => {
+    robotFormatControls.addEventListener(eventName, () => {
+      robotControlsMouseDown = false;
+    });
+  });
+}
+
+robotFontSelect?.addEventListener('change', (e) => {
+  e.preventDefault();
+  applyRobotRichCommand('fontName', robotFontSelect.value);
+  if (robotActiveEditable?.classList.contains('robot-steps')) {
+    sanitizeRobotSteps(robotActiveEditable);
+  }
+  saveFactionInfo?.();
+  markUnsaved();
+});
+
+robotBoldBtn?.addEventListener('click', (e) => {
+  e.preventDefault();
+  applyRobotRichCommand('bold');
+  if (robotActiveEditable?.classList.contains('robot-steps')) {
+    sanitizeRobotSteps(robotActiveEditable);
+  }
+  saveFactionInfo?.();
+  markUnsaved();
+});
+
+robotItalicBtn?.addEventListener('click', (e) => {
+  e.preventDefault();
+  applyRobotRichCommand('italic');
+  if (robotActiveEditable?.classList.contains('robot-steps')) {
+    sanitizeRobotSteps(robotActiveEditable);
+  }
+  saveFactionInfo?.();
+  markUnsaved();
+});
+
+robotSizeDecBtn?.addEventListener('click', (e) => {
+  e.preventDefault();
+  applyRobotFontDelta(-ROBOT_FONT_STEP);
+  if (robotActiveEditable?.classList.contains('robot-steps')) {
+    sanitizeRobotSteps(robotActiveEditable);
+  }
+  saveFactionInfo?.();
+  markUnsaved();
+});
+
+robotSizeIncBtn?.addEventListener('click', (e) => {
+  e.preventDefault();
+  applyRobotFontDelta(ROBOT_FONT_STEP);
+  if (robotActiveEditable?.classList.contains('robot-steps')) {
+    sanitizeRobotSteps(robotActiveEditable);
+  }
+  saveFactionInfo?.();
+  markUnsaved();
 });
 
 factionInfoPanel?.addEventListener('paste', (e) => {
@@ -890,9 +1172,62 @@ function ensureRobotStepsNotEmpty(ol) {
   }
 }
 
-// Санитизация содержимого списка: только li + простой текст
+// Санитизация содержимого списка: только li + разрешённое текстовое форматирование
 function sanitizeRobotSteps(ol) {
   if (!ol) return;
+
+  const sanitizeInline = (root) => {
+    const allowedInlineTags = new Set(['B', 'STRONG', 'I', 'EM', 'SPAN', 'BR', 'FONT']);
+    Array.from(root.querySelectorAll('*')).forEach((el) => {
+      if (el.tagName === 'LI') return;
+      if (!allowedInlineTags.has(el.tagName)) {
+        const frag = document.createDocumentFragment();
+        while (el.firstChild) frag.appendChild(el.firstChild);
+        el.replaceWith(frag);
+        return;
+      }
+      if (el.tagName === 'FONT') {
+        const span = document.createElement('span');
+        const face = el.getAttribute('face');
+        const size = el.getAttribute('size');
+        if (face) span.style.fontFamily = face;
+        if (size) {
+          const approxPx = { '1': 10, '2': 13, '3': 16, '4': 18, '5': 24, '6': 32, '7': 48 }[String(size)];
+          if (approxPx) span.style.fontSize = `${approxPx}px`;
+        }
+        span.innerHTML = el.innerHTML;
+        el.replaceWith(span);
+        el = span;
+      }
+      if (el.tagName === 'SPAN') {
+        const style = el.getAttribute('style') || '';
+        const kept = style
+          .split(';')
+          .map((part) => part.trim())
+          .filter(Boolean)
+          .map((entry) => {
+            const [keyRaw, valueRaw] = entry.split(':');
+            const key = String(keyRaw || '').trim().toLowerCase();
+            const value = String(valueRaw || '').trim();
+            if (!value) return '';
+            if (!['font-family', 'font-style', 'font-weight', 'font-size'].includes(key)) return '';
+            return `${key}: ${value}`;
+          })
+          .filter(Boolean);
+        if (kept.length) {
+          el.setAttribute('style', kept.join('; '));
+        } else {
+          el.removeAttribute('style');
+        }
+      } else {
+        el.removeAttribute('style');
+      }
+      Array.from(el.attributes).forEach((attr) => {
+        if (attr.name !== 'style') el.removeAttribute(attr.name);
+      });
+    });
+  };
+
   Array.from(ol.childNodes).forEach((node) => {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = (node.nodeValue || '').trim();
@@ -907,29 +1242,18 @@ function sanitizeRobotSteps(ol) {
       const el = node;
       if (el.tagName !== 'LI') {
         const li = document.createElement('li');
-        li.textContent = el.textContent || '';
+        li.innerHTML = el.innerHTML || el.textContent || '';
         ol.replaceChild(li, el);
-      } else {
-        const raw = el.textContent || '';
-        const lines = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-        if (lines.length <= 1) {
-          el.textContent = lines[0] || '';
-        } else {
-          const frag = document.createDocumentFragment();
-          lines.forEach((s) => {
-            const li = document.createElement('li');
-            li.textContent = s;
-            frag.appendChild(li);
-          });
-          ol.insertBefore(frag, el);
-          ol.removeChild(el);
-        }
       }
     }
   });
-  // Убираем возможные классы/стили
+
+  sanitizeInline(ol);
+  // Убираем служебные атрибуты у li, сохраняем inline-форматирование внутри их контента
   Array.from(ol.querySelectorAll('li')).forEach((li) => {
-    li.removeAttribute('style');
     li.removeAttribute('class');
+    Array.from(li.attributes).forEach((attr) => {
+      if (attr.name !== 'style') li.removeAttribute(attr.name);
+    });
   });
 }
