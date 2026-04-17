@@ -21,11 +21,6 @@ body {
 
   --ink: #191b1c;
   --text: #ffffff;
-
-  --mark-color: #aaa;
-  --mark-l: 5mm;
-  --mark-t: 0.2mm;
-  --mark-gap: 1mm;
 }
 
 @page {
@@ -72,6 +67,65 @@ body {
   grid-template-rows: repeat(2, var(--card-h));
   gap: 0;
   position: relative;
+}
+
+.cards-grid::after {
+  content: "";
+  position: absolute;
+  top: -8mm;
+  left: -8mm;
+  right: -8mm;
+  bottom: -8mm;
+  pointer-events: none;
+  z-index: 10;
+  
+  background-image:
+    /* Top marks */
+    linear-gradient(to bottom, #000 5mm, #fff 5mm),
+    linear-gradient(to bottom, #000 5mm, #fff 5mm),
+    linear-gradient(to bottom, #000 5mm, #fff 5mm),
+    /* Bottom marks */
+    linear-gradient(to bottom, #fff 3mm, #000 3mm),
+    linear-gradient(to bottom, #fff 3mm, #000 3mm),
+    linear-gradient(to bottom, #fff 3mm, #000 3mm),
+    /* Left marks */
+    linear-gradient(to right, #000 5mm, #fff 5mm),
+    linear-gradient(to right, #000 5mm, #fff 5mm),
+    linear-gradient(to right, #000 5mm, #fff 5mm),
+    /* Right marks */
+    linear-gradient(to right, #fff 3mm, #000 3mm),
+    linear-gradient(to right, #fff 3mm, #000 3mm),
+    linear-gradient(to right, #fff 3mm, #000 3mm);
+
+  background-size:
+    /* Top */
+    0.2mm 8mm, 0.2mm 8mm, 0.2mm 8mm,
+    /* Bottom */
+    0.2mm 8mm, 0.2mm 8mm, 0.2mm 8mm,
+    /* Left */
+    8mm 0.2mm, 8mm 0.2mm, 8mm 0.2mm,
+    /* Right */
+    8mm 0.2mm, 8mm 0.2mm, 8mm 0.2mm;
+
+  background-position:
+    /* Top */
+    calc(8mm - 0.1mm) 0,
+    calc(88mm - 0.1mm) 0,
+    calc(168mm - 0.1mm) 0,
+    /* Bottom */
+    calc(8mm - 0.1mm) 100%,
+    calc(88mm - 0.1mm) 100%,
+    calc(168mm - 0.1mm) 100%,
+    /* Left */
+    0 calc(8mm - 0.1mm),
+    0 calc(128mm - 0.1mm),
+    0 calc(248mm - 0.1mm),
+    /* Right */
+    100% calc(8mm - 0.1mm),
+    100% calc(128mm - 0.1mm),
+    100% calc(248mm - 0.1mm);
+
+  background-repeat: no-repeat;
 }
 
 .card {
@@ -138,77 +192,6 @@ body {
     color: #9a9a9a;
     letter-spacing: 0.2mm;
     user-select: none;
-  }
-
-  .pos-tl::before,
-  .pos-tl::after,
-  .pos-tr::before,
-  .pos-tr::after,
-  .pos-bl::before,
-  .pos-bl::after,
-  .pos-br::before,
-  .pos-br::after {
-    content: "";
-    position: absolute;
-    background: var(--mark-color);
-    z-index: 5;
-    pointer-events: none;
-  }
-
-  .pos-tl::before {
-    width: var(--mark-l);
-    height: var(--mark-t);
-    top: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
-    left: calc(-1 * (var(--mark-l) + var(--mark-gap)));
-  }
-
-  .pos-tl::after {
-    width: var(--mark-t);
-    height: var(--mark-l);
-    left: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
-    top: calc(-1 * (var(--mark-l) + var(--mark-gap)));
-  }
-
-  .pos-tr::before {
-    width: var(--mark-l);
-    height: var(--mark-t);
-    top: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
-    right: calc(-1 * (var(--mark-l) + var(--mark-gap)));
-  }
-
-  .pos-tr::after {
-    width: var(--mark-t);
-    height: var(--mark-l);
-    right: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
-    top: calc(-1 * (var(--mark-l) + var(--mark-gap)));
-  }
-
-  .pos-bl::before {
-    width: var(--mark-l);
-    height: var(--mark-t);
-    bottom: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
-    left: calc(-1 * (var(--mark-l) + var(--mark-gap)));
-  }
-
-  .pos-bl::after {
-    width: var(--mark-t);
-    height: var(--mark-l);
-    left: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
-    bottom: calc(-1 * (var(--mark-l) + var(--mark-gap)));
-  }
-
-  .pos-br::before {
-    width: var(--mark-l);
-    height: var(--mark-t);
-    bottom: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
-    right: calc(-1 * (var(--mark-l) + var(--mark-gap)));
-  }
-
-  .pos-br::after {
-    width: var(--mark-t);
-    height: var(--mark-l);
-    right: calc(-1 * (var(--mark-gap) + var(--mark-t) / 2));
-    bottom: calc(-1 * (var(--mark-l) + var(--mark-gap)));
   }
 }
 
