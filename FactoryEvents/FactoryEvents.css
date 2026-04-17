@@ -22,8 +22,11 @@ body {
   --ink: #292a2c;
   --text: #ffffff;
 
-  --cross-v: linear-gradient(to right, transparent calc(5mm - 0.3mm), #fff calc(5mm - 0.3mm), #fff calc(5mm - 0.1mm), #000 calc(5mm - 0.1mm), #000 calc(5mm + 0.1mm), #fff calc(5mm + 0.1mm), #fff calc(5mm + 0.3mm), transparent calc(5mm + 0.3mm));
-  --cross-h: linear-gradient(to bottom, transparent calc(5mm - 0.3mm), #fff calc(5mm - 0.3mm), #fff calc(5mm - 0.1mm), #000 calc(5mm - 0.1mm), #000 calc(5mm + 0.1mm), #fff calc(5mm + 0.1mm), #fff calc(5mm + 0.3mm), transparent calc(5mm + 0.3mm));
+  --cross-v: linear-gradient(to right, transparent calc(5mm - 0.15mm), #000 calc(5mm - 0.15mm), #000 calc(5mm + 0.15mm), transparent calc(5mm + 0.15mm));
+  --cross-h: linear-gradient(to bottom, transparent calc(5mm - 0.15mm), #000 calc(5mm - 0.15mm), #000 calc(5mm + 0.15mm), transparent calc(5mm + 0.15mm));
+  
+  --cross-v-white: linear-gradient(to right, transparent calc(5mm - 0.4mm), #fff calc(5mm - 0.4mm), #fff calc(5mm + 0.4mm), transparent calc(5mm + 0.4mm));
+  --cross-h-white: linear-gradient(to bottom, transparent calc(5mm - 0.4mm), #fff calc(5mm - 0.4mm), #fff calc(5mm + 0.4mm), transparent calc(5mm + 0.4mm));
 }
 
 @page {
@@ -83,15 +86,28 @@ body {
   z-index: 10;
   
   background-image:
-    /* Top row */
+    /* Top row - White background lines */
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+    /* Middle row - White background lines */
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+    /* Bottom row - White background lines */
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+
+    /* Top row - Black foreground lines */
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h),
-    /* Middle row */
+    /* Middle row - Black foreground lines */
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h),
-    /* Bottom row */
+    /* Bottom row - Black foreground lines */
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h);
@@ -100,15 +116,28 @@ body {
   background-repeat: no-repeat;
 
   background-position:
-    /* Top row */
+    /* Top row - White */
     0 0, 0 0,
     calc(80mm) 0, calc(80mm) 0,
     calc(160mm) 0, calc(160mm) 0,
-    /* Middle row */
+    /* Middle row - White */
     0 calc(120mm), 0 calc(120mm),
     calc(80mm) calc(120mm), calc(80mm) calc(120mm),
     calc(160mm) calc(120mm), calc(160mm) calc(120mm),
-    /* Bottom row */
+    /* Bottom row - White */
+    0 calc(240mm), 0 calc(240mm),
+    calc(80mm) calc(240mm), calc(80mm) calc(240mm),
+    calc(160mm) calc(240mm), calc(160mm) calc(240mm),
+
+    /* Top row - Black */
+    0 0, 0 0,
+    calc(80mm) 0, calc(80mm) 0,
+    calc(160mm) 0, calc(160mm) 0,
+    /* Middle row - Black */
+    0 calc(120mm), 0 calc(120mm),
+    calc(80mm) calc(120mm), calc(80mm) calc(120mm),
+    calc(160mm) calc(120mm), calc(160mm) calc(120mm),
+    /* Bottom row - Black */
     0 calc(240mm), 0 calc(240mm),
     calc(80mm) calc(240mm), calc(80mm) calc(240mm),
     calc(160mm) calc(240mm), calc(160mm) calc(240mm);
@@ -178,6 +207,12 @@ body {
     color: #9a9a9a;
     letter-spacing: 0.2mm;
     user-select: none;
+  }
+
+  /* Force background images to print (crucial for marks) */
+  .cards-grid::after {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }
 
