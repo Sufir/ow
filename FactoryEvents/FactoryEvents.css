@@ -19,14 +19,16 @@ body {
 
   --bleed: 3mm;
 
-  --ink: #292a2c;
+  --ink: #191b1c;
   --text: #ffffff;
 
-  --cross-v: linear-gradient(to right, transparent calc(5mm - 0.15mm), #000 calc(5mm - 0.15mm), #000 calc(5mm + 0.15mm), transparent calc(5mm + 0.15mm));
-  --cross-h: linear-gradient(to bottom, transparent calc(5mm - 0.15mm), #000 calc(5mm - 0.15mm), #000 calc(5mm + 0.15mm), transparent calc(5mm + 0.15mm));
+  --cross-color: #a0a0a0;
   
-  --cross-v-white: linear-gradient(to right, transparent calc(5mm - 0.4mm), #fff calc(5mm - 0.4mm), #fff calc(5mm + 0.4mm), transparent calc(5mm + 0.4mm));
-  --cross-h-white: linear-gradient(to bottom, transparent calc(5mm - 0.4mm), #fff calc(5mm - 0.4mm), #fff calc(5mm + 0.4mm), transparent calc(5mm + 0.4mm));
+  --cross-v: linear-gradient(to right, transparent calc(3.75mm - 0.1mm), var(--cross-color) calc(3.75mm - 0.1mm), var(--cross-color) calc(3.75mm + 0.1mm), transparent calc(3.75mm + 0.1mm));
+  --cross-h: linear-gradient(to bottom, transparent calc(3.75mm - 0.1mm), var(--cross-color) calc(3.75mm - 0.1mm), var(--cross-color) calc(3.75mm + 0.1mm), transparent calc(3.75mm + 0.1mm));
+  
+  --cross-v-white: linear-gradient(to right, transparent calc(3.75mm - 0.3mm), #fff calc(3.75mm - 0.3mm), #fff calc(3.75mm + 0.3mm), transparent calc(3.75mm + 0.3mm));
+  --cross-h-white: linear-gradient(to bottom, transparent calc(3.75mm - 0.3mm), #fff calc(3.75mm - 0.3mm), #fff calc(3.75mm + 0.3mm), transparent calc(3.75mm + 0.3mm));
 }
 
 @page {
@@ -78,10 +80,10 @@ body {
 .cards-grid::after {
   content: "";
   position: absolute;
-  top: -5mm;
-  left: -5mm;
-  right: -5mm;
-  bottom: -5mm;
+  top: -3.75mm;
+  left: -3.75mm;
+  right: -3.75mm;
+  bottom: -3.75mm;
   pointer-events: none;
   z-index: 10;
   
@@ -99,20 +101,20 @@ body {
     var(--cross-v-white), var(--cross-h-white),
     var(--cross-v-white), var(--cross-h-white),
 
-    /* Top row - Black foreground lines */
+    /* Top row - Colored foreground lines */
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h),
-    /* Middle row - Black foreground lines */
+    /* Middle row - Colored foreground lines */
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h),
-    /* Bottom row - Black foreground lines */
+    /* Bottom row - Colored foreground lines */
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h),
     var(--cross-v), var(--cross-h);
 
-  background-size: 10mm 10mm;
+  background-size: 7.5mm 7.5mm;
   background-repeat: no-repeat;
 
   background-position:
@@ -129,18 +131,23 @@ body {
     calc(80mm) calc(240mm), calc(80mm) calc(240mm),
     calc(160mm) calc(240mm), calc(160mm) calc(240mm),
 
-    /* Top row - Black */
+    /* Top row - Colored */
     0 0, 0 0,
     calc(80mm) 0, calc(80mm) 0,
     calc(160mm) 0, calc(160mm) 0,
-    /* Middle row - Black */
+    /* Middle row - Colored */
     0 calc(120mm), 0 calc(120mm),
     calc(80mm) calc(120mm), calc(80mm) calc(120mm),
     calc(160mm) calc(120mm), calc(160mm) calc(120mm),
-    /* Bottom row - Black */
+    /* Bottom row - Colored */
     0 calc(240mm), 0 calc(240mm),
     calc(80mm) calc(240mm), calc(80mm) calc(240mm),
     calc(160mm) calc(240mm), calc(160mm) calc(240mm);
+}
+
+/* Remove crop marks from the back page */
+.page-back .cards-grid::after {
+  display: none;
 }
 
 .card {
