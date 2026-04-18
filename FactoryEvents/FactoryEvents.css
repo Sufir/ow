@@ -1,0 +1,352 @@
+* {
+  box-sizing: border-box;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --a4-w: 210mm;
+  --a4-h: 297mm;
+
+  --card-w: 80mm;
+  --card-h: 120mm;
+
+  --bleed: 3mm;
+
+  --ink: #191b1c;
+  --text: #ffffff;
+
+  --cross-color: #a0a0a0;
+  
+  --cross-v: linear-gradient(to right, transparent calc(3.75mm - 0.1mm), var(--cross-color) calc(3.75mm - 0.1mm), var(--cross-color) calc(3.75mm + 0.1mm), transparent calc(3.75mm + 0.1mm));
+  --cross-h: linear-gradient(to bottom, transparent calc(3.75mm - 0.1mm), var(--cross-color) calc(3.75mm - 0.1mm), var(--cross-color) calc(3.75mm + 0.1mm), transparent calc(3.75mm + 0.1mm));
+  
+  --cross-v-white: linear-gradient(to right, transparent calc(3.75mm - 0.3mm), #fff calc(3.75mm - 0.3mm), #fff calc(3.75mm + 0.3mm), transparent calc(3.75mm + 0.3mm));
+  --cross-h-white: linear-gradient(to bottom, transparent calc(3.75mm - 0.3mm), #fff calc(3.75mm - 0.3mm), #fff calc(3.75mm + 0.3mm), transparent calc(3.75mm + 0.3mm));
+}
+
+@font-face {
+  font-family: "AlienEncounters";
+  src: url("../Fonts/AlienEncounters.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 8.5pt;
+  background: #f0f2f5;
+}
+
+.page {
+  width: var(--a4-w);
+  height: var(--a4-h);
+  page-break-after: always;
+  position: relative;
+}
+
+.page:last-child {
+  page-break-after: auto;
+}
+
+.sheet {
+  width: var(--a4-w);
+  height: var(--a4-h);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.bleed-wrap {
+  background: var(--ink);
+  padding: var(--bleed);
+  position: relative;
+  overflow: visible;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, var(--card-w));
+  grid-template-rows: repeat(2, var(--card-h));
+  gap: 0;
+  position: relative;
+}
+
+.cards-grid::after {
+  content: "";
+  position: absolute;
+  top: -3.75mm;
+  left: -3.75mm;
+  right: -3.75mm;
+  bottom: -3.75mm;
+  pointer-events: none;
+  z-index: 10;
+  
+  background-image:
+    /* Top row - White background lines */
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+    /* Middle row - White background lines */
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+    /* Bottom row - White background lines */
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+    var(--cross-v-white), var(--cross-h-white),
+
+    /* Top row - Colored foreground lines */
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h),
+    /* Middle row - Colored foreground lines */
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h),
+    /* Bottom row - Colored foreground lines */
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h),
+    var(--cross-v), var(--cross-h);
+
+  background-size: 7.5mm 7.5mm;
+  background-repeat: no-repeat;
+
+  background-position:
+    /* Top row - White */
+    0 0, 0 0,
+    calc(80mm) 0, calc(80mm) 0,
+    calc(160mm) 0, calc(160mm) 0,
+    /* Middle row - White */
+    0 calc(120mm), 0 calc(120mm),
+    calc(80mm) calc(120mm), calc(80mm) calc(120mm),
+    calc(160mm) calc(120mm), calc(160mm) calc(120mm),
+    /* Bottom row - White */
+    0 calc(240mm), 0 calc(240mm),
+    calc(80mm) calc(240mm), calc(80mm) calc(240mm),
+    calc(160mm) calc(240mm), calc(160mm) calc(240mm),
+
+    /* Top row - Colored */
+    0 0, 0 0,
+    calc(80mm) 0, calc(80mm) 0,
+    calc(160mm) 0, calc(160mm) 0,
+    /* Middle row - Colored */
+    0 calc(120mm), 0 calc(120mm),
+    calc(80mm) calc(120mm), calc(80mm) calc(120mm),
+    calc(160mm) calc(120mm), calc(160mm) calc(120mm),
+    /* Bottom row - Colored */
+    0 calc(240mm), 0 calc(240mm),
+    calc(80mm) calc(240mm), calc(80mm) calc(240mm),
+    calc(160mm) calc(240mm), calc(160mm) calc(240mm);
+}
+
+/* Remove crop marks from the back page */
+.page-back .cards-grid::after {
+  display: none;
+}
+
+.card {
+  width: var(--card-w);
+  height: var(--card-h);
+  background: var(--ink);
+  color: var(--text);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+}
+
+.tech {
+  display: none;
+}
+
+@media screen {
+  body {
+    padding: 24px;
+  }
+
+  .page {
+    margin: 0 auto 24px auto;
+  }
+
+  .sheet {
+    background: #ffffff;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
+    outline: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .card {
+    outline: 1px dashed rgba(255, 255, 255, 0.12);
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+
+  .page {
+    margin: 0;
+  }
+
+  .sheet {
+    background: transparent;
+  }
+
+  .card {
+    overflow: visible;
+  }
+
+  .tech {
+    display: block;
+    position: absolute;
+    left: 6mm;
+    bottom: 6mm;
+    font-size: 7pt;
+    color: #9a9a9a;
+    letter-spacing: 0.2mm;
+    user-select: none;
+  }
+
+  /* Force background images to print (crucial for marks) */
+  .cards-grid::after {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 8.5pt;
+  text-align: left;
+  color: rgb(204, 204, 204);
+  margin-bottom: 2mm;
+}
+
+.card-header {
+  font-size: 12pt;
+  text-align: center;
+  color: #25a4ee;
+  margin-bottom: 2mm;
+  font-family: "AlienEncounters", "Orbitron", sans-serif;
+}
+
+.page-1 .card-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 6mm 6mm;
+}
+
+.page-1 .card-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1.2mm;
+  height: auto;
+}
+
+.page-1 p {
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+  line-height: 1.15;
+}
+
+.page-1 p::before {
+  content: "●";
+  margin-right: 4px;
+}
+
+.page-1 p:nth-child(1) {
+  color: #4aa3ff;
+}
+.page-1 p:nth-child(2) {
+  color: #5fdc8f;
+}
+.page-1 p:nth-child(3) {
+  color: #ff6d01;
+}
+.page-1 p:nth-child(4) {
+  color: #b388ff;
+}
+.page-1 p:nth-child(5) {
+  color: #ff6b6b;
+}
+.page-1 p:nth-child(6) {
+  color: #ff8ad6;
+}
+.page-1 p:nth-child(7) {
+  color: #6fe7ff;
+}
+.page-1 p:nth-child(8) {
+  color: #ffe066;
+}
+.page-1 p:nth-child(9) {
+  color: #4de0c7;
+}
+.page-1 p:nth-child(10) {
+  color: #ffffff;
+}
+
+.page-2 .card-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 6mm 6mm;
+  gap: 3mm;
+}
+
+.factory-figure {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.factory-figure img {
+  width: 88%;
+  height: auto;
+  display: block;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
+}
+
+.page-2 .card-copy {
+  color: #cccccc;
+  text-align: justify;
+  hyphens: auto;
+  line-height: 1.15;
+}
+
+.page-2 .card-copy p {
+  margin: 0;
+}
+
+.page-back .card-inner {
+  padding: 2mm;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-back .card-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
