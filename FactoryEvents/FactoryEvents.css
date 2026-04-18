@@ -31,6 +31,13 @@ body {
   --cross-h-white: linear-gradient(to bottom, transparent calc(3.75mm - 0.3mm), #fff calc(3.75mm - 0.3mm), #fff calc(3.75mm + 0.3mm), transparent calc(3.75mm + 0.3mm));
 }
 
+@font-face {
+  font-family: "AlienEncounters";
+  src: url("../Fonts/AlienEncounters.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @page {
   size: A4 portrait;
   margin: 0;
@@ -232,11 +239,11 @@ body {
 }
 
 .card-header {
-  font-weight: bold;
-  font-size: 10.5pt;
+  font-size: 12pt;
   text-align: center;
-  color: var(--text);
+  color: #25a4ee;
   margin-bottom: 2mm;
+  font-family: "AlienEncounters", "Orbitron", sans-serif;
 }
 
 .page-1 .card-inner {
