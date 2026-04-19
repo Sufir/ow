@@ -64,7 +64,7 @@ body {
 }
 
 .back .bleed-bg {
-  background-color: #00011c;
+  background-color: #000009;
 }
 
 .safe-zone {
@@ -168,17 +168,11 @@ body {
 
 .back-logo {
   flex: 1;
-  border: 1mm dashed rgba(255, 255, 255, 0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.back-logo::after {
-  content: "LOGO";
-  color: rgba(255, 255, 255, 0.2);
-  font-size: 20pt;
-  font-weight: bold;
+  background-image: url('images/back.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 1mm; /* Добавим небольшое скругление, если нужно, или уберем */
 }
 
 /* Crop marks */
