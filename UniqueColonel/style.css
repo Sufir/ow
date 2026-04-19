@@ -99,7 +99,7 @@ body {
 }
 
 .illustration {
-  height: 25%;
+  aspect-ratio: 4 / 3;
   background-color: #111122;
   border: 0.5mm solid #25a4ee;
   margin-bottom: 2mm;
@@ -116,13 +116,12 @@ body {
 
 .prop-name {
   font-weight: bold;
-  color: #25a4ee;
+  color: #ffffff;
   display: inline;
 }
 
 .prop-cond {
-  font-style: italic;
-  color: #aaaaaa;
+  color: #25a4ee;
   margin-left: 1mm;
   display: inline;
 }
