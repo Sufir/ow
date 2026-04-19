@@ -95,8 +95,11 @@ body {
   font-style: italic;
   color: #aaaaaa;
   text-align: center;
-  margin-top: auto;
-  margin-bottom: 0;
+  position: absolute;
+  bottom: 1.5mm;
+  left: 4mm;
+  right: 4mm;
+  margin: 0;
   line-height: 1.1;
 }
 
@@ -121,6 +124,7 @@ body {
   color: #ffffff;
   font-size: 6pt;
   line-height: 1.1;
+  margin-bottom: 7mm; /* Оставляем место для абсолютного позиционирования flavor text */
 }
 
 .prop-name {
