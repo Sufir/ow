@@ -1,0 +1,172 @@
+/* Factory/factory.css */
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: inherit;
+}
+
+.page {
+  width: 210mm;
+  height: 297mm;
+  page-break-after: always;
+  break-after: page;
+  background-color: #fff;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen {
+  body {
+    padding: 10mm;
+  }
+  .page {
+    margin-bottom: 10mm;
+    box-shadow: 0 0 3mm rgba(0, 0, 0, 0.5);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 50mm);
+  grid-template-rows: repeat(5, 50mm);
+  padding: 2mm; /* Внешний bleed цвета #191b1c */
+  background-color: #191b1c;
+}
+
+.token {
+  width: 50mm;
+  height: 50mm;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Чтобы фоновые изображения печатались */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.token.factory-common {
+  background-image: url('factory.png');
+}
+
+.token.factory-special-1 {
+  background-image: url('factory1.png');
+}
+
+.token.factory-special-2 {
+  background-image: url('factory2.png');
+}
+
+.token.factory-special-3 {
+  background-image: url('factory3.png');
+}
+
+.token.factory-special-4 {
+  background-image: url('factory4.png');
+}
+
+.token.factory-special-5 {
+  background-image: url('factory5.png');
+}
+
+.token.factory-special-6 {
+  background-image: url('factory6.png');
+}
+
+.token.factory-special-7 {
+  background-image: url('factory7.png');
+}
+
+.token.factory-special-8 {
+  background-image: url('factory8.png');
+}
+
+.token.factory-special-9 {
+  background-image: url('factory9.png');
+}
+
+.token.factory-special-10 {
+  background-image: url('factory10.png');
+}
+
+.token .special-symbol {
+  font-size: 8mm;
+  margin-top: 5mm;
+  margin-left: 5mm;
+}
+
+.token.factory-special-1 {
+  color: #4aa3ff;
+}
+.token.factory-special-2 {
+  color: #5fdc8f;
+}
+.token.factory-special-3 {
+  color: #ff6d01;
+}
+.token.factory-special-4 {
+  color: #b388ff;
+}
+.token.factory-special-5 {
+  color: #ff6b6b;
+}
+.token.factory-special-6 {
+  color: #ff8ad6;
+}
+.token.factory-special-7 {
+  color: #6fe7ff;
+}
+.token.factory-special-8 {
+  color: #ffe066;
+}
+.token.factory-special-9 {
+  color: #4de0c7;
+}
+.token.factory-special-10 {
+  color: #ffffff;
+}
+
+/* Метки реза реализованы (светло-серые кресты по углам и между картами) 
+   и скрыты для экрана (видны только при @media print) */
+@media print {
+  .token::before {
+    content: "";
+    position: absolute;
+    top: -5mm;
+    left: -5mm;
+    width: 60mm;
+    height: 60mm;
+    /* Кресты #aaa размером 10мм х 10мм, толщина линии 0.2мм */
+    background:
+      /* Top-Left */
+      linear-gradient(#aaa, #aaa) 0 4.9mm / 10mm 0.2mm no-repeat,
+      linear-gradient(#aaa, #aaa) 4.9mm 0 / 0.2mm 10mm no-repeat,
+      /* Top-Right */
+      linear-gradient(#aaa, #aaa) 50mm 4.9mm / 10mm 0.2mm no-repeat,
+      linear-gradient(#aaa, #aaa) 54.9mm 0 / 0.2mm 10mm no-repeat,
+      /* Bottom-Left */
+      linear-gradient(#aaa, #aaa) 0 54.9mm / 10mm 0.2mm no-repeat,
+      linear-gradient(#aaa, #aaa) 4.9mm 50mm / 0.2mm 10mm no-repeat,
+      /* Bottom-Right */
+      linear-gradient(#aaa, #aaa) 50mm 54.9mm / 10mm 0.2mm no-repeat,
+      linear-gradient(#aaa, #aaa) 54.9mm 50mm / 0.2mm 10mm no-repeat;
+    pointer-events: none;
+    z-index: 10;
+  }
+}
