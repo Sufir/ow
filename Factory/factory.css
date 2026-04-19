@@ -33,7 +33,6 @@ html, body {
 
 @media screen {
   body {
-    background-color: #333;
     padding: 10mm;
   }
   .page {
@@ -62,12 +61,85 @@ html, body {
   print-color-adjust: exact;
 }
 
-.token.factory-1 {
+.token.factory-common {
   background-image: url('factory.png');
 }
 
-.token.factory-2 {
-  background-image: url('factory.png');
+.token.factory-special-1 {
+  background-image: url('factory1.png');
+}
+
+.token.factory-special-2 {
+  background-image: url('factory2.png');
+}
+
+.token.factory-special-3 {
+  background-image: url('factory3.png');
+}
+
+.token.factory-special-4 {
+  background-image: url('factory4.png');
+}
+
+.token.factory-special-5 {
+  background-image: url('factory5.png');
+}
+
+.token.factory-special-6 {
+  background-image: url('factory6.png');
+}
+
+.token.factory-special-7 {
+  background-image: url('factory7.png');
+}
+
+.token.factory-special-8 {
+  background-image: url('factory8.png');
+}
+
+.token.factory-special-9 {
+  background-image: url('factory9.png');
+}
+
+.token.factory-special-10 {
+  background-image: url('factory10.png');
+}
+
+.token .special-symbol {
+  font-size: 8mm;
+  margin-top: 5mm;
+  margin-left: 5mm;
+}
+
+.token.factory-special-1 {
+  color: #4aa3ff;
+}
+.token.factory-special-2 {
+  color: #5fdc8f;
+}
+.token.factory-special-3 {
+  color: #ff6d01;
+}
+.token.factory-special-4 {
+  color: #b388ff;
+}
+.token.factory-special-5 {
+  color: #ff6b6b;
+}
+.token.factory-special-6 {
+  color: #ff8ad6;
+}
+.token.factory-special-7 {
+  color: #6fe7ff;
+}
+.token.factory-special-8 {
+  color: #ffe066;
+}
+.token.factory-special-9 {
+  color: #4de0c7;
+}
+.token.factory-special-10 {
+  color: #ffffff;
 }
 
 /* Метки реза реализованы (светло-серые кресты по углам и между картами) 
