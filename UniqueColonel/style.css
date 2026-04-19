@@ -128,19 +128,26 @@ body {
 }
 
 .prop-name {
-  font-weight: bold;
+  font-weight: 600;
   color: #ffffff;
-  display: inline;
+  display: block;
+  font-size: 7pt;
+  border-top: #25a4ee 0.5mm solid;
+  border-left: #25a4ee 0.5mm solid;
+  padding-left: 1mm;
+  width: 100%;
 }
 
 .prop-cond {
   color: #25a4ee;
-  margin-left: 1mm;
-  display: inline;
+  display: block;
+  font-weight: 700;
+  border-left: #25a4ee 0.5mm solid;
+  padding-left: 1mm;
 }
 
 .prop-desc {
-  margin-top: 0.5mm;
+  margin-top: 1mm;
 }
 
 .back-logo {
