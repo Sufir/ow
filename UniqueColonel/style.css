@@ -82,36 +82,38 @@ body {
 
 .title {
   font-family: Arial, sans-serif;
-  font-size: 9pt;
+  font-size: 8.5pt;
   font-weight: bold;
   color: #ffffff;
   text-align: center;
-  margin-bottom: 2mm;
+  margin-bottom: 1mm;
 }
 
 .flavor {
   font-family: Arial, sans-serif;
-  font-size: 7.5pt;
+  font-size: 7pt;
   font-style: italic;
   color: #aaaaaa;
   text-align: center;
-  margin-bottom: 2mm;
+  margin-bottom: 1.5mm;
+  line-height: 1.1;
 }
 
 .illustration {
   aspect-ratio: 4 / 3;
   background-color: #111122;
   border: 0.5mm solid #25a4ee;
-  margin-bottom: 2mm;
+  margin-bottom: 1.5mm;
 }
 
 .properties {
   flex: 1;
   background: transparent;
-  padding: 2mm;
+  padding: 1mm;
   border-radius: 1mm;
   color: #ffffff;
-  font-size: 7pt;
+  font-size: 6pt;
+  line-height: 1.1;
 }
 
 .prop-name {
@@ -127,7 +129,7 @@ body {
 }
 
 .prop-desc {
-  margin-top: 1mm;
+  margin-top: 0.5mm;
 }
 
 .back-logo {
