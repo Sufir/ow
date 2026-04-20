@@ -105,10 +105,31 @@ html, body {
   background-image: url('factory10.png');
 }
 
+.token.lab {
+  background-image: url('lab.png');
+}
+
+.token.swarm-controller {
+  background-image: url('swarm-controller.png');
+}
+
+.token.community {
+  background-image: url('community.png');
+}
+
 .token .special-symbol {
   font-size: 8mm;
-  margin-top: 5mm;
-  margin-left: 5mm;
+  padding-bottom: 4mm;
+  padding-right: 4mm;
+  bottom: 0px;
+  right: 0px;
+  position: absolute;
+  text-align: right;
+  text-shadow: 
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
 }
 
 .token.factory-special-1 {

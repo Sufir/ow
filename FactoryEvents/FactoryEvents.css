@@ -323,14 +323,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 160px;
+  overflow: hidden;
 }
 
 .factory-figure img {
-  width: 88%;
+  width: 84%;
   height: auto;
   display: block;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%);
 }
 
 .page-2 .card-copy {
