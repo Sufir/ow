@@ -54,15 +54,29 @@ html, body {
   width: 50mm;
   height: 50mm;
   position: relative;
+  /* z-index is managed by the grid and pseudo-elements */
+}
+
+/* Слой с иллюстрацией жетона */
+.token::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--bg-img);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  /* Чтобы фоновые изображения печатались */
+  z-index: 1;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
+  /* Обрезка под нужную форму */
+  clip-path: var(--shape-clip, none);
 }
 
-/* Динамический bleed вокруг жетонов */
+/* Динамический bleed вокруг жетонов (слой фона) */
 .token::after {
   content: "";
   position: absolute;
@@ -72,66 +86,85 @@ html, body {
   bottom: -2mm;
   background-color: #191b1c;
   z-index: -1;
+  /* Обрезка bleed'а под ту же форму */
+  clip-path: var(--shape-clip, none);
+}
+
+/* Формы жетонов */
+.shape-circle {
+  --shape-clip: circle(50% at 50% 50%);
+}
+
+.shape-pentagon {
+  --shape-clip: polygon(50% 0%, 100% 38%, 81% 100%, 19% 100%, 0% 38%);
+}
+
+.shape-hexagon {
+  --shape-clip: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.shape-octagon {
+  --shape-clip: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
 }
 
 .token.factory-common {
-  background-image: url('factory.png');
+  --bg-img: url('factory.png');
 }
 
 .token.factory-special-1 {
-  background-image: url('factory1.png');
+  --bg-img: url('factory1.png');
 }
 
 .token.factory-special-2 {
-  background-image: url('factory2.png');
+  --bg-img: url('factory2.png');
 }
 
 .token.factory-special-3 {
-  background-image: url('factory3.png');
+  --bg-img: url('factory3.png');
 }
 
 .token.factory-special-4 {
-  background-image: url('factory4.png');
+  --bg-img: url('factory4.png');
 }
 
 .token.factory-special-5 {
-  background-image: url('factory5.png');
+  --bg-img: url('factory5.png');
 }
 
 .token.factory-special-6 {
-  background-image: url('factory6.png');
+  --bg-img: url('factory6.png');
 }
 
 .token.factory-special-7 {
-  background-image: url('factory7.png');
+  --bg-img: url('factory7.png');
 }
 
 .token.factory-special-8 {
-  background-image: url('factory8.png');
+  --bg-img: url('factory8.png');
 }
 
 .token.factory-special-9 {
-  background-image: url('factory9.png');
+  --bg-img: url('factory9.png');
 }
 
 .token.factory-special-10 {
-  background-image: url('factory10.png');
+  --bg-img: url('factory10.png');
 }
 
 .token.lab {
-  background-image: url('lab.png');
+  --bg-img: url('lab.png');
 }
 
 .token.swarm-controller {
-  background-image: url('swarm-controller.png');
+  --bg-img: url('swarm-controller.png');
 }
 
 .token.swarm-zone {
-  background-image: url('swarm-zone.png');
+  --bg-img: url('swarm-zone.png');
 }
 
 .token.community {
-  background-image: url('community.png');
+  --bg-img: url('community.png');
 }
 
 .token .special-symbol {
@@ -141,6 +174,7 @@ html, body {
   bottom: 0px;
   right: 0px;
   position: absolute;
+  z-index: 2;
   text-align: right;
   text-shadow: 
     -1px -1px 0 #000,
