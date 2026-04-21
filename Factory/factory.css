@@ -45,7 +45,7 @@ html, body {
   display: grid;
   grid-template-columns: repeat(4, 50mm);
   grid-auto-rows: 50mm;
-  margin: 2mm; /* Компенсация удаленного padding для центрирования */
+  margin: 2mm;
   position: relative;
   z-index: 1;
 }
@@ -54,10 +54,11 @@ html, body {
   width: 50mm;
   height: 50mm;
   position: relative;
-  /* z-index is managed by the grid and pseudo-elements */
+  background-color: #191b1c;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
-/* Слой с иллюстрацией жетона */
 .token::before {
   content: "";
   position: absolute;
@@ -72,25 +73,9 @@ html, body {
   z-index: 1;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
-  /* Обрезка под нужную форму */
   clip-path: var(--shape-clip, none);
 }
 
-/* Динамический bleed вокруг жетонов (слой фона) */
-.token::after {
-  content: "";
-  position: absolute;
-  top: -2mm;
-  left: -2mm;
-  right: -2mm;
-  bottom: -2mm;
-  background-color: #191b1c;
-  z-index: -1;
-  /* Обрезка bleed'а под ту же форму */
-  clip-path: var(--shape-clip, none);
-}
-
-/* Формы жетонов */
 .shape-circle {
   --shape-clip: circle(50% at 50% 50%);
 }
@@ -100,12 +85,10 @@ html, body {
 }
 
 .shape-hexagon {
-  /* Правильный равносторонний шестиугольник, вписанный по ширине (плоский верх и низ) */
   --shape-clip: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
 }
 
 .shape-hexagon-pointy {
-  /* Правильный равносторонний шестиугольник, вписанный по высоте (острый верх и низ) */
   --shape-clip: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
 }
 
@@ -114,7 +97,6 @@ html, body {
 }
 
 .shape-triangle {
-  /* Правильный равносторонний треугольник, вписанный по ширине основания */
   --shape-clip: polygon(50% 6.7%, 100% 93.3%, 0% 93.3%);
 }
 
@@ -228,7 +210,7 @@ html, body {
 /* Метки реза реализованы (светло-серые кресты по углам и между картами) 
    и скрыты для экрана (видны только при @media print) */
 @media print {
-  .token::before {
+  .token::after {
     content: "";
     position: absolute;
     top: -5mm;
