@@ -44,9 +44,10 @@ html, body {
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 50mm);
-  grid-template-rows: repeat(5, 50mm);
-  padding: 2mm; /* Внешний bleed цвета #191b1c */
-  background-color: #191b1c;
+  grid-auto-rows: 50mm;
+  margin: 2mm; /* Компенсация удаленного padding для центрирования */
+  position: relative;
+  z-index: 1;
 }
 
 .token {
@@ -59,6 +60,18 @@ html, body {
   /* Чтобы фоновые изображения печатались */
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
+}
+
+/* Динамический bleed вокруг жетонов */
+.token::after {
+  content: "";
+  position: absolute;
+  top: -2mm;
+  left: -2mm;
+  right: -2mm;
+  bottom: -2mm;
+  background-color: #191b1c;
+  z-index: -1;
 }
 
 .token.factory-common {
@@ -111,6 +124,10 @@ html, body {
 
 .token.swarm-controller {
   background-image: url('swarm-controller.png');
+}
+
+.token.swarm-zone {
+  background-image: url('swarm-zone.png');
 }
 
 .token.community {
