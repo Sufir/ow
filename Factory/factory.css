@@ -162,18 +162,66 @@ html, body {
 
 .token .special-symbol {
   font-size: 8mm;
-  padding-bottom: 4mm;
-  padding-right: 4mm;
-  bottom: 0px;
-  right: 0px;
   position: absolute;
   z-index: 2;
-  text-align: right;
   text-shadow: 
     -1px -1px 0 #000,
      1px -1px 0 #000,
     -1px  1px 0 #000,
      1px  1px 0 #000;
+  
+  /* Дефолтное позиционирование (правый нижний угол) */
+  bottom: var(--symbol-offset-y, 4mm);
+  right: var(--symbol-offset-x, 4mm);
+  top: var(--symbol-top, auto);
+  left: var(--symbol-left, auto);
+  transform: var(--symbol-transform, none);
+}
+
+/* Модификаторы для изменения позиции маркера */
+.token.symbol-top-left .special-symbol {
+  --symbol-top: 4mm;
+  --symbol-left: 4mm;
+  --symbol-offset-y: auto;
+  --symbol-offset-x: auto;
+}
+
+.token.symbol-top-right .special-symbol {
+  --symbol-top: 4mm;
+  --symbol-left: auto;
+  --symbol-offset-y: auto;
+  --symbol-offset-x: 4mm;
+}
+
+.token.symbol-bottom-left .special-symbol {
+  --symbol-top: auto;
+  --symbol-left: 4mm;
+  --symbol-offset-y: 4mm;
+  --symbol-offset-x: auto;
+}
+
+.token.symbol-center .special-symbol {
+  --symbol-top: 50%;
+  --symbol-left: 50%;
+  --symbol-offset-y: auto;
+  --symbol-offset-x: auto;
+  --symbol-transform: translate(-50%, -50%);
+}
+
+.token.symbol-top-center .special-symbol {
+  --symbol-top: 4mm;
+  --symbol-left: 50%;
+  --symbol-offset-y: auto;
+  --symbol-offset-x: auto;
+  --symbol-transform: translateX(-50%);
+}
+
+.token.symbol-bottom-center .special-symbol {
+  --symbol-top: auto;
+  --symbol-left: 50%;
+  --symbol-offset-y: 4mm;
+  --symbol-offset-x: auto;
+  --symbol-transform: translateX(-50%);
 }
 
 .token.factory-special-1 {
