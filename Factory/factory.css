@@ -28,7 +28,9 @@ html, body {
   margin: 0 auto;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start; /* Выравнивание всего контента по верхнему краю */
+  padding-top: 10mm;  /* Фиксированный отступ сверху */
+  box-sizing: border-box;
 }
 
 @media screen {
@@ -48,6 +50,8 @@ html, body {
   margin: 2mm;
   position: relative;
   z-index: 1;
+  /* Выравнивание сетки по верхнему краю (без центрирования по вертикали, если жетонов мало) */
+  align-content: start;
 }
 
 .token {
