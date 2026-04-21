@@ -1,36 +1,38 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
 <style>
-.wrapper {
-  position: relative;
+.page {
+  width: 210mm;
+  height: 297mm;
+  background-color: #eee;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 200px;
-  background: red;
 }
-.illus {
-  width: 90%;
-  aspect-ratio: 4 / 3;
-  background: blue;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 50mm);
+  grid-template-rows: repeat(5, 50mm);
+  padding: 2mm;
+  background-color: #191b1c;
 }
-.wrapper::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  background: rgba(0, 255, 0, 0.5);
-  pointer-events: none;
+.token {
+  width: 50mm;
+  height: 50mm;
+  background-color: #ccc;
+  border: 1px solid red;
 }
 </style>
 </head>
 <body>
-  <div class="wrapper">
-    <div class="illus"></div>
+<div class="page">
+  <div class="grid">
+    <div class="token"></div>
+    <div class="token"></div>
+    <div class="token"></div>
   </div>
+</div>
 </body>
 </html>

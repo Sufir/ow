@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  width: 200mm;
+  /* padding: 2mm; REMOVED */
+  /* background-color: #191b1c; REMOVED */
+  gap: 0;
+}
+.token {
+  width: 50mm;
+  height: 50mm;
+  position: relative;
+  background-color: #ccc; /* simulate image */
+  z-index: 1; /* establish stacking context */
+}
+.token::after {
+  content: "";
+  position: absolute;
+  top: -2mm; left: -2mm; right: -2mm; bottom: -2mm;
+  background-color: #191b1c;
+  z-index: -1; /* behind the token */
+}
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="token"></div>
+    <div class="token"></div>
+    <div class="token"></div>
+    <div class="token"></div>
+    <div class="token"></div>
+  </div>
+</body>
+</html>

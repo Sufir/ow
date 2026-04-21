@@ -1,0 +1,30 @@
+<style>
+.page { width: 210mm; height: 297mm; background: white; padding: 20px; border: 1px solid black; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 50mm);
+  grid-auto-rows: 50mm;
+  margin: 2mm;
+  position: relative;
+  z-index: 1;
+}
+.token {
+  width: 50mm; height: 50mm;
+  position: relative;
+  border: 1px dashed red;
+}
+.token::after {
+  content: "";
+  position: absolute;
+  top: -2mm; left: -2mm; right: -2mm; bottom: -2mm;
+  background-color: #191b1c;
+  z-index: -1;
+}
+</style>
+<div class="page">
+  <div class="grid">
+    <div class="token"></div>
+    <div class="token"></div>
+    <div class="token"></div>
+  </div>
+</div>

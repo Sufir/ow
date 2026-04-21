@@ -1,0 +1,23 @@
+<style>
+  .grid {
+    position: relative;
+    z-index: 1; /* root stacking context */
+    display: flex;
+  }
+  .token {
+    width: 100px; height: 100px;
+    position: relative; /* containing block, but z-index auto */
+    background: green;
+  }
+  .token::after {
+    content: "";
+    position: absolute;
+    top: -20px; left: -20px; right: -20px; bottom: -20px;
+    background: red;
+    z-index: -1;
+  }
+</style>
+<div class="grid">
+  <div class="token">A</div>
+  <div class="token">B</div>
+</div>
