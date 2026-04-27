@@ -4,6 +4,13 @@
   margin: 0;
 }
 
+@font-face {
+  font-family: 'OilWars';
+  src: url('../Fonts/Oil Wars.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -257,6 +264,11 @@ html, body {
 }
 .token.factory-special-10 {
   color: #ffffff;
+}
+.token.community {
+  font-family: OilWars;
+  color: #ff6d01;
+  font-weight: normal;
 }
 
 /* Метки реза реализованы (светло-серые кресты по углам и между картами) 
