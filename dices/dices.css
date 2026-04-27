@@ -1,6 +1,6 @@
 @page {
   size: A4;
-  margin: 10mm;
+  margin: 0; /* Убираем системные отступы принтера, чтобы контролировать всё через CSS */
 }
 
 @font-face {
@@ -15,18 +15,22 @@ html {
 
 body {
   margin: 0;
+  padding: 0;
   background: white;
+  width: 210mm;
+  height: 297mm; /* Строго задаем размер А4 */
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Центрирование по горизонтали */
+  align-items: center; /* Центрирование по вертикали (добавит равные отступы сверху и снизу) */
+  box-sizing: border-box;
 }
 
 /* Сетка */
 .sheet {
   display: grid;
-  grid-template-columns: repeat(14, 13mm);
+  grid-template-columns: repeat(15, 13mm); /* Увеличили на 1 ячейку (теперь 15 колонок) */
   grid-auto-rows: 13mm;
   gap: 0;
-  margin: 0 auto;
 }
 
 /* Ячейка */
