@@ -21,8 +21,9 @@ body {
   height: 297mm; /* Строго задаем размер А4 */
   display: flex;
   justify-content: center; /* Центрирование по горизонтали */
-  align-items: center; /* Центрирование по вертикали (добавит равные отступы сверху и снизу) */
+  align-items: flex-start; /* Выравнивание по верхнему краю */
   box-sizing: border-box;
+  padding-top: 10mm; /* Отступ 10 мм сверху */
 }
 
 /* Сетка */
