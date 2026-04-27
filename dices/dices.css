@@ -3,10 +3,9 @@
   margin: 10mm;
 }
 
-/* Шрифт */
 @font-face {
   font-family: 'AlienEncounters';
-  src: url('./AlienEncounters.ttf') format('truetype');
+  src: url('../fonts/AlienEncounters.ttf') format('truetype');
 }
 
 html {
@@ -17,56 +16,85 @@ html {
 body {
   margin: 0;
   background: white;
+  display: flex;
+  justify-content: center;
 }
 
 /* Сетка */
 .sheet {
-  width: 190mm;
   display: grid;
   grid-template-columns: repeat(14, 13mm);
   grid-auto-rows: 13mm;
+  gap: 0;
+  margin: 0 auto;
 }
 
 /* Ячейка */
 .cell {
   width: 13mm;
   height: 13mm;
-
-  border: 0.1pt solid rgba(128, 128, 128, 0.3);
-
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-
   box-sizing: border-box;
+  position: relative;
 }
 
-/* Общий стиль граней */
-.face {
+/* Изображения */
+.cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Метки реза (крестики) */
+.cell::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  background-image:
+    /* Top-left */
+    linear-gradient(black, black), linear-gradient(black, black),
+    /* Top-right */
+    linear-gradient(black, black), linear-gradient(black, black),
+    /* Bottom-left */
+    linear-gradient(black, black), linear-gradient(black, black),
+    /* Bottom-right */
+    linear-gradient(black, black), linear-gradient(black, black);
+
+  background-size:
+    /* Top-left */
+    2mm 0.1mm, 0.1mm 2mm,
+    /* Top-right */
+    2mm 0.1mm, 0.1mm 2mm,
+    /* Bottom-left */
+    2mm 0.1mm, 0.1mm 2mm,
+    /* Bottom-right */
+    2mm 0.1mm, 0.1mm 2mm;
+
+  background-position:
+    /* Top-left */
+    top left, top left,
+    /* Top-right */
+    top right, top right,
+    /* Bottom-left */
+    bottom left, bottom left,
+    /* Bottom-right */
+    bottom right, bottom right;
+
   background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-}
-
-/* Иконки */
-.face--kill {
-  background-image: url('./kill.png');
-}
-
-.face--retreat {
-  background-image: url('./retreat.png');
 }
 
 /* Числа */
 .face--num {
   font-family: 'AlienEncounters', sans-serif;
   color: #00ffff;
-
-  font-size: 10mm;
+  font-size: 11mm;
   line-height: 1;
-
   text-align: center;
-
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: none;
 }
