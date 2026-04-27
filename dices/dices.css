@@ -53,8 +53,10 @@ body {
 .cell::after {
   content: "";
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  /* Смещение ровно на половину толщины (0.25mm / 2 = 0.125mm), чтобы метки сливались в одну линию точно между ячейками */
+  top: -0.125mm; left: -0.125mm; right: -0.125mm; bottom: -0.125mm;
   pointer-events: none;
+  z-index: 10;
   background-image:
     /* Top-left */
     linear-gradient(black, black), linear-gradient(black, black),
@@ -67,13 +69,13 @@ body {
 
   background-size:
     /* Top-left */
-    2mm 0.1mm, 0.1mm 2mm,
+    2mm 0.25mm, 0.25mm 2mm,
     /* Top-right */
-    2mm 0.1mm, 0.1mm 2mm,
+    2mm 0.25mm, 0.25mm 2mm,
     /* Bottom-left */
-    2mm 0.1mm, 0.1mm 2mm,
+    2mm 0.25mm, 0.25mm 2mm,
     /* Bottom-right */
-    2mm 0.1mm, 0.1mm 2mm;
+    2mm 0.25mm, 0.25mm 2mm;
 
   background-position:
     /* Top-left */
