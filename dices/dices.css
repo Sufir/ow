@@ -1,12 +1,11 @@
 @page {
   size: A4;
-  margin: 10mm;
+  margin: 0; /* Убираем системные отступы принтера, чтобы контролировать всё через CSS */
 }
 
-/* Шрифт */
 @font-face {
   font-family: 'AlienEncounters';
-  src: url('./AlienEncounters.ttf') format('truetype');
+  src: url('../fonts/AlienEncounters.ttf') format('truetype');
 }
 
 html {
@@ -16,57 +15,93 @@ html {
 
 body {
   margin: 0;
+  padding: 0;
   background: white;
+  width: 210mm;
+  height: 297mm; /* Строго задаем размер А4 */
+  display: flex;
+  justify-content: center; /* Центрирование по горизонтали */
+  align-items: flex-start; /* Выравнивание по верхнему краю */
+  box-sizing: border-box;
+  padding-top: 10mm; /* Отступ 10 мм сверху */
 }
 
 /* Сетка */
 .sheet {
-  width: 190mm;
   display: grid;
-  grid-template-columns: repeat(14, 13mm);
+  grid-template-columns: repeat(15, 13mm); /* Увеличили на 1 ячейку (теперь 15 колонок) */
   grid-auto-rows: 13mm;
+  gap: 0;
 }
 
 /* Ячейка */
 .cell {
   width: 13mm;
   height: 13mm;
-
-  border: 0.1pt solid rgba(128, 128, 128, 0.3);
-
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-
   box-sizing: border-box;
+  position: relative;
 }
 
-/* Общий стиль граней */
-.face {
+/* Изображения */
+.cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Метки реза (крестики) */
+.cell::after {
+  content: "";
+  position: absolute;
+  /* Смещение ровно на половину толщины (0.25mm / 2 = 0.125mm), чтобы метки сливались в одну линию точно между ячейками */
+  top: -0.125mm; left: -0.125mm; right: -0.125mm; bottom: -0.125mm;
+  pointer-events: none;
+  z-index: 10;
+  background-image:
+    /* Top-left */
+    linear-gradient(black, black), linear-gradient(black, black),
+    /* Top-right */
+    linear-gradient(black, black), linear-gradient(black, black),
+    /* Bottom-left */
+    linear-gradient(black, black), linear-gradient(black, black),
+    /* Bottom-right */
+    linear-gradient(black, black), linear-gradient(black, black);
+
+  background-size:
+    /* Top-left */
+    2mm 0.25mm, 0.25mm 2mm,
+    /* Top-right */
+    2mm 0.25mm, 0.25mm 2mm,
+    /* Bottom-left */
+    2mm 0.25mm, 0.25mm 2mm,
+    /* Bottom-right */
+    2mm 0.25mm, 0.25mm 2mm;
+
+  background-position:
+    /* Top-left */
+    top left, top left,
+    /* Top-right */
+    top right, top right,
+    /* Bottom-left */
+    bottom left, bottom left,
+    /* Bottom-right */
+    bottom right, bottom right;
+
   background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-}
-
-/* Иконки */
-.face--kill {
-  background-image: url('./kill.png');
-}
-
-.face--retreat {
-  background-image: url('./retreat.png');
 }
 
 /* Числа */
 .face--num {
   font-family: 'AlienEncounters', sans-serif;
   color: #00ffff;
-
-  font-size: 10mm;
+  font-size: 11mm;
   line-height: 1;
-
   text-align: center;
-
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: none;
 }
