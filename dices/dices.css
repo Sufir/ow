@@ -1,0 +1,72 @@
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+/* Шрифт */
+@font-face {
+  font-family: 'AlienEncounters';
+  src: url('./AlienEncounters.ttf') format('truetype');
+}
+
+html {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+body {
+  margin: 0;
+  background: white;
+}
+
+/* Сетка */
+.sheet {
+  width: 190mm;
+  display: grid;
+  grid-template-columns: repeat(14, 13mm);
+  grid-auto-rows: 13mm;
+}
+
+/* Ячейка */
+.cell {
+  width: 13mm;
+  height: 13mm;
+
+  border: 0.1pt solid rgba(128, 128, 128, 0.3);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+}
+
+/* Общий стиль граней */
+.face {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Иконки */
+.face--kill {
+  background-image: url('./kill.png');
+}
+
+.face--retreat {
+  background-image: url('./retreat.png');
+}
+
+/* Числа */
+.face--num {
+  font-family: 'AlienEncounters', sans-serif;
+  color: #00ffff;
+
+  font-size: 10mm;
+  line-height: 1;
+
+  text-align: center;
+
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: none;
+}
