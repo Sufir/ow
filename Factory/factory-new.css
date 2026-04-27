@@ -4,13 +4,6 @@
   margin: 0;
 }
 
-@font-face {
-  font-family: 'OilWars';
-  src: url('../Fonts/Oil Wars.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 html, body {
   margin: 0;
   padding: 0;
@@ -35,9 +28,7 @@ html, body {
   margin: 0 auto;
   display: flex;
   justify-content: center;
-  align-items: start; /* Выравнивание всего контента по верхнему краю */
-  padding-top: 10mm;  /* Фиксированный отступ сверху */
-  box-sizing: border-box;
+  align-items: center;
 }
 
 @media screen {
@@ -54,61 +45,33 @@ html, body {
   display: grid;
   grid-template-columns: repeat(4, 50mm);
   grid-auto-rows: 50mm;
-  margin: 2mm;
+  margin: 2mm; /* Компенсация удаленного padding для центрирования */
   position: relative;
   z-index: 1;
-  /* Выравнивание сетки по верхнему краю (без центрирования по вертикали, если жетонов мало) */
-  align-content: start;
 }
 
 .token {
   width: 50mm;
   height: 50mm;
   position: relative;
-  background-color: #191b1c;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-}
-
-.token::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: var(--bg-img);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 1;
+  /* Чтобы фоновые изображения печатались */
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
-  clip-path: var(--shape-clip, none);
 }
 
-.shape-circle {
-  --shape-clip: circle(50% at 50% 50%);
-}
-
-.shape-pentagon {
-  --shape-clip: polygon(50% 0%, 100% 38%, 81% 100%, 19% 100%, 0% 38%);
-}
-
-.shape-hexagon {
-  --shape-clip: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
-}
-
-.shape-hexagon-pointy {
-  --shape-clip: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
-}
-
-.shape-octagon {
-  --shape-clip: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-}
-
-.shape-triangle {
-  --shape-clip: polygon(50% 6.7%, 100% 93.3%, 0% 93.3%);
+/* Динамический bleed вокруг жетонов */
+.token::after {
+  content: "";
+  position: absolute;
+  top: -2mm;
+  left: -2mm;
+  right: -2mm;
+  bottom: -2mm;
+  background-color: #191b1c;
+  z-index: -1;
 }
 
 .token.factory-common {
@@ -173,66 +136,17 @@ html, body {
 
 .token .special-symbol {
   font-size: 8mm;
+  padding-bottom: 4mm;
+  padding-right: 4mm;
+  bottom: 0px;
+  right: 0px;
   position: absolute;
-  z-index: 2;
+  text-align: right;
   text-shadow: 
     -1px -1px 0 #000,
      1px -1px 0 #000,
     -1px  1px 0 #000,
      1px  1px 0 #000;
-  
-  /* Дефолтное позиционирование (правый нижний угол) */
-  bottom: var(--symbol-offset-y, 4mm);
-  right: var(--symbol-offset-x, 4mm);
-  top: var(--symbol-top, auto);
-  left: var(--symbol-left, auto);
-  transform: var(--symbol-transform, none);
-}
-
-/* Модификаторы для изменения позиции маркера */
-.token.symbol-top-left .special-symbol {
-  --symbol-top: 4mm;
-  --symbol-left: 4mm;
-  --symbol-offset-y: auto;
-  --symbol-offset-x: auto;
-}
-
-.token.symbol-top-right .special-symbol {
-  --symbol-top: 4mm;
-  --symbol-left: auto;
-  --symbol-offset-y: auto;
-  --symbol-offset-x: 4mm;
-}
-
-.token.symbol-bottom-left .special-symbol {
-  --symbol-top: auto;
-  --symbol-left: 4mm;
-  --symbol-offset-y: 4mm;
-  --symbol-offset-x: auto;
-}
-
-.token.symbol-center .special-symbol {
-  --symbol-top: 50%;
-  --symbol-left: 50%;
-  --symbol-offset-y: auto;
-  --symbol-offset-x: auto;
-  --symbol-transform: translate(-50%, -50%);
-}
-
-.token.symbol-top-center .special-symbol {
-  --symbol-top: 4mm;
-  --symbol-left: 50%;
-  --symbol-offset-y: auto;
-  --symbol-offset-x: auto;
-  --symbol-transform: translateX(-50%);
-}
-
-.token.symbol-bottom-center .special-symbol {
-  --symbol-top: auto;
-  --symbol-left: 50%;
-  --symbol-offset-y: 4mm;
-  --symbol-offset-x: auto;
-  --symbol-transform: translateX(-50%);
 }
 
 .token.factory-special-1 {
@@ -265,16 +179,11 @@ html, body {
 .token.factory-special-10 {
   color: #ffffff;
 }
-.token.community {
-  font-family: OilWars;
-  color: #ff6d01;
-  font-weight: normal;
-}
 
 /* Метки реза реализованы (светло-серые кресты по углам и между картами) 
    и скрыты для экрана (видны только при @media print) */
 @media print {
-  .token::after {
+  .token::before {
     content: "";
     position: absolute;
     top: -5mm;
