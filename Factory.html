@@ -6,6 +6,12 @@
   <link rel="stylesheet" href="Factory/factory.css">
 </head>
 <body>
+  <div class="token-controls" aria-label="Token size controls">
+    <button type="button" data-action="dec">-</button>
+    <div class="token-size"><span id="tokenSizeValue"></span> мм</div>
+    <button type="button" data-action="inc">+</button>
+  </div>
+
   <!-- Лист 1 - печатать с двух сторон -->
   <div class="page front">
     <div class="grid">
@@ -98,5 +104,40 @@
     </div>
   </div>
 
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var valueEl = document.getElementById('tokenSizeValue');
+      var step = 0.5;
+      var min = 20;
+      var max = 50;
+
+      function readTokenSizeMm() {
+        var raw = getComputedStyle(root).getPropertyValue('--token-size').trim();
+        var n = parseFloat(raw.replace('mm', ''));
+        return Number.isFinite(n) ? n : 50;
+      }
+
+      function render(mm) {
+        if (valueEl) valueEl.textContent = mm.toFixed(1);
+      }
+
+      function setTokenSizeMm(mm) {
+        var clamped = Math.max(min, Math.min(max, Math.round(mm / step) * step));
+        root.style.setProperty('--token-size', clamped.toFixed(1) + 'mm');
+        render(clamped);
+      }
+
+      document.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest('button[data-action]') : null;
+        if (!btn) return;
+        var current = readTokenSizeMm();
+        if (btn.getAttribute('data-action') === 'inc') setTokenSizeMm(current + step);
+        if (btn.getAttribute('data-action') === 'dec') setTokenSizeMm(current - step);
+      });
+
+      setTokenSizeMm(readTokenSizeMm());
+    })();
+  </script>
 </body>
 </html>
