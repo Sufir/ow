@@ -94,8 +94,22 @@ html, body {
 
   .token-controls .token-size {
     min-width: 42mm;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2mm;
     color: #191b1c;
+  }
+
+  .token-controls .token-size input {
+    width: 18mm;
+    border: 0;
+    border-radius: 1.5mm;
+    padding: 1.5mm 2mm;
+    text-align: center;
+    background: #fff;
+    color: #191b1c;
+    outline: none;
   }
 }
 
