@@ -6,6 +6,15 @@
   <link rel="stylesheet" href="Factory/factory.css">
 </head>
 <body>
+  <div class="token-controls" aria-label="Token size controls">
+    <button type="button" data-action="dec">-</button>
+    <div class="token-size">
+      <input id="tokenSizeInput" type="text" inputmode="decimal" aria-label="Token size in millimeters">
+      <span>мм</span>
+    </div>
+    <button type="button" data-action="inc">+</button>
+  </div>
+
   <!-- Лист 1 - печатать с двух сторон -->
   <div class="page front">
     <div class="grid">
@@ -98,5 +107,74 @@
     </div>
   </div>
 
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var inputEl = document.getElementById('tokenSizeInput');
+      var step = 0.5;
+      var min = 20;
+      var max = 50;
+      var storageKey = 'tokenSizeMm';
+
+      function readTokenSizeMm() {
+        var raw = getComputedStyle(root).getPropertyValue('--token-size').trim();
+        var n = parseFloat(raw.replace('mm', ''));
+        return Number.isFinite(n) ? n : 50;
+      }
+
+      function normalizeNumberString(s) {
+        return String(s || '').trim().replace(',', '.').replace(/[^0-9.]/g, '');
+      }
+
+      function render(mm) {
+        if (inputEl) inputEl.value = mm.toFixed(1);
+      }
+
+      function setTokenSizeMm(mm) {
+        var clamped = Math.max(min, Math.min(max, Math.round(mm / step) * step));
+        root.style.setProperty('--token-size', clamped.toFixed(1) + 'mm');
+        try { localStorage.setItem(storageKey, String(clamped)); } catch (e) {}
+        render(clamped);
+      }
+
+      document.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest('button[data-action]') : null;
+        if (!btn) return;
+        var current = readTokenSizeMm();
+        if (btn.getAttribute('data-action') === 'inc') setTokenSizeMm(current + step);
+        if (btn.getAttribute('data-action') === 'dec') setTokenSizeMm(current - step);
+      });
+
+      function applyFromInput() {
+        if (!inputEl) return;
+        var n = parseFloat(normalizeNumberString(inputEl.value));
+        if (!Number.isFinite(n)) {
+          render(readTokenSizeMm());
+          return;
+        }
+        setTokenSizeMm(n);
+      }
+
+      if (inputEl) {
+        inputEl.addEventListener('focusout', applyFromInput);
+        inputEl.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            inputEl.blur();
+          }
+        });
+      }
+
+      var initial = (function () {
+        try {
+          var stored = parseFloat(String(localStorage.getItem(storageKey) || '').replace(',', '.'));
+          if (Number.isFinite(stored)) return stored;
+        } catch (e) {}
+        return readTokenSizeMm();
+      })();
+
+      setTokenSizeMm(initial);
+    })();
+  </script>
 </body>
 </html>

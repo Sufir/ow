@@ -64,13 +64,13 @@ body {
   z-index: 10;
   background-image:
     /* Top-left */
-    linear-gradient(black, black), linear-gradient(black, black),
+    linear-gradient(#999, #999), linear-gradient(#999, #999),
     /* Top-right */
-    linear-gradient(black, black), linear-gradient(black, black),
+    linear-gradient(#999, #999), linear-gradient(#999, #999),
     /* Bottom-left */
-    linear-gradient(black, black), linear-gradient(black, black),
+    linear-gradient(#999, #999), linear-gradient(#999, #999),
     /* Bottom-right */
-    linear-gradient(black, black), linear-gradient(black, black);
+    linear-gradient(#999, #999), linear-gradient(#999, #999);
 
   background-size:
     /* Top-left */
