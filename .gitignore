@@ -6,37 +6,30 @@ __pycache__/
 *.pyc
 *.tmp
 
-# ── Не в Git: тяжёлое, невосстановимое, единственный экземпляр на Яндекс.Диске ──
+# ── Не в Git: тяжёлое и невосстановимое ─────────────────────────────────
+# Единственный экземпляр всего перечисленного — в этой папке на Яндекс.Диске.
+# Исключено из Git, но НЕ является мусором. Не удалять.
+
 # Старые PSD/JPG игрового поля, 2.7 ГБ. GitHub не принимает файлы >100 МБ.
+# Топология с них уже снята, рабочая геометрия — в board/geo/.
 board/legacy/
+
 # Рулбуки оригинала Cthulhu Wars, 171 МБ на два файла.
+# Текстовые извлечения из них лежат рядом в .md и в Git есть.
 source/cthulhu-wars/SRC-RB-NEW__cw-rulebook-new-layout__2026-09-10.pdf
 source/cthulhu-wars/SRC-RB-OLD__cw-rulebook-old-layout__2026-09-10.pdf
 source/cthulhu-wars/Plan_Card.pdf
 source/cthulhu-wars/2017-10-17_balance_changes.pdf
 source/cthulhu-wars/Cthulhu_Wars_Faction_Selection_Cards.zip
 source/cthulhu-wars/Template_Faction_Card/
-# Рендеры страниц эрраты — пересоздаются из PDF.
+
+# Рендеры страниц эрраты, 25 МБ. Пересоздаются из соответствующего PDF.
 source/cthulhu-wars/pages/SRC-ERRATA-PACK/
-# Снятое с работы. Лежит локально, в историю не идёт.
+
+# Снятое с работы. Хранится локально, в историю проекта не идёт.
 archive/
 
 # ── Не в Git: производное, пересобирается скриптами ─────────────────────
+# rules/tools/registry.py собирает базу из yaml-реестров.
 rules/registry/registry.db
 rules/registry/registry.db-journal
-
-# ── ВРЕМЕННЫЙ БЛОК: старые пути, снимается сразу после миграции ─────────
-Карта/
-Stuff/
-Plan_Card.pdf
-2017-10-17_balance_changes.pdf
-Cthulhu_Wars_Faction_Selection_Cards.zip
-Template_Faction_Card/
-Template_Faction_Card.zip
-Draft.psd
-.agents/registry/registry.db
-.agents/registry/registry.db-journal
-.agents/sources/original/SRC-RB-NEW__cw-rulebook-new-layout__2026-09-10.pdf
-.agents/sources/original/SRC-RB-OLD__cw-rulebook-old-layout__2026-09-10.pdf
-.agents/sources/pages/SRC-ERRATA-PACK/
-Под Акрил/Под Акрил.zip

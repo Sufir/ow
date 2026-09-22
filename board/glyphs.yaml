@@ -1,0 +1,465 @@
+# glyphs.yaml — что напечатано НА поле помимо названий областей:
+# стартовые глифы фракций, СИМВОЛЫ РЕГИОНОВ и подписи-ориентиры.
+# Схема — SCHEMA.md.
+#
+# ВНИМАНИЕ: в этом файле живут ДВА разных знака, и путать их нельзя.
+#   faction_glyphs  — стартовая область фракции. Семь штук, у нас на поле их НЕТ
+#                     (решение № 10, MF-009): стартовый регион пишется текстом
+#                     на планшете.
+#   region_symbols  — символ региона. Три штуки, у нас на поле они ЕСТЬ
+#                     (D-043) и от них зависят семь задач двух фракций.
+#
+# Стартовые области фракций оригинала живут в registry/factions.yaml
+# (поля start_area / start_area_glyph / start_area_source, сверены с официальной
+# картой 2026-09-11). Здесь они привязаны к ID областей карты и разложены
+# по сторонам планшета, чего в factions.yaml нет.
+
+meta:
+  what_is_a_glyph: >
+    Стартовая область фракции на поле не подписана словами: faction card говорит
+    «in the Area marked with this Glyph», а на карте в этой области напечатана
+    плоская ажурная эмблема фракции в её цвете. Рулбук списка стартовых
+    регионов не даёт вообще (SRC-RB-NEW, с. 13), поэтому глифы — единственный
+    источник по расстановке.
+  not_glyphs: >
+    На фотографиях поля (SRC-BGA-GRAPH) в каждой области лежит розовая или синяя
+    «коралловая» фигурка и буквенная плашка — это пластиковые Gates и буквы
+    Scrabble, расставленные автором статьи для извлечения графа. К печати поля
+    они не относятся и с глифами их путать нельзя: глиф плоский и вписан
+    в рисунок, фигурка объёмная и лежит поверх.
+  glyph_count: >
+    Глифов семь: шесть фракций плюс второй глиф Windwalker. Остальные шесть
+    фракций оригинала стартовой области на поле не имеют — см. no_glyph.
+  sides: >
+    Глиф печатается на обеих сторонах планшета. На стороне «5 игроков» он стоит
+    в дробной области, на стороне «3 игрока» — в её родительской области.
+    Ориентир рядом с глифом (landmark) на обеих сторонах один и тот же, это и
+    позволяет сопоставить размещения.
+  what_is_a_region_symbol: >
+    Второй тип знака на поле, к стартовым глифам отношения не имеющий.
+    В оригинале это три Spellbook Glyph фракции Yellow Sign: Dragon, Chevron,
+    Thorns. Рулбук называет их числом при расстановке The Ancients (SRC-RB-NEW,
+    с. 64: «you may set up in an Area containing one of Yellow Sign's three
+    Spellbook Glyphs»), имена даёт SRC-WIKI-YS, размещение — SRC-CW-MAP-SCAN.
+    У нас это капля Q, пламя W, вагонетка E; размещение повторяет оригинал
+    один в один (D-046). Раздел — region_symbols.
+  redesign_rule: >
+    РЕШЕНИЕ ALEK 2026-09-16. У нас глифов на карте не будет: стартовый регион
+    записан текстом на планшете фракции. Раздел faction_glyphs остаётся
+    справочным — он нужен только для сверки с оригиналом. Рабочий раздел —
+    start_areas_redesign.
+    На планшете указан САМЫЙ УЗКИЙ регион («Западная Африка», «Южная Азия»,
+    «запад Северной Америки»). Если в собранной раскладке этого узкого региона
+    нет — та половина поля лежит стороной «3» — фракция ставится в содержащий
+    его широкий регион: Западная Африка → Африка, Южная Азия → Азия, запад
+    Северной Америки → Северная Америка, Скандинавия → Европа. Это ровно
+    отношение parent из regions.yaml, поэтому вычисляется однозначно и
+    сходится всегда: у каждой области стороны «5» есть ровно один parent.
+    Поля regions_3p и regions_5p ниже — уже разрешённый результат этого
+    правила, пересчитывать его в уме не нужно.
+  out_of_scope: >
+    Фракции, у которых стартовый регион правилом не задан (Братство
+    Сингулярности, Moon Systems, Сайнтифик Солюшн — «любой свободный»),
+    в задачу по карте не входят: они расставляются по своим правилам, и от
+    карты тут ничего не требуется. Записаны в start_areas_redesign с
+    regions_*: null только для полноты состава.
+
+# --- стартовые глифы фракций -------------------------------------------------
+
+faction_glyphs:
+
+  - id: MG-001
+    faction_original: CW-F-01
+    faction_original_name: Great Cthulhu
+    faction_redesign: OW-F-01
+    faction_redesign_name: Островная Империя
+    regions_3p: [MR-OC-SPAC]
+    regions_5p: [MR-OC-SPAC]
+    landmark: ML-001
+    glyph_colour_observed: null
+    glyph_shape_observed: null
+    confidence: HIGH
+    note: >
+      Единственный глиф в океане, кроме одного из двух глифов Windwalker.
+      Область одна и та же на обеих сторонах: океаны не дробятся.
+    sources: [SRC-WIKI-MAP, SRC-RB-NEW]
+
+  - id: MG-002
+    faction_original: CW-F-02
+    faction_original_name: Yellow Sign
+    faction_redesign: OW-F-03
+    faction_redesign_name: Глобал Петролеум
+    regions_3p: [MR-R3-EUR]
+    regions_5p: [MR-R5-EUR]
+    landmark: ML-004
+    glyph_colour_observed: золотисто-жёлтый
+    glyph_shape_observed: >
+      круглая ажурная эмблема с загнутым внутрь крюком
+    confidence: HIGH
+    note: >
+      Проверено глазами на ОБЕИХ сторонах по SRC-BGA-GRAPH: на стороне «3»
+      и на стороне «5» эмблема стоит в Европе на одном и том же месте, рядом
+      подпись-ориентир. На стороне «5» Скандинавия отделяется от Европы —
+      глиф остаётся в Европе, не в Скандинавии.
+    sources: [SRC-WIKI-MAP, SRC-BGA-GRAPH]
+
+  - id: MG-003
+    faction_original: CW-F-03
+    faction_original_name: Crawling Chaos
+    faction_redesign: OW-F-02
+    faction_redesign_name: Эйркрафт Корпорейшн
+    regions_3p: [MR-R3-ASI]
+    regions_5p: [MR-R5-ASIS]
+    landmark: ML-002
+    glyph_colour_observed: синий
+    glyph_shape_observed: >
+      плотная симметричная розетка с вписанным знаком
+    confidence: HIGH
+    note: >
+      На стороне «3» глиф стоит в Азии — проверено глазами по SRC-BGA-GRAPH.
+      На стороне «5» Азия дробится на North Asia / South Asia / Arabia, и глиф
+      попадает в South Asia (SRC-WIKI-MAP; это же подтверждает разбор
+      SRC-BGA-GRAPH: «its home base is in South Asia for the fragmented map»).
+    sources: [SRC-WIKI-MAP, SRC-BGA-GRAPH]
+
+  - id: MG-004
+    faction_original: CW-F-04
+    faction_original_name: Black Goat
+    faction_redesign: OW-F-05
+    faction_redesign_name: Клонэйд Ресёрч
+    regions_3p: [MR-R3-AFR]
+    regions_5p: [MR-R5-AFRW]
+    landmark: ML-003
+    glyph_colour_observed: тёмно-красный
+    glyph_shape_observed: >
+      кольцо с рогатой фигурой внутри
+    confidence: HIGH
+    note: >
+      Ключ к сопоставлению сторон — ориентир: и на стороне «3» (в Африке),
+      и на стороне «5» (в West Africa) эмблема стоит вплотную к подписи
+      «(G'HARNE)». Рулбук говорит только «Black Goat's starting position in
+      Africa» (с. 8), West Africa уточнена по глифу.
+    sources: [SRC-WIKI-MAP, SRC-BGA-GRAPH, SRC-RB-NEW]
+
+  - id: MG-005
+    faction_original: CW-F-09
+    faction_original_name: Sleeper
+    faction_redesign: OW-F-08
+    faction_redesign_name: Североамериканский Альянс
+    regions_3p: [MR-L3-NAM]
+    regions_5p: [MR-L5-NAMW]
+    landmark: null
+    glyph_colour_observed: null
+    glyph_shape_observed: >
+      бледная эмблема в форме незамкнутого кольца в центре материка
+    confidence: MEDIUM
+    note: >
+      Сторона «5» — HIGH по SRC-WIKI-MAP (North America West). Сторона «3» —
+      MEDIUM: на фотографии стороны «3» в Северной Америке эмблема видна, но
+      разрешения хватает только на факт её наличия, не на опознание фракции;
+      ориентира рядом с ней прочитать не удалось. Довести до HIGH — MF-004.
+    sources: [SRC-WIKI-MAP, SRC-BGA-GRAPH]
+
+  - id: MG-006
+    faction_original: CW-F-11
+    faction_original_name: Windwalker
+    faction_redesign: OW-X-01
+    faction_redesign_name: Криогеник Технолоджис (пара только предполагается, MAP-09)
+    regions_3p: [MR-OC-ARC]
+    regions_5p: [MR-OC-ARC]
+    landmark: ML-005
+    glyph_colour_observed: null
+    glyph_shape_observed: null
+    confidence: MEDIUM
+    note: >
+      Первый из двух глифов Windwalker — единственной фракции оригинала с двумя
+      стартовыми областями; игрок при расстановке выбирает одну. По
+      registry/factions.yaml он стоит «в ледяной зоне севернее Скандинавии,
+      рядом подписано (Lomar)». Севернее Скандинавии — Северный Ледовитый океан,
+      он один и тот же на обеих сторонах. MEDIUM: своими глазами на фотографиях
+      не подтверждён, разрешения в этой части листа не хватает.
+    sources: [SRC-WIKI-MAP]
+
+  - id: MG-007
+    faction_original: CW-F-11
+    faction_original_name: Windwalker
+    faction_redesign: OW-X-01
+    faction_redesign_name: Криогеник Технолоджис (пара только предполагается, MAP-09)
+    regions_3p: [MR-SH-ANT]
+    regions_5p: [MR-SH-ANT]
+    landmark: null
+    glyph_colour_observed: null
+    glyph_shape_observed: null
+    confidence: MEDIUM
+    note: >
+      Второй глиф Windwalker. Антарктида не дробится и напечатана на обоих
+      планшетах, поэтому область одна и та же на всех четырёх раскладках.
+      MEDIUM по той же причине, что MG-006.
+    sources: [SRC-WIKI-MAP]
+
+# --- фракции без глифа на поле -----------------------------------------------
+
+no_glyph:
+  - faction_original: CW-F-05
+    faction_original_name: The Ancients
+    faction_redesign: OW-F-04
+    faction_redesign_name: Братство Сингулярности
+    rule: >
+      Любой регион без чужого глифа и без игрового символа; расставляются
+      раньше Tcho-Tcho, Windwalker и Opener.
+  - faction_original: CW-F-06
+    faction_original_name: Bubastis
+    faction_redesign: OW-F-06
+    faction_redesign_name: Moon Systems
+    rule: >
+      Не на Земле: 6 Earth Cats кладутся на тайл Луны.
+  - faction_original: CW-F-07
+    faction_original_name: Daemon Sultan
+    faction_redesign: null
+    faction_redesign_name: null
+    rule: >
+      На карте ничего; стартовой считается область, куда способностью Psychosis
+      поставлен первый Acolyte. Фракция вне объёма (scope: IGNORED).
+  - faction_original: CW-F-08
+    faction_original_name: Opener of the Way
+    faction_redesign: OW-F-07
+    faction_redesign_name: Сайнтифик Солюшн
+    rule: >
+      Область выбирается игроком; расставляется последним.
+  - faction_original: CW-F-10
+    faction_original_name: Tcho-Tcho
+    faction_redesign: null
+    faction_redesign_name: null
+    rule: >
+      Любая незанятая область С ГЛИФОМ фракции — то есть Tcho-Tcho занимает
+      чужую стартовую область, если её хозяин не в игре. Отсюда следует, что
+      набор глифов на поле имеет игровой смысл и в отсутствие их владельцев.
+      Фракция вне объёма (scope: IGNORED).
+  - faction_original: CW-F-12
+    faction_original_name: The Invasion
+    faction_redesign: null
+    faction_redesign_name: null
+    rule: >
+      Любая незанятая область, дальше по инструкции на карте Lord's Shadow.
+      Фракция вне объёма (scope: IGNORED).
+
+# --- символы регионов --------------------------------------------------------
+# Три знака, напечатанные на поле помимо стартовых глифов. В оригинале это
+# три Spellbook Glyph фракции Yellow Sign; у нас — капля Q, пламя W,
+# вагонетка E (ICON-032/033/034 в ../icons.yaml, шрифт print/Fonts/Oil
+# Wars.ttf). Размещение снято своими глазами с SRC-CW-MAP-SCAN — растра обеих
+# сторон оригинального поля, — и повторяется у нас один в один (D-046).
+#
+# ЗАКОН РАЗМЕЩЕНИЯ, который держит весь раздел: СИМВОЛ ИДЁТ ПО МАТЕРИКУ.
+# Америки — Dragon, Европа с Азией — Thorns, Африка с Австралией — Chevron.
+# Отсюда два следствия, и оба проверены отдельно, а не выведены из закона:
+#   1. каждая область СУШИ, КРОМЕ АНТАРКТИДЫ, несёт ровно один символ —
+#      6 из 6 на стороне «3», 14 из 14 на стороне «5»;
+#   2. шесть океанов и Антарктида не несут ни одного — свободных областей
+#      ровно 7 в любой из четырёх раскладок.
+# Из (1) следует, что дробление стороны «5» символ наследует: все дети
+# области стороны «3» несут тот же символ, что и родитель. Проверено
+# пофамильно, исключений нет.
+#
+# ЧТО ЭТО ЗНАЧИТ ДЛЯ ЗАДАЧ. Четвёртая задача Братства Сингулярности — община
+# в регионе БЕЗ символов — выполняется только в океане или в Антарктиде.
+# Это не наша особенность: у The Ancients в оригинале четвёртый собор ставится
+# ровно туда же и по той же причине.
+
+region_symbols:
+
+  - id: MS-001
+    original_name: Dragon Glyph
+    original_shape: >
+      свёрнутый в кольцо завиток с отростками, похож на спираль или на
+      скрученный хвост; оранжевая заливка с жёлтым бликом, чёрный контур
+    redesign_symbol: капля
+    redesign_glyph: "Q"
+    icon_ref: ICON-032
+    resource_reading: нефть
+    landmasses: [NORTH_AMERICA, SOUTH_AMERICA]
+    regions_3p: [MR-L3-NAM, MR-L3-SAM]
+    regions_5p: [MR-L5-NAMW, MR-L5-NAME, MR-L5-CAM, MR-L5-SAMW, MR-L5-SAME]
+    confidence: HIGH
+    note: >
+      Сторона «3»: по одному знаку в Северной и Южной Америке. Сторона «5»:
+      знак есть в каждой из пяти американских областей, включая обе половины
+      Северной Америки — они стоят по разные стороны границы Запад / Восток
+      и это проверено отдельным кропом, потому что знаки там близко.
+    sources: [SRC-CW-MAP-SCAN, SRC-WIKI-YS]
+
+  - id: MS-002
+    original_name: Thorns Glyph
+    original_shape: >
+      пучок из пяти острых шипов, средний выше и залит оранжево-красным;
+      легко принять за язычки пламени — в первом проходе так и вышло
+    redesign_symbol: пламя
+    redesign_glyph: "W"
+    icon_ref: ICON-033
+    resource_reading: природный газ
+    landmasses: [EUROPE, ASIA]
+    regions_3p: [MR-R3-EUR, MR-R3-ASI]
+    regions_5p: [MR-R5-SCA, MR-R5-EUR, MR-R5-ASIN, MR-R5-ASIS, MR-R5-ARB]
+    confidence: HIGH
+    note: >
+      Размер знака гуляет: в Европе он мельче, чем в Азии, — это один и тот же
+      символ в разном масштабе, а не два разных. Скандинавия и Европа стороны
+      «5» несут по своему знаку, проверено кропом по их общей границе:
+      скандинавский стоит в оранжевой заливке, европейский — в оливковой.
+      Аравия несёт свой знак у юго-восточного угла.
+    sources: [SRC-CW-MAP-SCAN, SRC-WIKI-YS]
+
+  - id: MS-003
+    original_name: Chevron Glyph
+    original_shape: >
+      шеврон «^» с расходящимися книзу концами, оранжево-жёлтая заливка
+    redesign_symbol: рудничная вагонетка
+    redesign_glyph: "E"
+    icon_ref: ICON-034
+    resource_reading: уголь и руды
+    landmasses: [AFRICA, AUSTRALIA]
+    regions_3p: [MR-R3-AFR, MR-L3-AUS]
+    regions_5p: [MR-R5-AFRW, MR-R5-AFRE, MR-L5-AUS, MR-L5-NZL]
+    confidence: HIGH
+    note: >
+      Единственное имя из трёх, которое подтверждается не только вики,
+      но и рулбуком: SRC-RB-OLD про карту Yuggoth говорит «the Yellow Sign's
+      Chevron glyph». Австралия и Новая Зеландия несут по своему знаку;
+      новозеландский стоит у северного края своей области, близко к границе,
+      и проверен отдельным кропом.
+    sources: [SRC-CW-MAP-SCAN, SRC-WIKI-YS, SRC-RB-OLD]
+
+# --- стартовые области наших восьми фракций ----------------------------------
+# Источник — registry/factions.yaml, раздел redesign (планшеты фракций).
+# queue обновлены 2026-09-22 по D-048: три общие «10» разведены
+# (Братство 9, Moon Systems 6, Сайнтифик Солюшн 12). Шкала — factions.yaml,
+# meta.queue_scale.
+# Здесь то же самое, но привязанное к ID областей карты.
+
+start_areas_redesign:
+  - faction: OW-F-01
+    name: Островная Империя
+    queue: 1.0
+    start_region_text: юг Тихого океана
+    regions_3p: [MR-OC-SPAC]
+    regions_5p: [MR-OC-SPAC]
+    glyph: MG-001
+    baseline_ref: CW-F-01
+    mapping_ref: MAP-01
+  - faction: OW-F-02
+    name: Эйркрафт Корпорейшн
+    queue: 2.0
+    start_region_text: Южная Азия
+    regions_3p: [MR-R3-ASI]
+    regions_5p: [MR-R5-ASIS]
+    glyph: MG-003
+    baseline_ref: CW-F-03
+    mapping_ref: MAP-02
+  - faction: OW-F-03
+    name: Глобал Петролеум
+    queue: 3.0
+    start_region_text: Европа
+    regions_3p: [MR-R3-EUR]
+    regions_5p: [MR-R5-EUR]
+    glyph: MG-002
+    baseline_ref: CW-F-02
+    mapping_ref: MAP-03
+  - faction: OW-F-05
+    name: Клонэйд Ресёрч
+    queue: 7.0
+    start_region_text: Западная Африка
+    regions_3p: [MR-R3-AFR]
+    regions_5p: [MR-R5-AFRW]
+    glyph: MG-004
+    baseline_ref: CW-F-04
+    mapping_ref: MAP-05
+  - faction: OW-F-08
+    name: Североамериканский Альянс
+    queue: 8.0
+    start_region_text: запад Северной Америки
+    regions_3p: [MR-L3-NAM]
+    regions_5p: [MR-L5-NAMW]
+    glyph: MG-005
+    baseline_ref: CW-F-09
+    mapping_ref: MAP-08
+  - faction: OW-F-04
+    name: Братство Сингулярности
+    queue: 9.0
+    start_region_text: любой, кроме стартовых регионов других фракций
+    regions_3p: null
+    regions_5p: null
+    glyph: null
+    baseline_ref: CW-F-05
+    mapping_ref: MAP-04
+  - faction: OW-F-06
+    name: Moon Systems
+    queue: 6.0
+    start_region_text: любой, кроме стартовых регионов других фракций
+    regions_3p: null
+    regions_5p: null
+    glyph: null
+    baseline_ref: CW-F-06
+    mapping_ref: MAP-06
+  - faction: OW-F-07
+    name: Сайнтифик Солюшн
+    queue: 12.0
+    start_region_text: любой свободный
+    regions_3p: null
+    regions_5p: null
+    glyph: null
+    baseline_ref: CW-F-08
+    mapping_ref: MAP-07
+
+# --- подписи-ориентиры -------------------------------------------------------
+# Топонимы мифоса в круглых скобках, напечатанные внутри областей. Игрового
+# смысла не несут, но служат привязкой: глиф фракции печатается рядом со «своим»
+# ориентиром, и это единственный надёжный способ сопоставить размещение глифа
+# на стороне «3» и на стороне «5».
+
+landmarks:
+  - id: ML-001
+    label: "R'LYEH"
+    regions_3p: [MR-OC-SPAC]
+    regions_5p: [MR-OC-SPAC]
+    observed_on: [3P, 5P]
+    glyph_nearby: MG-001
+    confidence: HIGH
+  - id: ML-002
+    label: "LENG"
+    regions_3p: [MR-R3-ASI]
+    regions_5p: null
+    observed_on: [3P]
+    glyph_nearby: null
+    confidence: MEDIUM
+    note: >
+      На стороне «3» подпись стоит у восточного края Азии, у границы с Севером
+      Тихого океана. На какую из областей стороны «5» она попадает (North Asia
+      или South Asia), не проверено.
+  - id: ML-003
+    label: "G'HARNE"
+    regions_3p: [MR-R3-AFR]
+    regions_5p: [MR-R5-AFRW]
+    observed_on: [3P, 5P]
+    glyph_nearby: MG-004
+    confidence: HIGH
+  - id: ML-004
+    label: "DREIEICH"
+    regions_3p: [MR-R3-EUR]
+    regions_5p: [MR-R5-EUR]
+    observed_on: [3P, 5P]
+    glyph_nearby: MG-002
+    confidence: MEDIUM
+    note: >
+      Написание требует проверки по лучшему изображению: на фотографии стороны
+      «5» читается DREIEICH, на стороне «3» — DREIECH.
+  - id: ML-005
+    label: "LOMAR"
+    regions_3p: [MR-OC-ARC]
+    regions_5p: [MR-OC-ARC]
+    observed_on: []
+    glyph_nearby: MG-006
+    confidence: MEDIUM
+    note: >
+      Взят из registry/factions.yaml (сверка 2026-09-11): «в ледяной зоне
+      севернее Скандинавии, рядом подписано (Lomar)». Своими глазами на
+      фотографиях не прочитан.

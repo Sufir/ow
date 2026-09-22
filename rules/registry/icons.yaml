@@ -1,0 +1,743 @@
+# ICON REGISTRY — глифы кастомного шрифта и их значения.
+# Схема — SCHEMA.md. Заполнено в P7, 2026-09-10.
+# Правило: один глиф = одно значение, одно значение = один канонический глиф.
+# Плейсхолдер в Markdown — {ICON_NAME}. Emoji не использовать.
+#
+# ГЛАВНЫЙ ВЫВОД РАЗБОРА. Иконочного набора у проекта нет.
+# Кастомный шрифт `print/Fonts/Oil Wars.ttf` содержит 11 значащих глифов —
+# E, Q, W и цифры 1–8. Три — символы ресурса на карте, восемь — логотипы
+# восьми фракций. Ни одного глифа под нефть, влияние, фабрику, отряд или
+# результат боя в нём нет. Значит все иконки, нужные тексту правил, ещё
+# предстоит нарисовать.
+# До тех пор текст пишется плейсхолдерами: {OIL}, {FACTORY} и так далее.
+# Подмена emoji запрещена уставом §10 и здесь не применяется нигде.
+#
+# РЕШЕНИЕ D-029: недостающие иконки рисуются и добавляются В ЭТОТ ЖЕ ШРИФТ,
+# а не в виде картинок, — чтобы их можно было набирать в любом редакторе
+# и подставлять прямо в строку при сборке PDF. Отдельная подзадача, идёт
+# после правил, вместе с выверкой компонентов (D-004).
+#
+# ДВА ДЕФЕКТА САМОГО ШРИФТА, чинить при добавлении глифов (CODE-04):
+#   1. Всего в файле 16 глифов: значащие 11 плюс .notdef, space и ТРИ КОПИИ
+#      E/Q/W под строчными кодовыми точками с идентичными контурами
+#      и ширинами. Одно изображение набирается двумя символами — это устав §10
+#      с обратной стороны. В исходнике FontMaker строчные заданы как
+#      characterAliases и должны были свестись к одному глифу; сборщик их
+#      развёл.
+#   2. descender −54 вместо −200 из исходника. Вреда пока нет, yMin у всех
+#      глифов 0, но при добавлении иконок с выносом ниже базовой линии
+#      это выстрелит.
+#
+# Реестр состоит из трёх частей:
+#   A. Иконки, которые нужны тексту правил. Все status: MISSING.
+#   B. Глифы, которые в шрифте уже есть. Опознаны по контактному листу
+#      `../sources/pages/FONT-OILWARS/glyphs.png` (задача CODE-04).
+#   C. Знаки на компонентах, которые могли бы сойти за иконки. Оба разобраны
+#      и оба признаны нормальными (D-029); записи оставлены, чтобы при
+#      разработке набора их не завели заново как находки.
+#
+# Статусы: OK — глиф есть и значение однозначно; MISSING — значение нужно,
+# глифа нет; UNMAPPED — глиф есть, значение не определено; DUPLICATE —
+# одно значение под двумя глифами или наоборот; EMOJI-SUBSTITUTE — вместо
+# иконки стоит emoji.
+
+icons:
+
+  # === A. Нужны тексту правил ===============================================
+  # Порядок — по разделам структуры рулбука (STRUCTURE.md).
+
+  # --- Ресурсы и треки ---
+
+  - id: ICON-001
+    placeholder: "{OIL}"
+    glyph: null
+    font: null
+    meaning: Нефть
+    original_concept: Power
+    redesign_term: Нефть
+    term_ref: TERM-001
+    status: MISSING
+    used_in: [Компоненты, Фаза получения ресурсов, Все стоимости действий, Глоссарий]
+    notes: >
+      Самая частая иконка книги: стоит в каждой строке стоимости. Без неё
+      «Стоимость: 1 нефть» повторяется десятки раз. Обязательна.
+
+  - id: ICON-002
+    placeholder: "{INFLUENCE}"
+    glyph: null
+    font: null
+    meaning: Влияние (победные очки)
+    original_concept: Doom
+    redesign_term: Влияние
+    term_ref: TERM-002
+    status: MISSING
+    used_in: [Фаза влияния, Окончание игры и победа, Глоссарий]
+    notes: Обязательна. Вторая по частоте после нефти.
+
+  - id: ICON-003
+    placeholder: "{HIDDEN_INFLUENCE}"
+    glyph: null
+    font: null
+    meaning: Карта скрытого влияния
+    original_concept: Elder Sign
+    redesign_term: Скрытое влияние
+    term_ref: TERM-003
+    status: MISSING
+    used_in: [Фаза влияния, Окончание игры и победа]
+    notes: >
+      Тот же мотив, что на рубашке карт и на маркере Судного дня, — глаз
+      в неоновом треугольнике. Мотив выбран осознанно, менять его нельзя.
+
+  - id: ICON-004
+    placeholder: "{DOOMSDAY}"
+    glyph: null
+    font: null
+    meaning: Трек Судного дня
+    original_concept: Ritual of Annihilation Track
+    redesign_term: Судный день
+    term_ref: TERM-005
+    status: MISSING
+    used_in: [Подготовка, Оказание давления]
+    notes: >
+      Нужна там, где стоимость оказания давления читается с трека. Отличать
+      от ICON-005: это сам трек, а не его последнее деление.
+
+  - id: ICON-005
+    placeholder: "{NUCLEAR}"
+    glyph: null
+    font: null
+    meaning: Ядерная катастрофа
+    original_concept: Instant Death
+    redesign_term: Ядерная катастрофа
+    term_ref: TERM-051
+    status: MISSING
+    used_in: [Фаза влияния, Окончание игры и победа]
+    notes: >
+      На компоненте деление уже обозначено знаком — красный череп в лучах
+      поверх заградительной полосы. Иконка книги должна повторять его,
+      а не вводить новый знак.
+
+  # --- Территория ---
+
+  - id: ICON-006
+    placeholder: "{FACTORY}"
+    glyph: null
+    font: null
+    meaning: Военная фабрика
+    original_concept: Gate
+    redesign_term: Военная фабрика
+    term_ref: TERM-006
+    status: MISSING
+    used_in: [Компоненты, Основы игры, Фаза получения ресурсов, Фаза действий]
+    notes: Обязательна.
+
+  - id: ICON-007
+    placeholder: "{CONTROL}"
+    glyph: null
+    font: null
+    meaning: Контроль фабрики
+    original_concept: Controlled Gate
+    redesign_term: Контроль фабрики
+    term_ref: TERM-068
+    status: MISSING
+    used_in: [Основы игры, Фаза получения ресурсов, Фаза влияния, Свободные действия]
+    notes: >
+      Контроль обозначается пехотинцем поверх фабрики. Иконка должна читаться
+      как фабрика с фигуркой сверху, иначе её спутают с ICON-006.
+
+  - id: ICON-008
+    placeholder: "{FACTORY_SPECIAL}"
+    glyph: null
+    font: null
+    meaning: Особая фабрика
+    original_concept: Colour Gate
+    redesign_term: Особая фабрика
+    term_ref: TERM-008
+    status: MISSING
+    used_in: [Варианты игры → Особые фабрики]
+    notes: null
+
+  # --- Отряды ---
+
+  - id: ICON-009
+    placeholder: "{INFANTRY}"
+    glyph: null
+    font: null
+    meaning: Пехотинец
+    original_concept: Cultist
+    redesign_term: Пехотинец
+    term_ref: TERM-011
+    status: MISSING
+    used_in: [Основы игры, Фаза действий, Глоссарий]
+    notes: >
+      Надкатегория. Иконка должна читаться как общая: рекрут, полковник
+      и энграмма — её частные случаи.
+
+  - id: ICON-010
+    placeholder: "{RECRUIT}"
+    glyph: null
+    font: null
+    meaning: Рекрут
+    original_concept: Acolyte
+    redesign_term: Рекрут
+    term_ref: TERM-012
+    status: MISSING
+    used_in: [Основы игры, Вербовка пехотинца]
+    notes: >
+      Отдельная иконка обязательна: десятки эффектов написаны «на пехотинцев,
+      но не на рекрутов». Если рекрут и пехотинец будут неразличимы,
+      правило сломается визуально.
+
+  - id: ICON-011
+    placeholder: "{COLONEL}"
+    glyph: null
+    font: null
+    meaning: Полковник
+    original_concept: High Priest
+    redesign_term: Полковник
+    term_ref: TERM-015
+    status: MISSING
+    used_in: [Варианты игры → Полковники]
+    notes: null
+
+  - id: ICON-012
+    placeholder: "{ENGRAM}"
+    glyph: null
+    font: null
+    meaning: Энграмма
+    original_concept: Brain Cylinder
+    redesign_term: Энграмма
+    term_ref: TERM-016
+    status: MISSING
+    used_in: [Варианты игры → Лаборатория и энграммы, Варианты игры → Баланс сил]
+    notes: >
+      В «Балансе сил» (11.7) плейсхолдер обозначает ФИГУРКУ энграммы как
+      фишку-заменитель, а не энграмму как отряд (D-040). Иконка та же.
+
+  - id: ICON-013
+    placeholder: "{MACHINE}"
+    glyph: null
+    font: null
+    meaning: Боевая машина
+    original_concept: Monster
+    redesign_term: Боевая машина
+    term_ref: TERM-013
+    status: MISSING
+    used_in: [Основы игры, Производство боевой машины, Захват пехотинца]
+    notes: null
+
+  - id: ICON-014
+    placeholder: "{MECH}"
+    glyph: null
+    font: null
+    meaning: Мех
+    original_concept: Terror
+    redesign_term: Мех
+    term_ref: TERM-021
+    status: MISSING
+    used_in: [Основы игры, Захват пехотинца, Варианты игры → Наёмники]
+    notes: >
+      Обязана отличаться от ICON-013 с одного взгляда: весь смысл меха в том,
+      что эффекты против боевых машин на него не действуют.
+
+  - id: ICON-015
+    placeholder: "{ROBOT}"
+    glyph: null
+    font: null
+    meaning: Боевой робот
+    original_concept: Great Old One
+    redesign_term: Боевой робот
+    term_ref: TERM-014
+    status: MISSING
+    used_in: [Основы игры, Создание боевого робота, Оказание давления]
+    notes: null
+
+  - id: ICON-016
+    placeholder: "{SWARM}"
+    glyph: null
+    font: null
+    meaning: Рой боевых дронов
+    original_concept: Slime Mold
+    redesign_term: Рой боевых дронов
+    term_ref: TERM-017
+    status: MISSING
+    used_in: [Варианты игры → Рой боевых дронов]
+    notes: null
+
+  # --- Бой ---
+
+  - id: ICON-017
+    placeholder: "{DIE}"
+    glyph: null
+    font: null
+    meaning: Боевой кубик
+    original_concept: Battle die
+    redesign_term: Боевой кубик
+    term_ref: TERM-074
+    status: MISSING
+    used_in: [Компоненты, Подготовка, Битва, Глоссарий]
+    notes: >
+      Наши кубики печатаются цифрами 1–6, а не символами: наклейки в
+      `print/Dices.html` набраны шрифтом AlienEncounters обычными цифрами.
+      Значит книге нужна отдельная иконка кубика.
+      УТОЧНЕНО 2026-09-15 (D-040): символьный вариант граней у нас всё-таки
+      предусмотрен — лист наклеек по желанию, §8.4 правил. Арт двух символов
+      уже существует: `print/dices/kill.png` и `retreat.png`. Значит
+      ICON-018 и ICON-019 берутся ИЗ НЕГО, а не рисуются заново (MISS-024).
+      На саму ICON-017 это не влияет: иконка кубика как предмета нужна
+      независимо.
+
+  - id: ICON-018
+    placeholder: "{KILL}"
+    glyph: null
+    font: null
+    meaning: Смерть — результат броска 6
+    original_concept: Kill
+    redesign_term: Смерть
+    term_ref: TERM-028
+    status: MISSING
+    used_in: [Битва, Глоссарий]
+    notes: >
+      Обязана быть визуально не связана с ICON-019 и ICON-020: способности
+      срабатывают строго от одного из трёх исходов.
+      ИСТОЧНИК АРТА: `print/dices/kill.png` (вариант `kill-simple.png`).
+      Рисовать заново нельзя — одно значение получит два изображения,
+      устав §10. См. MISS-024.
+
+  - id: ICON-019
+    placeholder: "{SUPPRESS}"
+    glyph: null
+    font: null
+    meaning: Подавление — результат броска 4–5
+    original_concept: Pain
+    redesign_term: Подавление
+    term_ref: TERM-029
+    status: MISSING
+    used_in: [Битва, Глоссарий]
+    notes: >
+      Иконка называет состояние, а не движение. Отступление — применение
+      подавления, отдельной иконки не получает.
+      ИСТОЧНИК АРТА: `print/dices/retreat.png` (вариант `-simple.png`).
+      Имя файла осталось от терминологии до D-019 — сам знак наш, переименовать
+      файл при работе над компонентами. См. MISS-024.
+
+  - id: ICON-020
+    placeholder: "{MISS}"
+    glyph: null
+    font: null
+    meaning: Промах — результат броска 1–3
+    original_concept: Blank
+    redesign_term: Промах
+    term_ref: null
+    status: MISSING
+    used_in: [Битва, Глоссарий]
+    notes: >
+      Нужна в таблице значений кубика и в статье «Боевой кубик» глоссария:
+      статьи «Промах» нет, но плейсхолдер там употреблён — поэтому «Глоссарий»
+      стоит в used_in.
+      Отдельного знака промаха на наклейках нет и не нужно, но по другой
+      причине, чем в оригинале: у Petersen грань промаха ПУСТАЯ
+      (original_concept: Blank), а на нашем листе там остаются ЦИФРЫ 1, 2, 3
+      (print/generate_dices.py). На чёрном кубике пустая грань и невозможна.
+      Иконка книги нужна только для таблицы результатов.
+
+  - id: ICON-021
+    placeholder: "{TACTICAL}"
+    glyph: null
+    font: null
+    meaning: Тактический эффект
+    original_concept: Pre-Battle ability
+    redesign_term: Тактический (боевой) эффект
+    term_ref: TERM-031
+    status: MISSING
+    used_in: [Битва]
+    notes: >
+      Термин уже напечатан на картах технологий и полковниках. Если иконка
+      появится, она должна прийти и на карты — иначе книга и компонент
+      разойдутся. Уходит в выверку компонентов (D-004).
+
+  - id: ICON-022
+    placeholder: "{FINAL}"
+    glyph: null
+    font: null
+    meaning: Финальный эффект
+    original_concept: Post-Battle ability
+    redesign_term: Финальный (боевой) эффект
+    term_ref: TERM-032
+    status: MISSING
+    used_in: [Битва]
+    notes: Та же оговорка, что у ICON-021.
+
+  # --- Действия и способности ---
+
+  - id: ICON-023
+    placeholder: "{ACTION}"
+    glyph: null
+    font: null
+    meaning: Основное действие
+    original_concept: Action
+    redesign_term: Действие
+    term_ref: TERM-045
+    status: MISSING
+    used_in: [Фаза действий]
+    notes: null
+
+  - id: ICON-024
+    placeholder: "{FREE_ACTION}"
+    glyph: null
+    font: null
+    meaning: Свободное действие
+    original_concept: Unlimited Action
+    redesign_term: Свободное действие
+    term_ref: TERM-048
+    status: MISSING
+    used_in: [Фаза действий → Свободные действия]
+    notes: >
+      Различие с ICON-023 несёт правило: свободное действие не занимает ход.
+
+  - id: ICON-025
+    placeholder: "{ONGOING}"
+    glyph: null
+    font: null
+    meaning: Постоянный эффект
+    original_concept: Ongoing ability
+    redesign_term: Постоянно
+    term_ref: TERM-033
+    status: MISSING
+    used_in: [Фаза действий, Основы игры]
+    notes: >
+      Термин напечатан на картах технологий. Та же оговорка, что у ICON-021.
+
+  - id: ICON-026
+    placeholder: "{TECH}"
+    glyph: null
+    font: null
+    meaning: Технология
+    original_concept: Spellbook
+    redesign_term: Технология
+    term_ref: TERM-022
+    status: MISSING
+    used_in: [Основы игры, Окончание игры и победа]
+    notes: null
+
+  - id: ICON-027
+    placeholder: "{TASK}"
+    glyph: null
+    font: null
+    meaning: Задача
+    original_concept: Spellbook Requirement
+    redesign_term: Задача
+    term_ref: TERM-067
+    status: MISSING
+    used_in: [Основы игры, Планшет фракции]
+    notes: null
+
+  # --- Прочее ---
+
+  - id: ICON-028
+    placeholder: "{FIRST_PLAYER}"
+    glyph: null
+    font: null
+    meaning: Жетон первого игрока
+    original_concept: First-Player Token
+    redesign_term: Жетон первого игрока
+    term_ref: TERM-050
+    status: MISSING
+    used_in: [Компоненты, Фаза определения первого игрока]
+    notes: >
+      Жетон двусторонний и задаёт направление хода. Иконка должна показывать
+      направление, иначе половина правила потеряется. Арта пока нет и у самого
+      жетона.
+
+  - id: ICON-029
+    placeholder: "{LAB}"
+    glyph: null
+    font: null
+    meaning: Лаборатория
+    original_concept: The Laboratory
+    redesign_term: Лаборатория
+    term_ref: TERM-009
+    status: MISSING
+    used_in: [Варианты игры → Лаборатория и энграммы]
+    notes: null
+
+  - id: ICON-030
+    placeholder: "{HUB}"
+    glyph: null
+    font: null
+    meaning: Узел управления
+    original_concept: No Slime Token area
+    redesign_term: Узел управления
+    term_ref: TERM-076
+    status: MISSING
+    used_in: [Варианты игры → Рой боевых дронов]
+    notes: >
+      На жетоне компонента сейчас стоит emoji 📡 — см. ICON-042. Настоящей
+      иконки нет ни у книги, ни у жетона.
+
+  - id: ICON-031
+    placeholder: "{NET_ZONE}"
+    glyph: null
+    font: null
+    meaning: Зона сети
+    original_concept: Slime Sea Area
+    redesign_term: Зона сети
+    term_ref: TERM-010
+    status: MISSING
+    used_in: [Варианты игры → Рой боевых дронов]
+    notes: >
+      Обязана отличаться от ICON-030: узел один, зон сети три или четыре,
+      и правила у них разные. Сейчас на обоих жетонах стоит один и тот же
+      emoji 📡 — это ровно то, что запрещает правило «один глиф = одно
+      значение». См. ICON-042.
+
+  # === B. Глифы, которые в шрифте уже есть ==================================
+  # Шрифт: Oil Wars, `print/Fonts/Oil Wars.ttf`, версия 1.1.
+  # Опознано по контактному листу `../sources/pages/FONT-OILWARS/glyphs.png`,
+  # таблица кодовых точек — `../sources/pages/FONT-OILWARS/cmap.md`.
+  #
+  # Три символа ресурса (E, Q, W) и восемь логотипов фракций (1–8).
+  # Каждый из E/Q/W набирается ДВУМЯ символами — прописным и строчным,
+  # контуры идентичны. Канонический — прописной; строчные при пересборке
+  # шрифта свести к одному глифу (см. шапку файла).
+
+  - id: ICON-032
+    placeholder: "{MAP_MARK_DROP}"
+    glyph: "Q"
+    font: Oil Wars
+    meaning: Символ региона — капля
+    original_concept: Dragon Glyph — один из трёх Spellbook Glyph Yellow Sign
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: ["Игровое поле (1.4)", "Карты задач Глобал Петролеум", "Карты задач Братства Сингулярности"]
+    notes: >
+      Сплошная капля с бликом-полумесяцем внутри. Используется
+      в формулировках вида «разместить нефтяную вышку в регионе, отмеченном
+      символом Q» и «ваша община есть в регионе с символом Q».
+      ИСПРАВЛЕНО ПО CODE-04. В P7 я описал этот глиф как «одиночное пламя»,
+      прочитав контур `Qq.svg` вслепую, — и ошибся. Пламя это ICON-033.
+      ЗНАЧЕНИЕ ЗА ПРЕДЕЛАМИ ПРАВИЛ: чем отличаются регионы с разными
+      символами, задают фракции, а фракции вне объёма (D-004). В рулбуке
+      символ появится только в разделе про игровое поле, как элемент легенды.
+      На действующей карте `board/legacy/карта 5.jpg` этих символов нет — их ещё
+      предстоит нанести. Отмечено, чтобы не потерялось.
+      Не путать с ICON-037: там тоже капля, но над всплеском, и это логотип
+      Глобал Петролеум, а не пометка региона.
+
+  - id: ICON-033
+    placeholder: "{MAP_MARK_FLAME}"
+    glyph: "W"
+    font: Oil Wars
+    meaning: Символ региона — пламя
+    original_concept: Thorns Glyph — один из трёх Spellbook Glyph Yellow Sign
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: ["Игровое поле (1.4)", "Карты задач Глобал Петролеум", "Карты задач Братства Сингулярности"]
+    notes: >
+      Один язык пламени с внутренним контуром. ИСПРАВЛЕНО ПО CODE-04:
+      в P7 описано как «три языка пламени» — язык один.
+
+  - id: ICON-034
+    placeholder: "{MAP_MARK_CART}"
+    glyph: "E"
+    font: Oil Wars
+    meaning: Символ региона — рудничная вагонетка
+    original_concept: Chevron Glyph — один из трёх Spellbook Glyph Yellow Sign
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: ["Игровое поле (1.4)", "Карты задач Глобал Петролеум", "Карты задач Братства Сингулярности"]
+    notes: >
+      Вагонетка с горкой породы, на двух колёсах. ИСПРАВЛЕНО ПО CODE-04:
+      в P7 описано как «автоцистерна» — кабины нет, есть кузов и порода.
+      Тройка вагонетка / капля / пламя читается как руда, нефть и газ,
+      но ЭТО ЧТЕНИЕ, А НЕ ФАКТ: значение символов задают карты задач фракций,
+      и подтверждать его надо там (D-004).
+      D-046: этим чтением выбрано соответствие оригиналу. Вагонетка = уголь
+      и руды легла на Chevron Glyph, то есть на Африку, Австралию и Новую
+      Зеландию; капля = нефть на Dragon (Америки); пламя = газ на Thorns
+      (Скандинавия, Европа, Азия, Аравия). Размещение по областям —
+      board/glyphs.yaml → region_symbols. Игровой силы чтение
+      по-прежнему не несёт.
+
+  # Восемь логотипов фракций. Опознаны CODE-04 сличением силуэтов с файлами
+  # `art/logos/`: IoU 0.90–0.99, каждый глиф ложится ровно на один логотип.
+  # Глиф 7 проверен отдельно и глазами: `art/logos/Североамериканский
+  # Альянс.png` — та же роза ветров.
+  # Порядок глифов НЕ совпадает с порядком фракций в CLAUDE.md §2.
+  # В текст правил не идут: фракции вне объёма (D-004). Заведены, потому что
+  # правило «один глиф = одно значение» проверяется по всему шрифту, а не
+  # по той его части, которая нужна книге.
+
+  - id: ICON-035
+    placeholder: "{FACTION_ISLAND}"
+    glyph: "1"
+    font: Oil Wars
+    meaning: Логотип фракции «Островная Империя»
+    original_concept: null
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: []
+    notes: >
+      Спрут над гребнем волны. Сличено с `art/logos/Островная Империя.png`,
+      IoU 0.927 — самое низкое совпадение из восьми, но однозначное.
+      Употреблений в файлах проекта нет.
+
+  - id: ICON-036
+    placeholder: "{FACTION_AIRCRAFT}"
+    glyph: "2"
+    font: Oil Wars
+    meaning: Логотип фракции «Эйркрафт Корпорейшн»
+    original_concept: null
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: []
+    notes: >
+      Орёл с расправленными крыльями над земным шаром. IoU 0.986.
+      ЗДЕСЬ Я ОШИБСЯ В P7, и ошибка поучительная. Я сличил эту эмблему
+      с логотипом Североамериканского Альянса, увидел розу ветров, не увидел
+      орла — и вывел из одного несовпадения общий вывод «цифровые глифы это
+      НЕ логотипы фракций». Посылка была верна, вывод — нет: роза ветров
+      действительно у Альянса, но это глиф 7. Ловушка №1 из STATE.md,
+      «не выводить правило логически — смотреть источник», в чистом виде.
+
+  - id: ICON-037
+    placeholder: "{FACTION_PETROLEUM}"
+    glyph: "3"
+    font: Oil Wars
+    meaning: Логотип фракции «Глобал Петролеум»
+    original_concept: null
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: []
+    notes: >
+      Капля над расходящимся всплеском. IoU 0.954.
+      Не путать с ICON-032: там голая капля с бликом, и это пометка региона.
+      Различие держится на всплеске — при уменьшении проверить, что оно
+      не пропадает.
+
+  - id: ICON-038
+    placeholder: "{FACTION_MOON}"
+    glyph: "4"
+    font: Oil Wars
+    meaning: Логотип фракции «Moon Systems»
+    original_concept: null
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: []
+    notes: Полумесяц с сигнальными дугами внутри. IoU 0.976.
+
+  - id: ICON-039
+    placeholder: "{FACTION_CLONAID}"
+    glyph: "5"
+    font: Oil Wars
+    meaning: Логотип фракции «Клонэйд Ресёрч»
+    original_concept: null
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: []
+    notes: Двойная спираль ДНК в кольце. IoU 0.955.
+
+  - id: ICON-040
+    placeholder: "{FACTION_BROTHERHOOD}"
+    glyph: "6"
+    font: Oil Wars
+    meaning: Логотип фракции «Братство Сингулярности»
+    original_concept: null
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: ["Жетоны «Община» Братства Сингулярности, Factory.html строки 77–80"]
+    notes: >
+      Крона на стволе внутри трёх треугольников. IoU 0.963.
+      Единственный из восьми с подтверждённым употреблением — и теперь
+      понятно почему: на жетоне общины Братства печатается логотип самого
+      Братства. Остальные семь в файлах проекта не встречаются.
+
+  - id: ICON-041
+    placeholder: "{FACTION_ALLIANCE}"
+    glyph: "7"
+    font: Oil Wars
+    meaning: Логотип фракции «Североамериканский Альянс»
+    original_concept: null
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: []
+    notes: >
+      Роза ветров с восемью лучами. IoU 0.903. Проверено независимо и глазами
+      по `art/logos/Североамериканский Альянс.png` — совпадает.
+
+  - id: ICON-042
+    placeholder: "{FACTION_SCIENTIFIC}"
+    glyph: "8"
+    font: Oil Wars
+    meaning: Логотип фракции «Сайнтифик Солюшн»
+    original_concept: null
+    redesign_term: null
+    term_ref: null
+    status: OK
+    used_in: []
+    notes: >
+      Атом с тремя орбитами. IoU 0.952. Единственный глиф, экспортированный
+      отдельно в `README.txt` папки OilWars, — то есть добавлялся последним.
+
+  # === C. Знаки на компонентах ==============================================
+  # В правила не идут. Обе записи разобраны решением D-029 и признаны
+  # нормальными; оставлены, чтобы при разработке набора их не завели заново
+  # как находки.
+
+  - id: ICON-043
+    placeholder: "{NET_MARK}"
+    glyph: "📡"
+    font: null
+    meaning: Принадлежность компонента к сети Роя
+    original_concept: null
+    redesign_term: null
+    term_ref: TERM-077
+    status: EMOJI-SUBSTITUTE
+    used_in: ["Factory.html строки 98, 104–107"]
+    notes: >
+      Один знак стоит и на жетоне узла управления (строка 98), и на четырёх
+      жетонах зоны сети (строки 104–107).
+      РАЗОБРАНО, НАРУШЕНИЯ НЕТ (D-029). В P7 я завёл это как двойной дефект;
+      первая половина снята решением Alek: знак помечает связанные
+      компоненты, которые друг без друга не имеют смысла, и значение у него
+      ОДНО — принадлежность к сети Роя. Правило «один глиф = одно значение»
+      выполняется. Различать узел и зону — работа формы жетона и подписи,
+      а не этого знака: у узла жетон квадратный, у зон круглый
+      (`shape-circle`).
+      Осталась вторая половина, и она в силе: это emoji, а emoji запрещён
+      уставом §10. Меняется на глиф, когда набор будет добавлен в шрифт
+      (D-029). До тех пор статус EMOJI-SUBSTITUTE стоит по факту, а не
+      в укор.
+
+  - id: ICON-044
+    placeholder: "{FACTORY_SPECIAL_MARK}"
+    glyph: null
+    font: null
+    meaning: Различители десяти особых фабрик
+    original_concept: Colour Gate colours
+    redesign_term: Особая фабрика
+    term_ref: TERM-008
+    status: OK
+    used_in: ["Factory.html строки 55–64"]
+    notes: >
+      Десять особых фабрик различаются юникодными геометрическими знаками
+      ▣ ▲ ◆ ★ ✚ ⬟ ⬢ ◎ ✖ ✦ плюс цветом.
+      РАЗОБРАНО, ЗАКРЫТО (D-029). В P7 я поставил DUPLICATE, посчитав, что
+      ⬟ и ⬢ на жетоне 20 мм не различаются. Решение Alek: различаются —
+      не идеально, но приемлемо, а ОСНОВНОЕ различие там цвет, как
+      и в оригинале. Жетоны напечатаны и физически реализованы, менять
+      их не будем.
+      Открытым остаётся только число: у нас десять особых фабрик, в оригинале
+      девять. Это вопрос компонентов и чисел, а не иконок, — живёт
+      в numbers.yaml и в выверке компонентов (D-004). В текст правил таблица
+      особых фабрик не идёт (D-014).
