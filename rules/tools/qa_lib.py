@@ -24,7 +24,7 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 REG = ROOT / "registry"
 OUT = ROOT / "reports"
-BOOK = OUT / "RULEBOOK.md"
+BOOK = ROOT / "RULEBOOK.md"
 
 STEM = 5
 

@@ -9,7 +9,7 @@
 
 - Дата прогона: **2026-09-22**, повторный после правок `D-047`
 - Предмет проверки: `rules/RULEBOOK.md` — 2421 строка, 114 120 символов, части 1–13
-- Инструменты: `rules/tools/qa_final.py` (тринадцать проверок), `tools/qa_lib.py`
+- Инструменты: `rules/tools/qa_final.py` (тринадцать проверок), `rules/tools/qa_lib.py`
   (общая часть), `rules/tools/build_rulebook.py --verify` (сборка и доказательство
   переноса). Полный вывод — `rules/reports/14-final-qa-run.txt` и `rules/reports/14-build-verify.txt`
 - `registry.py all` — `EXIT=0`, восемь отчётов пересобраны; `map.py check` —
@@ -323,4 +323,4 @@ Emoji — **0**, включая посимвольный поиск по кат�
 - `rules/reports/14-final-qa-run.txt` — полный вывод `qa_final.py` (все тринадцать проверок
   плюс проверка требований к чистовику)
 - `rules/reports/14-build-verify.txt` — вывод `build_rulebook.py --verify`
-- `rules/tools/qa_final.py`, `tools/qa_lib.py`, `rules/tools/build_rulebook.py` — сами скрипты
+- `rules/tools/qa_final.py`, `rules/tools/qa_lib.py`, `rules/tools/build_rulebook.py` — сами скрипты

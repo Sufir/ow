@@ -1,6 +1,6 @@
 # MC-4P-A — матрица смежности
 
-Сгенерировано tools/map.py. Не править руками.
+Сгенерировано board/tools/map.py. Не править руками.
 
 | |AUS|NAM|SAM|ARC|IND|NATL|NPAC|SATL|SPAC|AFRE|AFRW|ARB|ASIN|ASIS|EUR|SCA|ANT|
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|

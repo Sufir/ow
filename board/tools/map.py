@@ -3,14 +3,14 @@
 """
 map.py — валидация подреестра карты, сборка графов конфигураций и отчёт.
 
-YAML в ../registry/map/ — источник истины. Всё в registry/map/derived/ и
-../out/11-map.md — производные: руками не правятся, пересобираются этим скриптом.
+YAML в ../board/ — источник истины. Всё в board/derived/ и
+../reports/11-map.md — производные: руками не правятся, пересобираются этим скриптом.
 
 Использование:
     python map.py check      # валидация YAML: ID, словари, ссылки, целостность модели
-    python map.py build      # собрать графы всех конфигураций в registry/map/derived/
+    python map.py build      # собрать графы всех конфигураций в board/derived/
     python map.py verify     # сверить собранные графы с опубликованными инвариантами
-    python map.py report     # сгенерировать ../out/11-map.md
+    python map.py report     # сгенерировать ../reports/11-map.md
     python map.py all        # check + build + verify + report
 
 Зависимость: PyYAML  ->  pip install pyyaml
@@ -424,7 +424,7 @@ def build(d):
         (DERIVED / f"{cfg['id']}.dot").write_text(dot(g, R), encoding="utf-8")
         (DERIVED / f"{cfg['id']}.md").write_text(
             f"# {cfg['id']} — матрица смежности\n\n"
-            f"Сгенерировано tools/map.py. Не править руками.\n\n" + matrix_md(g) + "\n",
+            f"Сгенерировано board/tools/map.py. Не править руками.\n\n" + matrix_md(g) + "\n",
             encoding="utf-8")
         print(f"build: {cfg['id']}: V={g['areas']} E={g['edges']} "
               f"oceans={g['ocean_areas']} diam={g['diameter']}")
@@ -482,7 +482,7 @@ def report(d, all_g, rows, ok):
     ow = {r["baseline_ref"]: r for r in d["redesign"]}
     L = ["# 11 — Карта: реконструкция оригинального поля",
          "",
-         "Сгенерировано `tools/map.py`. Не править руками — источник в `registry/map/`.",
+         "Сгенерировано `board/tools/map.py`. Не править руками — источник в `board/`.",
          "",
          "## Сводка по конфигурациям", "",
          "| Конфигурация | Игроков | Левый | Правый | Областей | Суша | Океан | Рёбер | Диаметр | Связный |",
@@ -610,7 +610,7 @@ def report(d, all_g, rows, ok):
         if f["status"] != "CLOSED":
             L.append(f"| `{f['id']}` | {f['type']} | {f['severity']} | {f['status']} | {f['title']} |")
     (OUT / "11-map.md").write_text("\n".join(L) + "\n", encoding="utf-8")
-    print("report: out/11-map.md")
+    print("report: reports/11-map.md")
 
 
 def main():

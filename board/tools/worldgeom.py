@@ -7,15 +7,15 @@ Master geometry проекта: чистая векторная географи
 океан) в WGS84, из которой детерминированно получаются нормализованное
 представление, SVG и любая проекция под конкретное полотно.
 
-Игровых регионов здесь нет и быть не должно — см. registry/map/geo/README.md.
+Игровых регионов здесь нет и быть не должно — см. board/geo/README.md.
 
 Запуск:
-    python tools/worldgeom.py all      # build + check + write + report
-    python tools/worldgeom.py check    # build + check, ничего не пишет
+    python board/tools/worldgeom.py all      # build + check + write + report
+    python board/tools/worldgeom.py check    # build + check, ничего не пишет
 
 Зависимости: shapely >= 2.0. Питона на машине нет — гонять в Docker:
     docker run --rm -v "C:/YandexDisk/Oil Wars/board:/w" -w /w python:3.12-slim \
-      sh -c "pip install --quiet shapely && python tools/worldgeom.py all"
+      sh -c "pip install --quiet shapely && python board/tools/worldgeom.py all"
 """
 
 from __future__ import annotations
@@ -1047,7 +1047,7 @@ def metadata(data, seam=None):
         ("name", "oil-wars-world-base"),
         ("version", VERSION),
         ("generated", datetime.date.today().isoformat()),
-        ("generator", "tools/worldgeom.py"),
+        ("generator", "board/tools/worldgeom.py"),
         ("purpose", "master geometry: география мира под алгоритмическое разбиение "
                     "на игровые регионы; игровых регионов здесь нет"),
         ("source", OrderedDict([
@@ -1117,7 +1117,7 @@ def metadata(data, seam=None):
                              "OCEAN, но океаном не являются — исключать явно"),
         ])),
         ("downstream", OrderedDict([
-            ("graph", "registry/map/derived/all.json и MC-*.json — игровой граф"),
+            ("graph", "board/derived/all.json и MC-*.json — игровой граф"),
             ("contract", "WORLD GEOMETRY (этот файл) + GAME GRAPH → REGIONAL PARTITION"),
         ])),
     ])
@@ -1485,7 +1485,7 @@ def write_report(path, data, checks, narrow, gaps, game, game_journal):
 
     A("# world-base-report — эталонная география мира")
     A("")
-    A(f"Сгенерировано `tools/worldgeom.py`, руками не правится. "
+    A(f"Сгенерировано `board/tools/worldgeom.py`, руками не правится. "
       f"Версия {VERSION}, {datetime.date.today().isoformat()}.")
     A("")
     A("Это master geometry проекта: чистая география, поверх которой на следующем "
@@ -1522,7 +1522,7 @@ def write_report(path, data, checks, narrow, gaps, game, game_journal):
     A("|---|---|")
     A("| Набор | Natural Earth 1:50m Physical — Land |")
     A("| Лицензия | public domain |")
-    A("| Файл | `registry/map/geo/src/ne_50m_land.json` (вендорная копия в репозитории) |")
+    A("| Файл | `board/geo/src/ne_50m_land.json` (вендорная копия в репозитории) |")
     A(f"| SHA-256 | `{data['src_sha']}` |")
     A("| Доставка | git-клон `github.com/martynafford/natural-earth-geojson`, "
       "коммит `0b9a6ce` |")
@@ -1784,7 +1784,7 @@ def write_report(path, data, checks, narrow, gaps, game, game_journal):
       "не нарисовать по реальной географии. Берингов пролив намеренно не трогаем: "
       "пролив должен остаться проливом.")
     A("")
-    A("Любая из этих правок — строка в `tools/worldgeom.py` (`RESTORE_ISLANDS`, "
+    A("Любая из этих правок — строка в `board/tools/worldgeom.py` (`RESTORE_ISLANDS`, "
       "`MIN_VISIBLE_KM2`, `WIDEN`) и пересборка за минуту. Добавить остров, "
       "раздуть перешеек, выпилить мешающий архипелаг — так же.")
     A("")
@@ -1798,7 +1798,7 @@ def write_report(path, data, checks, narrow, gaps, game, game_journal):
     A("")
     passed = sum(1 for _, p, _ in checks if p)
     A(f"**{passed} из {len(checks)} проверок пройдено.** Проверки гоняются командой "
-      "`python tools/worldgeom.py check` и являются частью сборки: если хоть одна "
+      "`python board/tools/worldgeom.py check` и являются частью сборки: если хоть одна "
       "падает, файлы не пишутся.")
     A("")
 
@@ -1852,9 +1852,9 @@ def write_report(path, data, checks, narrow, gaps, game, game_journal):
     A("Следующий этап получает на вход два файла и ничего больше:")
     A("")
     A("```")
-    A("registry/map/geo/world-game.geojson      география с игровыми коррекциями")
-    A("registry/map/derived/all.json            игровой граф (MF-001)")
-    A("registry/map/ТЗ-ЭСКИЗ-КАРТЫ.md §5        целевые площади областей")
+    A("board/geo/world-game.geojson      география с игровыми коррекциями")
+    A("board/derived/all.json            игровой граф (MF-001)")
+    A("board/ТЗ-ЭСКИЗ-КАРТЫ.md §5        целевые площади областей")
     A("        ↓")
     A("REGIONAL PARTITION")
     A("```")

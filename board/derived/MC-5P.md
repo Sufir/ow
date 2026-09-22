@@ -1,6 +1,6 @@
 # MC-5P — матрица смежности
 
-Сгенерировано tools/map.py. Не править руками.
+Сгенерировано board/tools/map.py. Не править руками.
 
 | |AUS|CAM|NAME|NAMW|NZL|SAME|SAMW|ARC|IND|NATL|NPAC|SATL|SPAC|AFRE|AFRW|ARB|ASIN|ASIS|EUR|SCA|ANT|
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|

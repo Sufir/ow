@@ -8,14 +8,14 @@ mapgeom.py проверяет ГЕОМЕТРИЮ (влезают ли фигур
 по слоям PSD и сверяет полученные смежности с тем же реестром.
 
 Источник геометрии — маски областей в слоях PSD. Источник истины
-по смежностям — registry/map/edges.yaml: картинка подгоняется под реестр,
+по смежностям — board/edges.yaml: картинка подгоняется под реестр,
 а не наоборот.
 
 Использование:
     python mapgeom.py measure            # замер: A, U, N_пех/маш/роб, U/A -> derived/geometry.json
     python mapgeom.py adjacency          # смежности из масок против edges.yaml
     python mapgeom.py check              # PASS/FAIL по SPEC-BOARD §4 и §6
-    python mapgeom.py report             # ../out/12-mapgeom.md
+    python mapgeom.py report             # ../reports/12-mapgeom.md
     python mapgeom.py all                # measure + adjacency + check + report
 
 Ключи:
@@ -33,7 +33,7 @@ Python на машине нет — гонять в Docker, как registry.py �
 
     docker run --rm -v "C:/YandexDisk/Oil Wars:/w" -w /w/board python:3.12-slim \\
       sh -c "pip install --quiet pyyaml psd-tools numpy scipy pillow && \\
-             python tools/mapgeom.py all"
+             python board/tools/mapgeom.py all"
 """
 
 import argparse
@@ -423,8 +423,8 @@ def print_table(rows, redesign, starts):
 def report(rows, problems, redesign, starts, meta):
     OUT.mkdir(parents=True, exist_ok=True)
     L = ["# 12 — геометрическая приёмка поля", "",
-         "Сгенерировано `tools/mapgeom.py`, руками не правится.",
-         f"Критерии — `registry/map/SPEC-BOARD.md`. Источник геометрии — `{meta['psd']}`.",
+         "Сгенерировано `board/tools/mapgeom.py`, руками не правится.",
+         f"Критерии — `board/SPEC-BOARD.md`. Источник геометрии — `{meta['psd']}`.",
          "", "## Параметры замера", "",
          f"- полотно: {meta['sheet_w']:.0f} × {meta['sheet_h']:.0f} мм",
          f"- исходник: {meta['px_w']} × {meta['px_h']} px, {meta['dpi']:.0f} dpi",
