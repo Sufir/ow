@@ -1,6 +1,6 @@
 # SCHEMA — описание реестров
 
-Источник истины — YAML-файлы в этой папке. `registry.db` (SQLite) и отчёты в `../out/`
+Источник истины — YAML-файлы в этой папке. `registry.db` (SQLite) и отчёты в `../reports/`
 собираются из них скриптом `../tools/registry.py` и руками не правятся.
 
 **Подреестр карты — `board/`, своя схема `board/SCHEMA.md`.** Реконструкция
@@ -33,7 +33,7 @@
   title: Cthulhu Wars Rulebook
   edition: null                   # издание/версия, если известно
   url: null
-  local_path: sources/original/... # относительно rules/, либо null
+  local_path: source/cthulhu-wars/... # относительно rules/, либо null
   retrieved: null                 # дата получения
   status: REQUESTED               # AVAILABLE | REQUESTED | UNREACHABLE | PARTIAL
   need: >                         # что именно нужно, если REQUESTED

@@ -369,5 +369,5 @@ docker run --rm -v "C:\YandexDisk\Oil Wars\rules/:/work" python:3.12-slim \
   bash -lc 'pip install -q pyyaml && cd /work && python tools/registry.py all'
 ```
 
-Для контактного листа дополнительно монтируется `Templates\Fonts`
+Для контактного листа дополнительно монтируется `print\Fonts`
 в `/fonts:ro` и ставятся `pillow`, `fonttools` и `fonts-dejavu-core`.

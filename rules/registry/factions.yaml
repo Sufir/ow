@@ -12,9 +12,9 @@
 # механики и компоненты. Названия использованы только как дополнительный признак.
 #
 # Источники (см. sources.yaml, где заведены; локальные пути — от rules/):
-#   SRC-RB-NEW   — sources/original/SRC-RB-NEW__cw-rulebook-new-layout__2026-09-10.md
-#   SRC-DRAFT    — sources/redesign/SRC-DRAFT__rules-draft__2026-09-10.md
-#   SRC-APP-MERC — sources/redesign/SRC-APP-MERC__mercenaries__2026-09-10.md
+#   SRC-RB-NEW   — sources/cthulhu-wars/SRC-RB-NEW__cw-rulebook-new-layout__2026-09-10.md
+#   SRC-DRAFT    — sources/gdocs/SRC-DRAFT__rules-draft__2026-09-10.md
+#   SRC-APP-MERC — sources/gdocs/SRC-APP-MERC__mercenaries__2026-09-10.md
 #   FC-<фракция> — print/Saved/Faction Card — <фракция>.pdf  (эталон состава по CLAUDE.md §2)
 #   JSON-<фракция> — print/Saved/<фракция>.json (состояние планшета; МОЖЕТ БЫТЬ УСТАРЕВШИМ)
 #   TECH-JSON    — print/Saved/Cards - Технологии и задачи.json
@@ -41,7 +41,7 @@ meta:
   # Числа сверены по трём источникам: количества фигурок — SRC-RB-NEW
   # (страницы COMPONENTS), стоимости и бой — SRC-WIKI и SRC-NECRO-FAC,
   # которые сошлись между собой по всем 11 фракциям компендиума без расхождений.
-  # Выписка со сверкой — sources/original/SRC-WIKI__faction-units-and-components__2026-09-11.md
+  # Выписка со сверкой — sources/cthulhu-wars/SRC-WIKI__faction-units-and-components__2026-09-11.md
   stats_filled: 2026-09-11
 
   # РЕШЕНИЕ ALEK 2026-09-11 — фиксация без работы.
@@ -216,7 +216,7 @@ original:
   # количества подтверждены страницей COMPONENTS рулбука, стоимости и боевые
   # значения — двумя независимыми источниками (SRC-WIKI и SRC-NECRO-FAC),
   # которые сошлись по всем 11 фракциям компендиума без единого расхождения.
-  # Выписка со сверкой — sources/original/SRC-WIKI__faction-units-and-components__2026-09-11.md
+  # Выписка со сверкой — sources/cthulhu-wars/SRC-WIKI__faction-units-and-components__2026-09-11.md
 
   - id: CW-F-01
     name_en: Great Cthulhu

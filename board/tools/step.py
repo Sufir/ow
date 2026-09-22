@@ -1,4 +1,8 @@
-import sys, os, numpy as np; sys.path.insert(0,'/sessions/modest-confident-hypatia/w2')
+import sys, os, numpy as np; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import os as _os
+_W = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'sketch')
+_W = _os.path.normpath(_W)
+_os.makedirs(_W, exist_ok=True)
 import repair
 from partition import make_grid
 import layout as L
@@ -6,7 +10,7 @@ L.MAPD=repair.MAPD; L.GEO=repair.MAPD+'/geo'
 X,Y,inner,nx,ny = make_grid(); tg = repair.targets(inner)
 seeds = repair.sketch_seeds(90.0)
 repair.ZONE = {r:v for r,v in seeds.items() if repair.REG[r][2]}
-F = '/sessions/modest-confident-hypatia/w2/lab_live.npy'
+F = _os.path.join(_W, 'lab_live.npy')
 if os.path.exists(F): lab = np.load(F)
 else:
     seeds,_ = L.polar_seeds(); lab,_,_ = repair.init_balanced(seeds, inner)

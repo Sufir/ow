@@ -12,7 +12,7 @@ sources:
     title: Нефтяные войны — Правила (черновик)
     edition: null
     url: https://docs.google.com/document/d/1Eb49tnE9XtmucsIQImUPP2uk2OEXHUC292uYP6iSz30/edit
-    local_path: sources/redesign/SRC-DRAFT__rules-draft__2026-09-10.md
+    local_path: sources/gdocs/SRC-DRAFT__rules-draft__2026-09-10.md
     retrieved: 2026-09-10
     status: AVAILABLE
     need: null
@@ -28,7 +28,7 @@ sources:
     title: Нефтяные войны (приложения) — Особые фабрики
     edition: null
     url: null
-    local_path: sources/redesign/SRC-APP-FACTORY__special-factories__2026-09-10.md
+    local_path: sources/gdocs/SRC-APP-FACTORY__special-factories__2026-09-10.md
     retrieved: 2026-09-10
     status: PARTIAL
     need: >
@@ -44,7 +44,7 @@ sources:
     title: Нефтяные войны (наемники)
     edition: null
     url: null
-    local_path: sources/redesign/SRC-APP-MERC__mercenaries__2026-09-10.md
+    local_path: sources/gdocs/SRC-APP-MERC__mercenaries__2026-09-10.md
     retrieved: 2026-09-10
     status: AVAILABLE
     need: null
@@ -60,7 +60,7 @@ sources:
     title: Нефтяные войны (приложения) — Уникальные полковники
     edition: null
     url: null
-    local_path: sources/redesign/SRC-APP-COLONEL__unique-colonels__2026-09-10.md
+    local_path: sources/gdocs/SRC-APP-COLONEL__unique-colonels__2026-09-10.md
     retrieved: 2026-09-10
     status: PARTIAL
     need: >
@@ -94,7 +94,7 @@ sources:
     title: Cthulhu Wars Rulebook — новая вёрстка (полный компендиум)
     edition: "омнибус эпохи Final Onslaught: есть Rule Omega и фракция Daemon Sultan"
     url: https://drive.google.com/file/d/1320UvIs5J2c8kUHPIuItAThc7f1NGwD6/view
-    local_path: sources/original/SRC-RB-NEW__cw-rulebook-new-layout__2026-09-10.pdf
+    local_path: sources/cthulhu-wars/SRC-RB-NEW__cw-rulebook-new-layout__2026-09-10.pdf
     retrieved: 2026-09-10
     status: AVAILABLE
     need: null
@@ -114,7 +114,7 @@ sources:
     title: Cthulhu Wars Rulebook — старая вёрстка
     edition: null
     url: https://drive.google.com/file/d/1wCEAJffAPaKYqctvlrKnjseLUr2s2psy/view
-    local_path: sources/original/SRC-RB-OLD__cw-rulebook-old-layout__2026-09-10.pdf
+    local_path: sources/cthulhu-wars/SRC-RB-OLD__cw-rulebook-old-layout__2026-09-10.pdf
     retrieved: 2026-09-10
     status: AVAILABLE
     need: null
@@ -132,7 +132,7 @@ sources:
     title: Cthulhu Wars Ultimate Errata Pack
     edition: "Final Onslaught, 2023-12"
     url: https://www.kickstarter.com/projects/petersengames/cthulhu-wars-the-daemon-sultan/posts/2736627
-    local_path: sources/original/SRC-ERRATA-PACK__ultimate-errata-pack__2026-09-10.pdf
+    local_path: sources/cthulhu-wars/SRC-ERRATA-PACK__ultimate-errata-pack__2026-09-10.pdf
     retrieved: 2026-09-10
     status: PARTIAL
     need: >
@@ -150,7 +150,7 @@ sources:
     title: Petersen Games — таблица балансных правок Cthulhu Wars
     edition: "обновлена 2019-11-18"
     url: https://petersengames.freshdesk.com/support/solutions/articles/48000953456-what-balance-changes-have-been-made-to-cthulhu-wars-and-when-were-they-were-fixed-
-    local_path: sources/original/SRC-ERRATA__balance-changes-table__2026-09-10.md
+    local_path: sources/cthulhu-wars/SRC-ERRATA__balance-changes-table__2026-09-10.md
     retrieved: 2026-09-10
     status: AVAILABLE
     need: null
@@ -165,7 +165,7 @@ sources:
     title: Та же таблица балансных правок в Excel
     edition: null
     url: https://drive.google.com/file/d/1-E381PGmHI2N6uM7_DMt5o4_gvMTgcuC/view?usp=sharing
-    local_path: sources/original/SRC-ERRATA-XLSX__balance-changes__2026-09-10.xlsx
+    local_path: sources/cthulhu-wars/SRC-ERRATA-XLSX__balance-changes__2026-09-10.xlsx
     retrieved: 2026-09-10
     status: AVAILABLE
     need: null
@@ -183,7 +183,7 @@ sources:
     title: Cthulhu Wars Rules FAQ (Petersen Games)
     edition: "обновлён 2019-09-25"
     url: https://petersengames.freshdesk.com/support/solutions/articles/48000952254-cthulhu-wars-rules-faq
-    local_path: sources/original/SRC-FAQ__cw-rules-faq__2026-09-10.md
+    local_path: sources/cthulhu-wars/SRC-FAQ__cw-rules-faq__2026-09-10.md
     retrieved: 2026-09-10
     status: AVAILABLE
     need: null
@@ -200,7 +200,7 @@ sources:
     title: Cthulhu Wars Product List (Petersen Games)
     edition: "обновлён 2020-03-04"
     url: https://petersengames.freshdesk.com/support/solutions/articles/48001060995-cthulhu-wars-product-list
-    local_path: sources/original/SRC-PRODUCTS__cw-product-list__2026-09-10.md
+    local_path: sources/cthulhu-wars/SRC-PRODUCTS__cw-product-list__2026-09-10.md
     retrieved: 2026-09-10
     status: AVAILABLE
     need: null
@@ -213,7 +213,7 @@ sources:
     title: Necronomicon — фанатское веб-приложение по Cthulhu Wars
     edition: v2.0
     url: https://necronomicon.app/data-files/rulebook.json
-    local_path: sources/original/SRC-NECRO__rulebook__2026-09-10.json
+    local_path: sources/cthulhu-wars/SRC-NECRO__rulebook__2026-09-10.json
     retrieved: 2026-09-10
     status: AVAILABLE
     need: null
@@ -228,7 +228,7 @@ sources:
     title: Cthulhu Wars Strategy Wiki (Fandom)
     edition: null
     url: https://cthulhuwars.fandom.com/wiki/Main_Page
-    local_path: sources/original/SRC-WIKI__faction-units-and-components__2026-09-11.md
+    local_path: sources/cthulhu-wars/SRC-WIKI__faction-units-and-components__2026-09-11.md
     retrieved: 2026-09-11
     status: PARTIAL
     need: >
@@ -387,7 +387,7 @@ sources:
     title: Cthulhu Wars Faction Selection Cards
     edition: null
     url: null
-    local_path: ../../Cthulhu_Wars_Faction_Selection_Cards.zip
+    local_path: cthulhu-wars/Cthulhu_Wars_Faction_Selection_Cards.zip
     retrieved: null
     status: AVAILABLE
     need: null

@@ -1,4 +1,8 @@
-import sys, numpy as np; sys.path.insert(0,'/sessions/modest-confident-hypatia/w2')
+import sys, numpy as np; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import os as _os
+_W = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'sketch')
+_W = _os.path.normpath(_W)
+_os.makedirs(_W, exist_ok=True)
 import repair
 from partition import make_grid
 from collections import deque
@@ -6,7 +10,7 @@ import layout as L
 L.MAPD=repair.MAPD; L.GEO=repair.MAPD+'/geo'
 X,Y,inner,nx,ny=make_grid(); tg=repair.targets(inner)
 seeds=repair.sketch_seeds(90.0); repair.ZONE={r:v for r,v in seeds.items() if repair.REG[r][2]}
-F='/sessions/modest-confident-hypatia/w2/lab_live.npy'
+F=_os.path.join(_W, 'lab_live.npy')
 lab=np.load(F); I=repair.IDX
 NP, NA, CAM = I["MR-OC-NPAC"], I["MR-OC-NATL"], I["MR-L5-CAM"]
 # кратчайший проток от Севера Тихого до Севера Атлантики, дешевле всего через
@@ -51,4 +55,4 @@ print('весь граф: %d из %d, лишних %d' % (len(req_all&got)+ (6-l
 N=repair.NAMES
 print('нет:', '; '.join('%s—%s'%(repair.REG[N[i]][0],repair.REG[N[j]][0]) for i,j in sorted(req_all-got)) or '—')
 print('лишние:', '; '.join('%s—%s'%(repair.REG[N[i]][0],repair.REG[N[j]][0]) for i,j in sorted(got-req_all)) or '—')
-np.save('/sessions/modest-confident-hypatia/w2/lab_panama.npy', lab)
+np.save(_os.path.join(_W, 'lab_panama.npy'), lab)

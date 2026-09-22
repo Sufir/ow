@@ -231,11 +231,11 @@ numbers:
   # Сплошной numerical audit, CODE-03. Записи NUM-021 и далее.
   # Сторона оригинала — только registry/baseline.yaml (+ D-010 там, где в
   # baseline записи нет; это оговорено в note). Сторона редизайна — источники
-  # в sources/redesign/, поле loc указывает файл и строку.
+  # в source/gdocs/, поле loc указывает файл и строку.
   # Поля loc и note схемой SCHEMA.md не предусмотрены и добавлены по ТЗ
   # CODE-03 для проверки работы редактором.
   #
-  # Сокращения в loc (все файлы — в sources/redesign/):
+  # Сокращения в loc (все файлы — в source/gdocs/):
   #   SRC-DRAFT             = SRC-DRAFT__rules-draft__2026-09-10.md
   #   SRC-APP-FACTORY       = SRC-APP-FACTORY__special-factories__2026-09-10.md
   #   SRC-APP-MERC          = SRC-APP-MERC__mercenaries__2026-09-10.md

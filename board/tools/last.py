@@ -1,4 +1,8 @@
-import sys, numpy as np, random; sys.path.insert(0,'/sessions/modest-confident-hypatia/w2')
+import sys, numpy as np, random; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import os as _os
+_W = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'sketch')
+_W = _os.path.normpath(_W)
+_os.makedirs(_W, exist_ok=True)
 import repair
 from partition import make_grid
 from scipy import ndimage
@@ -7,7 +11,7 @@ L.MAPD=repair.MAPD; L.GEO=repair.MAPD+'/geo'
 X,Y,inner,nx,ny=make_grid(); tg=repair.targets(inner)
 seeds=repair.sketch_seeds(90.0); repair.ZONE={r:v for r,v in seeds.items() if repair.REG[r][2]}
 I=repair.IDX; K=repair.K
-base=np.load('/sessions/modest-confident-hypatia/w2/lab_panama.npy')
+base=np.load(_os.path.join(_W, 'lab_panama.npy'))
 REQ = repair.req_pairs(with_panama=True)
 def score(l):
     pr=repair.adj_of(l,inner); got=set((i,j) for i,j in pr if j<K); rim=set(i for i,j in pr if j==K)
@@ -26,7 +30,7 @@ for trial in range(60):
     if n<bn:
         bn=n; best=lab.copy(); print('   лучше: %d'%bn, flush=True)
         if bn==0: break
-np.save('/sessions/modest-confident-hypatia/w2/lab_final.npy', best)
+np.save(_os.path.join(_W, 'lab_final.npy'), best)
 n,got=score(best)
 print('итог: %d нарушений; рёбер %d из %d'%(n, len(REQ&got)+len(repair.RIM_OK), len(REQ)+6), flush=True)
 N=repair.NAMES

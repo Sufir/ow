@@ -1,6 +1,6 @@
 # REDESIGN RULE BASELINE — механические правила из черновика «Нефтяных войн».
 # Схема — SCHEMA.md. Источник — только гуглдок «Правила (черновик)» (D-001).
-# loc — номер строки в sources/redesign/SRC-DRAFT__rules-draft__2026-09-10.md
+# loc — номер строки в sources/gdocs/SRC-DRAFT__rules-draft__2026-09-10.md
 #
 # match: EXACT | RENAMED | DEVIATION | MISSING | AMBIGUOUS | CONTRADICTORY | UNVERIFIED
 # EXACT — правило то же и сказано так же полно.

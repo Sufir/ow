@@ -38,10 +38,10 @@
 **Вход:** ссылки на гуглдок, `source/gdocs/pdf/*.pdf`, публичные материалы Petersen Games.
 **Работа:**
 
-- экспорт гуглдока «Правила (черновик)» → `sources/redesign/rules-draft-<дата>.md`;
-- извлечение текста приложений из `source/gdocs/pdf/` → `sources/redesign/`;
+- экспорт гуглдока «Правила (черновик)» → `source/gdocs/rules-draft-<дата>.md`;
+- извлечение текста приложений из `source/gdocs/pdf/` → `source/gdocs/`;
 - сбор материалов оригинала: рулбук, errata, FAQ, правила модулей дополнений →
-  `sources/original/`;
+  `source/cthulhu-wars/`;
 - cross-check-заготовки с necronomicon.app и fandom;
 - заполнение `registry/sources.yaml`.
 

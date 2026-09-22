@@ -1,9 +1,13 @@
-import sys; sys.path.insert(0,'/sessions/modest-confident-hypatia/w2')
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import os as _os
+_W = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'sketch')
+_W = _os.path.normpath(_W)
+_os.makedirs(_W, exist_ok=True)
 import numpy as np, repair, layout as L
 from partition import make_grid, REG, GRID, ARC
 from shapely.geometry import box as SB
-L.MAPD=repair.MAPD; L.GEO=repair.MAPD+'/geo'; L.OUT='/sessions/modest-confident-hypatia/w2/out'
-lab = np.load('/sessions/modest-confident-hypatia/w2/lab_final.npy')
+L.MAPD=repair.MAPD; L.GEO=repair.MAPD+'/geo'; L.OUT=_W
+lab = np.load(_os.path.join(_W, 'lab_final.npy'))
 X,Y,inner,nx,ny = make_grid()
 m,e,rm,re = repair.graph_state(lab, inner)
 ar = np.bincount(lab[inner].ravel(), minlength=repair.K+1)[:repair.K]*GRID**2/100

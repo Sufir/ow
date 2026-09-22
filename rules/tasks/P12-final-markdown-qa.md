@@ -71,7 +71,7 @@
 | numerical parity | `numbers.yaml`: сколько `PASS`, `FAIL`, `UNKNOWN`, и что каждый `FAIL` разобран |
 | timing parity | моменты срабатывания: фазы, шаги хода, такты битвы |
 | interaction parity | стыки правил, по которым били P10 и P11 |
-| setup | часть 2 против `registry/map` и планшетов |
+| setup | часть 2 против `board/` и планшетов |
 | victory | часть 9 против `baseline` |
 | terminology | текст против `terms.yaml`; ни одного термина мимо карты |
 | icons | все `{PLACEHOLDER}` есть в `icons.yaml`; emoji ноль |

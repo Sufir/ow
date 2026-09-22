@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import os as _os
+_W = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'sketch')
+_W = _os.path.normpath(_W)
+_os.makedirs(_W, exist_ok=True)
 """
 repair.py — разбиение поля, верное по графу MC-5P. Вариант B, шаг 1.
 
@@ -434,7 +438,7 @@ def pull_to_rim(lab, inner, i):
     return carve(lab, inner, i, K, max_steps=90)
 
 # ------------------------------------------- отжиг по адресным операциям
-SAVE_TO = "/sessions/modest-confident-hypatia/w2/lab_live.npy"
+SAVE_TO = _os.path.join(_W, "lab_live.npy")
 def anneal_ops(lab, inner, tg, seconds=600, T0=260.0, T1=6.0, seed=5, log=print):
     """Ход отжига — не клетка, а целая операция: проложить коридор, развести
     пару, вытолкнуть из рамки. Каждая оценивается общей стоимостью

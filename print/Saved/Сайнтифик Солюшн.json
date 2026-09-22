@@ -3,7 +3,7 @@
   "rows": [
     {
       "type": "data",
-      "imgSrc": "file:///C:/YandexDisk/Oil%20Wars/Templates/Units/adept.png",
+      "imgSrc": "file:///C:/YandexDisk/Oil%20Wars/print/Units/adept.png",
       "caption": "Рекрут",
       "cells": [
         "6",
@@ -16,7 +16,7 @@
     },
     {
       "type": "data",
-      "imgSrc": "file:///C:/YandexDisk/Oil%20Wars/Templates/Units/colonel.png",
+      "imgSrc": "file:///C:/YandexDisk/Oil%20Wars/print/Units/colonel.png",
       "caption": "Полковник",
       "cells": [
         "1",

@@ -28,20 +28,20 @@
 
 ### 1) Масштабирование `unit-icon` и сохранение масштаба
 
-#### Файл: `c:\YandexDisk\Oil Wars\Templates\Template.html`
+#### Файл: `c:\YandexDisk\Oil Wars\print\Template.html`
 - Добавить в тулбар две новые кнопки, рядом с управлением строками:
   - `id="unit-scale-dec-btn"` (уменьшить),
   - `id="unit-scale-inc-btn"` (увеличить).
 - Начальное состояние кнопок: скрыты/неактивны до выбора валидной строки данных.
 
-#### Файл: `c:\YandexDisk\Oil Wars\Templates\faction-card\style.css`
+#### Файл: `c:\YandexDisk\Oil Wars\print\faction-card\style.css`
 - Добавить стили для кнопок масштабирования в тулбаре и их состояний.
 - Добавить CSS-модель масштаба иконки без ломки текущей верстки:
   - использовать CSS-переменную на уровне строки/иконки, например `--unit-icon-scale`,
   - применить ее через `transform: scale(var(--unit-icon-scale, 1))` к `.unit-image` (или к обертке внутри `unit-dropzone`) с `transform-origin: center`.
 - Ограничить влияние масштаба только на изображение: подпись `unit-caption` и геометрия строки остаются без изменения.
 
-#### Файл: `c:\YandexDisk\Oil Wars\Templates\faction-card\app.js`
+#### Файл: `c:\YandexDisk\Oil Wars\print\faction-card\app.js`
 - Добавить ссылки на новые кнопки и константы диапазона/шага:
   - шаг: `0.05` (минимальный визуально заметный шаг),
   - минимум/максимум: например `0.5 .. 1.8` (фиксируется как решение в коде).
@@ -62,7 +62,7 @@
   - в `ensureDropzone` не сбрасывать уже установленный масштаб строки.
 - После операций, которые могут перестроить DOM (`renderTable`, импорт), переоценивать доступность кнопок масштаба по текущему выбору.
 
-#### Файл: `c:\YandexDisk\Oil Wars\Templates\faction-card\storage.js`
+#### Файл: `c:\YandexDisk\Oil Wars\print\faction-card\storage.js`
 - Расширить сериализацию строк таблицы:
   - в `buildRowsFromTbody` читать `tr.dataset.unitScale` и сохранять как `unitScale` (число или `1` по умолчанию).
 - Обратная совместимость:
@@ -71,20 +71,20 @@
 
 ### 2) Форматирование выделенного текста в `robot-panel` (по образцу mini-cards)
 
-#### Файл: `c:\YandexDisk\Oil Wars\Templates\Template.html`
+#### Файл: `c:\YandexDisk\Oil Wars\print\Template.html`
 - Добавить небольшой блок контролов форматирования для `robot-panel` (внутри `faction-info-panel`), включающий:
   - выбор шрифта (`select` с набором, совпадающим с mini-cards: `Arial`, `AlienEncounters`, `OilWars`, `OpenGostTypeB`, `AgencyFBCyrillic`);
   - кнопки `B`, `I`;
   - кнопки размера `-`, `+`.
 - Контролы по умолчанию скрыты; показываются только когда фокус/выделение находится в `.robot-title` или `.robot-steps`.
 
-#### Файл: `c:\YandexDisk\Oil Wars\Templates\faction-card\style.css`
+#### Файл: `c:\YandexDisk\Oil Wars\print\faction-card\style.css`
 - Добавить стили контролов по аналогии с `mini-cards/cards-landscape-sixes.css`:
   - схожие размеры, прозрачный темный фон, границы, hover;
   - состояние видимости через модификатор класса (например `.robot-format-visible`).
 - Убедиться, что контролы не печатаются (`@media print`).
 
-#### Файл: `c:\YandexDisk\Oil Wars\Templates\faction-card\app.js`
+#### Файл: `c:\YandexDisk\Oil Wars\print\faction-card\app.js`
 - Добавить модуль/блок логики форматирования для `robot-panel` с минимальным переносом паттернов из mini-cards:
   - отслеживание активного editable (`.robot-title` или `.robot-steps`);
   - сохранение и восстановление `Range` выделения внутри robot editable;
@@ -99,7 +99,7 @@
   - сохранить backward-compatible поведение для пасты plain text (как сейчас), но не ломать уже примененное форматирование.
 - Убедиться, что при добавлении/удалении robot-panel контролы продолжают работать без повторной ручной инициализации.
 
-#### Файл: `c:\YandexDisk\Oil Wars\Templates\faction-card\storage.js`
+#### Файл: `c:\YandexDisk\Oil Wars\print\faction-card\storage.js`
 - Специальных изменений схемы не требуется:
   - `robotTitle`/`robotSteps` уже сохраняются как `textContent`/`innerHTML`;
   - форматирование в HTML автоматически попадет в `factionInfo` localStorage и JSON.

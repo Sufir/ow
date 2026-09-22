@@ -166,7 +166,7 @@ cd /work && python tools/registry.py all
 ```
 docker run --rm -it ^
   -v "C:\YandexDisk\Oil Wars\rules/:/work" ^
-  -v "C:\YandexDisk\Oil Wars\Templates\Fonts:/fonts:ro" ^
+  -v "C:\YandexDisk\Oil Wars\print\Fonts:/fonts:ro" ^
   python:3.12-slim bash
 ```
 

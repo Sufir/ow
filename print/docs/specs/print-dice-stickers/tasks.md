@@ -9,7 +9,7 @@
 - [x] Task 3: Стилизация ячеек и контента
   - [x] SubTask 3.1: Настроить flex-центрирование внутри ячеек (13x13mm), `margin: 0`, `padding: 0`.
   - [x] SubTask 3.2: Настроить изображения (`width: 100%; height: 100%; object-fit: contain;`).
-  - [x] SubTask 3.3: Подключить шрифт `AlienEncounters.ttf` локально (`@font-face` из `../Fonts/AlienEncounters.ttf` или аналогично).
+  - [x] SubTask 3.3: Подключить шрифт `AlienEncounters.ttf` локально (`@font-face` из `print/Fonts/AlienEncounters.ttf` или аналогично).
   - [x] SubTask 3.4: Стилизовать цифры (цвет `#00ffff`, высота ~85% от ячейки, `text-rendering: geometricPrecision; -webkit-font-smoothing: none;`).
 - [x] Task 4: Метки реза (крестики)
   - [x] SubTask 4.1: Реализовать черные крестики на углах/стыках ячеек с помощью CSS (например, псевдоэлементы или background/border хитрости), без сплошных рамок.
