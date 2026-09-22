@@ -1,0 +1,145 @@
+# configs.yaml — конфигурации оригинального поля Cthulhu Wars (Earth Map) на 3–5 игроков.
+# Схема — SCHEMA.md. Правится руками; derived/ пересобирается tools/map.py.
+#
+# Поле оригинала — ДВА планшета (Western Hemisphere и Eastern Hemisphere),
+# каждый напечатан с двух сторон: сторона «3 игрока» и сторона «5 игроков».
+# Конфигурация задаётся парой (сторона левого планшета, сторона правого планшета).
+# Океанские области на обеих сторонах одинаковы, различается только дробление суши.
+
+meta:
+  boards: 2
+  board_left: Western Hemisphere
+  board_right: Eastern Hemisphere
+  seam: >
+    Шов между планшетами проходит по Северной Атлантике между Восточной Южной
+    Америкой и Западной Африкой. Области, пересекающие шов, напечатаны на обоих
+    планшетах и присутствуют в любой конфигурации: шесть океанов и Антарктида
+    (board: BOTH).
+  meridian: >
+    Левый и правый края листа склеены: «the Areas on the far right of the Map
+    connect directly to those on the far left because the Earth is round»
+    (SRC-RB-NEW, с. 9). Север Тихого океана и Индийский океан напечатаны двумя
+    кусками — у левого и у правого края (printed_in_two_pieces: true).
+  presence_rule: >
+    Область входит в конфигурацию, если side == BOTH либо side совпадает со
+    стороной того планшета, на котором она напечатана (board). Ребро входит в
+    конфигурацию тогда и только тогда, когда в неё входят обе его области:
+    межпланшетных связей «суша — суша» на карте нет, поэтому склейка двух
+    половин корректна без дополнительных правил.
+  player_counts_out_of_scope: [2, 6, 7, 8, 9, 10, 11]
+
+configs:
+
+  - id: MC-3P
+    players: 3
+    alias: "3P"
+    left: 3P
+    right: 3P
+    rulebook: >
+      «3-Player Game: Arrange the Map so that both 3-Player hemispheres are
+      face-up. The map will display 13 total Areas.»
+    recommended: null
+    published:
+      areas: {value: 13, ref: SRC-RB-NEW, loc: "с. 7"}
+      ocean_areas: {value: 6, ref: SRC-BGA-GRAPH, loc: "The constance of water"}
+      diameter: {value: 3, ref: SRC-BGA-GRAPH, loc: "Graph diameter"}
+      degrees:
+        ref: SRC-BGA-GRAPH
+        loc: "Connectivity histogram for the 3 player map"
+        values:
+          MR-L3-AUS: 2
+          MR-R3-EUR: 3
+          MR-SH-ANT: 3
+          MR-L3-NAM: 4
+          MR-R3-AFR: 4
+          MR-L3-SAM: 5
+          MR-OC-ARC: 5
+          MR-R3-ASI: 6
+          MR-OC-SPAC: 6
+          MR-OC-SATL: 6
+          MR-OC-IND: 7
+          MR-OC-NPAC: 7
+          MR-OC-NATL: 8
+      longest_pairs:
+        ref: SRC-BGA-GRAPH
+        loc: "For the 3 player maps the longest paths are of length 3… And there are 8 of them"
+        values:
+          - [MR-OC-SPAC, MR-R3-EUR]
+          - [MR-L3-AUS, MR-OC-ARC]
+          - [MR-OC-ARC, MR-SH-ANT]
+          - [MR-L3-AUS, MR-OC-NATL]
+          - [MR-L3-AUS, MR-L3-NAM]
+          - [MR-L3-AUS, MR-R3-EUR]
+          - [MR-L3-NAM, MR-SH-ANT]
+          - [MR-R3-EUR, MR-SH-ANT]
+
+  - id: MC-4P-A
+    players: 4
+    alias: "4P-A"
+    aka: "3-5 variant"
+    left: 3P
+    right: 5P
+    rulebook: >
+      «4-Player Game: Arrange the Map such that one 3-Player and one 5-Player
+      hemisphere are face-up. <…> In either arrangement, the Map will contain
+      17 total Areas.»
+    recommended: >
+      Рекомендованная рулбуком раскладка первой партии на четверых:
+      «we recommend using the 5-Player Eastern Hemisphere and the 3-Player
+      Western Hemisphere» (SRC-RB-NEW, с. 7).
+    published:
+      areas: {value: 17, ref: SRC-RB-NEW, loc: "с. 7"}
+      ocean_areas: {value: 6, ref: SRC-BGA-GRAPH, loc: "The constance of water"}
+      diameter: {value: 4, ref: SRC-BGA-GRAPH, loc: "Graph diameter"}
+      degree_count_4: {value: 6, ref: SRC-BGA-GRAPH, loc: "the 3-5 map histogram has a higher count of location with 4 neighbors (there are 6 of them)"}
+      edges_minus_other: {value: 1, other: MC-4P-B, ref: SRC-BGA-GRAPH, loc: "There is only one additional frontier on the 3-5 map"}
+      longest_pairs:
+        ref: SRC-BGA-GRAPH
+        loc: "In the 4 player map (3-5) there is one path of maximum length 4"
+        values:
+          - [MR-L3-AUS, MR-R5-SCA]
+
+  - id: MC-4P-B
+    players: 4
+    alias: "4P-B"
+    aka: "5-3 variant"
+    left: 5P
+    right: 3P
+    rulebook: >
+      Вторая из двух раскладок на четверых, та же цитата рулбука
+      («Alternate Set Up for 4-Player Game», иллюстрация на с. 7).
+    recommended: null
+    published:
+      areas: {value: 17, ref: SRC-RB-NEW, loc: "с. 7"}
+      ocean_areas: {value: 6, ref: SRC-BGA-GRAPH, loc: "The constance of water"}
+      diameter: {value: 4, ref: SRC-BGA-GRAPH, loc: "Graph diameter"}
+      longest_pairs:
+        ref: SRC-BGA-GRAPH
+        loc: "In the 4 player map (5-3) The paths of maximum length take 4 steps"
+        values:
+          - [MR-L5-AUS, MR-L5-NAME]
+          - [MR-L5-NZL, MR-L5-NAME]
+
+  - id: MC-5P
+    players: 5
+    alias: "5P"
+    left: 5P
+    right: 5P
+    rulebook: >
+      «5-Player Game: Do NOT place both 5-Player sides face-up unless you are
+      playing a 5-Player game <…>. The 5-Player game Map contains 21 total Areas.»
+    recommended: null
+    published:
+      areas: {value: 21, ref: SRC-RB-NEW, loc: "с. 7"}
+      ocean_areas: {value: 6, ref: SRC-BGA-GRAPH, loc: "The constance of water"}
+      diameter: {value: 4, ref: SRC-BGA-GRAPH, loc: "Graph diameter"}
+      degree_count_2: {value: 1, region: MR-L5-AUS, ref: SRC-BGA-GRAPH, loc: "there is only one location with 2 neighbors"}
+      degree_count_4: {value: 6, ref: SRC-BGA-GRAPH, loc: "there are still 6 locations with 4 neighbors"}
+      longest_pairs:
+        ref: SRC-BGA-GRAPH
+        loc: "In the 5 player map, the maximum length path also takes 4 steps"
+        values:
+          - [MR-L5-AUS, MR-R5-SCA]
+          - [MR-L5-AUS, MR-L5-NAME]
+          - [MR-L5-NZL, MR-L5-NAME]
+          - [MR-L5-NZL, MR-R5-SCA]

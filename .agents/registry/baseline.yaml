@@ -1,0 +1,3304 @@
+# ORIGINAL RULE BASELINE — эталон механики Cthulhu Wars. Схема — SCHEMA.md.
+# Заполняется в P2. Основной источник — SRC-RB-NEW (компендиум эпохи Final Onslaught).
+# loc указывает страницу рулбука и строку в извлечённом .md — чтобы можно было
+# вернуться к месту без пролистывания 213 страниц.
+#
+# Прогресс P2: UNIT — вчерне; остальные области не начаты.
+
+baseline:
+
+  # ============================================================================
+  # UNIT — типы отрядов
+  # ============================================================================
+
+  - id: BL-UNIT-001
+    area: UNIT
+    title: Три категории отрядов фракции
+    rule: >
+      У каждой фракции три категории отрядов: Cultists, Monsters и Great Old Ones.
+      Отряды, не находящиеся на карте, лежат в резерве фракции (Pool).
+    numbers: {categories: 3}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Это базовая тройка. Дополнения добавляют ещё два типа отрядов — Terror
+        (BL-UNIT-005) и Elder God (BL-UNIT-006), — а также особые Cultists
+        (BL-UNIT-007) и High Priest (BL-UNIT-008).
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 14, строка 263 в .md", note: "«Each Faction has 3 categories of Units: Cultists, Monsters, and Great Old Ones.»"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-002
+    area: UNIT
+    title: Acolyte — базовый тип Cultist
+    rule: >
+      В базовой игре единственный тип Cultist — Acolyte. У каждой фракции ровно
+      шесть Acolytes.
+    numbers: {acolytes_per_faction: 6}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Различие Cultist / Acolyte существенно при нацеливании: эффект, который
+        адресован Cultists без уточнения, задевает и Brain Cylinders; эффект,
+        адресованный именно Acolytes, — нет. См. BL-UNIT-007.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 14, строка 265 в .md", note: "«the only type of Cultist is an Acolyte Cultist; every Faction has exactly 6 of them»"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-003
+    area: UNIT
+    title: Monster
+    rule: >
+      У каждой фракции больше одного типа Monster, и типы у разных фракций
+      не совпадают: никакие две фракции не имеют одинакового типа Monster.
+      У каждого типа свои характеристики.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 14, строки 266–268 в .md", note: "«Each Faction has more than one type of Monster… No two Factions share the same type of Monster.»"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-004
+    area: UNIT
+    title: Great Old One
+    rule: >
+      Great Old Ones — индивидуальные существа: у каждого своё уникальное имя,
+      двух одинаковых не бывает.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Часть Great Old Ones обладает свойством Elder God (BL-UNIT-006).
+    interactions:
+      - >
+        Great Old One может захватывать Cultist, даже если того прикрывает
+        Monster или Terror. См. BL-UNIT-005.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 14, строки 269–270 в .md", note: "фраза разорвана переносом колонки: «…and thus every single Great Old One» / «has a unique name; no two are the same»"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-005
+    area: UNIT
+    title: Terror — отдельный тип отряда
+    rule: >
+      Terror — отдельный тип отряда, появляющийся в части дополнений. Terror
+      призывается так же, как Monster, действием Summon Terror, которое требует
+      контролируемых врат. В захвате Cultists Terror равен Monster: Monster может
+      защитить Cultist от Terror и наоборот, а Great Old One всё равно может
+      захватить Cultist, прикрытого Terror. При этом, будучи отдельным типом
+      отряда, Terror НЕ уязвим к способностям, которые прицельно бьют по Monsters.
+    numbers: {}
+    timing: null
+    prerequisites:
+      - Контролируемые врата для действия Summon Terror
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Не является Monster для эффектов, нацеленных на Monsters
+    interactions:
+      - Monster и Terror взаимно прикрывают Cultists друг от друга
+      - Great Old One пробивает прикрытие Terror при захвате Cultist
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 103, строки 2714–2728 в .md", note: "определение Terror целиком"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-006
+    area: UNIT
+    title: Elder God — отдельный тип отряда
+    rule: >
+      Elder God во всём считается Great Old One, кроме двух пунктов: он не даёт
+      собственного Elder Sign для Ритуала Уничтожения (хотя обычно имеет иные
+      способы получать Elder Signs), и он никогда не бросает боевые кубики, а
+      вместо этого даёт фиксированный эффект. В остальном Elder God равен Great
+      Old One: он блокирует захват отрядов и позволяет захватывать Cultists даже
+      при вражеском Monster в регионе.
+    numbers: {combat_dice: 0}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Не даёт собственного Elder Sign для Ритуала Уничтожения
+      - Никогда не бросает боевые кубики
+    interactions:
+      - >
+        Способность Harbinger (Nyarlathotep) в применении к Elder God даёт
+        2 Elder Signs либо половинную стоимость по сравнению с обычным
+        Great Old One.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 70, строки 1959–1969 в .md", note: "определение дано в разделе фракции Bubastis, на примере Bastet"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-007
+    area: UNIT
+    title: Brain Cylinder — особый Cultist
+    rule: >
+      Brain Cylinder — Cultist во всём, кроме трёх пунктов. Первое: не вербуется
+      обычным образом и не может попасть на карту иначе как действием Surgery.
+      Второе: не может двигаться сам — чтобы переместить Brain Cylinder, должен
+      двигаться другой ваш отряд из того же региона, и он берёт с собой любое
+      число присутствующих Brain Cylinders без дополнительной платы. Третье:
+      Brain Cylinder не получает результат Pain и не подвержен эффектам вида
+      «отступление от боли», но при этом и не мешает отрядам противника
+      отступать в его регион.
+    numbers: {per_faction: 4, cost: 0, combat: 0}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: 0
+    limits:
+      - 4 на фракцию
+    exceptions:
+      - Не вербуется и не размещается ничем, кроме Surgery
+      - Не двигается самостоятельно
+      - Не получает Pain
+    interactions:
+      - >
+        Является Cultist для эффектов, адресованных Cultists без уточнения,
+        но НЕ является Acolyte.
+      - >
+        При захвате Brain Cylinder захватившая фракция может вместо взятия отряда
+        «обратить» его, заменив своим Brain Cylinder. Это всё равно считается
+        захватом для способностей.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. ~92, строки 3996–4056 в .md", note: null}
+      - {ref: SRC-WIKI, loc: "Yuggoth Map → Brain Cylinders", note: "сверено, формулировки совпадают"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-008
+    area: UNIT
+    title: High Priest
+    rule: >
+      High Priest — Cultist. Вербуется так же, как Acolytes, и приносит 1 Power
+      в фазу сбора Power. Может создавать врата и контролировать их, может быть
+      захвачен. Ключевая способность — Unspeakable Oath (описана на карте
+      лояльности): позволяет в любой момент принести High Priest в жертву ради
+      Power. У каждой фракции доступен только один High Priest. Поскольку High
+      Priest вербуется, а не призывается, контролируемые врата для этого не нужны.
+      High Priest получает выгоду от всех книг заклинаний и способностей, которые
+      ссылаются на Cultists, но не на Acolytes.
+    numbers: {per_faction: 1, power_per_gather_phase: 1, cost: 3, combat: 0}
+    timing: >
+      Жертвоприношение по Unspeakable Oath — не действие, см. BL-UNIT-012.
+    prerequisites: []
+    targets: null
+    cost: 3
+    limits:
+      - 1 на фракцию
+    exceptions:
+      - Контролируемые врата для вербовки не нужны
+      - У фракции Tcho-Tcho High Priests трое, а не один
+    interactions:
+      - >
+        Является Cultist, но не Acolyte, — как и Brain Cylinder (BL-UNIT-007).
+      - >
+        Уникальные High Priests способности Unspeakable Oath не имеют и могут
+        пользоваться только способностями со своих карт лояльности (BL-UNIT-011).
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 131, строки 3086–3096 в .md", note: null}
+      - {ref: SRC-WIKI, loc: "High Priest", note: "стоимость 3, боевое значение 0, исключение по Tcho-Tcho"}
+      - {ref: SRC-FAQ, loc: "вопрос про Tcho-Tcho и Unique High Priest", note: null}
+    errata_applied: []
+    faq_applied: ["Tcho-Tcho / Unique High Priest"]
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-011
+    area: UNIT
+    title: Unique High Priests
+    rule: >
+      Unique High Priests — дополнительный набор правил для High Priests, дающий
+      восемь уникальных способностей; используются те же фигурки обычного High
+      Priest. Вербуя High Priest, игрок каждый раз выбирает, будет тот обычным
+      (со способностью Unspeakable Oath) или одним из именованных уникальных.
+      Уникальные High Priests способности Unspeakable Oath НЕ имеют. Как только
+      игрок выбрал конкретного уникального High Priest, до конца партии он может
+      вербовать только его. Как только уникальный High Priest завербован одним
+      игроком, никакой другой игрок не может завербовать именно этого High Priest —
+      даже если тот в данный момент не на карте, потому что убит или снят.
+    numbers: {unique_priests: 8}
+    timing: >
+      Выбор «обычный или уникальный» делается в момент вербовки, каждый раз.
+    prerequisites: []
+    targets: null
+    cost: null
+    limits:
+      - Один и тот же уникальный High Priest на партию для игрока
+      - Уникальный High Priest занят навсегда за тем, кто его завербовал первым
+    exceptions:
+      - Уникальные High Priests не имеют Unspeakable Oath
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 132, строки 3119–3138 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-012
+    area: UNIT
+    title: "Unspeakable Oath — жертвоприношение High Priest"
+    rule: >
+      Постоянная способность. В конце действия любого игрока — даже если сейчас
+      не ваш ход — вы можете принести своего High Priest в жертву: вернуть его
+      в резерв и прибавить себе 2 Power. То же можно сделать в фазу сбора Power
+      и в фазу Doom.
+    numbers: {power_gained: 2}
+    timing: >
+      В конце действия любого игрока, включая чужой ход. Также в фазу сбора Power
+      и в фазу Doom.
+    prerequisites:
+      - Свой High Priest в игре
+    targets: "собственный High Priest"
+    cost: 0
+    limits: []
+    exceptions:
+      - >
+        Уникальные High Priests этой способностью не обладают (BL-UNIT-011).
+    interactions:
+      - >
+        Это постоянная способность, а не действие: она не стоит Power, не
+        занимает ход и работает при нулевом запасе Power (BL-ACTION-020).
+      - >
+        Возможность применить её в чужой ход делает её ответом на угрозу захвата
+        и на действия противника вообще. Отдельные способности прямо оговаривают,
+        что на них нельзя ответить Unspeakable Oath.
+    sources:
+      - {ref: SRC-WIKI, loc: "High Priest → Unspeakable Oath", note: "полный текст способности с карты лояльности"}
+      - {ref: SRC-RB-NEW, loc: "с. 131, строка 3115 в .md", note: "косвенно подтверждает величину: в примере после жертвы остаётся 2 Power"}
+    errata_applied: []
+    faq_applied: []
+    confidence: MEDIUM
+    status: VERIFIED
+
+  - id: BL-UNIT-009
+    area: UNIT
+    title: Slime Mold — нейтральный монстр
+    rule: >
+      Slime Mold — нейтральный Monster со стоимостью 1. Пока он не под контролем,
+      считается не имеющим ни книг заклинаний, ни Doom, ни Power, ни прочих
+      признаков фракции. Slime Mold не призывается обычным образом и не может
+      попасть на карту ничем, кроме действия Call Slime Mold. Slime Mold не может
+      действием Move уйти в регион с жетоном No Slime, но может быть туда
+      отброшен болью или перемещён способностью.
+    numbers: {count: 6, cost: 1, cost_if_none_in_play: 0, combat: 2}
+    timing: null
+    prerequisites:
+      - Контроль врат в регионе с жетоном No Slime даёт карту лояльности Роя
+    targets: null
+    cost: "1; 0, если в игре нет ни одного Slime Mold"
+    limits:
+      - 6 фигурок
+    exceptions:
+      - Не может уйти в регион No Slime действием Move
+    interactions:
+      - >
+        Контроль над всеми Slime Molds переходит вместе с контролем над вратами
+        в узловом регионе, БЕЗ привязки к фазе: «If this Gate becomes Controlled
+        by another Faction, all Slime Molds in play change their allegiance
+        to the Gate's new Controller.» Если врата оставлены, все Slime Molds
+        становятся неконтролируемыми и перестают считаться частью какой-либо
+        фракции, в том числе для эффектов боли.
+      - >
+        ВАЖНО, И Я СНАЧАЛА ЗАПИСАЛ ЭТО НЕВЕРНО: неконтролируемым Slime Molds
+        МОЖНО объявлять бой. «It is possible to declare Battle against
+        uncontrolled Slime Molds without affecting any other Faction. The Slime
+        Molds do fight back — roll dice for them and mark losses normally.»
+        То есть они не только допустимая цель, но и полноценно отвечают: за них
+        бросаются кубики и им назначаются потери.
+      - >
+        «Slimes are Monsters, but they cannot be Summoned. They may only be
+        brought into play via this Action.»
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 171–172, строки 3975–4070 в .md", note: null}
+      - {ref: SRC-WIKI, loc: "Yuggoth Map → Slime Molds", note: "сверено"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-016
+    area: UNIT
+    title: Предел числа Brain Cylinders и захват сверх предела
+    rule: >
+      У каждой фракции жёсткий предел в 4 Brain Cylinders. Поэтому если у игрока
+      уже четыре Brain Cylinders в игре и он захватывает пятого, обратить его
+      нельзя: захваченный кладётся на планшет фракции и приносится в жертву
+      в следующую фазу сбора Power, как обычный захваченный Cultist.
+    numbers: {hard_limit_per_faction: 4}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits:
+      - 4 на фракцию, жёстко
+    exceptions: []
+    interactions:
+      - Уточняет правило обращения из BL-UNIT-007
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 171, строки 4051–4058 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-017
+    area: MODULE
+    title: Handicap Acolytes — выравнивание сил игроков
+    rule: >
+      Модуль на 9 нейтральных серых Acolytes, позволяющий уравнивать партию,
+      когда один игрок или фракция заметно сильнее либо слабее прочих.
+      Игрок слишком силён: взять одного Acolyte Cultist уравниваемой фракции
+      и убрать в коробку — он в этой партии не используется; вместо него
+      поставить серого Acolyte этой фракции вместе с оставшимися пятью
+      культистами на стартовых вратах. Если серый культист когда-либо
+      отправляется в резерв по любой причине, вместо этого он немедленно
+      убирается в коробку. То есть игрок до конца партии ограничен максимум
+      пятью культистами и получает уязвимое место.
+      Игрок слишком слаб: просто добавить серого Acolyte в его резерв — теперь
+      у него семь культистов для вербовки.
+    numbers: {grey_acolytes: 9, strong_limit: 5, weak_pool: 7}
+    timing: Определяется до начала партии
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Издатель отмечает, что от участи серого культиста есть способы уйти
+        фракционными способностями, и считает это частью замысла.
+    sources:
+      - {ref: SRC-RB-OLD, loc: "с. 155–156, строки 3715–3746 в .md", note: null}
+      - {ref: SRC-RB-NEW, loc: "с. 134, раздел Handicap Acolytes", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-010
+    area: UNIT
+    title: «Building» как тип отряда — в правилах отсутствует
+    rule: >
+      Сплошной поиск по рулбуку не находит слова Building ни разу. Отдельного
+      типа отряда «здание» в Cthulhu Wars нет. Объекты на карте, которые могли бы
+      так восприниматься, отрядами не являются: врата (Gates), тайл Луны, жетоны
+      осквернения Yellow Sign, жетон Лаборатории.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    interactions:
+      - >
+        Ближайшее, что похоже на «здание», — соборы фракции Ancients. FAQ рулбука
+        прямо отвечает: «Cathedral is not a Unit», собор отрядом не является,
+        и, например, завербовать Cultist в регионе, где стоит только собор,
+        нельзя. То есть в оригинале объекты на карте последовательно отделены
+        от отрядов, и отдельной категории отрядов «здание» действительно нет.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "сплошной поиск по всему тексту, 0 вхождений", note: "отрицательный результат"}
+      - {ref: SRC-RB-NEW, loc: "с. 182, встроенный FAQ, вопрос про собор и вербовку", note: null}
+    errata_applied: []
+    faq_applied: ["Cathedral is not a Unit"]
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-015
+    area: UNIT
+    title: Elder God не может объявить бой
+    rule: >
+      Elder God не может объявить бой, поскольку не бросает боевых кубиков.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Частный случай BL-COMBAT-015: чтобы объявить бой, нужен хотя бы один
+        боевой кубик, а Elder God их не даёт. При этом сам Elder God в бою
+        полноценно участвует и наносит свой фиксированный эффект.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 182, встроенный FAQ", note: "«Can Elder Gods declare Battle since they have no Combat dice? A. No.»"}
+    errata_applied: []
+    faq_applied: ["Elder Gods cannot declare Battle"]
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # ROUND — структура раунда
+  # ============================================================================
+
+  - id: BL-ROUND-001
+    area: ROUND
+    title: Четыре фазы раунда и их порядок
+    rule: >
+      Партия играется в четырёх различных фазах, строго в этом порядке:
+      1) фаза действий, 2) фаза сбора Power, 3) фаза определения первого игрока,
+      4) фаза Doom. Игра начинается с фазы действий и проходит фазы по порядку,
+      после четвёртой возвращаясь к первой. Цикл повторяется, пока не сработает
+      условие окончания игры.
+    numbers: {phases: 4, typical_cycles: "4–6"}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 8, строки 235–253 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ROUND-002
+    area: ROUND
+    title: Первый игрок в начале партии
+    rule: >
+      Если в игре есть фракция Great Cthulhu, её игрок всегда первый игрок на
+      старте партии и берёт жетон первого игрока. Если Great Cthulhu в партии нет,
+      первого игрока выбирают любым способом; правила рекомендуют по алфавиту
+      названий фракций.
+    numbers: {}
+    timing: Начало партии
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Фракция Windwalker никогда не может быть первым игроком в начале партии
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 8, строки 234–242 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ROUND-003
+    area: ROUND
+    title: Жетон первого игрока задаёт направление хода
+    rule: >
+      Первый игрок выбирает, какой стороной положить жетон первого игрока, и тем
+      самым задаёт направление хода. В течение партии жетон переходит из рук
+      в руки, и направление хода тоже может меняться.
+    numbers: {}
+    timing: Начало партии, далее — по итогам фазы определения первого игрока
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 8, строки 243–246 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # ACTION — фаза действий
+  # ============================================================================
+
+  - id: BL-ACTION-001
+    area: ACTION
+    title: Порядок ходов в фазе действий
+    rule: >
+      Фаза действий всегда начинается с текущего первого игрока, который совершает
+      одно действие. Затем действие совершает следующий игрок по направлению хода,
+      и так по кругу; когда действие совершили все, первый игрок начинает новый
+      круг. Фаза продолжается, пока у игроков остаётся Power, и заканчивается,
+      когда Power не осталось ни у кого и действий больше сделать нельзя. После
+      этого начинается фаза сбора Power.
+    numbers: {actions_per_turn: 1}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 13, строки 431–460 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-002
+    area: ACTION
+    title: Одно действие за ход, отказаться нельзя
+    rule: >
+      Каждое действие стоит определённое количество Power, и его нужно потратить
+      до выполнения действия. Игрок никогда не может совершить больше одного
+      действия за ход и не может отказаться от действия, пока у него остаётся
+      Power: он обязан выбрать доступное действие и заплатить за него. Если Power
+      не хватает на желаемое действие, нужно выбрать то, которое по карману.
+      Если Power есть, но совершать действия игрок больше не хочет, он может
+      добровольно опустить свой запас Power до нуля.
+    numbers: {actions_per_turn: 1}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits:
+      - Ровно одно действие за ход
+    exceptions:
+      - Неограниченные действия (BL-ACTION-008) не подпадают под это ограничение
+      - Добровольный сброс Power до нуля
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 13, строки 437–449 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-003
+    area: ACTION
+    title: Ход при нулевом запасе Power
+    rule: >
+      Если на момент своего хода игрок не имеет Power, его ход пропускается. При
+      нуле Power нельзя совершать даже действия стоимостью 0. Но если игрок с
+      нулевым запасом получает Power от способности или книги заклинаний, он
+      обязан совершить действие в свой ход как обычно.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Ключевое: ноль Power блокирует и бесплатные действия. Это не «действие
+        за 0», а полная невозможность действовать.
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 13, строки 451–455 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-004
+    area: ACTION
+    title: Четыре категории действий
+    rule: >
+      Действий четыре категории: общие (Common), уникальные (Unique), действия по
+      требованию книги заклинаний (Spellbook Requirement) и неограниченные
+      (Unlimited). В свой ход игрок обязан выбрать ровно одно действие из первых
+      трёх категорий; взять по одному из каждой нельзя.
+    numbers: {categories: 4}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Неограниченные действия совершаются сверх хода
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 13, строки 424–426 и 464–467 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-005
+    area: ACTION
+    title: Общие действия
+    rule: >
+      Общие действия доступны всем фракциям. В свой ход игрок может выполнить
+      одно из семи общих действий.
+    numbers: {common_actions: 7}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 13, строки 430–432 в .md; сами действия — с. 14–16", note: "семь действий подлежат выписке отдельными записями"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-006
+    area: ACTION
+    title: Уникальные действия
+    rule: >
+      Уникальное действие доступно только конкретной фракции. У части уникальных
+      действий есть требования, которые нужно выполнить, чтобы действие стало
+      доступно. Уникальное действие нельзя совершить, если игрок не в состоянии
+      выполнить его полностью.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 13, строки 436–443 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-007
+    area: ACTION
+    title: Действия по требованию книги заклинаний
+    rule: >
+      Такие действия находятся в слотах требований на планшете фракции. Большинство
+      требований книг заклинаний действиями не являются; те, что являются,
+      начинаются словами «As an Action» или «As your Action». Действие по
+      требованию книги стоит Power только если это указано, иначе его стоимость 0.
+      Такое действие всегда отдельное: его нельзя совместить с общим или
+      уникальным действием и нельзя вызвать, выполнив одно из них. Поскольку
+      полученные книги заклинаний не теряются, любое действие по требованию книги
+      может быть выполнено только один раз за партию.
+    numbers: {times_per_game: 1, default_cost: 0}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: "0, если на планшете не указано иное"
+    limits:
+      - Один раз за партию
+      - Не совмещается с общим или уникальным действием
+    exceptions:
+      - Отдельные дополнения могут делать исключения из правила «раз за партию»
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 13, строки 446–462 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-008
+    area: ACTION
+    title: Неограниченные действия
+    rule: >
+      Неограниченные действия нарушают правило «одно действие за ход»: их можно
+      совершать дополнительно к действию своего хода. Они не привязаны к фракциям
+      и доступны всем игрокам. У неограниченного действия могут быть требования,
+      которые нужно выполнить.
+    numbers: {}
+    timing: Дополнительно к действию своего хода
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - Единственное исключение из BL-ACTION-002
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 13–14, строки 470–482 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # --- Семь общих действий ----------------------------------------------------
+
+  - id: BL-ACTION-009
+    area: ACTION
+    title: "Общее действие 1: Recruit Cultist"
+    rule: >
+      Позволяет выставить Cultist из резерва на карту. В регионе, куда вербуется
+      Cultist, должен находиться любой ваш отряд — Cultist, Monster или даже Great
+      Old One. Если на карте у вас нет ни одного отряда, отряд в регионе не нужен:
+      это позволяет вернуться в игру, будучи полностью стёртым с карты.
+      За одно действие вербуется ровно один Cultist.
+    numbers: {cost: 1, per_action: 1}
+    timing: null
+    prerequisites:
+      - Любой ваш отряд в регионе вербовки
+      - Требование снимается, если на карте нет ни одного вашего отряда
+    targets: null
+    cost: 1
+    limits:
+      - 1 Cultist за действие
+    exceptions:
+      - Пустая карта снимает требование присутствия отряда
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 14, строки 500–512 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-010
+    area: ACTION
+    title: "Общее действие 2: Summon Monster"
+    rule: >
+      Позволяет выставить Monster из резерва на карту. Вы должны контролировать
+      врата в регионе призыва. Оплачивается стоимость Monster, указанная на
+      планшете фракции. За одно действие призывается ровно один Monster.
+      Способности, которые выставляют Monster на карту, действием Summon Monster
+      не являются и врат в регионе не требуют.
+    numbers: {per_action: 1}
+    timing: null
+    prerequisites:
+      - Контролируемые врата в регионе призыва
+    targets: null
+    cost: "переменная, указана на планшете фракции"
+    limits:
+      - 1 Monster за действие
+    exceptions:
+      - >
+        Выставление Monster способностью — не Summon Monster: врата не нужны,
+        и ограничение «один за действие» к нему не относится.
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 14, строки 514–528 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-011
+    area: ACTION
+    title: "Общее действие 3: Awaken Great Old One"
+    rule: >
+      Позволяет ввести в игру своего Great Old One. Способ размещения у каждого
+      свой: на планшете фракции описана последовательность шагов, всегда не менее
+      двух, и все эти шаги вместе составляют одно действие Awaken. За одно
+      действие пробуждается только один Great Old One. Пока Great Old One в игре,
+      доступна его особая способность. Если он покидает игру, способность
+      недоступна, пока он не будет пробуждён заново.
+    numbers: {min_steps: 2, per_action: 1}
+    timing: null
+    prerequisites:
+      - Шаги, указанные на планшете фракции
+    targets: null
+    cost: "переменная, действуют особые требования"
+    limits:
+      - 1 Great Old One за действие
+    exceptions: []
+    interactions:
+      - >
+        Способность Great Old One привязана к его присутствию в игре, а не
+        к однократному факту пробуждения.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 14, строки 479–497 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-012
+    area: ACTION
+    title: "Общее действие 4: Create Gate"
+    rule: >
+      Чтобы создать врата в регионе, нужен ваш Cultist в этом регионе, и врат там
+      быть не должно: в одном регионе никогда не может существовать более одних
+      врат. Оплачивается 3 Power, врата размещаются. Вы можете немедленно
+      поставить своего Cultist на врата, обозначив контроль. Технически это
+      применение неограниченного действия Control Gate. За одно действие
+      создаются одни врата.
+    numbers: {cost: 3, per_action: 1, max_gates_per_area: 1}
+    timing: null
+    prerequisites:
+      - Ваш Cultist в регионе
+      - В регионе нет врат
+    targets: null
+    cost: 3
+    limits:
+      - Одни врата за действие
+      - Не более одних врат в регионе за всю партию
+    exceptions: []
+    interactions:
+      - Немедленный контроль — это BL-ACTION-017, а не часть Create Gate
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 14, строки 504–513 правой колонки в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-013
+    area: ACTION
+    title: "Общее действие 5: Move"
+    rule: >
+      За каждый перемещаемый отряд платится 1 Power. Отряд перемещается из своего
+      региона в соседний. Перемещение гибкое: можно двигать отряды из нескольких
+      разных регионов в один, из одного в несколько разных или любой комбинацией.
+      Одним действием Move можно двигать сколько угодно отрядов, на сколько
+      хватает Power, но каждый отряд может двигаться только один раз за ход.
+    numbers: {cost_per_unit: 1, moves_per_unit_per_turn: 1}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: "1 Power за каждый перемещаемый отряд"
+    limits:
+      - Каждый отряд двигается не более одного раза за ход
+      - Перемещение только в соседний регион
+    exceptions: []
+    interactions:
+      - >
+        Brain Cylinder сам не двигается, но едет с другим отрядом бесплатно
+        (BL-UNIT-007).
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 15, строки 533–543 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-014
+    area: ACTION
+    title: "Общее действие 6: Battle"
+    rule: >
+      Чтобы вступить в бой с другой фракцией, выберите любой регион, где и у вас,
+      и у вражеской фракции есть хотя бы по одному отряду. Если в регионе отряды
+      нескольких вражеских фракций, драться можно только с одной выбранной; все
+      остальные фракции в регионе остаются праздными наблюдателями. В бою каждая
+      сторона бросает кубики по сумме боевых значений своих отрядов и наносит
+      результаты. Чтобы объявить бой, у вас должно быть не менее 1 боевого
+      значения на своей стороне. При этом драться можно с противником, у которого
+      боевое значение 0. За одно действие Battle проводится только один бой и
+      только в одном регионе.
+    numbers: {cost: 1, min_own_combat: 1, battles_per_action: 1}
+    timing: null
+    prerequisites:
+      - Отряд с боевым значением не менее 1
+      - Общий регион с отрядами противника
+    targets: "ровно одна вражеская фракция в регионе"
+    cost: 1
+    limits:
+      - Один бой в одном регионе за действие
+    exceptions:
+      - Противник с боевым значением 0 остаётся допустимой целью
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 15, строки 547–562 в .md", note: "подробности боя — с. 23"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-015
+    area: ACTION
+    title: "Общее действие 7: Capture Cultist"
+    rule: >
+      Способ убрать вражеского Cultist с карты и позже принести его в жертву
+      своему Great Old One ради Power. Захваченный Cultist считается
+      уничтоженным и выбывает из игры, но, в отличие от обычного уничтожения,
+      возвращается в резерв своей фракции не сразу, а в следующую фазу сбора
+      Power, принося захватившей фракции 1 Power. Пока Cultist захвачен, он
+      кладётся на планшет захватившего. Чтобы захватить вражеского Cultist,
+      нужен ваш Monster или Great Old One в том же регионе, и у цели не должно
+      быть защитника в этом регионе. За одно действие захватывается один Cultist.
+    numbers: {cost: 1, per_action: 1, power_on_return: 1}
+    timing: >
+      Захваченный Cultist возвращается в резерв владельца в следующую фазу сбора
+      Power, и тогда же захвативший получает 1 Power.
+    prerequisites:
+      - Ваш Monster или Great Old One в регионе с целью
+      - У цели нет защитника
+    targets: "вражеский Cultist без защитника"
+    cost: 1
+    limits:
+      - 1 Cultist за действие
+    exceptions:
+      - >
+        Захват — не бой. Боевые способности не применяются, боевое значение цели
+        и захватчика роли не играет: Cultist с боевым значением может быть
+        захвачен, Monster с боевым значением 0 может захватывать.
+    interactions:
+      - См. иерархию защитников BL-ACTION-016
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 16, строки 567–605 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-016
+    area: ACTION
+    title: Иерархия защитников при захвате
+    rule: >
+      Иерархия такая: Great Old One старше Monster, Monster старше Cultist.
+      Great Old One может захватить вражеского Cultist, если того не защищает
+      его собственный Great Old One в этом регионе. Monster может захватить
+      вражеского Cultist, если того не защищает его собственный Monster или Great
+      Old One. Cultists захватывать Cultists не могут. Один-единственный Monster
+      защищает Cultist от любого числа вражеских Monsters. Если в регионе
+      несколько Cultists одной фракции, владелец сам выбирает, кого отдать: то
+      есть Cultist на вратах можно не отдавать, пока в регионе есть другие.
+      Ваши Monster и Great Old One никогда не защищают Cultist чужой фракции от
+      третьей стороны — защищать могут только отряды фракции самого Cultist.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Terror равен Monster в защите и захвате Cultists, но не является Monster
+        для эффектов, бьющих по Monsters (BL-UNIT-005).
+      - >
+        Elder God считается Great Old One и, соответственно, блокирует захват
+        (BL-UNIT-006).
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 16, строки 579–600 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # --- Структура хода и неограниченные действия -------------------------------
+
+  - id: BL-ACTION-017
+    area: ACTION
+    title: Структура хода в фазе действий
+    rule: >
+      Неограниченные действия — единственный тип действий, который можно
+      совершать сверх одного действия своего хода. Их можно совершать и до, и
+      после основного действия, поэтому ход в фазе действий раскладывается на три
+      шага: 1) любое количество неограниченных действий, включая ноль;
+      2) ровно одно общее, уникальное или действие по требованию книги;
+      3) любое количество неограниченных действий, включая ноль.
+    numbers: {steps: 3, main_actions: 1}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits:
+      - Шаг 2 обязателен и равен ровно одному действию
+    exceptions:
+      - >
+        Книги заклинаний Yellow Sign «The Screaming Dead» и «He Who is Not to be
+        Named» дают два действия подряд. Между этими двумя действиями нельзя
+        вставить неограниченное действие, поскольку сказано «немедленно».
+        Применение такой книги целиком составляет шаг 2.
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 18, строки 634–658 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-018
+    area: ACTION
+    title: "Неограниченное действие: Control or Abandon Gate"
+    rule: >
+      Неограниченных действий у игроков два: Control or Abandon Gate и Unlimited
+      Battle. Первое стоит 0 Power. Если у вас есть Cultist в регионе с
+      оставленными вратами, на которых нет вражеского Cultist, это действие
+      переводит вашего Cultist на врата и даёт контроль над ними. Созданные вами
+      врата можно взять под контроль сразу. Тем же действием можно снять Cultist
+      с врат, оставив их, и поместить Cultist в тот же регион. Действие можно
+      выполнять в свой ход сколько угодно раз, но оно не может быть единственным:
+      обязательное одно общее, уникальное или книжное действие всё равно нужно
+      выполнить. Неограниченные действия совершаются только в свой ход: взять
+      контроль над оставленными вратами вне своего хода нельзя. Если Cultists в
+      регионе с оставленными вратами есть у двух игроков, врата достанутся тому,
+      кто первым получит ход.
+    numbers: {cost: 0, unlimited_action_types: 2}
+    timing: Только в свой ход, до или после основного действия
+    prerequisites:
+      - Ваш Cultist в регионе с оставленными вратами
+      - На вратах нет вражеского Cultist
+    targets: null
+    cost: 0
+    limits:
+      - Не может быть единственным действием хода
+      - Только в свой ход
+    exceptions: []
+    interactions:
+      - >
+        Перемещение Cultist с врат — это сначала неограниченное Abandon, затем
+        Move как основное действие.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 19, строки 660–697 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-019
+    area: ACTION
+    title: "Неограниченное действие: Unlimited Battle"
+    rule: >
+      Если на планшете фракции лежат все 6 книг заклинаний, игрок может проводить
+      Unlimited Battle. Каждый такой бой всё равно стоит 1 Power и позволяет
+      инициировать сколько угодно боёв до и после единственного общего,
+      уникального или книжного действия. Battle остаётся доступен и как обычное
+      общее действие. Поскольку после получения всех книг бой может быть и общим,
+      и неограниченным, игрок вправе провести бой и только потом решить, каким он
+      был. Важное ограничение: в одном регионе можно инициировать только один
+      бой. Нельзя объявить бой общим действием, а затем провести Unlimited Battle
+      в том же регионе. Если по итогам боя ваши отряды отступили в другой регион,
+      там Unlimited Battle провести можно; но если затем они вернулись отступлением
+      в исходный регион, инициировать бой там уже нельзя.
+    numbers: {cost: 1, spellbooks_required: 6, battles_per_area: 1}
+    timing: До и после основного действия
+    prerequisites:
+      - 6 книг заклинаний на планшете фракции
+    targets: null
+    cost: 1
+    limits:
+      - Один инициированный бой на регион за ход
+    exceptions: []
+    interactions:
+      - >
+        Правило «один бой на регион» связывает общее и неограниченное действия
+        между собой: они делят один и тот же лимит.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 19, строки 699–706 и 654–673 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-020
+    area: ACTION
+    title: Постоянные способности — не действия
+    rule: >
+      Постоянные особые способности действиями не являются, но могут срабатывать
+      в фазу действий. Поскольку они не действия, у них нет стоимости в Power, и
+      применять их можно даже при нулевом запасе Power. Правило о пропуске хода
+      при нуле Power относится только к действиям и не относится к постоянным и
+      прочим способностям.
+    numbers: {}
+    timing: В фазу действий, в момент, предусмотренный способностью
+    prerequisites: []
+    targets: null
+    cost: 0
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Прямое исключение из BL-ACTION-003: ноль Power блокирует действия, но не
+        способности.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 19, строки 675–683 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-021
+    area: ACTION
+    title: Эффекты между действиями
+    rule: >
+      Часть постоянных способностей содержит формулировки «After any player's
+      Action…» или «At the end of any player's Action…». Такие способности можно
+      применять после действия другого игрока, но до того, как начнётся
+      следующее действие, в том числе посреди чужого хода, если тот выполняет
+      неограниченные действия. Если после чьего-то действия свою способность
+      хотят применить несколько игроков и возникает спор о порядке, он решается
+      так: начинают с активного игрока и далее по порядку хода.
+    numbers: {}
+    timing: >
+      После действия любого игрока, до начала следующего действия.
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Книги Yellow Sign «The Screaming Dead» и «He Who is Not to be Named»,
+        дающие два действия подряд, НЕ мешают применить постоянную способность
+        между этими двумя действиями. Ср. BL-ACTION-017: неограниченное действие
+        туда вставить нельзя, а постоянную способность — можно.
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 19, строки 685–706 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # POWER — фаза сбора Power
+  # ============================================================================
+
+  - id: BL-POWER-001
+    area: POWER
+    title: Фаза сбора Power и источники Power
+    rule: >
+      Фаза действий заканчивается, когда Power не осталось ни у кого; в фазу сбора
+      Power все игроки восстанавливают запас. Фаза выполняется одновременно всеми
+      игроками. Источники: 1 Power за каждого своего Cultist в игре; 2 Power за
+      каждые контролируемые вами врата; 1 Power за каждые оставленные врата на
+      карте, причём это получает каждый игрок за каждые такие врата; 1 Power за
+      каждого захваченного Cultist на вашем планшете, после чего все захваченные
+      Cultists возвращаются в резервы владельцев. Оставить захваченного Cultist
+      у себя нельзя — возврат обязателен. Отдельно проверяются особые способности
+      и книги заклинаний, дающие Power в эту фазу.
+    numbers: {per_cultist: 1, per_controlled_gate: 2, per_abandoned_gate: 1, per_captured_cultist: 1}
+    timing: После фазы действий, одновременно всеми игроками
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Возврат захваченных Cultists обязателен, выбор оставить их у себя
+        не предусмотрен.
+    interactions:
+      - >
+        Оставленные врата дают по 1 Power каждому игроку, а не только владельцу
+        региона. Это общий доход, а не персональный.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 21, строки 725–759 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-POWER-002
+    area: POWER
+    title: Power производят только Cultists
+    rule: >
+      Отряды, не являющиеся Cultists, — Monsters и Great Old Ones — Power
+      не производят, за редкими исключениями. Производить Power могут только
+      Cultists. Отдельные фракции могут иметь особый способ получения Power
+      в эту фазу; способы различаются и иногда требуют определённых книг
+      заклинаний.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Редкие исключения на уровне фракций и книг заклинаний
+    interactions:
+      - High Priest — Cultist и приносит 1 Power в эту фазу (BL-UNIT-008)
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 21, строки 761–766 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-POWER-003
+    area: POWER
+    title: Трек Power идёт до 20, но запас может быть больше
+    rule: >
+      Трек Power размечен до 20, однако иметь больше 20 Power можно. При 21 и
+      более Power отслеживать запас приходится иначе; правила предлагают
+      «заворачивать» трек: при 23 Power маркер ставится на деление 3 и игрок
+      помнит, что на самом деле у него 23. Когда маркер доходит до деления 0, его
+      немедленно переставляют на 20 — то есть при 21 Power и трате 1 Power маркер
+      идёт на 20, а не на 0, иначе игрок подарит себе лишний Power.
+    numbers: {track_max: 20}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Разметка трека до 20 не является верхним пределом запаса. Это оформление
+        компонента, а не ограничение правила.
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 21, строки 768–775 и 725–726 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-POWER-004
+    area: POWER
+    title: Правило минимального Power
+    rule: >
+      В конце фазы сбора Power, после того как все записали свой запас,
+      применяется правило минимального Power: если у игрока Power меньше половины
+      запаса игрока с наибольшим Power, этот игрок поднимает свой запас до
+      половины наибольшего, с округлением вверх.
+    numbers: {threshold_fraction: "1/2", rounding: "вверх"}
+    timing: >
+      В конце фазы сбора Power, после подсчёта всеми игроками и до фазы
+      определения первого игрока.
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Пример из правил: у игрока 4 Power, у лидера 13 — игрок поднимается до 7.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 21, строки 728–746 правой колонки в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # ROUND — фаза определения первого игрока
+  # ============================================================================
+
+  - id: BL-ROUND-004
+    area: ROUND
+    title: Фаза определения первого игрока
+    rule: >
+      Жетон первого игрока получает игрок с наибольшим запасом Power. При равенстве
+      у двоих и более игроков решает тот, у кого жетон первого игрока был в
+      предыдущем раунде: он выбирает, кто из претендентов станет новым первым
+      игроком, и может выбрать себя, если сам участвует в равенстве. После
+      определения первый игрок выбирает, по часовой стрелке или против пойдёт
+      игра, отмечая это стороной жетона. Выбранное направление действует до
+      следующей фазы определения первого игрока. Если первый игрок сохранил свою
+      позицию с прошлого раунда, он может изменить направление хода на следующий.
+    numbers: {}
+    timing: После фазы сбора Power, до фазы Doom
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 21, строки 747–773 правой колонки в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # DOOM — фаза Doom
+  # ============================================================================
+
+  - id: BL-DOOM-001
+    area: DOOM
+    title: Два шага фазы Doom
+    rule: >
+      Фаза Doom состоит из двух шагов, выполняемых в порядке: 1) продвижение по
+      треку Doom, одновременно всеми; 2) Ритуалы Уничтожения, по порядку хода.
+      Это фаза, в которой чаще всего продвигается Doom и в которой вероятнее всего
+      срабатывает окончание игры.
+    numbers: {steps: 2}
+    timing: После фазы определения первого игрока
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 22, строки 779–790 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-DOOM-002
+    area: DOOM
+    title: Продвижение по треку Doom
+    rule: >
+      Каждый игрок продвигает свой маркер Doom на число делений, равное количеству
+      контролируемых им врат. Игрок с двумя контролируемыми вратами продвигается
+      на два деления. Игроки делают это одновременно. Оставленные врата Doom
+      не дают.
+    numbers: {doom_per_controlled_gate: 1}
+    timing: Первый шаг фазы Doom, одновременно
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Оставленные врата не дают Doom, в отличие от Power (BL-POWER-001)
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 22, строки 792–798 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # RITUAL — Ритуал Уничтожения
+  # ============================================================================
+
+  - id: BL-RITUAL-001
+    area: RITUAL
+    title: Ритуал Уничтожения — порядок и стоимость
+    rule: >
+      Начиная с первого игрока и далее по порядку хода каждый игрок может провести
+      Ритуал Уничтожения. В этой фазе каждый игрок может провести только один
+      Ритуал. Порядок выполнения: 1) потратить Power, равный текущему положению
+      маркера на треке Ритуала Уничтожения, — от 5 до 10; 2) продвинуть маркер
+      Ритуала на одно деление вверх, что обычно повышает стоимость для тех, кто
+      ходит позже; 3) продвинуть свой маркер Doom на одно деление за каждые
+      контролируемые врата; 4) получить один Elder Sign за каждого своего
+      фракционного Great Old One в игре.
+    numbers: {cost_min: 5, cost_max: 10, rituals_per_player_per_phase: 1, doom_per_gate: 1, elder_sign_per_goo: 1}
+    timing: Второй шаг фазы Doom, по порядку хода начиная с первого игрока
+    prerequisites:
+      - Достаточно Power для текущей стоимости
+    targets: null
+    cost: "равна текущему положению маркера на треке Ритуала, от 5 до 10"
+    limits:
+      - Один Ритуал на игрока за фазу Doom
+    exceptions:
+      - >
+        Elder Sign дают фракционные Great Old Ones. Elder God собственного
+        Elder Sign не даёт (BL-UNIT-006).
+    interactions:
+      - >
+        Продвижение по треку Doom за врата происходит дважды за фазу: один раз
+        на шаге 1 фазы (BL-DOOM-002) и второй раз внутри Ритуала.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 22, строки 800–827 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-RITUAL-002
+    area: RITUAL
+    title: Мгновенная смерть
+    rule: >
+      Если маркер Ритуала стоит на 10 и проводится Ритуал Уничтожения, маркер
+      переходит на деление «Instant Death». Это значит, что игра закончится по
+      завершении текущей фазы Doom и будет определён победитель. Игроки, которые
+      к моменту перехода маркера на «Instant Death» ещё не имели возможности
+      провести Ритуал, всё равно могут провести его в свою очередь. Стоимость всех
+      последующих Ритуалов — 10 Power. В фазу Doom каждый игрок получает ровно
+      одну возможность провести Ритуал, в порядке хода, — это верно и для той
+      фазы Doom, в которой достигнута «Instant Death».
+    numbers: {trigger_position: 10, subsequent_cost: 10}
+    timing: >
+      Игра заканчивается по завершении текущей фазы Doom, а не немедленно.
+    prerequisites: []
+    targets: null
+    cost: 10
+    limits:
+      - Одна возможность на игрока за фазу сохраняется
+    exceptions: []
+    interactions:
+      - Определение победителя — область VICTORY
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 22, строки 793–811 правой колонки в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-RITUAL-003
+    area: RITUAL
+    title: Особые события и способности в фазу Doom
+    rule: >
+      Часть книг заклинаний, особых способностей и требований книг срабатывает
+      в фазу Doom. Обычно это происходит, когда подходит очередь игрока проводить
+      Ритуал Уничтожения, — независимо от того, проводит он Ритуал или нет.
+      Если игрок может применить несколько способностей или событий, он сам
+      выбирает порядок их применения. После того как все продвинули трек Doom за
+      контролируемые врата, получили возможность провести Ритуал и применили
+      особые способности, игра переходит к фазе действий, и цикл фаз начинается
+      заново.
+    numbers: {}
+    timing: >
+      В момент очереди игрока на Ритуал, вне зависимости от того, проводится
+      Ритуал или нет.
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Порядок применения выбирает сам игрок, и этот выбор может быть значимым:
+        одна способность может лишить возможности применить другую.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 22–23, строки 813–840 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # COMBAT — бой
+  # ============================================================================
+
+  - id: BL-COMBAT-001
+    area: COMBAT
+    title: Общие свойства боя
+    rule: >
+      Бой инициируется игроком и является действием. Бой проходит в одном регионе
+      и вовлекает ровно две фракции, независимо от того, чьи ещё отряды там
+      присутствуют. Фракция, инициирующая бой, должна иметь в этом регионе не
+      менее 1 боевого значения. Даже когда бой доступен как неограниченное
+      действие, в одном регионе за ход конкретного игрока может состояться только
+      один бой. Все отряды сражающихся фракций, находящиеся в регионе, обязаны
+      участвовать в бою.
+    numbers: {factions_per_battle: 2, battles_per_area_per_turn: 1, min_attacker_combat: 1}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits:
+      - Один бой на регион за ход игрока
+    exceptions: []
+    interactions:
+      - >
+        Участие обязательно: вывести отдельный отряд из боя по желанию нельзя.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 23, строки 842–855 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-002
+    area: COMBAT
+    title: Четыре шага боя
+    rule: >
+      После оплаты действия Battle инициировавшим игроком бой проходит по шагам:
+      1) способности до боя; 2) подсчёт боевых значений и броски кубиков;
+      3) способности после боя и назначение результатов; 4) применение
+      результатов.
+    numbers: {steps: 4}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 23, строки 856–865 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-003
+    area: COMBAT
+    title: Способности до боя
+    rule: >
+      Первый шаг — применить или не применять способности и книги заклинаний,
+      срабатывающие до боя. Как и все способности, они необязательны, если прямо
+      не сказано иное. Поскольку они не являются действиями, Power для них обычно
+      не нужен. Части таких способностей нужен определённый тип отряда в бою,
+      другим достаточно, чтобы отряд был в игре — не обязательно в самом бою.
+      Первой применяет все свои способности до боя фракция, инициировавшая бой,
+      и в любом порядке по своему выбору; затем то же делает защищающаяся
+      фракция. То есть все способности атакующего срабатывают до любой из
+      способностей защищающегося. Если атакующий воздержался от способности
+      до боя, он не может применить её после того, как защищающийся выбрал и
+      применил свои.
+    numbers: {}
+    timing: Шаг 1 боя. Сначала атакующий целиком, затем защищающийся
+    prerequisites: []
+    targets: null
+    cost: 0
+    limits:
+      - >
+        Атакующий теряет право на способности до боя, как только начал
+        защищающийся.
+    exceptions:
+      - Способность обязательна, только если это прямо написано
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 23, строки 867–879 и 832–834 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-004
+    area: COMBAT
+    title: Удаление отрядов на шаге до боя
+    rule: >
+      Часть способностей до боя уничтожает, убивает или иначе удаляет отряд из
+      боя. Такой отряд не участвует в бою дальше, включая оставшуюся часть шага
+      способностей до боя, и его боевые способности применить уже нельзя. При
+      этом если удалённый отряд успел применить способность, создавшую эффект на
+      весь бой, эффект сохраняется. Если на шаге до боя все отряды одной из
+      фракций оказались удалены, переходить к следующему шагу не нужно: бой
+      окончен и никакие способности больше применить нельзя.
+    numbers: {}
+    timing: Шаг 1 боя
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Ключевой случай: бой может закончиться, не дойдя до бросков кубиков.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 23, строки 836–862 правой колонки в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-005
+    area: COMBAT
+    title: Подсчёт боевых значений и броски
+    rule: >
+      После того как отработали способности до боя с обеих сторон, считаются
+      боевые значения и бросаются кубики. У каждого отряда есть боевое значение,
+      указанное на планшете фракции или карте лояльности. У части отрядов оно
+      равно 0, у части вычисляется. Боевое значение фракции в бою равно сумме
+      боевых значений всех её отрядов, участвующих в бою. Обе стороны бросают
+      число кубиков, равное своим боевым значениям. Бросать можно одновременно
+      или по очереди. Поскольку способности до боя могут менять боевые значения,
+      итоговую сумму считают только после того, как все они отработали.
+    numbers: {}
+    timing: Шаг 2 боя
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Отдельные способности записаны просто как боевые, без пометки «до» или
+        «после», и изменяют именно этот шаг.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 23, строки 864–898 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-006
+    area: COMBAT
+    title: Значения кубиков
+    rule: >
+      Каждая выпавшая 6 — результат «Kill». Каждые выпавшие 4 и 5 — результат
+      «Pain». Выпавшие 1, 2 и 3 — промахи и эффекта не дают.
+    numbers: {kill_on: 6, pain_on: "4–5", miss_on: "1–3"}
+    timing: Шаг 2 боя
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 24, строки 884–887 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-007
+    area: COMBAT
+    title: Назначение результатов боя
+    rule: >
+      После подсчёта результатов каждая сторона назначает результаты противника
+      на свои собственные отряды. Сначала назначаются результаты Kill — всегда
+      первыми. Если выпавших Kill больше, чем уязвимых отрядов, лишние результаты
+      игнорируются. При назначении Kill игроки могут применять доступные
+      способности после боя: они обычно изменяют результаты или порядок их
+      назначения. Способности после боя могут добавить третий тип результата —
+      Elimination. Добавленный Elimination назначается одновременно с Kill.
+      Лишние Elimination, как и лишние Kill, игнорируются. Способности после боя,
+      меняющие Pain, уместно применять при назначении Pain, а не только при
+      назначении Kill.
+    numbers: {}
+    timing: Шаг 3 боя. Kill назначаются первыми, затем Pain
+    prerequisites: []
+    targets: null
+    cost: null
+    limits:
+      - Лишние Kill и Elimination игнорируются
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 24, строки 900–916 и 884–893 правой колонки в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-008
+    area: COMBAT
+    title: Необратимость сработавших способностей после боя
+    rule: >
+      Как только способность после боя сработала — при назначении Kill или при
+      назначении Pain, — её эффект состоялся, независимо от того, будет ли отряд
+      с этой способностью впоследствии убит или уничтожен. Способности после боя
+      не могут задним числом отменить уже состоявшееся применение другой
+      способности после боя, но с учётом уже применённых способностей могут
+      менять то, как назначаются результаты.
+    numbers: {}
+    timing: Шаг 3 боя
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 24, строки 895–902 правой колонки в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-009
+    area: COMBAT
+    title: Kill — частный случай Elimination, но не наоборот
+    rule: >
+      Отношение между Kill и Elimination одностороннее.
+      Elimination — это удаление отряда с поля любым способом; Kill входит в него
+      как частный случай, наряду с захватом и прочими способами.
+      Поэтому способность, сформулированная через Elimination, срабатывает
+      и от Kill. Способность, сформулированная строго через Kill, от прочих
+      Elimination НЕ срабатывает.
+      Отдельно: в бою Elimination является ещё и самостоятельным третьим типом
+      назначаемого результата, который добавляют способности после боя.
+      Наши термины (D-019): Kill — смерть, Elimination — уничтожение.
+      Проверочная формула: убитый отряд уничтожен, но не всякий уничтоженный убит.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Kill бывает только результатом броска 6. Кубики Elimination не дают
+        вовсе: он возникает от способностей, действий, оплаты и особых положений
+        на карте, а в бою добавляется способностями после боя.
+      - >
+        Различие сквозное и затрагивает множество способностей. В переводе его
+        нельзя схлопывать в одно слово, но и нельзя разводить в два независимых:
+        вложенность обязана читаться.
+    sources:
+      - {ref: SRC-ERRATA-PACK, loc: "карта Yellow Sign, слот 2, Passion", note: "«When one or more of your Cultists are Eliminated by an enemy (Killed, Captured, etc.), gain 1 Power total» — сама карта раскрывает Elimination через Killed"}
+      - {ref: SRC-RB-NEW, loc: "с. 24, строки 904–911 правой колонки в .md", note: null}
+    errata_applied: ["Passion capped at 1 Power per Action (O2)"]
+    faq_applied:
+      - "Windwalker Cannibalism requires Killed, not Eliminated"
+      - "Unholy Ground produces an Elimination, not a Kill"
+      - "Passion срабатывает и при Eradication"
+      - "Passion срабатывает при захвате или обращении Brain Cylinder"
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-017
+    area: COMBAT
+    title: Обоснование одностороннего отношения Kill и Elimination
+    rule: >
+      Решающее свидетельство — текст самой карты Passion в Ultimate Errata Pack,
+      самом свежем официальном источнике: «When one or more of your Cultists are
+      Eliminated by an enemy (Killed, Captured, etc.)». Карта прямо раскрывает
+      Elimination через перечисление, где Killed стоит первым пунктом. То есть
+      Kill входит в Elimination.
+      Это подтверждается двумя ответами FAQ: Passion срабатывает, когда культисты
+      подверглись Eradication, и срабатывает при захвате или обращении Brain
+      Cylinder — «его культист потерян».
+      Обратное направление не работает, и это тоже прямо сказано в FAQ:
+      «Cannibalism требует, чтобы вражеский отряд был Killed, а не Eliminated —
+      например, через Devour или Abduct», и «Unholy Ground даёт Elimination,
+      а не Kill».
+      Отдельно надо держать в голове, что в бою Elimination — это ещё и
+      самостоятельный третий тип назначаемого результата: способности после боя
+      могут его добавить, и применяется он раньше Kill. Слово в оригинале одно
+      и на состояние, и на этот тип результата.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Практический вывод для редактуры: вложенность должна читаться из самих
+        слов. Пара «смерть — уничтожение» это обеспечивает, потому что слова
+        лежат в разных смысловых полях: убитый отряд уничтожен, но не всякий
+        уничтоженный убит.
+      - >
+        Формула «Killed or Eliminated», которая встречается на картах Yothan
+        и Bloated Woman и в правилах игры на двоих, — это усиление ради
+        однозначности, а не свидетельство непересечения. Сначала я прочитал её
+        как доказательство раздельности; текст карты Passion это опроверг.
+    sources:
+      - {ref: SRC-ERRATA-PACK, loc: "карта Yellow Sign, слот 2, Passion", note: "решающее свидетельство"}
+      - {ref: SRC-FAQ, loc: "вопросы про Passion и Eradication, Passion и Brain Cylinder", note: null}
+      - {ref: SRC-RB-NEW, loc: "с. 24, применение и назначение результатов", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-010
+    area: COMBAT
+    title: Способности после боя работают, даже если отряд удалён
+    rule: >
+      Способности после боя устроены иначе, чем способности до боя: Kill,
+      Elimination или любое иное удаление из боя не мешает отряду применить свои
+      собственные способности после боя. На этом шаге обе стороны всегда могут
+      применить любые доступные им способности после боя. Кроме того, есть
+      несколько способностей после боя, которые можно применять, даже не участвуя
+      в бою: это единственный способ для фракции, прямо в бою не участвующей,
+      в нём поучаствовать.
+    numbers: {}
+    timing: Шаг 3 боя
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Прямая противоположность BL-COMBAT-004: на шаге до боя удаление отряда
+        отнимает его способности, на шаге после боя — нет.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 24, строки 918–928 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-011
+    area: COMBAT
+    title: Применение результатов боя
+    rule: >
+      После назначения результаты применяются. Kill и Elimination убирают отряды
+      с карты, возвращая их в резервы фракций. Как и при назначении, Kill и
+      Elimination применяются до Pain. Обе стороны сначала убирают уничтоженные
+      отряды, затем убитые — всё одновременно. После применения Kill и Elimination
+      применяются Pain.
+    numbers: {}
+    timing: >
+      Шаг 4 боя. Порядок: Elimination, затем Kill, обе стороны одновременно,
+      затем Pain.
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Часть способностей после боя срабатывает именно на применении
+        результатов, а не на их назначении.
+      - >
+        Порядок «сначала Elimination, потом Kill» подтверждён отдельным вопросом
+        FAQ: «Are Eliminations handled before Kills? — Yes».
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 24, строки 915–935 в .md", note: null}
+      - {ref: SRC-RB-NEW, loc: "с. 182, встроенный FAQ", note: null}
+    errata_applied: []
+    faq_applied: ["Eliminations are handled before Kills"]
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-012
+    area: COMBAT
+    title: Отступление от боли
+    rule: >
+      Отряды, получившие Pain, отступают и перемещаются в регионы, соседние с
+      регионом боя. Как и при назначении Kill, регионы выбирает владелец отрядов.
+      Отступать все в один регион не обязательно: отряды можно разделить между
+      несколькими соседними регионами. Отступление от боли действием Move
+      не считается. Все свои Pain первым применяет игрок, инициировавший бой,
+      затем защищающийся.
+    numbers: {}
+    timing: Шаг 4 боя, после Kill и Elimination. Сначала атакующий, затем защищающийся
+    prerequisites: []
+    targets: null
+    cost: 0
+    limits: []
+    exceptions:
+      - >
+        Отступление не является действием Move: оно не тратит Power, не расходует
+        лимит перемещения отряда за ход и не подпадает под правила Move.
+    interactions:
+      - >
+        Brain Cylinder не получает Pain и не отступает, но и не мешает отрядам
+        противника отступать в его регион (BL-UNIT-007).
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 24, строки 922–930 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-013
+    area: COMBAT
+    title: Запрет отступления к недавнему противнику и вынужденное уничтожение
+    rule: >
+      Отступающие от боли отряды нельзя отвести в регион, где есть отряды той
+      фракции, с которой вы только что сражались. Если из-за этого отступить
+      невозможно, владелец выбирает один отряд из отступающих и уничтожает его;
+      остальные его отряды остаются в регионе боя так, как если бы они не получали
+      Pain.
+    numbers: {forced_eliminations: 1}
+    timing: Шаг 4 боя
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Отсюда тактика: атакующий может распределить свои Pain по всем регионам
+        вокруг региона боя, чтобы отрезать противнику пути отступления и вынудить
+        дополнительное уничтожение.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 24–25, строки 932–941 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # SETUP — подготовка к игре
+  # ============================================================================
+
+  - id: BL-SETUP-001
+    area: SETUP
+    title: Сборка карты по числу игроков
+    rule: >
+      Карта состоит из двух частей, восточного и западного полушарий, каждая
+      напечатана с двух сторон. Очертания континентов на сторонах одинаковы, но
+      сторона на 5 игроков разбита на существенно большее число сухопутных
+      регионов, чем сторона на 3 игроков. На 3 игроков обе части кладутся стороной
+      «на 3 игроков» вверх — карта даёт 13 регионов. На 4 игроков одна часть
+      кладётся стороной «на 3», другая — стороной «на 5»; карта даёт 17 регионов.
+      На 5 игроков обе части кладутся стороной «на 5» — 21 регион; так можно
+      играть только при наличии фракционных дополнений. Игра на двоих собирается
+      по отдельным правилам.
+    numbers: {areas_3p: 13, areas_4p: 17, areas_5p: 21}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Правила игры на двоих вынесены в оригинале отдельно, с. 39. В нашу
+        версию не переносятся (D-021): целевой состав 3–5 игроков, на 6–8
+        правила ведём, на двоих — нет.
+    interactions:
+      - >
+        Раскладки на 6–8 игроков досверены 2026-09-10 (DEV-008, D-024).
+        SRC-RB-NEW, стр. 184, раздел «6-8 Player Maps»: эти поля устроены так же,
+        как поля основной игры, и лишь увеличивают число регионов. На шесть
+        игроков обе половины кладутся стороной «на 6», на восемь — обе стороной
+        «на 8», на семь — одна половина «на 6» и одна «на 8». Числа регионов
+        для этих раскладок оригинал не называет.
+        Черновик (строки 131–136) повторяет это правило дословно —
+        сопоставление EXACT.
+        Нарезка регионов нашей карты совпадает с оригинальной (подтверждено
+        Alek), поэтому числа 13 / 17 / 21 переносятся в наш текст как есть.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 7, строки 180–205 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-SETUP-002
+    area: SETUP
+    title: Раскладка треков, жетонов и кубиков
+    rule: >
+      Трек Ритуала Уничтожения кладётся с краю стола. Маркер Ритуала ставится на
+      наименьшее число — 5 — той шкалы трека, которая соответствует числу игроков.
+      Рядом кладётся трек Doom. Врата и кубики кладутся в пределах досягаемости
+      всех игроков, образуя общий резерв. 36 жетонов Elder Sign складываются в
+      мешочек и перемешиваются; как альтернатива, их можно разложить на столе
+      рубашкой вверх и перемешать. Каждому игроку выдаётся памятка.
+    numbers: {ritual_marker_start: 5, elder_signs: 36}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Трек Ритуала двусторонний: шкалы для 3–5 и для 6–8 игроков различаются,
+        но обе начинаются с 5.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 7, строки 184–209 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-SETUP-003
+    area: SETUP
+    title: Стартовое состояние фракции
+    rule: >
+      Каждый игрок выбирает фракцию — случайно или по желанию; при споре право
+      первого выбора отдаётся младшим игрокам. Игрок берёт планшет фракции, книги
+      заклинаний и все пластиковые фигурки своего цвета. Маркер Doom ставится на 0
+      на треке Doom, маркер Power — на 8 на треке Power своего планшета.
+    numbers: {starting_power: 8, starting_doom: 0}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Фракция Yellow Sign дополнительно берёт 12 жетонов осквернения
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 7, строки 210–221 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-SETUP-004
+    area: SETUP
+    title: Стартовые регионы
+    rule: >
+      Стартовые регионы указаны на планшетах фракций. Все игроки начинают с одними
+      контролируемыми вратами и шестью Acolyte Cultists в регионе, отмеченном
+      глифом их фракции. Один из Acolytes ставится сверху на врата.
+    numbers: {starting_gates: 1, starting_acolytes: 6}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Acolyte на вратах — это и есть обозначение контроля (BL-GATE-001), то есть
+        из шести стартовых Cultists один сразу занят.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 7, строки 226–230 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # MAP — карта и резерв
+  # ============================================================================
+
+  - id: BL-MAP-001
+    area: MAP
+    title: Регионы, океан и суша, смежность
+    rule: >
+      Карта разделена на регионы; у каждого есть название, и каждый определён как
+      океанский или сухопутный. На карте Земли океанские регионы — Северный и
+      Южный Тихий, Северная и Южная Атлантика, Индийский океан и Северный
+      Ледовитый; все прочие регионы, включая Антарктиду, считаются сухопутными.
+      Для большинства игровых целей разницы между океаном и сушей нет: любые
+      отряды свободно перемещаются между сушей и океаном и совершают действия в
+      регионах любого типа. Отдельные способности всё же различают океан и сушу.
+      Термины «море» и «океан» в игре тождественны: любая способность или текст,
+      упоминающие одно, читаются как включающие и другое. Регионы у правого края
+      карты напрямую смежны с регионами у левого края, поскольку Земля круглая.
+    numbers: {ocean_areas_earth_map: 6}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Часть способностей различает океан и сушу — например, Y'ha Nthlei и
+        Submerge у Great Cthulhu.
+    interactions:
+      - >
+        Смежность через край карты — например, Индийский океан напрямую смежен
+        с Южным Тихим, Северная Атлантика — с Северным Тихим.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 9, строки 261–278 и 300–301 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MAP-002
+    area: MAP
+    title: Резерв фракции и пределы числа отрядов
+    rule: >
+      У каждого игрока есть резерв, где лежат книги заклинаний и фигурки его цвета,
+      не находящиеся в игре. Число доступных отрядов ограничено: например, в игре
+      никогда не может быть больше шести Acolyte Cultists. Если все ваши отряды
+      определённого типа выставлены на карту, поставить ещё один нельзя, пока
+      хотя бы один не вернётся в резерв. Отряды в резерве не считаются
+      находящимися в игре, и наоборот. Отряд возвращается из игры в резерв, будучи
+      убитым в бою или уничтоженным иначе; уничтожение может быть следствием
+      действия, способности или боя.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits:
+      - >
+        Жёсткий предел: нет фигурки в резерве — нет размещения, независимо
+        от наличия Power и выполнения прочих условий.
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 9, строки 272–283 и 302–304 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # GATE — врата
+  # ============================================================================
+
+  - id: BL-GATE-001
+    area: GATE
+    title: Контроль над вратами
+    rule: >
+      Контроль обозначается тем, что на врата сверху поставлен Acolyte Cultist
+      владельца. На вратах никогда не может стоять более одного Cultist, поэтому
+      конкретные врата всегда контролируются только одной фракцией. Врата могут
+      быть оставленными — это обозначается отсутствием Cultist сверху. Monsters и
+      Great Old Ones контролировать врата не могут и никогда не ставятся на них
+      сверху.
+    numbers: {max_cultists_on_gate: 1}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Dark Young фракции Black Goat может стоять на вратах, когда в игре её
+        книга заклинаний Red Sign.
+    interactions:
+      - >
+        Контроль берётся и снимается неограниченным действием Control or Abandon
+        Gate (BL-ACTION-018).
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 9, строки 284–294 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-GATE-002
+    area: GATE
+    title: Врата на карте и их ценность
+    rule: >
+      В ходе партии создаются новые врата, и ни один регион не может содержать
+      более одних врат. Врата очень ценны: они дают и Power, который позволяет
+      совершать действия, и Doom, который позволяет выиграть.
+    numbers: {max_gates_per_area: 1}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits:
+      - Не более одних врат в регионе за всю партию
+    exceptions: []
+    interactions:
+      - Контролируемые врата дают 2 Power (BL-POWER-001) и 1 Doom (BL-DOOM-002)
+      - Оставленные врата дают 1 Power каждому игроку и не дают Doom
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 9, строки 295–299 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # TECH — особые способности и книги заклинаний
+  # ============================================================================
+
+  - id: BL-TECH-001
+    area: TECH
+    title: Три источника особых способностей
+    rule: >
+      Особые способности берутся из трёх источников: 1) уникальные способности
+      фракции, напечатанные на планшете и доступные с начала партии; 2) книги
+      заклинаний, у каждой фракции свои, становящиеся доступными по ходу игры;
+      3) собственная уникальная способность каждого Great Old One, доступная,
+      пока тот в игре, и описанная на планшете фракции.
+    numbers: {sources: 3}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 10, строки 309–321 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-TECH-002
+    area: TECH
+    title: Пять типов особых способностей
+    rule: >
+      Каждая особая способность относится к категории, которая определяет, когда
+      она срабатывает. Категорий пять: 1) действия — применяются в фазу действий;
+      2) боевые — срабатывают только в бою; 3) фазы сбора Power — срабатывают
+      в каждую фазу сбора Power; 4) фазы Doom — срабатывают в каждую фазу Doom;
+      5) постоянные — могут применяться в пользу фракции в любой момент.
+    numbers: {types: 5}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 10, строки 322–335 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-TECH-003
+    area: TECH
+    title: Способности необязательны по умолчанию
+    rule: >
+      Применение любой особой способности считается необязательным, если в её
+      описании прямо не указано обратное. Это значит, что в момент, когда
+      способность применялась бы или когда её эффект что-то сделал бы — включая
+      постоянные способности, — игрок может отказаться от срабатывания эффекта.
+      Часть способностей необязательными не являются и обязаны сработать
+      в соответствующий момент; в таком случае это прямо написано в тексте
+      способности.
+    numbers: {}
+    timing: >
+      Выбор делается в момент, когда способность сработала бы.
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Способность обязательна, только если это прямо сказано в её тексте
+    interactions:
+      - >
+        Эррата Final Onslaught отдельно добавляла фразу «использование этой книги
+        не является необязательным» трём книгам фракции Ancients — признак того,
+        что умолчание здесь читается неверно и обязательность надо писать явно.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 10, строки 336–347 в .md", note: null}
+      - {ref: SRC-ERRATA-TABLE, loc: "строки Ancients / Final Onslaught", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-TECH-004
+    area: TECH
+    title: Цель выбирает отряд
+    rule: >
+      Если способность нацелена на отряд противника, то, как правило, сам
+      пострадавший выбирает, какой из его отрядов станет целью. Есть редкие
+      исключения, и они прямо оговорены в тексте способности. Если способность
+      не указывает, кто выбирает затронутый отряд, выбор принадлежит владельцу
+      отряда.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Редкие случаи, прямо оговорённые в тексте способности
+    interactions:
+      - >
+        Тот же принцип действует при захвате Cultist: владелец решает, кого
+        отдать (BL-ACTION-016).
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 10, строки 352–358 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-TECH-005
+    area: TECH
+    title: Получение книг заклинаний
+    rule: >
+      Выполнив одно из требований, напечатанных на планшете фракции, игрок обязан
+      накрыть это требование книгой заклинаний из своего резерва. Ни одна книга
+      не привязана к конкретному требованию: любую книгу можно положить в любой
+      слот. Книги никогда не теряются, даже если их требование перестало
+      выполняться: однажды полученная книга остаётся на планшете и работает до
+      конца партии. Можно получить несколько книг одновременно, если в этот момент
+      выполнены все их требования. Отдельные книги можно получить одновременно
+      только определённым образом, и это оговорено на планшете фракции.
+    numbers: {spellbooks_per_faction: 6}
+    timing: >
+      Если книга получается в ходе боя или как его часть, она не выдаётся, пока
+      бой не разрешён полностью.
+    prerequisites:
+      - Выполненное требование на планшете фракции
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Книга, полученная в бою, выдаётся только после полного разрешения боя.
+        Это важно: она не работает внутри того боя, в котором заработана.
+    interactions:
+      - >
+        Шесть книг на планшете открывают неограниченный бой (BL-ACTION-019) и
+        являются условием победы (область VICTORY).
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 11, строки 363–393 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-TECH-006
+    area: TECH
+    title: Способность применяется целиком или не применяется вовсе
+    rule: >
+      Сами способности всегда необязательны, если в их тексте не сказано иное.
+      Но если игрок решил применить способность, он обязан выполнить всё, что она
+      предписывает: выполнить только часть способности нельзя. В том числе нельзя
+      отказаться от невыгодной части эффекта, решив применить способность ради
+      выгодной.
+    numbers: {}
+    timing: Решение принимается в момент применения, дальше эффект неделим
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Уточняет BL-TECH-003: необязательность относится к применению способности
+        целиком, а не к отдельным её последствиям.
+      - >
+        Отдельный случай: если способность требует чего-то, чего в резерве нет,
+        одни способности из-за этого применить нельзя вовсе, а другие можно —
+        и тогда невыполнимая часть просто не происходит. Это задаётся текстом
+        конкретной способности.
+    sources:
+      - {ref: SRC-FAQ, loc: "Core Game Rules, вопросы про Ghroth", note: null}
+    errata_applied: []
+    faq_applied: ["Ghroth optional placement", "Ghroth with no Acolytes left"]
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-TECH-007
+    area: TECH
+    title: Требование книги может быть выполнено в чужой ход
+    rule: >
+      Требование книги заклинаний может оказаться выполненным в любой момент,
+      в том числе в ход противника. Как только оно выполнено, книга берётся.
+    numbers: {}
+    timing: В любой момент, включая чужой ход
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Требование, выполняемое в бою, даёт книгу только после полного разрешения
+        боя (BL-TECH-005).
+    interactions: []
+    sources:
+      - {ref: SRC-FAQ, loc: "Core Game Rules, вопрос про «Share Areas with all enemies»", note: null}
+    errata_applied: []
+    faq_applied: ["Black Goat: Share Areas with all enemies"]
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-ACTION-022
+    area: ACTION
+    title: Второе действие от способности оплачивается отдельно
+    rule: >
+      Если способность даёт право совершить второе действие, это второе действие
+      оплачивается по своей обычной стоимости. Способность даёт право на действие,
+      но не делает его бесплатным.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: "обычная стоимость второго действия"
+    limits: []
+    exceptions: []
+    interactions:
+      - Дополняет BL-ACTION-017
+    sources:
+      - {ref: SRC-FAQ, loc: "Core Game Rules, вопрос про Screaming Dead", note: null}
+    errata_applied: []
+    faq_applied: ["Yellow Sign: Screaming Dead / He Who is Not to be Named"]
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-014
+    area: COMBAT
+    title: Способность, управляющая отступлением, не отменяет ограничений
+    rule: >
+      Способность, позволяющая распоряжаться отступлением чужих отрядов, обязана
+      соблюдать обычные ограничения отступления, включая запрет отступать в
+      регион с отрядами фракции, с которой только что был бой. Кроме того, такая
+      способность даёт право выбрать только НАПРАВЛЕНИЕ отступления, но не то,
+      КАКИЕ отряды отступают.
+    numbers: {}
+    timing: Шаг 4 боя
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - Уточняет BL-COMBAT-012 и BL-COMBAT-013
+    sources:
+      - {ref: SRC-FAQ, loc: "Core Game Rules, вопрос про Madness и правила отступления", note: null}
+    errata_applied: []
+    faq_applied: ["Crawling Chaos: Madness and retreat rules"]
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-COMBAT-015
+    area: COMBAT
+    title: Ноль боевых кубиков — бой объявить нельзя
+    rule: >
+      Если суммарное число боевых кубиков фракции равно нулю, объявить бой она
+      не может, даже если отдельные её отряды при этом всё равно будут бросать
+      свои кубики по особым правилам.
+    numbers: {min_dice_to_declare: 1}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Подтверждает BL-ACTION-014: требование «не менее 1 боевого значения»
+        относится именно к объявлению боя, а не к участию в нём.
+    sources:
+      - {ref: SRC-FAQ, loc: "Neutral Monsters, вопрос про Star Vampires и Servitors", note: null}
+    errata_applied: []
+    faq_applied: ["Star Vampires with zero total Combat"]
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-013
+    area: UNIT
+    title: Назначение результатов боя, когда среди отрядов есть Brain Cylinder
+    rule: >
+      Kill назначаются первыми. Если Kill назначен на Brain Cylinder, тот гибнет,
+      а Pain достаётся другому отряду. Если Kill назначен на другой отряд, то Pain,
+      которому больше некого достаться, кроме Brain Cylinder, просто игнорируется —
+      Brain Cylinder не получает Pain.
+    numbers: {}
+    timing: Шаг 3 боя
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Практическое следствие BL-UNIT-007: Brain Cylinder уязвим для Kill,
+        но неуязвим для Pain, и это даёт владельцу выбор, какой результат
+        обесценить.
+      - >
+        Brain Cylinder не подчиняется и способностям, принудительно отступающим
+        отряды.
+    sources:
+      - {ref: SRC-FAQ, loc: "Yuggoth Map, вопросы про Brain Cylinder", note: null}
+    errata_applied: []
+    faq_applied: ["Brain Cylinder: Kill and Pain assignment", "Windwalker Howl vs Brain Cylinder"]
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-UNIT-014
+    area: UNIT
+    title: Неконтролируемый Slime Mold не считается вражеской фракцией
+    rule: >
+      Пока Slime Molds никем не контролируются, они не принадлежат никакой
+      фракции. Поэтому регион, в котором есть только неконтролируемые Slime Molds,
+      не считается регионом с отрядами фракции, с которой только что был бой,
+      и отступать туда можно.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - Практическое следствие BL-UNIT-009 для BL-COMBAT-013
+    sources:
+      - {ref: SRC-FAQ, loc: "Yuggoth Map, вопрос про отступление в регион с неконтролируемыми Slimes", note: null}
+    errata_applied: []
+    faq_applied: ["Retreat into Area with uncontrolled Slimes"]
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # DOOM — трофеи Elder Sign
+  # ============================================================================
+
+  - id: BL-DOOM-003
+    area: DOOM
+    title: Трофеи Elder Sign
+    rule: >
+      Заработав Elder Sign, игрок берёт жетон из мешочка и, не показывая другим,
+      кладёт его рубашкой вверх у своего планшета. Свои жетоны игрок может
+      свободно рассматривать. На каждом напечатано 1, 2 или 3 — это его стоимость
+      в Doom. Всего 18 жетонов достоинством 1, 12 достоинством 2 и 6 достоинством
+      3. Doom по жетонам не отмечается на треке сразу: игрок сам решает, когда
+      его получить. Для этого он раскрывает жетоны и продвигает свой маркер Doom
+      на соответствующее число делений. Сделать это можно в любой момент — в любую
+      из четырёх фаз или даже в самом конце партии. Обычно большая часть жетонов
+      остаётся нераскрытой до конца игры, что скрывает истинный Doom игроков.
+      Раскрытый жетон в мешочек не возвращается: он убирается в коробку и больше
+      никогда не может быть вытянут.
+    numbers: {total: 36, value_1: 18, value_2: 12, value_3: 6}
+    timing: >
+      Раскрытие — в любой момент партии, по решению владельца, включая самый
+      конец игры.
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Если все Elder Signs уже разобраны и нужно вытянуть новый, игрок вместо
+        этого получает 1 Doom, и это не является тайной.
+    interactions:
+      - >
+        Скрытость Elder Signs означает, что видимая позиция на треке Doom не
+        отражает реального счёта. Это существенно для оценки момента окончания
+        игры.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 11, строки 359–386 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # FACTION — планшет фракции
+  # ============================================================================
+
+  - id: BL-FACTION-001
+    area: FACTION
+    title: Состав планшета фракции
+    rule: >
+      На планшете фракции размещаются: название фракции; портрет фракции, который
+      служит местом для захваченных Cultists; трек Power; уникальная способность
+      фракции, доступная всю партию; информация о подготовке и глиф фракции;
+      сведения о Cultists и Monsters — название, силуэт, стоимость, боевое
+      значение, примечания и число доступных фигурок каждого типа; сведения о
+      Great Old One — силуэт, стоимость, боевое значение, примечания, порядок
+      пробуждения, формула боевого значения и описание особой способности;
+      слоты требований книг заклинаний, каждый со своим условием.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 12, строки 405–419 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # VICTORY — окончание игры и победа
+  # ============================================================================
+
+  - id: BL-VICTORY-001
+    area: VICTORY
+    title: Два условия окончания игры
+    rule: >
+      Окончание игры запускается одним из двух способов: либо игрок набирает
+      30 или более Doom, либо маркер на треке Ритуала Уничтожения доходит до
+      деления «Instant Death».
+    numbers: {doom_threshold: 30}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 37, строки 1222–1225 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-VICTORY-002
+    area: VICTORY
+    title: Момент окончания при достижении 30 Doom
+    rule: >
+      Когда фракция набирает 30 или более Doom на треке, игра заканчивается.
+      Поскольку Doom чаще всего растёт в фазу Doom, обычно игра заканчивается
+      именно в ней; в этом случае фазу Doom нужно доиграть целиком, и только затем
+      объявлять победу. Однако игрок может раскрыть Elder Signs и в фазу действий:
+      если новый Doom доводит его до 30 и более, игра закончится по завершении
+      хода текущего игрока — даже если это не тот игрок, который раскрыл Elder
+      Signs.
+    numbers: {doom_threshold: 30}
+    timing: >
+      В фазу Doom — по завершении всей фазы. В фазу действий — по завершении хода
+      текущего игрока, а не немедленно.
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Прямое следствие скрытости Elder Signs (BL-DOOM-003): окончание игры может
+        быть запущено внезапно и не тем игроком, чей сейчас ход.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 37, строки 1227–1236 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-VICTORY-003
+    area: VICTORY
+    title: Окончание по «Instant Death»
+    rule: >
+      Игра также может закончиться в фазу Doom, когда маркер Ритуала Уничтожения
+      доходит до деления «Instant Death». Все игроки, ещё не имевшие возможности
+      провести Ритуал, всё равно могут его провести. Игра закончится по завершении
+      этой фазы Doom, даже если никто не набрал 30 или более Doom.
+    numbers: {}
+    timing: По завершении текущей фазы Doom
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - Стоимость Ритуала после достижения «Instant Death» — 10 (BL-RITUAL-002)
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 37, строки 1237–1242 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-VICTORY-004
+    area: VICTORY
+    title: Определение победителя
+    rule: >
+      Независимо от того, чем было запущено окончание игры, все игроки могут
+      раскрыть свои Elder Signs до объявления победителя. После того как Elder
+      Signs добавлены к счёту Doom, побеждает игрок, у которого одновременно
+      наибольший Doom И все шесть книг заклинаний на планшете фракции. Если у
+      игрока с наибольшим Doom шести книг нет, побеждает тот, у кого наибольший
+      Doom среди имеющих все шесть книг. Если двое или более игроков сравнялись
+      по наибольшему Doom и у обоих есть все шесть книг, игра заканчивается
+      ничьей, и эти игроки делят победу. Если игра закончилась и ни у кого нет
+      всех шести книг, проигрывают все игроки, а побеждает человечество.
+    numbers: {spellbooks_required: 6}
+    timing: null
+    prerequisites:
+      - Шесть книг заклинаний на планшете — обязательное условие победы
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Ничья при равенстве Doom у двух игроков с полными книгами
+      - Общее поражение, если полных книг нет ни у кого
+    interactions:
+      - >
+        Наибольший Doom сам по себе победы не даёт. Это ключевая развилка правил,
+        и терять её в переводе нельзя.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 37, строки 1243–1259 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-VICTORY-005
+    area: VICTORY
+    title: "Rule Omega: последний вопрос"
+    rule: >
+      Правило на случай, когда ответа нет в правилах: если возник конфликт
+      способностей и разрешить его нечем, игроки голосуют за желаемый исход,
+      причём голос владельца игры имеет преимущество. Домашние правила
+      приветствуются.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Решено (D-013): в нашем рулбуке записывается кратко — голосуйте, голос
+        владельца коробки весомее, хоумрульте свободно, игра должна быть весёлой.
+        Оригинальные отсылки к FAQ издателя и риторика не переносятся: они
+        не механические.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 37, строки 1220–1231 правой колонки в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # MODULE — игра на двоих. ВНЕ ОБЪЁМА, см. D-021
+  # ============================================================================
+  # Записи BL-MODULE-001…007 в наш рулбук НЕ переносятся: игра на двоих
+  # исключена из версии целиком. Целевой состав — 3–5 игроков, правила на 6–8
+  # ведём. Записи сохраняются как эталон на случай, если решение изменится,
+  # и чтобы не разбирать этот раздел оригинала заново.
+  # В P5 они не сравниваются, в P8 не пишутся.
+
+  - id: BL-MODULE-001
+    area: MODULE
+    title: Подготовка игры на двоих
+    rule: >
+      Для игры на двоих не нужны никакие компоненты и дополнения сверх базовой
+      игры. Карта кладётся стороной на 3 игроков. Используется трек Ритуала
+      Уничтожения со шкалой на 4 игроков. Берётся маркер Doom неиспользуемой
+      фракции и ставится на 0 на треке Doom — это маркер Распада. Большинство
+      дополнений использовать можно, но при обилии вариантов некоторые сочетания
+      дополнений и фракций могут дать перекос.
+    numbers: {players: 2, map_side: 3, ritual_track_side: 4, decay_start: 0}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 39, строки 1271–1291 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-002
+    area: MODULE
+    title: "Игра на двоих: Doom за уничтоженные отряды"
+    rule: >
+      Когда отряд уничтожен или убит, противник получает Doom, равный стоимости
+      этого отряда в Power. Если же отряд заменяется другим, Doom не начисляется.
+      У части отрядов стоимость переменная: в этом случае начисляемый Doom равен
+      среднему всех вариантов стоимости отряда, сложенных вместе, независимо от
+      того, действует ли сейчас скидка. Итог всегда округляется вверх. Отряды,
+      способные избежать гибели способностью или книгой заклинаний, всё равно
+      дают противнику, «убившему» их, Doom, но вдвое меньше, с округлением вверх.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Замена отряда другим Doom не даёт
+    interactions:
+      - >
+        Это главное отличие режима: гибель собственных отрядов напрямую кормит
+        противника победными очками.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 39, строки 1296–1315 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-003
+    area: MODULE
+    title: "Игра на двоих: маркер Распада"
+    rule: >
+      Перед своим ходом игрок обязан заплатить Power, равный положению маркера
+      Распада на треке Doom. Маркер начинается с 0 и начинает расти, когда у
+      другого игрока заканчивается Power, — это штрафует за несколько действий
+      подряд. Если игрок не может оплатить Распад или после оплаты у него
+      осталось 0 Power, он ставит свой запас в 0 и переходит к следующей фазе.
+      Если игрок остался без Power, когда наступает его очередь действовать, — а
+      для Windwalker также если он в спячке, — маркер Распада вместо этого
+      поднимается на 1, и ход переходит к другому игроку. В начале фазы сбора
+      Power маркер Распада возвращается на 0.
+    numbers: {decay_start: 0, decay_increment: 1}
+    timing: >
+      Оплата — до начала своего хода. Сброс на 0 — в начале фазы сбора Power.
+    prerequisites: []
+    targets: null
+    cost: "Power, равный положению маркера Распада"
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Заменяет обычное правило пропуска хода при нуле Power (BL-ACTION-003).
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 39–40, строки 1301–1349 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-004
+    area: MODULE
+    title: "Игра на двоих: нельзя добровольно обнулить Power"
+    rule: >
+      Добровольно опустить свой запас Power до нуля нельзя. Если после оплаты
+      Распада у игрока остался 1 или более Power, он обязан совершить действие.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Прямо отменяет разрешение из BL-ACTION-002 добровольно сбросить Power
+        до нуля.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 40, строки 1320–1324 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-005
+    area: MODULE
+    title: "Игра на двоих: неограниченный бой открывается обоим"
+    rule: >
+      Когда неограниченный бой открывается одному игроку — то есть он собрал шесть
+      книг заклинаний, — другой игрок немедленно получает неограниченный бой тоже.
+    numbers: {spellbooks_required: 6}
+    timing: Немедленно в момент открытия у первого игрока
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 39, строки 1310–1314 правой колонки в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-006
+    area: MODULE
+    title: "Игра на двоих: изменения фаз"
+    rule: >
+      Фаза сбора Power: маркер Распада возвращается на 0 в начале фазы, Power
+      начисляется по обычным правилам. Фаза определения первого игрока: без
+      изменений. Фаза Doom: игрок НЕ получает Doom просто за контроль врат.
+      Ритуал Уничтожения при этом по-прежнему даёт Doom, равный числу
+      контролируемых врат, плюс Elder Sign за каждого фракционного Great Old One
+      в игре.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Отменяется BL-DOOM-002 — продвижение по треку Doom за контролируемые
+        врата, но НЕ отменяется аналогичное продвижение внутри Ритуала
+        (BL-RITUAL-001, шаг 3).
+    interactions:
+      - >
+        В режиме на двоих Ритуал становится единственным способом получить Doom
+        за врата.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 40, строки 1347–1363 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-007
+    area: MODULE
+    title: "Игра на двоих: балансные поправки и рекомендации"
+    rule: >
+      Часть обычных правил и книг заклинаний требует поправок для игры на двоих.
+      Поправки фракционные: при броске кубика для Ghroth, Thousand Forms и Dread
+      Curse of Azathoth эффекты уполовиниваются с округлением вверх, причём у
+      Dread Curse of Azathoth уполовинивается не результат, а число кубиков;
+      требование Opener of the Way на 12 врат снижается до 10; боевое значение
+      Yog-Sothoth всегда равно 4. Отдельно: только в игре на двоих Windwalker
+      может выполнить требование «у другой фракции 6 книг заклинаний», принеся
+      в жертву Ithaqua, — потому что противник может вредить ему, намеренно
+      не забирая свою шестую книгу. Издатель не рекомендует использовать в игре
+      на двоих Bokrug, Servitors of the Outer Gods, Dhole и карту Library
+      of Celaeno.
+    numbers: {opener_gates_requirement: 10, yog_sothoth_combat: 4}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Перечисленные поправки фракционные и по D-012 в объём работы над
+        правилами не входят: они понадобятся при выверке фракций. Здесь важно
+        не их содержание, а сам принцип — режим на двоих требует отдельного
+        списка поправок к фракционным способностям, и в нашем рулбуке такой
+        список должен существовать.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 40, строки 1365–1369 и 1320–1346 правой колонки в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # MODULE — приобретение Terror
+  # ============================================================================
+
+  - id: BL-MODULE-008
+    area: MODULE
+    title: Приобретение Terror
+    rule: >
+      Когда подходит очередь игрока проводить Ритуал Уничтожения, он может
+      потратить 2 Doom и 2 Power. Если он это делает, он выбирает карту лояльности
+      Terror, кладёт её у своего планшета и выставляет фигурку на карту так, как
+      указано. После этого он при желании всё равно может провести Ритуал
+      Уничтожения. Приобретённая карта лояльности Terror остаётся у игрока до
+      конца партии, и с этого момента только он может призывать и контролировать
+      связанный с ней Terror.
+    numbers: {doom_cost: 2, power_cost: 2, loyalty_cards_per_doom_phase: 1}
+    timing: >
+      В очередь игрока на Ритуал Уничтожения, в фазу Doom. Не отменяет самого
+      Ритуала — его можно провести дополнительно.
+    prerequisites:
+      - 2 Doom и 2 Power
+    targets: null
+    cost: "2 Doom и 2 Power"
+    limits:
+      - Не более одной карты лояльности за фазу Doom
+      - Общее число приобретённых карт лояльности не ограничено
+      - Карта лояльности закрепляется за игроком навсегда
+    exceptions: []
+    interactions:
+      - Призыв самого Terror — отдельное действие Summon Terror (BL-UNIT-005)
+      - >
+        Тем же способом приобретается право призывать нейтрального Monster:
+        правило покупки общее для карт лояльности Neutral Monster и Terror.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 103, строки 2691–2713 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # MODULE — нейтральные монстры (у нас «наёмники»)
+  # ============================================================================
+
+  - id: BL-MODULE-011
+    area: MODULE
+    title: Нейтральные монстры
+    rule: >
+      Нейтральные монстры — это Monsters во всех отношениях, кроме двух: они
+      не принадлежат никакой фракции с начала игры и у них есть собственные
+      врождённые способности вместо опоры на книги заклинаний. Их можно
+      использовать в любом сочетании с другими дополнениями, на любой карте
+      и с любыми фракциями.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Не принадлежат фракции изначально
+      - Врождённые способности вместо книг заклинаний
+    interactions:
+      - Право призыва приобретается картой лояльности (BL-MODULE-008)
+      - Slime Mold — частный случай нейтрального монстра (BL-UNIT-009)
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 99, строки 2655–2663 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # MODULE — независимые Great Old Ones (у нас «наёмные боевые роботы»)
+  # ============================================================================
+
+  - id: BL-MODULE-012
+    area: MODULE
+    title: "Независимые Great Old Ones: пробуждение"
+    rule: >
+      Конкретные требования для пробуждения независимого Great Old One указаны на
+      его карте лояльности. При пробуждении игрок берёт карту лояльности и ставит
+      фигурку на карту под свой контроль. Книга заклинаний этого независимого и
+      связанные с ним жетоны добавляются в резерв игрока. Число независимых,
+      которых можно контролировать, не ограничено. Одного независимого можно
+      использовать, чтобы помочь пробудить другого.
+    numbers: {}
+    timing: null
+    prerequisites:
+      - Требования на карте лояльности
+    targets: null
+    cost: null
+    limits:
+      - Ограничения на число контролируемых независимых нет
+    exceptions: []
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 109, строки 2790–2799 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-013
+    area: MODULE
+    title: "Независимые Great Old Ones: гибель"
+    rule: >
+      Если независимый Great Old One убит, его карта лояльности, фигурка,
+      неиспользованные жетоны и книга заклинаний возвращаются в общий резерв;
+      жетоны, уже выставленные на карту, остаются там. Если игрок успел заработать
+      его книгу заклинаний, она «слетает» с карты лояльности и перестаёт
+      действовать. Если этот независимый будет пробуждён снова — даже тем же
+      игроком, который его контролировал, — книгу заклинаний придётся зарабатывать
+      заново.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Жетоны, уже лежащие на карте, остаются на месте
+    interactions: []
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 109, строки 2800–2807 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-014
+    area: MODULE
+    title: "Независимые Great Old Ones: книга заклинаний"
+    rule: >
+      У каждого независимого есть своя книга заклинаний. Когда требования для её
+      получения выполнены, книга кладётся на карту лояльности этого независимого
+      и работает, пока игрок его контролирует. Такие книги НИКОГДА не считаются
+      книгами на планшете фракции: положить их на планшет нельзя, неограниченный
+      бой они не открывают и для победы не засчитываются.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits:
+      - Не засчитываются в шесть книг планшета
+      - Не открывают неограниченный бой
+      - Не учитываются в условии победы
+    exceptions: []
+    interactions:
+      - Прямо ограничивает BL-ACTION-019 и BL-VICTORY-004
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 109, строки 2808–2815 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-015
+    area: MODULE
+    title: "Независимые Great Old Ones: фаза Doom"
+    rule: >
+      Проводя Ритуал Уничтожения, игрок НЕ получает Elder Sign ни за одного
+      контролируемого независимого Great Old One. Elder Signs за Ритуал дают
+      только фракционные Great Old Ones. При этом Great Cthulhu по-прежнему
+      получает Elder Sign при пробуждении любого Great Old One.
+    numbers: {elder_signs_from_independents: 0}
+    timing: При проведении Ритуала Уничтожения
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Способность Great Cthulhu на пробуждение действует по-прежнему
+    interactions:
+      - >
+        Уточняет BL-RITUAL-001, шаг 4. Правило добавлено позже: в первоначальном
+        издании его не было, и это создавало балансную проблему. То есть это
+        явная официальная правка, а не изначальная формулировка.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 109, строки 2816–2824 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-016
+    area: MODULE
+    title: Фракционные Great Old Ones в роли независимых
+    rule: >
+      Для части фракционных Great Old Ones существуют карты лояльности, книги
+      заклинаний и способности, позволяющие использовать их как независимых.
+      Издатель не рекомендует использовать Great Old One в роли независимого,
+      если кто-то из игроков играет за фракцию этого Great Old One.
+    numbers: {}
+    timing: null
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions: []
+    interactions:
+      - >
+        Важно для BL-MODULE-015: став независимым, фракционный Great Old One
+        перестаёт давать Elder Sign за Ритуал.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 113, строки 2860–2866 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # MODULE — Лаборатория и действие Surgery (у нас «Извлечение сознания»)
+  # ============================================================================
+  # Запись заведена 2026-09-11 при написании 11.5. Закрывает пробел, найденный
+  # приёмкой CODE-03: числа для NUM-119 и NUM-120 брались из D-010, потому что
+  # записи baseline не существовало.
+
+  - id: BL-MODULE-018
+    area: MODULE
+    title: "The Laboratory и действие Surgery"
+    rule: >
+      Игрок, контролирующий врата в области Лаборатории, может выполнять действие
+      Surgery. Дословно: «Surgery (Action: Cost 1) If you Control the Laboratory
+      Gate, Eliminate up to 4 of your Cultists IN PLAY and replace them with
+      an equal number of Brain Cylinder tokens in your Faction's Color.»
+      Условие — контроль врат именно в области Лаборатории; предел замены —
+      до четырёх; стоимость 1 Power.
+      Сама Лаборатория — область на карте Yuggoth, но оригинал прямо
+      предусматривает её перенос на другие карты жетоном Laboratory Token,
+      то есть наша адаптация к общему полю — штатный режим, а не отклонение.
+    numbers: {cost: 1, max_replaced: 4}
+    timing: Действие в фазу действий
+    prerequisites:
+      - Контролируемые врата в области Лаборатории
+    targets: "до 4 собственных Cultists в игре"
+    cost: 1
+    limits:
+      - Не более 4 за одно применение
+    exceptions:
+      - >
+        Фракционное исключение оригинала, у нас не применяется: если в игре
+        Opener of the Way, Yog-Sothoth может выполнять Surgery, находясь
+        в области Лаборатории; и если в это же время другая фракция
+        контролирует там обычные врата, Surgery могут выполнять обе. Обе
+        оговорки фракционные (D-021, D-004) и в наш текст не идут.
+    interactions:
+      - >
+        «Eliminate up to 4 of your Cultists IN PLAY» — именно «в игре»,
+        не «на поле». То же различение, что в BL-POWER-001 и DEV-019.
+      - >
+        Требования к самим энграммам — BL-UNIT-007; предел в 4 на фракцию
+        и судьба пятой захваченной — BL-UNIT-016; назначение результатов боя
+        при участии энграмм — BL-UNIT-013.
+      - >
+        «Replace them» в оригинале не уточняет регион размещения. Черновик
+        добавляет «точно в тех же местах, где находились заменяемые
+        пехотинцы» — это уточнение, следующее из слова «replace»,
+        а не расхождение.
+    sources:
+      - {ref: SRC-RB-OLD, loc: "с. ~166, раздел The Laboratory и Surgery", note: "лучший читаемый вариант: в старой вёрстке абзац не разорван колонками"}
+      - {ref: SRC-RB-NEW, loc: "с. ~171, LABORATORY", note: "тот же текст, разорван вёрсткой в две колонки"}
+      - {ref: SRC-WIKI, loc: "Yuggoth Map → The Laboratory", note: "сверено в P2, D-010"}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  # ============================================================================
+  # MODULE — Colour Gates (у нас «Особые фабрики»)
+  # ============================================================================
+
+  - id: BL-MODULE-009
+    area: MODULE
+    title: "Colour Gates: состав и базовые правила"
+    rule: >
+      Модуль состоит из 9 цветных врат, отдельных светящихся в темноте врат
+      (Glow) и 22 серых врат; серые врата можно использовать вместо обычных
+      вырубных жетонов базовой игры. Издатель не рекомендует играть с этими
+      правилами каждую партию. Создавая врата, игрок может выбрать и разместить
+      либо доступные цветные врата, либо обычные. Светящиеся врата можно создать
+      ТОЛЬКО если игрок уже контролирует другие цветные врата. Создавать врата
+      цвета своей фракции не обязательно: например, Crawling Chaos может создать
+      красные врата. В фазу сбора Power цветные врата работают как обычные.
+      В НАЧАЛЕ каждой фазы Doom бросается один шестигранный кубик, и результат
+      сверяется с соответствующим столбцом таблицы эффектов.
+    numbers: {colour_gates: 9, glow_gates: 1, grey_gates: 22, die: "1d6"}
+    timing: В начале каждой фазы Doom
+    prerequisites:
+      - Для создания светящихся врат — контроль других цветных врат
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - Цвет врат не привязан к цвету фракции
+    interactions:
+      - >
+        Бросок в начале фазы Doom происходит до продвижения по треку Doom
+        (BL-DOOM-002) и до Ритуалов, поэтому эффекты вроде запрета Ритуала
+        успевают подействовать в ту же фазу.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 137, строки 3174–3228 в .md", note: null}
+    errata_applied: []
+    faq_applied: []
+    confidence: HIGH
+    status: VERIFIED
+
+  - id: BL-MODULE-010
+    area: MODULE
+    title: "Colour Gates: таблица эффектов по броску d6"
+    rule: |
+      1 — МЕТЕОРИТ. Начиная со стартового игрока и далее по порядку хода, первый
+      игрок, не контролирующий цветных врат, обязан взять цветные врата из резерва,
+      если они есть, и заменить ими одни свои обычные врата. Это делает не более
+      одного игрока.
+
+      2 — ПЛОДОРОДИЕ. Синие: контролирующий получает 1 Power. Зелёные:
+      контролирующий получает дополнительный Elder Sign за Ритуал Уничтожения в эту
+      фазу Doom. Оранжевые: 1 Power. Фиолетовые: 1 Doom. Красные: контролирующий
+      уничтожает самый дешёвый вражеский Monster или Cultist на вратах, если такой
+      есть. Розовые: дополнительный Elder Sign за Ритуал Уничтожения в этот ход.
+      Голубые: уничтожает самый дешёвый вражеский Monster или Cultist на вратах,
+      если есть. Жёлтые: 1 Doom. Бирюзовые: контролирующий выбирает двое цветных
+      врат и меняет их местами непосредственно перед срабатыванием эффектов врат.
+      Светящиеся: контролирующий выбирает эффект любого другого цвета из столбца
+      «Плодородие».
+
+      3 — ПИРШЕСТВО. Синие: контролирующий теряет 1 Power. Зелёные: дополнительный
+      Elder Sign за Ритуал в эту фазу Doom. Оранжевые: получает 1 Power.
+      Фиолетовые: теряет 1 Doom. Красные: уничтожает свой отряд на вратах.
+      Розовые: не может провести Ритуал Уничтожения в эту фазу Doom. Голубые:
+      уничтожает свой отряд на вратах. Жёлтые: получает 1 Doom. Бирюзовые: выбирает
+      двое цветных врат и меняет их местами перед срабатыванием эффектов.
+      Светящиеся: выбирает эффект любого другого цвета из столбца «Пиршество».
+
+      4 — БЕЗУМИЕ. Синие: получает 1 Power. Зелёные: не может провести Ритуал в эту
+      фазу Doom. Оранжевые: теряет 1 Power. Фиолетовые: получает 1 Doom. Красные:
+      уничтожает самый дешёвый вражеский Monster или Cultist на вратах, если есть.
+      Розовые: получает дополнительный Elder Sign за Ритуал в эту фазу Doom.
+      Голубые: уничтожает самый дешёвый вражеский Monster или Cultist на вратах,
+      если есть. Жёлтые: теряет 1 Doom. Бирюзовые: заменяет одни свои цветные врата
+      на обычные. Светящиеся: выбирает эффект любого другого цвета из столбца
+      «Безумие».
+
+      5 — ПОРЧА. Синие: теряет 1 Power. Зелёные: не может провести Ритуал в эту фазу
+      Doom. Оранжевые: теряет 1 Power. Фиолетовые: теряет 1 Doom. Красные:
+      уничтожает свой отряд на вратах. Розовые: не может провести Ритуал в эту фазу
+      Doom. Голубые: уничтожает свой отряд на вратах. Жёлтые: теряет 1 Doom.
+      Бирюзовые: заменяет одни свои цветные врата на обычные. Светящиеся: выбирает
+      эффект любого другого цвета из столбца «Порча».
+
+      6 — УХОД. Игрок с наименьшим Doom может выбрать одни цветные врата в любом
+      месте карты и заменить их обычными. При равенстве наименьшего Doom это делают
+      все игроки с равным счётом, по порядку хода. После этого кубик цвета
+      перебрасывается. При повторном броске 6 больше ничего не происходит. При любом
+      другом результате сверяются с соответствующим столбцом таблицы.
+    numbers: {die: "1d6", colours: 10}
+    timing: В начале каждой фазы Doom
+    prerequisites: []
+    targets: null
+    cost: null
+    limits: []
+    exceptions:
+      - >
+        Столбцы 1 и 6 действуют не по цветам, а на игроков: первый без цветных
+        врат и игрок с наименьшим Doom соответственно.
+    interactions:
+      - >
+        Бирюзовые врата в столбцах 2 и 3 меняют врата местами «непосредственно
+        перед срабатыванием эффектов врат» — то есть до применения остальной
+        строки таблицы. Порядок разрешения внутри одного броска имеет значение.
+      - >
+        ВНЕ ТЕКСТА РУЛБУКА (D-014). У нас эта таблица реализована отдельными
+        картами формата таро, то есть является компонентом, а не частью правил.
+        В рулбук идёт только механика из BL-MODULE-009: как создаются особые
+        фабрики и что в начале фазы Doom бросается кубик. Сама запись сохраняется
+        как эталон для будущей сверки наших карт с оригиналом — это отдельная
+        задача, вне работы над правилами.
+    sources:
+      - {ref: SRC-RB-NEW, loc: "с. 137–138, строки 3179–3276 в .md", note: "таблица собрана по колонкам вручную; сверка по PDF не требуется, см. D-014"}
+    errata_applied: []
+    faq_applied: []
+    confidence: MEDIUM
+    status: PROVISIONAL

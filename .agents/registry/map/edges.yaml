@@ -1,0 +1,578 @@
+# edges.yaml — смежности областей оригинальной карты. Схема — SCHEMA.md.
+# Рёбра ненаправленные. Ребро входит в конфигурацию тогда и только тогда,
+# когда обе его области присутствуют в этой конфигурации (см. configs.yaml).
+# observed_on — на какой стороне поля смежность зафиксирована при извлечении.
+# contact_px — длина общей границы в пикселях эталона 2400×1203 (доказательство, не правило).
+
+edges:
+  - id: ME-001
+    a: MR-L3-NAM
+    b: MR-L3-SAM
+    kind: LAND-LAND
+    observed_on: [3P]
+    contact_px: {3P: 1370}
+
+  - id: ME-002
+    a: MR-L5-AUS
+    b: MR-L5-NZL
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 3067}
+
+  - id: ME-003
+    a: MR-L5-CAM
+    b: MR-L5-NAMW
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 2376}
+
+  - id: ME-004
+    a: MR-L5-CAM
+    b: MR-L5-SAME
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 507}
+    note: >
+      Центральная Америка своей карибской полосой достаёт и до Востока Южной
+      Америки — короткий контакт 507 px.
+
+  - id: ME-005
+    a: MR-L5-CAM
+    b: MR-L5-SAMW
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 890}
+    note: >
+      Граница поперёк перешейка у панамского перекрёстка. Именно она решает,
+      кому достаётся карибский берег: он уходит Центральной Америке (ME-027).
+
+  - id: ME-006
+    a: MR-L5-NAME
+    b: MR-L5-NAMW
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 4223}
+
+  - id: ME-007
+    a: MR-L5-SAME
+    b: MR-L5-SAMW
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 2641}
+
+  - id: ME-008
+    a: MR-R3-AFR
+    b: MR-R3-ASI
+    kind: LAND-LAND
+    observed_on: [3P]
+    contact_px: {3P: 2508}
+
+  - id: ME-009
+    a: MR-R3-ASI
+    b: MR-R3-EUR
+    kind: LAND-LAND
+    observed_on: [3P]
+    contact_px: {3P: 3917}
+
+  - id: ME-010
+    a: MR-R5-AFRE
+    b: MR-R5-AFRW
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 2677}
+
+  - id: ME-011
+    a: MR-R5-AFRE
+    b: MR-R5-ARB
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 2328}
+
+  - id: ME-012
+    a: MR-R5-AFRW
+    b: MR-R5-ARB
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 258}
+
+  - id: ME-013
+    a: MR-R5-ARB
+    b: MR-R5-ASIN
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 466}
+
+  - id: ME-014
+    a: MR-R5-ARB
+    b: MR-R5-ASIS
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 3330}
+
+  - id: ME-015
+    a: MR-R5-ARB
+    b: MR-R5-EUR
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 1378}
+
+  - id: ME-016
+    a: MR-R5-ASIN
+    b: MR-R5-ASIS
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 3483}
+
+  - id: ME-017
+    a: MR-R5-ASIN
+    b: MR-R5-EUR
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 1322}
+
+  - id: ME-018
+    a: MR-R5-ASIN
+    b: MR-R5-SCA
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 1343}
+
+  - id: ME-019
+    a: MR-R5-EUR
+    b: MR-R5-SCA
+    kind: LAND-LAND
+    observed_on: [5P]
+    contact_px: {5P: 3666}
+
+  - id: ME-020
+    a: MR-L3-AUS
+    b: MR-OC-IND
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 5126}
+
+  - id: ME-021
+    a: MR-L3-AUS
+    b: MR-OC-SPAC
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 5603}
+
+  - id: ME-022
+    a: MR-L3-NAM
+    b: MR-OC-NATL
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 11699}
+
+  - id: ME-023
+    a: MR-L3-NAM
+    b: MR-OC-NPAC
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 8672}
+
+  - id: ME-024
+    a: MR-L3-SAM
+    b: MR-OC-SATL
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 3247}
+
+  - id: ME-025
+    a: MR-L3-SAM
+    b: MR-OC-SPAC
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 3707}
+
+  - id: ME-026
+    a: MR-L5-AUS
+    b: MR-OC-IND
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 4242}
+
+  - id: ME-027
+    a: MR-L5-CAM
+    b: MR-OC-NATL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 5587}
+    note: >
+      Центральная Америка на стороне «5» — не только перешеек: полосой она
+      тянется на восток по карибскому берегу и полностью отделяет Запад Южной
+      Америки от Северной Атлантики. Поэтому ребра Запад Южной Америки —
+      Северная Атлантика НЕТ ни на нашей карте, ни на оригинале.
+
+  - id: ME-028
+    a: MR-L5-CAM
+    b: MR-OC-NPAC
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 4986}
+
+  - id: ME-029
+    a: MR-L5-NAME
+    b: MR-OC-NATL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 4822}
+
+  - id: ME-030
+    a: MR-L5-NAMW
+    b: MR-OC-NATL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 1325}
+
+  - id: ME-031
+    a: MR-L5-NAMW
+    b: MR-OC-NPAC
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 3691}
+
+  - id: ME-032
+    a: MR-L5-NZL
+    b: MR-OC-SPAC
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 5583}
+
+  - id: ME-033
+    a: MR-L5-SAME
+    b: MR-OC-SATL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 2069}
+
+  - id: ME-034
+    a: MR-L5-SAMW
+    b: MR-OC-SATL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 1186}
+
+  - id: ME-035
+    a: MR-L5-SAMW
+    b: MR-OC-SPAC
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 3707}
+
+  - id: ME-036
+    a: MR-OC-ARC
+    b: MR-L3-NAM
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 12151}
+
+  - id: ME-037
+    a: MR-OC-ARC
+    b: MR-L5-NAME
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 9274}
+
+  - id: ME-038
+    a: MR-OC-ARC
+    b: MR-L5-NAMW
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 2994}
+
+  - id: ME-039
+    a: MR-OC-ARC
+    b: MR-R3-ASI
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 3917}
+
+  - id: ME-040
+    a: MR-OC-ARC
+    b: MR-R3-EUR
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 10686}
+
+  - id: ME-041
+    a: MR-OC-ARC
+    b: MR-R5-ASIN
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 3960}
+
+  - id: ME-042
+    a: MR-OC-ARC
+    b: MR-R5-SCA
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 11781}
+
+  - id: ME-043
+    a: MR-OC-IND
+    b: MR-L5-NZL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 965}
+
+  - id: ME-044
+    a: MR-OC-NATL
+    b: MR-L3-SAM
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 3330}
+    note: >
+      На стороне «3» Южная Америка выходит в Северную Атлантику напрямую:
+      карибского берега ни с кем делить не надо. На стороне «5» это ребро
+      исчезает — берег забирает Центральная Америка (ME-027), а Северную
+      Атлантику из Южной Америки видит только её восточная половина (ME-045).
+
+  - id: ME-045
+    a: MR-OC-NATL
+    b: MR-L5-SAME
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 3325}
+
+  - id: ME-046
+    a: MR-OC-NATL
+    b: MR-R5-SCA
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 441}
+
+  - id: ME-047
+    a: MR-OC-NPAC
+    b: MR-L3-SAM
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 458}
+    note: >
+      Короткий контакт (458 px) на тихоокеанском берегу Колумбии, там же, где к
+      берегу выходит граница Севера и Юга Тихого океана. Это ребро обязательно:
+      без него у Южной Америки было бы 4 соседа, а опубликованная степень — 5
+      (SRC-BGA-GRAPH).
+
+  - id: ME-048
+    a: MR-OC-NPAC
+    b: MR-L5-SAMW
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 458}
+    note: >
+      То же место, что ME-047, но на стороне «5»: контакт наследует Запад Южной
+      Америки. 458 px — самый короткий контакт суши с океаном на всей карте.
+
+  - id: ME-049
+    a: MR-R3-AFR
+    b: MR-OC-IND
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 2430}
+
+  - id: ME-050
+    a: MR-R3-AFR
+    b: MR-OC-NATL
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 4667}
+
+  - id: ME-051
+    a: MR-R3-AFR
+    b: MR-OC-SATL
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 6439}
+
+  - id: ME-052
+    a: MR-R3-ASI
+    b: MR-OC-IND
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 4322}
+
+  - id: ME-053
+    a: MR-R3-ASI
+    b: MR-OC-NATL
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 1061}
+
+  - id: ME-054
+    a: MR-R3-ASI
+    b: MR-OC-NPAC
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 4520}
+
+  - id: ME-055
+    a: MR-R3-EUR
+    b: MR-OC-NATL
+    kind: LAND-OCEAN
+    observed_on: [3P]
+    contact_px: {3P: 10652}
+
+  - id: ME-056
+    a: MR-R5-AFRE
+    b: MR-OC-IND
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 2444}
+
+  - id: ME-057
+    a: MR-R5-AFRE
+    b: MR-OC-SATL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 3567}
+
+  - id: ME-058
+    a: MR-R5-AFRW
+    b: MR-OC-NATL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 4656}
+
+  - id: ME-059
+    a: MR-R5-AFRW
+    b: MR-OC-SATL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 2914}
+
+  - id: ME-060
+    a: MR-R5-ARB
+    b: MR-OC-IND
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 2347}
+
+  - id: ME-061
+    a: MR-R5-ARB
+    b: MR-OC-NATL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 1062}
+
+  - id: ME-062
+    a: MR-R5-ASIN
+    b: MR-OC-NPAC
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 2051}
+
+  - id: ME-063
+    a: MR-R5-ASIS
+    b: MR-OC-IND
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 1982}
+
+  - id: ME-064
+    a: MR-R5-ASIS
+    b: MR-OC-NPAC
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 2517}
+
+  - id: ME-065
+    a: MR-R5-EUR
+    b: MR-OC-NATL
+    kind: LAND-OCEAN
+    observed_on: [5P]
+    contact_px: {5P: 10253}
+
+  - id: ME-066
+    a: MR-SH-ANT
+    b: MR-OC-IND
+    kind: LAND-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 1408, 5P: 1408}
+
+  - id: ME-067
+    a: MR-SH-ANT
+    b: MR-OC-SATL
+    kind: LAND-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 9052, 5P: 9052}
+
+  - id: ME-068
+    a: MR-SH-ANT
+    b: MR-OC-SPAC
+    kind: LAND-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 1047, 5P: 1047}
+
+  - id: ME-069
+    a: MR-OC-ARC
+    b: MR-OC-NATL
+    kind: OCEAN-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 2860, 5P: 2860}
+
+  - id: ME-070
+    a: MR-OC-ARC
+    b: MR-OC-NPAC
+    kind: OCEAN-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 2641, 5P: 2635}
+
+  - id: ME-071
+    a: MR-OC-IND
+    b: MR-OC-NPAC
+    kind: OCEAN-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 2311, 5P: 2311}
+
+  - id: ME-072
+    a: MR-OC-IND
+    b: MR-OC-SATL
+    kind: OCEAN-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 1842, 5P: 1842}
+
+  - id: ME-073
+    a: MR-OC-IND
+    b: MR-OC-SPAC
+    kind: OCEAN-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 1989, 5P: 1977}
+
+  - id: ME-074
+    a: MR-OC-NATL
+    b: MR-OC-NPAC
+    kind: OCEAN-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 1278, 5P: 1278}
+    note: >
+      Два океана сходятся напрямую в разрыве Панамского перешейка: суша там
+      нарисована цепочкой островков, вода проходит между ними. Рулбук это
+      специально отмечает — «Note that the North Atlantic is directly adjacent
+      to the North Pacific!» (SRC-RB-NEW, с. 9). Смежность есть на обеих
+      сторонах поля. Контакт замерен на x 0.207–0.253, y 0.539–0.627 листа.
+
+  - id: ME-075
+    a: MR-OC-NATL
+    b: MR-OC-SATL
+    kind: OCEAN-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 2544, 5P: 2544}
+
+  - id: ME-076
+    a: MR-OC-NPAC
+    b: MR-OC-SPAC
+    kind: OCEAN-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 3414, 5P: 3414}
+
+  - id: ME-077
+    a: MR-OC-SATL
+    b: MR-OC-SPAC
+    kind: OCEAN-OCEAN
+    observed_on: [3P, 5P]
+    contact_px: {3P: 930, 5P: 930}
+    note: >
+      Два океана сходятся южнее Огненной Земли — перекрёсток у Магелланова
+      пролива. Смежность есть на обеих сторонах поля.

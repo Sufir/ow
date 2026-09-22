@@ -1,0 +1,166 @@
+# redesign.yaml — области карты «Нефтяных войн» и их соответствие оригиналу.
+# Источник имён: подписи на карте (Карта/карта.pdf, Карта/карта 5.jpg) и имена слоёв
+# в Карта/карта 5.psd. Слой «Слой 3» в PSD не назван — идентифицирован по подписи.
+
+regions:
+  - id: OW-OC-ARC
+    name_ru: Северный Ледовитый океан
+    psd_layer: Северный ледовитый
+    baseline_ref: MR-OC-ARC
+    match: EXACT
+
+  - id: OW-OC-NPAC
+    name_ru: Север Тихого океана
+    psd_layer: Север Тихого океана
+    baseline_ref: MR-OC-NPAC
+    match: EXACT
+
+  - id: OW-OC-SPAC
+    name_ru: Юг Тихого океана
+    psd_layer: Юг Тихого океана
+    baseline_ref: MR-OC-SPAC
+    match: EXACT
+
+  - id: OW-OC-NATL
+    name_ru: Север Атлантического океана
+    psd_layer: Северная Атлантика
+    baseline_ref: MR-OC-NATL
+    match: EXACT
+
+  - id: OW-OC-SATL
+    name_ru: Юг Атлантического океана
+    psd_layer: Южная Атлантика
+    baseline_ref: MR-OC-SATL
+    match: EXACT
+
+  - id: OW-OC-IND
+    name_ru: Индийский океан
+    psd_layer: Индийский океан
+    baseline_ref: MR-OC-IND
+    match: EXACT
+
+  - id: OW-SH-ANT
+    name_ru: Антарктида
+    psd_layer: Антарктида
+    baseline_ref: MR-SH-ANT
+    match: EXACT
+
+  - id: OW-L3-NAM
+    name_ru: Северная Америка
+    psd_layer: Сев. Америка
+    baseline_ref: MR-L3-NAM
+    match: EXACT
+
+  - id: OW-L3-SAM
+    name_ru: Южная Америка
+    psd_layer: Южная Америка
+    baseline_ref: MR-L3-SAM
+    match: EXACT
+
+  - id: OW-L3-AUS
+    name_ru: Австралия
+    psd_layer: Австралия
+    baseline_ref: MR-L3-AUS
+    match: EXACT
+
+  - id: OW-R3-EUR
+    name_ru: Европа
+    psd_layer: Европа
+    baseline_ref: MR-R3-EUR
+    match: EXACT
+
+  - id: OW-R3-ASI
+    name_ru: Азия
+    psd_layer: Азия
+    baseline_ref: MR-R3-ASI
+    match: EXACT
+
+  - id: OW-R3-AFR
+    name_ru: Африка
+    psd_layer: Африка
+    baseline_ref: MR-R3-AFR
+    match: EXACT
+
+  - id: OW-L5-NAMW
+    name_ru: Запад Северной Америки
+    psd_layer: Сев. Америка - запад
+    baseline_ref: MR-L5-NAMW
+    match: EXACT
+
+  - id: OW-L5-NAME
+    name_ru: Восток Северной Америки
+    psd_layer: Сев. Америка - восток
+    baseline_ref: MR-L5-NAME
+    match: EXACT
+
+  - id: OW-L5-CAM
+    name_ru: Центральная Америка
+    psd_layer: Центральная америка
+    baseline_ref: MR-L5-CAM
+    match: EXACT
+
+  - id: OW-L5-SAMW
+    name_ru: Запад Южной Америки
+    psd_layer: Южная Америка - запад
+    baseline_ref: MR-L5-SAMW
+    match: EXACT
+
+  - id: OW-L5-SAME
+    name_ru: Восток Южной Америки
+    psd_layer: Южная Америка - восток
+    baseline_ref: MR-L5-SAME
+    match: EXACT
+
+  - id: OW-L5-AUS
+    name_ru: Австралия
+    psd_layer: Австралия
+    baseline_ref: MR-L5-AUS
+    match: EXACT
+
+  - id: OW-L5-NZL
+    name_ru: Новая Зеландия
+    psd_layer: Новая зеландия
+    baseline_ref: MR-L5-NZL
+    match: EXACT
+
+  - id: OW-R5-SCA
+    name_ru: Скандинавия
+    psd_layer: Скандинавия
+    baseline_ref: MR-R5-SCA
+    match: EXACT
+
+  - id: OW-R5-EUR
+    name_ru: Европа
+    psd_layer: Европа
+    baseline_ref: MR-R5-EUR
+    match: EXACT
+
+  - id: OW-R5-ASIN
+    name_ru: Северная Азия
+    psd_layer: Северная Азия
+    baseline_ref: MR-R5-ASIN
+    match: EXACT
+
+  - id: OW-R5-ASIS
+    name_ru: Южная Азия
+    psd_layer: Азия
+    baseline_ref: MR-R5-ASIS
+    match: EXACT
+
+  - id: OW-R5-ARB
+    name_ru: Аравийский полуостров
+    psd_layer: Слой 3
+    baseline_ref: MR-R5-ARB
+    match: EXACT
+
+  - id: OW-R5-AFRW
+    name_ru: Западная Африка
+    psd_layer: Африка западная
+    baseline_ref: MR-R5-AFRW
+    match: EXACT
+
+  - id: OW-R5-AFRE
+    name_ru: Восточная Африка
+    psd_layer: Африка восточная
+    baseline_ref: MR-R5-AFRE
+    match: EXACT

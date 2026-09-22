@@ -1,0 +1,301 @@
+# regions.yaml — области оригинальной карты Cthulhu Wars (Earth Map, 3–5 игроков).
+# Схема — SCHEMA.md. Файл правится руками; derived/ пересобирается tools/map.py.
+# Названия — как напечатаны на поле оригинала (EN). Русские имена — в redesign.yaml.
+
+regions:
+  - id: MR-OC-ARC
+    name_en: Arctic Ocean
+    type: OCEAN
+    landmass: null
+    basin: ARCTIC
+    board: BOTH
+    side: BOTH
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-OC-NPAC
+    name_en: North Pacific
+    type: OCEAN
+    landmass: null
+    basin: PACIFIC
+    board: BOTH
+    side: BOTH
+    parent: null
+    printed_in_two_pieces: true
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-OC-SPAC
+    name_en: South Pacific
+    type: OCEAN
+    landmass: null
+    basin: PACIFIC
+    board: LEFT
+    side: BOTH
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-OC-NATL
+    name_en: North Atlantic
+    type: OCEAN
+    landmass: null
+    basin: ATLANTIC
+    board: BOTH
+    side: BOTH
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-OC-SATL
+    name_en: South Atlantic
+    type: OCEAN
+    landmass: null
+    basin: ATLANTIC
+    board: BOTH
+    side: BOTH
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-OC-IND
+    name_en: Indian Ocean
+    type: OCEAN
+    landmass: null
+    basin: INDIAN
+    board: BOTH
+    side: BOTH
+    parent: null
+    printed_in_two_pieces: true
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-SH-ANT
+    name_en: Antarctica
+    type: LAND
+    landmass: ANTARCTICA
+    basin: null
+    board: BOTH
+    side: BOTH
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-L3-NAM
+    name_en: North America
+    type: LAND
+    landmass: NORTH_AMERICA
+    basin: null
+    board: LEFT
+    side: 3P
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-L3-SAM
+    name_en: South America
+    type: LAND
+    landmass: SOUTH_AMERICA
+    basin: null
+    board: LEFT
+    side: 3P
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-L3-AUS
+    name_en: Australia
+    type: LAND
+    landmass: AUSTRALIA
+    basin: null
+    board: LEFT
+    side: 3P
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-R3-EUR
+    name_en: Europe
+    type: LAND
+    landmass: EUROPE
+    basin: null
+    board: RIGHT
+    side: 3P
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-R3-ASI
+    name_en: Asia
+    type: LAND
+    landmass: ASIA
+    basin: null
+    board: RIGHT
+    side: 3P
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-R3-AFR
+    name_en: Africa
+    type: LAND
+    landmass: AFRICA
+    basin: null
+    board: RIGHT
+    side: 3P
+    parent: null
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-L5-NAMW
+    name_en: North America West
+    type: LAND
+    landmass: NORTH_AMERICA
+    basin: null
+    board: LEFT
+    side: 5P
+    parent: MR-L3-NAM
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-L5-NAME
+    name_en: North America East
+    type: LAND
+    landmass: NORTH_AMERICA
+    basin: null
+    board: LEFT
+    side: 5P
+    parent: MR-L3-NAM
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-L5-CAM
+    name_en: Central America
+    type: LAND
+    landmass: NORTH_AMERICA
+    basin: null
+    board: LEFT
+    side: 5P
+    parent: MR-L3-NAM
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-L5-SAMW
+    name_en: South America West
+    type: LAND
+    landmass: SOUTH_AMERICA
+    basin: null
+    board: LEFT
+    side: 5P
+    parent: MR-L3-SAM
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-L5-SAME
+    name_en: South America East
+    type: LAND
+    landmass: SOUTH_AMERICA
+    basin: null
+    board: LEFT
+    side: 5P
+    parent: MR-L3-SAM
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-L5-AUS
+    name_en: Australia
+    type: LAND
+    landmass: AUSTRALIA
+    basin: null
+    board: LEFT
+    side: 5P
+    parent: MR-L3-AUS
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-L5-NZL
+    name_en: New Zealand
+    type: LAND
+    landmass: AUSTRALIA
+    basin: null
+    board: LEFT
+    side: 5P
+    parent: MR-L3-AUS
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-R5-SCA
+    name_en: Scandinavia
+    type: LAND
+    landmass: EUROPE
+    basin: null
+    board: RIGHT
+    side: 5P
+    parent: MR-R3-EUR
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-R5-EUR
+    name_en: Europe
+    type: LAND
+    landmass: EUROPE
+    basin: null
+    board: RIGHT
+    side: 5P
+    parent: MR-R3-EUR
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-R5-ASIN
+    name_en: North Asia
+    type: LAND
+    landmass: ASIA
+    basin: null
+    board: RIGHT
+    side: 5P
+    parent: MR-R3-ASI
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-R5-ASIS
+    name_en: South Asia
+    type: LAND
+    landmass: ASIA
+    basin: null
+    board: RIGHT
+    side: 5P
+    parent: MR-R3-ASI
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-R5-ARB
+    name_en: Arabia
+    type: LAND
+    landmass: ASIA
+    basin: null
+    board: RIGHT
+    side: 5P
+    parent: MR-R3-ASI
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]
+
+  - id: MR-R5-AFRW
+    name_en: West Africa
+    type: LAND
+    landmass: AFRICA
+    basin: null
+    board: RIGHT
+    side: 5P
+    parent: MR-R3-AFR
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD, SRC-WIKI-MAP]
+
+  - id: MR-R5-AFRE
+    name_en: East Africa
+    type: LAND
+    landmass: AFRICA
+    basin: null
+    board: RIGHT
+    side: 5P
+    parent: MR-R3-AFR
+    printed_in_two_pieces: false
+    sources: [SRC-RB-NEW, SRC-BGA-GRAPH, SRC-OW-MAP-PSD]

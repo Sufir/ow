@@ -1,0 +1,852 @@
+{
+ "config": "MC-3P",
+ "players": 3,
+ "left": "3P",
+ "right": "3P",
+ "areas": 13,
+ "ocean_areas": 6,
+ "land_areas": 7,
+ "edges": 33,
+ "connected": true,
+ "diameter": 3,
+ "degree_histogram": {
+  "2": 1,
+  "3": 2,
+  "4": 2,
+  "5": 2,
+  "6": 3,
+  "7": 2,
+  "8": 1
+ },
+ "degrees": {
+  "MR-L3-AUS": 2,
+  "MR-L3-NAM": 4,
+  "MR-L3-SAM": 5,
+  "MR-OC-ARC": 5,
+  "MR-OC-IND": 7,
+  "MR-OC-NATL": 8,
+  "MR-OC-NPAC": 7,
+  "MR-OC-SATL": 6,
+  "MR-OC-SPAC": 6,
+  "MR-R3-AFR": 4,
+  "MR-R3-ASI": 6,
+  "MR-R3-EUR": 3,
+  "MR-SH-ANT": 3
+ },
+ "longest_pairs": [
+  [
+   "MR-L3-AUS",
+   "MR-L3-NAM"
+  ],
+  [
+   "MR-L3-AUS",
+   "MR-OC-ARC"
+  ],
+  [
+   "MR-L3-AUS",
+   "MR-OC-NATL"
+  ],
+  [
+   "MR-L3-AUS",
+   "MR-R3-EUR"
+  ],
+  [
+   "MR-L3-NAM",
+   "MR-SH-ANT"
+  ],
+  [
+   "MR-OC-ARC",
+   "MR-SH-ANT"
+  ],
+  [
+   "MR-OC-SPAC",
+   "MR-R3-EUR"
+  ],
+  [
+   "MR-R3-EUR",
+   "MR-SH-ANT"
+  ]
+ ],
+ "vertices": [
+  {
+   "id": "MR-L3-AUS",
+   "name_en": "Australia",
+   "type": "LAND",
+   "landmass": "AUSTRALIA",
+   "basin": null,
+   "board": "LEFT",
+   "side": "3P",
+   "glyphs": [],
+   "symbol": {
+    "id": "MS-003",
+    "original_name": "Chevron Glyph",
+    "glyph": "E",
+    "symbol": "рудничная вагонетка",
+    "icon_ref": "ICON-034"
+   },
+   "degree": 2,
+   "neighbours": [
+    "MR-OC-IND",
+    "MR-OC-SPAC"
+   ]
+  },
+  {
+   "id": "MR-L3-NAM",
+   "name_en": "North America",
+   "type": "LAND",
+   "landmass": "NORTH_AMERICA",
+   "basin": null,
+   "board": "LEFT",
+   "side": "3P",
+   "glyphs": [
+    {
+     "id": "MG-005",
+     "faction_original": "Sleeper",
+     "faction_redesign": "Североамериканский Альянс",
+     "confidence": "MEDIUM"
+    }
+   ],
+   "symbol": {
+    "id": "MS-001",
+    "original_name": "Dragon Glyph",
+    "glyph": "Q",
+    "symbol": "капля",
+    "icon_ref": "ICON-032"
+   },
+   "degree": 4,
+   "neighbours": [
+    "MR-L3-SAM",
+    "MR-OC-ARC",
+    "MR-OC-NATL",
+    "MR-OC-NPAC"
+   ]
+  },
+  {
+   "id": "MR-L3-SAM",
+   "name_en": "South America",
+   "type": "LAND",
+   "landmass": "SOUTH_AMERICA",
+   "basin": null,
+   "board": "LEFT",
+   "side": "3P",
+   "glyphs": [],
+   "symbol": {
+    "id": "MS-001",
+    "original_name": "Dragon Glyph",
+    "glyph": "Q",
+    "symbol": "капля",
+    "icon_ref": "ICON-032"
+   },
+   "degree": 5,
+   "neighbours": [
+    "MR-L3-NAM",
+    "MR-OC-NATL",
+    "MR-OC-NPAC",
+    "MR-OC-SATL",
+    "MR-OC-SPAC"
+   ]
+  },
+  {
+   "id": "MR-OC-ARC",
+   "name_en": "Arctic Ocean",
+   "type": "OCEAN",
+   "landmass": null,
+   "basin": "ARCTIC",
+   "board": "BOTH",
+   "side": "BOTH",
+   "glyphs": [
+    {
+     "id": "MG-006",
+     "faction_original": "Windwalker",
+     "faction_redesign": "Криогеник Технолоджис (пара только предполагается, MAP-09)",
+     "confidence": "MEDIUM"
+    }
+   ],
+   "symbol": null,
+   "degree": 5,
+   "neighbours": [
+    "MR-L3-NAM",
+    "MR-OC-NATL",
+    "MR-OC-NPAC",
+    "MR-R3-ASI",
+    "MR-R3-EUR"
+   ]
+  },
+  {
+   "id": "MR-OC-IND",
+   "name_en": "Indian Ocean",
+   "type": "OCEAN",
+   "landmass": null,
+   "basin": "INDIAN",
+   "board": "BOTH",
+   "side": "BOTH",
+   "glyphs": [],
+   "symbol": null,
+   "degree": 7,
+   "neighbours": [
+    "MR-L3-AUS",
+    "MR-OC-NPAC",
+    "MR-OC-SATL",
+    "MR-OC-SPAC",
+    "MR-R3-AFR",
+    "MR-R3-ASI",
+    "MR-SH-ANT"
+   ]
+  },
+  {
+   "id": "MR-OC-NATL",
+   "name_en": "North Atlantic",
+   "type": "OCEAN",
+   "landmass": null,
+   "basin": "ATLANTIC",
+   "board": "BOTH",
+   "side": "BOTH",
+   "glyphs": [],
+   "symbol": null,
+   "degree": 8,
+   "neighbours": [
+    "MR-L3-NAM",
+    "MR-L3-SAM",
+    "MR-OC-ARC",
+    "MR-OC-NPAC",
+    "MR-OC-SATL",
+    "MR-R3-AFR",
+    "MR-R3-ASI",
+    "MR-R3-EUR"
+   ]
+  },
+  {
+   "id": "MR-OC-NPAC",
+   "name_en": "North Pacific",
+   "type": "OCEAN",
+   "landmass": null,
+   "basin": "PACIFIC",
+   "board": "BOTH",
+   "side": "BOTH",
+   "glyphs": [],
+   "symbol": null,
+   "degree": 7,
+   "neighbours": [
+    "MR-L3-NAM",
+    "MR-L3-SAM",
+    "MR-OC-ARC",
+    "MR-OC-IND",
+    "MR-OC-NATL",
+    "MR-OC-SPAC",
+    "MR-R3-ASI"
+   ]
+  },
+  {
+   "id": "MR-OC-SATL",
+   "name_en": "South Atlantic",
+   "type": "OCEAN",
+   "landmass": null,
+   "basin": "ATLANTIC",
+   "board": "BOTH",
+   "side": "BOTH",
+   "glyphs": [],
+   "symbol": null,
+   "degree": 6,
+   "neighbours": [
+    "MR-L3-SAM",
+    "MR-OC-IND",
+    "MR-OC-NATL",
+    "MR-OC-SPAC",
+    "MR-R3-AFR",
+    "MR-SH-ANT"
+   ]
+  },
+  {
+   "id": "MR-OC-SPAC",
+   "name_en": "South Pacific",
+   "type": "OCEAN",
+   "landmass": null,
+   "basin": "PACIFIC",
+   "board": "LEFT",
+   "side": "BOTH",
+   "glyphs": [
+    {
+     "id": "MG-001",
+     "faction_original": "Great Cthulhu",
+     "faction_redesign": "Островная Империя",
+     "confidence": "HIGH"
+    }
+   ],
+   "symbol": null,
+   "degree": 6,
+   "neighbours": [
+    "MR-L3-AUS",
+    "MR-L3-SAM",
+    "MR-OC-IND",
+    "MR-OC-NPAC",
+    "MR-OC-SATL",
+    "MR-SH-ANT"
+   ]
+  },
+  {
+   "id": "MR-R3-AFR",
+   "name_en": "Africa",
+   "type": "LAND",
+   "landmass": "AFRICA",
+   "basin": null,
+   "board": "RIGHT",
+   "side": "3P",
+   "glyphs": [
+    {
+     "id": "MG-004",
+     "faction_original": "Black Goat",
+     "faction_redesign": "Клонэйд Ресёрч",
+     "confidence": "HIGH"
+    }
+   ],
+   "symbol": {
+    "id": "MS-003",
+    "original_name": "Chevron Glyph",
+    "glyph": "E",
+    "symbol": "рудничная вагонетка",
+    "icon_ref": "ICON-034"
+   },
+   "degree": 4,
+   "neighbours": [
+    "MR-OC-IND",
+    "MR-OC-NATL",
+    "MR-OC-SATL",
+    "MR-R3-ASI"
+   ]
+  },
+  {
+   "id": "MR-R3-ASI",
+   "name_en": "Asia",
+   "type": "LAND",
+   "landmass": "ASIA",
+   "basin": null,
+   "board": "RIGHT",
+   "side": "3P",
+   "glyphs": [
+    {
+     "id": "MG-003",
+     "faction_original": "Crawling Chaos",
+     "faction_redesign": "Эйркрафт Корпорейшн",
+     "confidence": "HIGH"
+    }
+   ],
+   "symbol": {
+    "id": "MS-002",
+    "original_name": "Thorns Glyph",
+    "glyph": "W",
+    "symbol": "пламя",
+    "icon_ref": "ICON-033"
+   },
+   "degree": 6,
+   "neighbours": [
+    "MR-OC-ARC",
+    "MR-OC-IND",
+    "MR-OC-NATL",
+    "MR-OC-NPAC",
+    "MR-R3-AFR",
+    "MR-R3-EUR"
+   ]
+  },
+  {
+   "id": "MR-R3-EUR",
+   "name_en": "Europe",
+   "type": "LAND",
+   "landmass": "EUROPE",
+   "basin": null,
+   "board": "RIGHT",
+   "side": "3P",
+   "glyphs": [
+    {
+     "id": "MG-002",
+     "faction_original": "Yellow Sign",
+     "faction_redesign": "Глобал Петролеум",
+     "confidence": "HIGH"
+    }
+   ],
+   "symbol": {
+    "id": "MS-002",
+    "original_name": "Thorns Glyph",
+    "glyph": "W",
+    "symbol": "пламя",
+    "icon_ref": "ICON-033"
+   },
+   "degree": 3,
+   "neighbours": [
+    "MR-OC-ARC",
+    "MR-OC-NATL",
+    "MR-R3-ASI"
+   ]
+  },
+  {
+   "id": "MR-SH-ANT",
+   "name_en": "Antarctica",
+   "type": "LAND",
+   "landmass": "ANTARCTICA",
+   "basin": null,
+   "board": "BOTH",
+   "side": "BOTH",
+   "glyphs": [
+    {
+     "id": "MG-007",
+     "faction_original": "Windwalker",
+     "faction_redesign": "Криогеник Технолоджис (пара только предполагается, MAP-09)",
+     "confidence": "MEDIUM"
+    }
+   ],
+   "symbol": null,
+   "degree": 3,
+   "neighbours": [
+    "MR-OC-IND",
+    "MR-OC-SATL",
+    "MR-OC-SPAC"
+   ]
+  }
+ ],
+ "start_glyphs": {
+  "MR-L3-NAM": [
+   {
+    "id": "MG-005",
+    "faction_original": "Sleeper",
+    "faction_redesign": "Североамериканский Альянс",
+    "confidence": "MEDIUM"
+   }
+  ],
+  "MR-OC-ARC": [
+   {
+    "id": "MG-006",
+    "faction_original": "Windwalker",
+    "faction_redesign": "Криогеник Технолоджис (пара только предполагается, MAP-09)",
+    "confidence": "MEDIUM"
+   }
+  ],
+  "MR-OC-SPAC": [
+   {
+    "id": "MG-001",
+    "faction_original": "Great Cthulhu",
+    "faction_redesign": "Островная Империя",
+    "confidence": "HIGH"
+   }
+  ],
+  "MR-R3-AFR": [
+   {
+    "id": "MG-004",
+    "faction_original": "Black Goat",
+    "faction_redesign": "Клонэйд Ресёрч",
+    "confidence": "HIGH"
+   }
+  ],
+  "MR-R3-ASI": [
+   {
+    "id": "MG-003",
+    "faction_original": "Crawling Chaos",
+    "faction_redesign": "Эйркрафт Корпорейшн",
+    "confidence": "HIGH"
+   }
+  ],
+  "MR-R3-EUR": [
+   {
+    "id": "MG-002",
+    "faction_original": "Yellow Sign",
+    "faction_redesign": "Глобал Петролеум",
+    "confidence": "HIGH"
+   }
+  ],
+  "MR-SH-ANT": [
+   {
+    "id": "MG-007",
+    "faction_original": "Windwalker",
+    "faction_redesign": "Криогеник Технолоджис (пара только предполагается, MAP-09)",
+    "confidence": "MEDIUM"
+   }
+  ]
+ },
+ "region_symbols": {
+  "MR-L3-AUS": {
+   "id": "MS-003",
+   "original_name": "Chevron Glyph",
+   "glyph": "E",
+   "symbol": "рудничная вагонетка",
+   "icon_ref": "ICON-034"
+  },
+  "MR-L3-NAM": {
+   "id": "MS-001",
+   "original_name": "Dragon Glyph",
+   "glyph": "Q",
+   "symbol": "капля",
+   "icon_ref": "ICON-032"
+  },
+  "MR-L3-SAM": {
+   "id": "MS-001",
+   "original_name": "Dragon Glyph",
+   "glyph": "Q",
+   "symbol": "капля",
+   "icon_ref": "ICON-032"
+  },
+  "MR-R3-AFR": {
+   "id": "MS-003",
+   "original_name": "Chevron Glyph",
+   "glyph": "E",
+   "symbol": "рудничная вагонетка",
+   "icon_ref": "ICON-034"
+  },
+  "MR-R3-ASI": {
+   "id": "MS-002",
+   "original_name": "Thorns Glyph",
+   "glyph": "W",
+   "symbol": "пламя",
+   "icon_ref": "ICON-033"
+  },
+  "MR-R3-EUR": {
+   "id": "MS-002",
+   "original_name": "Thorns Glyph",
+   "glyph": "W",
+   "symbol": "пламя",
+   "icon_ref": "ICON-033"
+  }
+ },
+ "region_symbol_counts": {
+  "MS-001": 2,
+  "MS-002": 2,
+  "MS-003": 2
+ },
+ "areas_without_symbol": [
+  "MR-OC-ARC",
+  "MR-OC-IND",
+  "MR-OC-NATL",
+  "MR-OC-NPAC",
+  "MR-OC-SATL",
+  "MR-OC-SPAC",
+  "MR-SH-ANT"
+ ],
+ "edge_list": [
+  [
+   "MR-L3-AUS",
+   "MR-OC-IND"
+  ],
+  [
+   "MR-L3-AUS",
+   "MR-OC-SPAC"
+  ],
+  [
+   "MR-L3-NAM",
+   "MR-L3-SAM"
+  ],
+  [
+   "MR-L3-NAM",
+   "MR-OC-NATL"
+  ],
+  [
+   "MR-L3-NAM",
+   "MR-OC-NPAC"
+  ],
+  [
+   "MR-L3-SAM",
+   "MR-OC-SATL"
+  ],
+  [
+   "MR-L3-SAM",
+   "MR-OC-SPAC"
+  ],
+  [
+   "MR-OC-ARC",
+   "MR-L3-NAM"
+  ],
+  [
+   "MR-OC-ARC",
+   "MR-OC-NATL"
+  ],
+  [
+   "MR-OC-ARC",
+   "MR-OC-NPAC"
+  ],
+  [
+   "MR-OC-ARC",
+   "MR-R3-ASI"
+  ],
+  [
+   "MR-OC-ARC",
+   "MR-R3-EUR"
+  ],
+  [
+   "MR-OC-IND",
+   "MR-OC-NPAC"
+  ],
+  [
+   "MR-OC-IND",
+   "MR-OC-SATL"
+  ],
+  [
+   "MR-OC-IND",
+   "MR-OC-SPAC"
+  ],
+  [
+   "MR-OC-NATL",
+   "MR-L3-SAM"
+  ],
+  [
+   "MR-OC-NATL",
+   "MR-OC-NPAC"
+  ],
+  [
+   "MR-OC-NATL",
+   "MR-OC-SATL"
+  ],
+  [
+   "MR-OC-NPAC",
+   "MR-L3-SAM"
+  ],
+  [
+   "MR-OC-NPAC",
+   "MR-OC-SPAC"
+  ],
+  [
+   "MR-OC-SATL",
+   "MR-OC-SPAC"
+  ],
+  [
+   "MR-R3-AFR",
+   "MR-OC-IND"
+  ],
+  [
+   "MR-R3-AFR",
+   "MR-OC-NATL"
+  ],
+  [
+   "MR-R3-AFR",
+   "MR-OC-SATL"
+  ],
+  [
+   "MR-R3-AFR",
+   "MR-R3-ASI"
+  ],
+  [
+   "MR-R3-ASI",
+   "MR-OC-IND"
+  ],
+  [
+   "MR-R3-ASI",
+   "MR-OC-NATL"
+  ],
+  [
+   "MR-R3-ASI",
+   "MR-OC-NPAC"
+  ],
+  [
+   "MR-R3-ASI",
+   "MR-R3-EUR"
+  ],
+  [
+   "MR-R3-EUR",
+   "MR-OC-NATL"
+  ],
+  [
+   "MR-SH-ANT",
+   "MR-OC-IND"
+  ],
+  [
+   "MR-SH-ANT",
+   "MR-OC-SATL"
+  ],
+  [
+   "MR-SH-ANT",
+   "MR-OC-SPAC"
+  ]
+ ],
+ "distance_matrix": {
+  "MR-L3-AUS": {
+   "MR-L3-AUS": 0,
+   "MR-L3-NAM": 3,
+   "MR-L3-SAM": 2,
+   "MR-OC-ARC": 3,
+   "MR-OC-IND": 1,
+   "MR-OC-NATL": 3,
+   "MR-OC-NPAC": 2,
+   "MR-OC-SATL": 2,
+   "MR-OC-SPAC": 1,
+   "MR-R3-AFR": 2,
+   "MR-R3-ASI": 2,
+   "MR-R3-EUR": 3,
+   "MR-SH-ANT": 2
+  },
+  "MR-L3-NAM": {
+   "MR-L3-AUS": 3,
+   "MR-L3-NAM": 0,
+   "MR-L3-SAM": 1,
+   "MR-OC-ARC": 1,
+   "MR-OC-IND": 2,
+   "MR-OC-NATL": 1,
+   "MR-OC-NPAC": 1,
+   "MR-OC-SATL": 2,
+   "MR-OC-SPAC": 2,
+   "MR-R3-AFR": 2,
+   "MR-R3-ASI": 2,
+   "MR-R3-EUR": 2,
+   "MR-SH-ANT": 3
+  },
+  "MR-L3-SAM": {
+   "MR-L3-AUS": 2,
+   "MR-L3-NAM": 1,
+   "MR-L3-SAM": 0,
+   "MR-OC-ARC": 2,
+   "MR-OC-IND": 2,
+   "MR-OC-NATL": 1,
+   "MR-OC-NPAC": 1,
+   "MR-OC-SATL": 1,
+   "MR-OC-SPAC": 1,
+   "MR-R3-AFR": 2,
+   "MR-R3-ASI": 2,
+   "MR-R3-EUR": 2,
+   "MR-SH-ANT": 2
+  },
+  "MR-OC-ARC": {
+   "MR-L3-AUS": 3,
+   "MR-L3-NAM": 1,
+   "MR-L3-SAM": 2,
+   "MR-OC-ARC": 0,
+   "MR-OC-IND": 2,
+   "MR-OC-NATL": 1,
+   "MR-OC-NPAC": 1,
+   "MR-OC-SATL": 2,
+   "MR-OC-SPAC": 2,
+   "MR-R3-AFR": 2,
+   "MR-R3-ASI": 1,
+   "MR-R3-EUR": 1,
+   "MR-SH-ANT": 3
+  },
+  "MR-OC-IND": {
+   "MR-L3-AUS": 1,
+   "MR-L3-NAM": 2,
+   "MR-L3-SAM": 2,
+   "MR-OC-ARC": 2,
+   "MR-OC-IND": 0,
+   "MR-OC-NATL": 2,
+   "MR-OC-NPAC": 1,
+   "MR-OC-SATL": 1,
+   "MR-OC-SPAC": 1,
+   "MR-R3-AFR": 1,
+   "MR-R3-ASI": 1,
+   "MR-R3-EUR": 2,
+   "MR-SH-ANT": 1
+  },
+  "MR-OC-NATL": {
+   "MR-L3-AUS": 3,
+   "MR-L3-NAM": 1,
+   "MR-L3-SAM": 1,
+   "MR-OC-ARC": 1,
+   "MR-OC-IND": 2,
+   "MR-OC-NATL": 0,
+   "MR-OC-NPAC": 1,
+   "MR-OC-SATL": 1,
+   "MR-OC-SPAC": 2,
+   "MR-R3-AFR": 1,
+   "MR-R3-ASI": 1,
+   "MR-R3-EUR": 1,
+   "MR-SH-ANT": 2
+  },
+  "MR-OC-NPAC": {
+   "MR-L3-AUS": 2,
+   "MR-L3-NAM": 1,
+   "MR-L3-SAM": 1,
+   "MR-OC-ARC": 1,
+   "MR-OC-IND": 1,
+   "MR-OC-NATL": 1,
+   "MR-OC-NPAC": 0,
+   "MR-OC-SATL": 2,
+   "MR-OC-SPAC": 1,
+   "MR-R3-AFR": 2,
+   "MR-R3-ASI": 1,
+   "MR-R3-EUR": 2,
+   "MR-SH-ANT": 2
+  },
+  "MR-OC-SATL": {
+   "MR-L3-AUS": 2,
+   "MR-L3-NAM": 2,
+   "MR-L3-SAM": 1,
+   "MR-OC-ARC": 2,
+   "MR-OC-IND": 1,
+   "MR-OC-NATL": 1,
+   "MR-OC-NPAC": 2,
+   "MR-OC-SATL": 0,
+   "MR-OC-SPAC": 1,
+   "MR-R3-AFR": 1,
+   "MR-R3-ASI": 2,
+   "MR-R3-EUR": 2,
+   "MR-SH-ANT": 1
+  },
+  "MR-OC-SPAC": {
+   "MR-L3-AUS": 1,
+   "MR-L3-NAM": 2,
+   "MR-L3-SAM": 1,
+   "MR-OC-ARC": 2,
+   "MR-OC-IND": 1,
+   "MR-OC-NATL": 2,
+   "MR-OC-NPAC": 1,
+   "MR-OC-SATL": 1,
+   "MR-OC-SPAC": 0,
+   "MR-R3-AFR": 2,
+   "MR-R3-ASI": 2,
+   "MR-R3-EUR": 3,
+   "MR-SH-ANT": 1
+  },
+  "MR-R3-AFR": {
+   "MR-L3-AUS": 2,
+   "MR-L3-NAM": 2,
+   "MR-L3-SAM": 2,
+   "MR-OC-ARC": 2,
+   "MR-OC-IND": 1,
+   "MR-OC-NATL": 1,
+   "MR-OC-NPAC": 2,
+   "MR-OC-SATL": 1,
+   "MR-OC-SPAC": 2,
+   "MR-R3-AFR": 0,
+   "MR-R3-ASI": 1,
+   "MR-R3-EUR": 2,
+   "MR-SH-ANT": 2
+  },
+  "MR-R3-ASI": {
+   "MR-L3-AUS": 2,
+   "MR-L3-NAM": 2,
+   "MR-L3-SAM": 2,
+   "MR-OC-ARC": 1,
+   "MR-OC-IND": 1,
+   "MR-OC-NATL": 1,
+   "MR-OC-NPAC": 1,
+   "MR-OC-SATL": 2,
+   "MR-OC-SPAC": 2,
+   "MR-R3-AFR": 1,
+   "MR-R3-ASI": 0,
+   "MR-R3-EUR": 1,
+   "MR-SH-ANT": 2
+  },
+  "MR-R3-EUR": {
+   "MR-L3-AUS": 3,
+   "MR-L3-NAM": 2,
+   "MR-L3-SAM": 2,
+   "MR-OC-ARC": 1,
+   "MR-OC-IND": 2,
+   "MR-OC-NATL": 1,
+   "MR-OC-NPAC": 2,
+   "MR-OC-SATL": 2,
+   "MR-OC-SPAC": 3,
+   "MR-R3-AFR": 2,
+   "MR-R3-ASI": 1,
+   "MR-R3-EUR": 0,
+   "MR-SH-ANT": 3
+  },
+  "MR-SH-ANT": {
+   "MR-L3-AUS": 2,
+   "MR-L3-NAM": 3,
+   "MR-L3-SAM": 2,
+   "MR-OC-ARC": 3,
+   "MR-OC-IND": 1,
+   "MR-OC-NATL": 2,
+   "MR-OC-NPAC": 2,
+   "MR-OC-SATL": 1,
+   "MR-OC-SPAC": 1,
+   "MR-R3-AFR": 2,
+   "MR-R3-ASI": 2,
+   "MR-R3-EUR": 3,
+   "MR-SH-ANT": 0
+  }
+ }
+}

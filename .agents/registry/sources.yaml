@@ -1,0 +1,496 @@
+# Реестр источников. Схема — SCHEMA.md
+# side: ORIGINAL | REDESIGN, status: AVAILABLE | REQUESTED | UNREACHABLE | PARTIAL
+# Обновлено: 2026-09-10 после прогона CODE-01. Отчёт — ../sources/README.md
+
+sources:
+  # --- REDESIGN ---------------------------------------------------------------
+
+  - id: SRC-DRAFT
+    side: REDESIGN
+    priority: null
+    kind: DRAFT
+    title: Нефтяные войны — Правила (черновик)
+    edition: null
+    url: https://docs.google.com/document/d/1Eb49tnE9XtmucsIQImUPP2uk2OEXHUC292uYP6iSz30/edit
+    local_path: sources/redesign/SRC-DRAFT__rules-draft__2026-09-10.md
+    retrieved: 2026-09-10
+    status: AVAILABLE
+    need: null
+    notes: >
+      102 КБ, 829 строк. Единственный эталон текста редизайна (D-001). Черновик,
+      не вычитан. Варианты игры объявлены в строках 61–66: Особые фабрики,
+      Полковники, Уникальные Полковники.
+
+  - id: SRC-APP-FACTORY
+    side: REDESIGN
+    priority: null
+    kind: APPENDIX
+    title: Нефтяные войны (приложения) — Особые фабрики
+    edition: null
+    url: null
+    local_path: sources/redesign/SRC-APP-FACTORY__special-factories__2026-09-10.md
+    retrieved: 2026-09-10
+    status: PARTIAL
+    need: >
+      Текст извлечён, но исходник — таблица в 6 колонок (грани кубика), колонки
+      в тексте расходятся построчно. Цитировать только сверяясь с
+      ../../Drafts/Нефтяные войны (приложения) - Особые фабрики.pdf
+    notes: 2 страницы.
+
+  - id: SRC-APP-MERC
+    side: REDESIGN
+    priority: null
+    kind: APPENDIX
+    title: Нефтяные войны (наемники)
+    edition: null
+    url: null
+    local_path: sources/redesign/SRC-APP-MERC__mercenaries__2026-09-10.md
+    retrieved: 2026-09-10
+    status: AVAILABLE
+    need: null
+    notes: >
+      12 страниц, текстовый слой чистый. Соответствует в оригинале связке
+      Neutral Monsters + Independent Great Old Ones (у наёмного б/р есть карта
+      лояльности = Loyalty Card).
+
+  - id: SRC-APP-COLONEL
+    side: REDESIGN
+    priority: null
+    kind: APPENDIX
+    title: Нефтяные войны (приложения) — Уникальные полковники
+    edition: null
+    url: null
+    local_path: sources/redesign/SRC-APP-COLONEL__unique-colonels__2026-09-10.md
+    retrieved: 2026-09-10
+    status: PARTIAL
+    need: >
+      Текст извлечён, но колонка «Имя» физически отделена от строк способностей:
+      в тексте имена идут отдельным блоком и НЕ выровнены по способностям.
+      Сопоставлять имя ↔ способность только по PDF.
+    notes: >
+      2 страницы. Соответствует в оригинале Unique High Priests (рулбук, с. 132).
+
+  - id: SRC-FACTIONS
+    side: REDESIGN
+    priority: null
+    kind: DRAFT
+    title: Нефтяные войны — Фракции v2.0
+    edition: null
+    url: https://docs.google.com/document/d/13MHcSea0FDaMMRJTa989p846IqYxmg4OA0CpRvNDrek/edit
+    local_path: null
+    retrieved: null
+    status: REQUESTED
+    need: >
+      Нужен только для сопоставления названий фракций и юнитов оригиналу (D-004).
+      Забирать по мере надобности, целиком не требуется.
+    notes: Экспорт обрывается на Североамериканском Альянсе. Выверка составов — вне задачи.
+
+  # --- ORIGINAL: рулбук -------------------------------------------------------
+
+  - id: SRC-RB-NEW
+    side: ORIGINAL
+    priority: 1
+    kind: RULEBOOK
+    title: Cthulhu Wars Rulebook — новая вёрстка (полный компендиум)
+    edition: "омнибус эпохи Final Onslaught: есть Rule Omega и фракция Daemon Sultan"
+    url: https://drive.google.com/file/d/1320UvIs5J2c8kUHPIuItAThc7f1NGwD6/view
+    local_path: sources/original/SRC-RB-NEW__cw-rulebook-new-layout__2026-09-10.pdf
+    retrieved: 2026-09-10
+    status: AVAILABLE
+    need: null
+    notes: >
+      ГЛАВНЫЙ ИСТОЧНИК. 213 страниц, текст 425 КБ рядом в .md. Это не буклет базовой
+      коробки, а полный сборник: ядро правил (с. 1–40), правила на двоих (с. 39),
+      4 базовые фракции (с. 41), 7 дополнительных фракций (с. 61), нейтральные
+      монстры (с. 99), Terrors (с. 103), Independent Great Old Ones (с. 107),
+      смешанные дополнения включая High Priests и Unique High Priests (с. 117),
+      дополнительные карты (с. 141) и ВСТРОЕННЫЙ FAQ (с. 181–196).
+      Структурно это ровно та форма, к которой мы ведём наш рулбук (D-003).
+
+  - id: SRC-RB-OLD
+    side: ORIGINAL
+    priority: 1
+    kind: RULEBOOK
+    title: Cthulhu Wars Rulebook — старая вёрстка
+    edition: null
+    url: https://drive.google.com/file/d/1wCEAJffAPaKYqctvlrKnjseLUr2s2psy/view
+    local_path: sources/original/SRC-RB-OLD__cw-rulebook-old-layout__2026-09-10.pdf
+    retrieved: 2026-09-10
+    status: AVAILABLE
+    need: null
+    notes: >
+      254 страницы, текст 786 КБ. Второй экземпляр того же корпуса в другой вёрстке.
+      Роль — контрольный источник: если формулировка в SRC-RB-NEW двусмысленна,
+      сверяться здесь. При расхождении между вёрстками — SOURCE-CONFLICT issue.
+
+  # --- ORIGINAL: эррата -------------------------------------------------------
+
+  - id: SRC-ERRATA-PACK
+    side: ORIGINAL
+    priority: 2
+    kind: ERRATA
+    title: Cthulhu Wars Ultimate Errata Pack
+    edition: "Final Onslaught, 2023-12"
+    url: https://www.kickstarter.com/projects/petersengames/cthulhu-wars-the-daemon-sultan/posts/2736627
+    local_path: sources/original/SRC-ERRATA-PACK__ultimate-errata-pack__2026-09-10.pdf
+    retrieved: 2026-09-10
+    status: PARTIAL
+    need: >
+      PDF на месте (15 страниц), но это листы карт: в извлечённом тексте колонки
+      накладываются и строки перемешаны. Цитировать только сверяясь с PDF.
+    notes: >
+      Самый свежий официальный источник правок. Включает эрраты Onslaught 2 и 3
+      плюс новые для Final Onslaught. При конфликте с рулбуком побеждает он
+      (charter §5).
+
+  - id: SRC-ERRATA-TABLE
+    side: ORIGINAL
+    priority: 2
+    kind: ERRATA
+    title: Petersen Games — таблица балансных правок Cthulhu Wars
+    edition: "обновлена 2019-11-18"
+    url: https://petersengames.freshdesk.com/support/solutions/articles/48000953456-what-balance-changes-have-been-made-to-cthulhu-wars-and-when-were-they-were-fixed-
+    local_path: sources/original/SRC-ERRATA__balance-changes-table__2026-09-10.md
+    retrieved: 2026-09-10
+    status: AVAILABLE
+    need: null
+    notes: >
+      28 строк правок O2 / O3 / Final Onslaught. Почти только spellbooks, faction
+      cards и loyalty cards; из ядра правил задет только «new turn order» (O2).
+
+  - id: SRC-ERRATA-XLSX
+    side: ORIGINAL
+    priority: 2
+    kind: ERRATA
+    title: Та же таблица балансных правок в Excel
+    edition: null
+    url: https://drive.google.com/file/d/1-E381PGmHI2N6uM7_DMt5o4_gvMTgcuC/view?usp=sharing
+    local_path: sources/original/SRC-ERRATA-XLSX__balance-changes__2026-09-10.xlsx
+    retrieved: 2026-09-10
+    status: AVAILABLE
+    need: null
+    notes: >
+      Сверено: строк сверх HTML-таблицы нет, порядок совпадает. Отличие одно —
+      в Excel есть колонка Item с именем конкретной карты (The Red Sign, Ghroth,
+      Passion и т.д.). При работе с эрратой брать имена отсюда.
+
+  # --- ORIGINAL: FAQ и справочники --------------------------------------------
+
+  - id: SRC-FAQ
+    side: ORIGINAL
+    priority: 2
+    kind: FAQ
+    title: Cthulhu Wars Rules FAQ (Petersen Games)
+    edition: "обновлён 2019-09-25"
+    url: https://petersengames.freshdesk.com/support/solutions/articles/48000952254-cthulhu-wars-rules-faq
+    local_path: sources/original/SRC-FAQ__cw-rules-faq__2026-09-10.md
+    retrieved: 2026-09-10
+    status: AVAILABLE
+    need: null
+    notes: >
+      159 пар Q/A, разбивка по разделам сохранена. Пересекается с FAQ, встроенным
+      в SRC-RB-NEW (с. 181–196) — при работе сверять оба и расхождения заводить
+      как SOURCE-CONFLICT. В одном ответе (про Energy Nexus) в самом источнике
+      нет маркера «A.» — это дефект источника, не извлечения.
+
+  - id: SRC-PRODUCTS
+    side: ORIGINAL
+    priority: 2
+    kind: MODULE
+    title: Cthulhu Wars Product List (Petersen Games)
+    edition: "обновлён 2020-03-04"
+    url: https://petersengames.freshdesk.com/support/solutions/articles/48001060995-cthulhu-wars-product-list
+    local_path: sources/original/SRC-PRODUCTS__cw-product-list__2026-09-10.md
+    retrieved: 2026-09-10
+    status: AVAILABLE
+    need: null
+    notes: 191 строка. Издания Core Game O1/O2/O3/O4, дополнения, локализации.
+
+  - id: SRC-NECRO
+    side: ORIGINAL
+    priority: 3
+    kind: DB
+    title: Necronomicon — фанатское веб-приложение по Cthulhu Wars
+    edition: v2.0
+    url: https://necronomicon.app/data-files/rulebook.json
+    local_path: sources/original/SRC-NECRO__rulebook__2026-09-10.json
+    retrieved: 2026-09-10
+    status: AVAILABLE
+    need: null
+    notes: >
+      185 КБ JSON, ключи rules / variants / faq. Удобен для машинной сверки:
+      структурированные правила без вёрстки PDF. Cross-check, не первоисточник.
+
+  - id: SRC-WIKI
+    side: ORIGINAL
+    priority: 4
+    kind: WIKI
+    title: Cthulhu Wars Strategy Wiki (Fandom)
+    edition: null
+    url: https://cthulhuwars.fandom.com/wiki/Main_Page
+    local_path: sources/original/SRC-WIKI__faction-units-and-components__2026-09-11.md
+    retrieved: 2026-09-11
+    status: PARTIAL
+    need: >
+      Выкачаны только страницы фракций (викитекст через api.php) — состав отрядов,
+      стоимости, боевые значения, жетоны. Остальное по-прежнему точечно, по ходу P2.
+    notes: >
+      Данные лежат в шаблонах: {{unit|имя|фракция|количество|стоимость|бой|spellbook}}
+      и {{comp|имя|фракция|количество}}. Это делает страницы машиночитаемыми и даёт
+      источник, независимый от necronomicon. По всем 11 фракциям компендиума оба
+      источника сошлись без расхождений. Вики фанатская — приоритет 4, третьим
+      подтверждением служит рулбук (количества фигурок).
+
+  - id: SRC-NECRO-FAC
+    side: ORIGINAL
+    priority: 3
+    kind: DB
+    title: Necronomicon — данные по фракциям (factions.json)
+    edition: v2.0
+    url: https://necronomicon.app/data-files/factions.json
+    local_path: null
+    retrieved: 2026-09-11
+    status: PARTIAL
+    need: >
+      Локальной копии нет: web_fetch обрывает файл (~101 КБ). Данные считаны
+      в браузере и сведены в выписку SRC-WIKI__faction-units-and-components.
+      Если понадобится целиком — качать через браузер.
+    notes: >
+      Поля по каждой фракции: setup, uniqueAbility, units (tot / type / cost /
+      combat / notes), requirements (условия получения каждого spellbook),
+      spellbooks, tips, faq. Ошибка источника: spellbook Yellow Sign назван
+      «He Who Must Not Be Named», правильно — «He Who is Not to be Named».
+
+  - id: SRC-PLANCARD
+    side: ORIGINAL
+    priority: 3                        # понижен с 1 решением Alek 2026-09-11 (FAC-017)
+    kind: RULEBOOK
+    title: "Cthulhu Wars — русское издание: планшеты и карты заклинаний четырёх фракций ядра"
+    edition: "PDF создан 2015-10-14, изменён 2017-08-22 — издание O1/O2"
+    url: null
+    local_path: Plan_Card.pdf          # в корне проекта, не в .agents/
+    retrieved: 2026-09-11
+    status: AVAILABLE
+    need: null
+    notes: >
+      8 страниц A4, растровые (Photoshop), текстового слоя нет — читается только
+      рендером в картинку. Чётные страницы — планшеты фракций (2 Ползучий Хаос,
+      4 Чёрные Козлы, 6 Великий Ктулху, 8 Жёлтый Знак), нечётные — по шесть карт
+      заклинаний к каждой. Это официальный компонент, поэтому приоритет 1.
+      ОГОВОРКА, решение Alek 2026-09-11: издание устарело, ЧИСЛА ИЗ НЕГО
+      НЕ ПРИНИМАЮТСЯ. По трём фракциям они совпадают с актуальными, по Ползучему
+      Хаосу расходятся на два боевых значения (FAC-017) — и в таком конфликте
+      выигрывает актуальное издание. Источник остаётся в работе ради другого:
+      официальных русских названий юнитов и Великих Древних (внесены
+      в factions.yaml как `name_ru`) и русской терминологии планшета.
+
+  - id: SRC-WIKI-FC
+    side: ORIGINAL
+    priority: 2
+    kind: WIKI
+    title: Изображения faction cards на Cthulhu Wars Strategy Wiki
+    edition: null
+    url: https://cthulhuwars.fandom.com/wiki/Category:Factions
+    local_path: null
+    retrieved: 2026-09-11
+    status: PARTIAL
+    need: >
+      Карты The Invasion на вики нет — единственная из двенадцати фракций без
+      изображения планшета (FAC-012).
+    notes: >
+      Файлы вида «File:Faction Card - <Фракция>.png», по одному на фракцию,
+      разрешение 609×342 — мелко, но таблица юнитов читается при увеличении
+      втрое. Это фотографии официального компонента, отсюда приоритет 2,
+      а не 4 как у текста вики. Прочитаны и сверены все десять: Ancients,
+      Bubastis, Daemon Sultan, Opener, Sleeper, Tcho-Tcho, Windwalker,
+      Crawling Chaos, Black Goat, Yellow Sign, Great Cthulhu.
+      Есть и тринадцатая карта, The Bad Movie Dimension, — шуточная фракция,
+      в реестр не берётся (FAC-018).
+
+  - id: SRC-WIKI-MAP
+    side: ORIGINAL
+    priority: 2
+    kind: WIKI
+    title: Карта Земли Cthulhu Wars с глифами фракций (изображения на вики)
+    edition: "раскладка на 5 игроков, половины 5P-L и 5P-R"
+    url: https://cthulhuwars.fandom.com/wiki/Earth_Map
+    local_path: null
+    retrieved: 2026-09-11
+    status: AVAILABLE
+    need: null
+    notes: >
+      ИСПРАВЛЕНО 2026-09-17: раньше здесь стояло «единственный источник, по
+      которому вообще определяются стартовые регионы». Это неверно — растр
+      обеих сторон оригинального поля лежит в папке проекта, SRC-CW-MAP-SCAN,
+      и он подробнее. Вики остаётся удобной сверкой, а не единственным словом.
+      Faction card региона не называет, в ней написано «in the Area marked with
+      this Glyph». Прочитаны глифы: Great Cthulhu — South Pacific (рядом подпись
+      «R'lyeh»), Yellow Sign — Europe, Crawling Chaos — South Asia, Black Goat —
+      West Africa, Sleeper — North America West, Windwalker — Arctic Ocean
+      (подпись «Lomar») и Antarctica. Глифы опознавались сличением с картинками
+      «File:Sigil - <Фракция>.png» с той же вики.
+      Заодно подтверждено, что наша карта повторяет деление оригинала один
+      в один: те же области под теми же именами. ИСПРАВЛЕНО 2026-09-18
+      (`MF-008`): раньше здесь стояло «те же 17 зон». Число неверно — 17 бывает
+      только в смешанной раскладке на четверых; на стороне «3» областей 13,
+      на стороне «5» — 21. Числа названы в рулбуке, SRC-RB-NEW, с. 7.
+
+  - id: SRC-PG-ROSTER
+    side: ORIGINAL
+    priority: 2
+    kind: MODULE
+    title: "Petersen Games — Every Cthulhu Wars Faction: The Complete Alphabetical Roster"
+    edition: "запись в блоге от 2026-07-17"
+    url: https://petersengames.com/blogs/news/cthulhu-wars-complete-faction-list-alphabetical
+    local_path: null
+    retrieved: 2026-09-11
+    status: AVAILABLE
+    need: null
+    notes: >
+      Официальный список фракций издателя: одиннадцать — The Ancients, Black Goat,
+      Bubastis, Crawling Chaos, Daemon Sultan, Great Cthulhu, Opener of the Way,
+      Sleeper, Tcho-Tchos, Windwalker, Yellow Sign. The Invasion в список не входит,
+      хотя продаётся в витрине той же страницы как CW-F9. См. FAC-012.
+
+  - id: SRC-EOG
+    side: ORIGINAL
+    priority: 5
+    kind: MODULE
+    title: Esoteric Order of Gamers — сводка правил Cthulhu Wars v2
+    edition: v2
+    url: https://www.orderofgamers.com/downloads/CthulhuWarsBW_v2.pdf
+    local_path: null
+    retrieved: null
+    status: REQUESTED
+    need: >
+      Брать при необходимости. Полезен только как быстрая проверка «не потеряно ли
+      правило»; после появления SRC-RB-NEW ценность невысока.
+    notes: Community reference.
+
+  - id: SRC-BGG
+    side: ORIGINAL
+    priority: 5
+    kind: FORUM
+    title: BoardGameGeek — форум и файлы Cthulhu Wars
+    edition: null
+    url: https://boardgamegeek.com/boardgame/139976/cthulhu-wars
+    local_path: null
+    retrieved: null
+    status: REQUESTED
+    need: Точечно по ходу P2, если официальные источники чего-то не закрывают.
+    notes: Не переопределяет официальные источники молча.
+
+  - id: SRC-FSC
+    side: ORIGINAL
+    priority: 5
+    kind: MODULE
+    title: Cthulhu Wars Faction Selection Cards
+    edition: null
+    url: null
+    local_path: ../../Cthulhu_Wars_Faction_Selection_Cards.zip
+    retrieved: null
+    status: AVAILABLE
+    need: null
+    notes: Единственный материал оригинала, лежавший в папке проекта до начала работы.
+
+  - id: SRC-BGA-GRAPH
+    side: ORIGINAL
+    priority: 3
+    kind: FORUM
+    title: "Board Game Analysis — Graph analysis of the Cthulhu Wars maps"
+    edition: "статья от 2017-11-17, правки от 2017-11-20"
+    url: https://www.boardgameanalysis.com/graph-analysis-of-the-cthulhu-wars-maps/
+    local_path: null
+    retrieved: 2026-09-16
+    status: AVAILABLE
+    need: null
+    notes: >
+      Фанатский разбор, но для карты это самый ценный источник после рулбука:
+      автор сфотографировал ЧЕТЫРЕ реальные раскладки настоящих планшетов
+      (3P, 4P 3-5, 4P 5-3, 5P) и опубликовал посчитанные по ним величины —
+      гистограммы степеней (для 3P пофамильно, все 13 областей), диаметры и
+      полные списки самых длинных пар для всех четырёх раскладок, долю воды
+      (6 областей в любой раскладке) и разницу между двумя раскладками на
+      четверых («у 3-5 на одно ребро больше»). Именно против этих чисел
+      сверяется наш граф в registry/map/configs.yaml → published.
+      Величины независимы от нашего арта: считались по оригиналу.
+
+  - id: SRC-CW-MAP-SCAN
+    side: ORIGINAL
+    priority: 1
+    kind: MODULE
+    title: "Cthulhu Wars Earth Map — растр обеих сторон оригинального поля"
+    edition: "сторона «3 игрока» и сторона «5 игроков», обе целиком"
+    url: null
+    local_path: ../../Карта/карта.jpg, ../../Карта/карта_5.jpg
+    retrieved: 2026-09-17
+    status: AVAILABLE
+    need: null
+    notes: >
+      САМ КОМПОНЕНТ, а не разбор компонента, поэтому приоритет 1: по вопросам
+      «что напечатано на поле» это высшая инстанция, выше рулбука и вики.
+      `карта.jpg` — 11024×5523, CMYK, в углах напечатано «EARTH / 3 PLAYER»
+      и «Cthulhu Wars — A Sandy Petersen Game, © 2014». `карта_5.jpg` —
+      10630×5287, CMYK, то же с подписью «5 PLAYER». Обе стороны собраны
+      в один лист, шов между планшетами на растре не виден.
+      ЧИТАЕТСЯ НА НИХ ВСЁ: названия областей, семь стартовых глифов фракций,
+      подписи-ориентиры, три Spellbook Glyph Yellow Sign (наши символы
+      регионов — `region_symbols` в map/glyphs.yaml) и декоративная графика.
+      Разрешение хватает, чтобы отличить символ от рисунка: символ залит
+      оранжевым с чёрным контуром, рисунок — тонкая штриховая графика тоном
+      материка.
+      ПОЧЕМУ ЭТОТ ИСТОЧНИК ПОЯВИЛСЯ ПОЗДНО. До 2026-09-17 стартовые глифы
+      снимались по SRC-WIKI-MAP и фотографиям SRC-BGA-GRAPH, а в заметке
+      SRC-WIKI-MAP записано «единственный источник, по которому вообще
+      определяются стартовые регионы». Это было неверно: оба растра лежали
+      в папке `Карта/` с самого начала и по ним видно больше, чем по вики.
+      Заметка SRC-WIKI-MAP исправлена, MEDIUM-глифы по этому растру можно
+      довести до HIGH — `MF-004`.
+      НЕ ПУТАТЬ с соседними файлами той же папки: `карта 5.jpg`
+      и `карта-тест2.jpg` — наши схемы (русские подписи, плоская заливка),
+      `шаблон-карта.jpg` — силуэты материков чёрным по белому,
+      `карта-тест.jpg` — пустой белый лист.
+
+  - id: SRC-WIKI-YS
+    side: ORIGINAL
+    priority: 2
+    kind: WIKI
+    title: "Cthulhu Wars Strategy Wiki — Yellow Sign"
+    edition: null
+    url: https://cthulhuwars.fandom.com/wiki/Yellow_Sign
+    local_path: null
+    retrieved: 2026-09-17
+    status: AVAILABLE
+    need: null
+    notes: >
+      Взят ради одного факта: собственные имена трёх Spellbook Glyph.
+      В требованиях к заклинаниям Yellow Sign они названы прямо —
+      **Dragon Glyph**, **Chevron Glyph**, **Thorns Glyph**, по одному
+      требованию «Successfully Desecrate an Area marked with this Glyph»
+      на каждый. Имя Chevron независимо подтверждается рулбуком:
+      SRC-RB-OLD с. 4485 говорит про «the Yellow Sign's Chevron glyph»
+      в правилах карты Yuggoth.
+      Размещение символов по областям вики НЕ даёт — оно снято
+      с SRC-CW-MAP-SCAN.
+
+  - id: SRC-OW-MAP-PSD
+    side: REDESIGN
+    priority: null
+    kind: DRAFT
+    title: "Нефтяные войны — исходник карты (PSD со слоями по областям)"
+    edition: null
+    url: null
+    local_path: ../../Карта/карта 5.psd
+    retrieved: 2026-09-16
+    status: AVAILABLE
+    need: null
+    notes: >
+      805 МБ, 11031×5528. Ключевой технический источник топологии: в файле
+      лежат готовые маски областей по одному слою на область — группа
+      «Океаны База» (6 океанов), «Материки База» (7 материков стороны «3»)
+      и группа «3 игрока», в которой на самом деле лежат 15 областей стороны
+      «5». Слои внутри группы наложены по z-порядку, поэтому маски снимаются
+      с вычитанием вышележащих. Слой Аравийского полуострова не назван
+      («Слой 3») — MAP-002.
+      Рядом лежат Карта/карта.pdf (сторона «3», 934×468 мм) и
+      Карта/карта 5.jpg (сторона «5») — растровые версии того же.

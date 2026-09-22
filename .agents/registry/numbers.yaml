@@ -1,0 +1,2149 @@
+# NUMERICAL CONSISTENCY TABLE — сплошная сверка всех чисел.
+# Схема — SCHEMA.md. Основное наполнение — в P5.
+# Проверяются все числа без исключения. Визуальной вычитке не доверяем.
+#
+# Записи ниже появились попутно в P3, когда термины сверялись по тексту
+# черновика. Это не полный numerical audit, а его начало.
+
+numbers:
+
+  - id: NUM-001
+    subject: Стартовый запас ресурса
+    area: SETUP
+    original: 8
+    redesign: 0
+    unit: нефть
+    match: FAIL
+    baseline_ref: BL-SETUP-003
+    redesign_ref: null
+    issue: DEV-002
+
+  - id: NUM-002
+    subject: Разметка трека запаса ресурса
+    area: POWER
+    original: 20
+    redesign: 25
+    unit: делений
+    match: FAIL
+    baseline_ref: BL-POWER-003
+    redesign_ref: null
+    issue: DEV-005
+
+  - id: NUM-003
+    subject: Число этапов фазы Doom
+    area: DOOM
+    original: 2
+    redesign: 4
+    unit: этапа
+    match: FAIL
+    baseline_ref: BL-DOOM-001
+    redesign_ref: null
+    issue: DEV-003
+
+  - id: NUM-004
+    subject: Стартовое положение маркера на треке Ритуала
+    area: SETUP
+    original: 5
+    redesign: 5
+    unit: null
+    match: PASS
+    baseline_ref: BL-SETUP-002
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-005
+    subject: Стартовое число пехотинцев в стартовом регионе
+    area: SETUP
+    original: 6
+    redesign: 6
+    unit: шт
+    match: PASS
+    baseline_ref: BL-SETUP-004
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-006
+    subject: Стартовое число контролируемых фабрик
+    area: SETUP
+    original: 1
+    redesign: 1
+    unit: шт
+    match: PASS
+    baseline_ref: BL-SETUP-004
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-007
+    subject: Доход за пехотинца в фазу сбора
+    area: POWER
+    original: 1
+    redesign: 1
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-POWER-001
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-008
+    subject: Доход за контролируемую фабрику в фазу сбора
+    area: POWER
+    original: 2
+    redesign: 2
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-POWER-001
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-009
+    subject: Доход за незанятую фабрику, каждому игроку
+    area: POWER
+    original: 1
+    redesign: 1
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-POWER-001
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-010
+    subject: Доход за возвращённого захваченного пехотинца
+    area: POWER
+    original: 1
+    redesign: 1
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-POWER-001
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-011
+    subject: Порог правила минимального запаса
+    area: POWER
+    original: "1/2 от наибольшего, округление вверх"
+    redesign: "1/2 от наибольшего, округление вверх"
+    unit: null
+    match: PASS
+    baseline_ref: BL-POWER-004
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-012
+    subject: Стоимость вербовки пехотинца
+    area: ACTION
+    original: 1
+    redesign: 1
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-ACTION-009
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-013
+    subject: Стоимость строительства фабрики
+    area: ACTION
+    original: 3
+    redesign: 3
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-ACTION-012
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-014
+    subject: Стоимость перемещения за отряд
+    area: ACTION
+    original: 1
+    redesign: 1
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-ACTION-013
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-015
+    subject: Стоимость битвы
+    area: ACTION
+    original: 1
+    redesign: 1
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-ACTION-014
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-016
+    subject: Стоимость захвата пехотинца
+    area: ACTION
+    original: 1
+    redesign: 1
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-ACTION-015
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-017
+    subject: Диапазон стоимости Ритуала
+    area: RITUAL
+    original: "5–10"
+    redesign: "5–10"
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-RITUAL-001
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-018
+    subject: Порог победы по треку влияния
+    area: VICTORY
+    original: 30
+    redesign: 30
+    unit: очков
+    match: PASS
+    baseline_ref: BL-VICTORY-001
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-019
+    subject: Предел числа пехотинцев в резерве
+    area: MAP
+    original: 6
+    redesign: 6
+    unit: шт
+    match: PASS
+    baseline_ref: BL-MAP-002
+    redesign_ref: null
+    issue: null
+
+  - id: NUM-020
+    subject: Стоимость производства боевой машины
+    area: ACTION
+    original: "переменная, по планшету фракции"
+    redesign: "1–3"
+    unit: нефть
+    match: UNKNOWN
+    baseline_ref: BL-ACTION-010
+    redesign_ref: null
+    issue: DEV-006
+
+  # ==========================================================================
+  # Сплошной numerical audit, CODE-03. Записи NUM-021 и далее.
+  # Сторона оригинала — только registry/baseline.yaml (+ D-010 там, где в
+  # baseline записи нет; это оговорено в note). Сторона редизайна — источники
+  # в sources/redesign/, поле loc указывает файл и строку.
+  # Поля loc и note схемой SCHEMA.md не предусмотрены и добавлены по ТЗ
+  # CODE-03 для проверки работы редактором.
+  #
+  # Сокращения в loc (все файлы — в sources/redesign/):
+  #   SRC-DRAFT             = SRC-DRAFT__rules-draft__2026-09-10.md
+  #   SRC-APP-FACTORY       = SRC-APP-FACTORY__special-factories__2026-09-10.md
+  #   SRC-APP-MERC          = SRC-APP-MERC__mercenaries__2026-09-10.md
+  #   SRC-APP-COLONEL       = SRC-APP-COLONEL__unique-colonels__2026-09-10.md
+  #   SRC-APP-COLONEL-TABLE = SRC-APP-COLONEL__unique-colonels-table__2026-09-10.md
+  # ==========================================================================
+
+  # --- SETUP: сборка поля -----------------------------------------------------
+
+  - id: NUM-021
+    subject: Число регионов на карте при игре втроём
+    area: SETUP
+    original: 13
+    redesign: null
+    unit: регионов
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-001
+    redesign_ref: RD-SETUP-001
+    issue: DEV-008
+    loc: "SRC-DRAFT:125-126"
+    note: >
+      Черновик описывает только, какими сторонами кладутся половины поля,
+      и числа регионов не называет ни для одной раскладки. Решением D-024
+      числа 13 / 17 / 21 постановлено печатать в разделе подготовки, но
+      в текст они ещё не внесены — сверять пока не с чем.
+
+  - id: NUM-022
+    subject: Число регионов на карте при игре вчетвером
+    area: SETUP
+    original: 17
+    redesign: null
+    unit: регионов
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-001
+    redesign_ref: RD-SETUP-001
+    issue: DEV-008
+    loc: "SRC-DRAFT:127-128"
+    note: Число в черновике не названо. См. NUM-021 и D-024.
+
+  - id: NUM-023
+    subject: Число регионов на карте при игре впятером
+    area: SETUP
+    original: 21
+    redesign: null
+    unit: регионов
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-001
+    redesign_ref: RD-SETUP-001
+    issue: DEV-008
+    loc: "SRC-DRAFT:129-130"
+    note: Число в черновике не названо. См. NUM-021 и D-024.
+
+  - id: NUM-024
+    subject: Число регионов в раскладках на 6, 7 и 8 игроков
+    area: SETUP
+    original: null
+    redesign: null
+    unit: регионов
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-001
+    redesign_ref: RD-SETUP-001
+    issue: DEV-008
+    loc: "SRC-DRAFT:131-136"
+    note: >
+      Числа отсутствуют на обеих сторонах: оригинал их не называет
+      (BL-SETUP-001, interactions), черновик повторяет правило дословно и тоже
+      не называет. Зафиксировано в D-024 как осознанное отсутствие, а не потеря.
+
+  - id: NUM-025
+    subject: Половин игрового поля в комплекте
+    area: SETUP
+    original: 2
+    redesign: "2/4"
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-001
+    redesign_ref: RD-SETUP-001
+    issue: null
+    loc: "SRC-DRAFT:43"
+    note: >
+      Оригинал говорит о карте из двух двусторонних половин, отдельного
+      числа компонентов не даёт. Запись черновика «2/4 шт» означает две
+      половины базового поля плюс две половины поля на 6–8 игроков.
+      Сопоставить как одно и то же число нельзя.
+
+  # --- SETUP: треки, маркеры, кубики, памятки ---------------------------------
+
+  - id: NUM-026
+    subject: Стартовое положение маркера фракции на треке влияния
+    area: SETUP
+    original: 0
+    redesign: 0
+    unit: null
+    match: PASS
+    baseline_ref: BL-SETUP-003
+    redesign_ref: RD-SETUP-003
+    issue: null
+    loc: "SRC-DRAFT:163"
+    note: null
+
+  - id: NUM-027
+    subject: Разметка трека влияния
+    area: VICTORY
+    original: "0–30"
+    redesign: "0–30"
+    unit: null
+    match: PASS
+    baseline_ref: BL-VICTORY-001
+    redesign_ref: RD-VICTORY-001
+    issue: null
+    loc: "SRC-DRAFT:155, 315"
+    note: >
+      Нижняя граница — из стартового положения маркера (BL-SETUP-003 ↔
+      SRC-DRAFT:155/163), верхняя — из порога окончания игры
+      (BL-VICTORY-001 ↔ SRC-DRAFT:315). Сам порог отдельно проверен в NUM-018.
+
+  - id: NUM-028
+    subject: Разметка трека Судного дня
+    area: RITUAL
+    original: "5–10"
+    redesign: "5–10"
+    unit: null
+    match: PASS
+    baseline_ref: BL-RITUAL-001
+    redesign_ref: RD-RITUAL-001
+    issue: null
+    loc: "SRC-DRAFT:146, 279, 291"
+    note: >
+      Разметка трека как компонента; стоимость оказания давления по тем же
+      делениям отдельно проверена в NUM-017, стартовая позиция — в NUM-004.
+      Верхняя граница подтверждается строкой 291: с отметки «10» маркер уходит
+      в «Ядерную катастрофу».
+
+  - id: NUM-029
+    subject: Треков Судного дня в комплекте
+    area: SETUP
+    original: 1
+    redesign: 2
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-002
+    redesign_ref: RD-SETUP-002
+    issue: null
+    loc: "SRC-DRAFT:44"
+    note: >
+      Оригинал обходится одним двусторонним треком: шкалы на 3–5 и на 6–8
+      игроков напечатаны на разных сторонах (BL-SETUP-002, interactions).
+      Черновик заводит два трека. Это разное исполнение компонента, а не
+      разные правила, — сопоставить числа как одно правило нельзя.
+
+  - id: NUM-030
+    subject: Маркеров Судного дня в комплекте
+    area: SETUP
+    original: null
+    redesign: 1
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-002
+    redesign_ref: RD-SETUP-002
+    issue: null
+    loc: "SRC-DRAFT:45"
+    note: Оригинал числа маркеров трека Ритуала не называет.
+
+  - id: NUM-031
+    subject: Треков влияния в комплекте
+    area: SETUP
+    original: null
+    redesign: 1
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-002
+    redesign_ref: RD-SETUP-002
+    issue: null
+    loc: "SRC-DRAFT:46"
+    note: >
+      Оригинал числа треков Doom не называет. Черновик пишет «1 шт», хотя
+      строка 143 требует накладывать трек влияния поверх трека Судного дня
+      по числу игроков, — то есть длина трека переменная.
+
+  - id: NUM-032
+    subject: Шестигранных кубиков в комплекте
+    area: SETUP
+    original: null
+    redesign: 20
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-002
+    redesign_ref: RD-SETUP-002
+    issue: null
+    loc: "SRC-DRAFT:47"
+    note: >
+      Оригинал числа кубиков не называет — «кубики кладутся в пределах
+      досягаемости всех игроков» (BL-SETUP-002). Число 20 в черновике
+      относится только к кубикам и с разметкой трека запаса (NUM-002)
+      не связано — проверено сплошным поиском при закрытии DEV-005.
+
+  - id: NUM-033
+    subject: Жетон первого игрока
+    area: SETUP
+    original: 1
+    redesign: 1
+    unit: шт
+    match: PASS
+    baseline_ref: BL-ROUND-003
+    redesign_ref: RD-ROUND-004
+    issue: null
+    loc: "SRC-DRAFT:48"
+    note: >
+      Оригинал оперирует единственным двусторонним жетоном, задающим
+      направление хода (BL-ROUND-003); черновик — тоже, и в перечне
+      компонентов ставит «1 шт».
+
+  - id: NUM-034
+    subject: Памяток в комплекте
+    area: SETUP
+    original: null
+    redesign: 5
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-002
+    redesign_ref: RD-SETUP-002
+    issue: null
+    loc: "SRC-DRAFT:41"
+    note: >
+      Оригинал говорит «каждому игроку выдаётся памятка», числа не называет.
+      Пять памяток при целевом составе 3–5 игроков (D-021) на 6–8 игроков
+      не хватает — но это вопрос комплектации, а не расхождение с оригиналом.
+
+  - id: NUM-035
+    subject: Маркеров нефти в комплекте
+    area: SETUP
+    original: null
+    redesign: 10
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-002
+    redesign_ref: RD-SETUP-002
+    issue: null
+    loc: "SRC-DRAFT:42"
+    note: Оригинал числа маркеров Power не называет.
+
+  - id: NUM-036
+    subject: Планшеты и маркеры фракций
+    area: SETUP
+    original: null
+    redesign: "по 1 на фракцию"
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-FACTION-001
+    redesign_ref: RD-SETUP-003
+    issue: null
+    loc: "SRC-DRAFT:54, 57"
+    note: >
+      Оригинал состав планшета описывает (BL-FACTION-001), но числа планшетов
+      и маркеров не задаёт. Сверять не с чем.
+
+  # --- SETUP / DOOM: колода скрытого влияния ----------------------------------
+
+  - id: NUM-037
+    subject: Карт скрытого влияния в колоде
+    area: DOOM
+    original: 36
+    redesign: 36
+    unit: шт
+    match: PASS
+    baseline_ref: BL-DOOM-003
+    redesign_ref: RD-DOOM-003
+    issue: null
+    loc: "SRC-DRAFT:50"
+    note: >
+      В оригинале это 36 жетонов Elder Sign в мешочке (BL-SETUP-002,
+      BL-DOOM-003), у нас — колода карт. Носитель другой, число то же.
+
+  - id: NUM-038
+    subject: Карт скрытого влияния номиналом 1
+    area: DOOM
+    original: 18
+    redesign: 18
+    unit: шт
+    match: PASS
+    baseline_ref: BL-DOOM-003
+    redesign_ref: RD-DOOM-003
+    issue: null
+    loc: "SRC-DRAFT:51"
+    note: null
+
+  - id: NUM-039
+    subject: Карт скрытого влияния номиналом 2
+    area: DOOM
+    original: 12
+    redesign: 12
+    unit: шт
+    match: PASS
+    baseline_ref: BL-DOOM-003
+    redesign_ref: RD-DOOM-003
+    issue: null
+    loc: "SRC-DRAFT:52"
+    note: null
+
+  - id: NUM-040
+    subject: Карт скрытого влияния номиналом 3
+    area: DOOM
+    original: 6
+    redesign: 6
+    unit: шт
+    match: PASS
+    baseline_ref: BL-DOOM-003
+    redesign_ref: RD-DOOM-003
+    issue: null
+    loc: "SRC-DRAFT:53"
+    note: null
+
+  - id: NUM-041
+    subject: Номиналы карт скрытого влияния
+    area: DOOM
+    original: "1, 2, 3"
+    redesign: "1, 2, 3"
+    unit: очков влияния
+    match: PASS
+    baseline_ref: BL-DOOM-003
+    redesign_ref: RD-DOOM-003
+    issue: null
+    loc: "SRC-DRAFT:302"
+    note: null
+
+  - id: NUM-042
+    subject: Компенсация при исчерпании колоды скрытого влияния
+    area: DOOM
+    original: 1
+    redesign: 1
+    unit: очко влияния
+    match: PASS
+    baseline_ref: BL-DOOM-003
+    redesign_ref: RD-DOOM-003
+    issue: null
+    loc: "SRC-DRAFT:311"
+    note: null
+
+  # --- ROUND ------------------------------------------------------------------
+
+  - id: NUM-043
+    subject: Число фаз в раунде
+    area: ROUND
+    original: 4
+    redesign: 4
+    unit: фазы
+    match: PASS
+    baseline_ref: BL-ROUND-001
+    redesign_ref: RD-ROUND-001
+    issue: null
+    loc: "SRC-DRAFT:187-193"
+    note: >
+      Совпадает именно число фаз. Их порядок в черновике сдвинут; DEV-002
+      признал перестановку эквивалентной и закрыт.
+
+  - id: NUM-044
+    subject: Типичное число циклов фаз за партию
+    area: ROUND
+    original: "4–6"
+    redesign: null
+    unit: циклов
+    match: UNKNOWN
+    baseline_ref: BL-ROUND-001
+    redesign_ref: RD-ROUND-001
+    issue: null
+    loc: "SRC-DRAFT:196"
+    note: >
+      Оригинал даёт ориентир длительности партии, черновик его не переносит.
+      На игровое поведение не влияет, но число на стороне оригинала есть,
+      а на нашей нет.
+
+  - id: NUM-045
+    subject: Раундов, в которых фаза влияния пропускается
+    area: ROUND
+    original: null
+    redesign: 1
+    unit: раунд
+    match: UNKNOWN
+    baseline_ref: BL-ROUND-001
+    redesign_ref: RD-ROUND-001
+    issue: DEV-002
+    loc: "SRC-DRAFT:196, 199"
+    note: >
+      В оригинале ни одна фаза не пропускается: там партия начинается с фазы
+      действий, и первая фаза Doom наступает своим чередом. Пропуск первой
+      фазы влияния — следствие другого порядка фаз; DEV-002 признал
+      конструкцию эквивалентной и закрыт. Прямой пары чисел нет.
+
+  # --- POWER ------------------------------------------------------------------
+
+  - id: NUM-046
+    subject: Число этапов фазы получения ресурсов
+    area: POWER
+    original: null
+    redesign: 2
+    unit: этапа
+    match: UNKNOWN
+    baseline_ref: BL-POWER-001
+    redesign_ref: RD-POWER-001
+    issue: null
+    loc: "SRC-DRAFT:206-208"
+    note: >
+      Оригинал фазу сбора Power на пронумерованные этапы не делит: правило
+      минимального Power записано отдельным правилом (BL-POWER-004), а не
+      вторым этапом фазы. Разбиение подачи, а не механики.
+
+  - id: NUM-047
+    subject: Пример к правилу минимального запаса
+    area: POWER
+    original: "4 при лидере 13 → 7"
+    redesign: "4 при лидере 13 → 7"
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-POWER-004
+    redesign_ref: RD-POWER-004
+    issue: null
+    loc: "SRC-DRAFT:236"
+    note: Пример перенесён из оригинала с теми же числами.
+
+  - id: NUM-048
+    subject: Пример «заворачивания» трека запаса при превышении разметки
+    area: POWER
+    original: "23 → отметка 3"
+    redesign: "28 → отметка 3"
+    unit: нефть
+    match: FAIL
+    baseline_ref: BL-POWER-003
+    redesign_ref: RD-POWER-003
+    issue: DEV-005
+    loc: "SRC-DRAFT:227-228"
+    note: >
+      То же расхождение, что и NUM-002, во втором месте: пример пересчитан
+      под трек длиной 25 вместо 20 (23−20=3 против 28−25=3), и по той же
+      причине маркер, дойдя до нуля, возвращается на 25, а не на 20.
+      Арифметически черновик последователен. Новым конфликтом это не является:
+      DEV-005 решён (D-020, принято как есть) и закрыт, FAIL остаётся как
+      фиксация факта.
+
+  # --- DOOM / RITUAL: фаза влияния --------------------------------------------
+
+  - id: NUM-049
+    subject: Продвижение по треку влияния за контролируемую фабрику
+    area: DOOM
+    original: 1
+    redesign: 1
+    unit: пункт
+    match: PASS
+    baseline_ref: BL-DOOM-002
+    redesign_ref: RD-DOOM-002
+    issue: null
+    loc: "SRC-DRAFT:262, 265"
+    note: >
+      Совпадает и пример: две фабрики — два пункта (оригинал: двое врат —
+      два деления).
+
+  - id: NUM-050
+    subject: Оказаний давления на игрока за фазу
+    area: RITUAL
+    original: 1
+    redesign: 1
+    unit: раз
+    match: PASS
+    baseline_ref: BL-RITUAL-001
+    redesign_ref: RD-RITUAL-001
+    issue: null
+    loc: "SRC-DRAFT:273"
+    note: null
+
+  - id: NUM-051
+    subject: Продвижение маркера Судного дня за оказание давления
+    area: RITUAL
+    original: 1
+    redesign: 1
+    unit: пункт
+    match: PASS
+    baseline_ref: BL-RITUAL-001
+    redesign_ref: RD-RITUAL-001
+    issue: null
+    loc: "SRC-DRAFT:282"
+    note: null
+
+  - id: NUM-052
+    subject: Влияние за контролируемую фабрику при оказании давления
+    area: RITUAL
+    original: 1
+    redesign: 1
+    unit: пункт
+    match: PASS
+    baseline_ref: BL-RITUAL-001
+    redesign_ref: RD-RITUAL-001
+    issue: null
+    loc: "SRC-DRAFT:285"
+    note: >
+      Это второе за фазу продвижение за те же фабрики — в оригинале так же
+      (BL-RITUAL-001, interactions).
+
+  - id: NUM-053
+    subject: Карт скрытого влияния за своего боевого робота при давлении
+    area: RITUAL
+    original: 1
+    redesign: 1
+    unit: карта
+    match: PASS
+    baseline_ref: BL-RITUAL-001
+    redesign_ref: RD-RITUAL-001
+    issue: null
+    loc: "SRC-DRAFT:288, 296"
+    note: >
+      В оригинале — один Elder Sign за каждого фракционного Great Old One
+      в игре. Ограничение «но не за наёмных» отдельно проверено в NUM-110.
+
+  - id: NUM-054
+    subject: Положение маркера, с которого наступает Ядерная катастрофа
+    area: RITUAL
+    original: 10
+    redesign: 10
+    unit: null
+    match: PASS
+    baseline_ref: BL-RITUAL-002
+    redesign_ref: RD-RITUAL-002
+    issue: null
+    loc: "SRC-DRAFT:291, 534"
+    note: null
+
+  - id: NUM-055
+    subject: Стоимость оказания давления после Ядерной катастрофы
+    area: RITUAL
+    original: 10
+    redesign: 10
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-RITUAL-002
+    redesign_ref: RD-RITUAL-002
+    issue: null
+    loc: "SRC-DRAFT:291, 534"
+    note: null
+
+  # --- ACTION: структура фазы действий ----------------------------------------
+
+  - id: NUM-056
+    subject: Основных действий за ход
+    area: ACTION
+    original: 1
+    redesign: 1
+    unit: действие
+    match: PASS
+    baseline_ref: BL-ACTION-002
+    redesign_ref: RD-ACTION-011
+    issue: null
+    loc: "SRC-DRAFT:415"
+    note: null
+
+  - id: NUM-057
+    subject: Число категорий действий
+    area: ACTION
+    original: 4
+    redesign: null
+    unit: категории
+    match: UNKNOWN
+    baseline_ref: BL-ACTION-004
+    redesign_ref: RD-ACTION-010
+    issue: null
+    loc: "SRC-DRAFT:324, 411, 414, 508"
+    note: >
+      Черновик числа не называет, но фактически описывает те же четыре
+      категории отдельными разделами: общие (324), уникальные (411),
+      свободные (414) и задачи, требующие выполнения действия (508).
+      Число на стороне редизайна отсутствует как явное утверждение.
+
+  - id: NUM-058
+    subject: Число общих действий
+    area: ACTION
+    original: 7
+    redesign: null
+    unit: действий
+    match: UNKNOWN
+    baseline_ref: BL-ACTION-005
+    redesign_ref: RD-ACTION-001
+    issue: null
+    loc: "SRC-DRAFT:325-410"
+    note: >
+      Черновик числа не называет и перечисляет под заголовком «Общие
+      действия» восемь пунктов: те же семь, что в оригинале, плюс «Пас»
+      (строка 409). В оригинале «Пас» отдельным общим действием не является —
+      это разрешение добровольно опустить запас до нуля внутри
+      BL-ACTION-002. Считать ли это расхождением числа, здесь не решается.
+
+  - id: NUM-059
+    subject: Число свободных (неограниченных) действий
+    area: ACTION
+    original: 2
+    redesign: 2
+    unit: действия
+    match: PASS
+    baseline_ref: BL-ACTION-018
+    redesign_ref: RD-ACTION-011
+    issue: null
+    loc: "SRC-DRAFT:416, 427"
+    note: >
+      В обоих источниках их ровно два: захват/оставление фабрики и
+      неограниченная битва.
+
+  - id: NUM-060
+    subject: Число шагов хода в фазе действий
+    area: ACTION
+    original: 3
+    redesign: null
+    unit: шага
+    match: UNKNOWN
+    baseline_ref: BL-ACTION-017
+    redesign_ref: RD-ACTION-011
+    issue: null
+    loc: "SRC-DRAFT:415"
+    note: >
+      Оригинал раскладывает ход на три шага (свободные действия — основное
+      действие — свободные действия). Черновик говорит «до и после основного
+      действия», то есть содержательно то же, но числом это не оформлено.
+
+  # --- ACTION: лимиты и стоимости отдельных действий --------------------------
+
+  - id: NUM-061
+    subject: Пехотинцев за одно действие вербовки
+    area: ACTION
+    original: 1
+    redesign: 1
+    unit: шт
+    match: PASS
+    baseline_ref: BL-ACTION-009
+    redesign_ref: RD-ACTION-001
+    issue: DEV-009
+    loc: "SRC-DRAFT:329"
+    note: >
+      Число совпадает. Расхождение в DEV-009 касается формулировки лимита
+      («за ход» вместо «за это действие»), а не самого числа.
+
+  - id: NUM-062
+    subject: Боевых машин за одно действие производства
+    area: ACTION
+    original: 1
+    redesign: 1
+    unit: шт
+    match: PASS
+    baseline_ref: BL-ACTION-010
+    redesign_ref: RD-ACTION-002
+    issue: DEV-009
+    loc: "SRC-DRAFT:337"
+    note: Как и в NUM-061, вопрос DEV-009 — к формулировке лимита, не к числу.
+
+  - id: NUM-063
+    subject: Боевых роботов за одно действие
+    area: ACTION
+    original: 1
+    redesign: null
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-ACTION-011
+    redesign_ref: RD-ACTION-003
+    issue: MISS-004
+    loc: "SRC-DRAFT:338-345"
+    note: >
+      Лимит в черновике отсутствует целиком — это и есть MISS-004.
+      Числа на стороне редизайна нет.
+
+  - id: NUM-064
+    subject: Минимальное число шагов создания боевого робота
+    area: ACTION
+    original: 2
+    redesign: null
+    unit: шага
+    match: UNKNOWN
+    baseline_ref: BL-ACTION-011
+    redesign_ref: RD-ACTION-003
+    issue: MISS-004
+    loc: "SRC-DRAFT:338-345"
+    note: >
+      Оригинал требует, чтобы последовательность пробуждения состояла
+      не менее чем из двух шагов. Черновик говорит только про «условия
+      получения», числа не даёт.
+
+  - id: NUM-065
+    subject: Военных фабрик за одно действие строительства
+    area: ACTION
+    original: 1
+    redesign: 1
+    unit: шт
+    match: PASS
+    baseline_ref: BL-ACTION-012
+    redesign_ref: RD-ACTION-004
+    issue: DEV-009
+    loc: "SRC-DRAFT:350"
+    note: null
+
+  - id: NUM-066
+    subject: Захватов пехотинца за одно действие
+    area: ACTION
+    original: 1
+    redesign: null
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-ACTION-015
+    redesign_ref: RD-ACTION-007
+    issue: MISS-006
+    loc: "SRC-DRAFT:389-408"
+    note: Лимит в черновике потерян целиком — MISS-006. Числа нет.
+
+  - id: NUM-067
+    subject: Перемещений одного отряда за ход
+    area: MOVE
+    original: 1
+    redesign: 1
+    unit: раз
+    match: PASS
+    baseline_ref: BL-ACTION-013
+    redesign_ref: RD-ACTION-005
+    issue: null
+    loc: "SRC-DRAFT:367"
+    note: >
+      Единственное место, где «за ход» в черновике соответствует оригиналу
+      и правке по DEV-009 не подлежит (D-025).
+
+  - id: NUM-068
+    subject: Стоимость свободного действия с военной фабрикой
+    area: GATE
+    original: 0
+    redesign: 0
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-ACTION-018
+    redesign_ref: RD-ACTION-012
+    issue: null
+    loc: "SRC-DRAFT:417"
+    note: >
+      В черновике напечатано «Стоимость: 0 Силы» — остаток перевода,
+      правится молча по D-021. Само число верное.
+
+  - id: NUM-069
+    subject: Стоимость неограниченной битвы
+    area: ACTION
+    original: 1
+    redesign: 1
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-ACTION-019
+    redesign_ref: RD-ACTION-013
+    issue: null
+    loc: "SRC-DRAFT:428"
+    note: null
+
+  - id: NUM-070
+    subject: Технологий, открывающих неограниченную битву
+    area: ACTION
+    original: 6
+    redesign: 6
+    unit: шт
+    match: PASS
+    baseline_ref: BL-ACTION-019
+    redesign_ref: RD-ACTION-013
+    issue: null
+    loc: "SRC-DRAFT:429, 499"
+    note: null
+
+  - id: NUM-071
+    subject: Стоимость по умолчанию и лимит действия по задаче фракции
+    area: TECH
+    original: "стоимость 0; один раз за партию"
+    redesign: null
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-ACTION-007
+    redesign_ref: RD-ACTION-015
+    issue: MISS-002
+    loc: "SRC-DRAFT:508-509"
+    note: >
+      Оба числа в черновике потеряны — это MISS-002. На стороне редизайна
+      сверять нечего.
+
+  - id: NUM-072
+    subject: Пример задачи «В качестве действия, потратьте 4 нефти»
+    area: TECH
+    original: null
+    redesign: 4
+    unit: нефть
+    match: UNKNOWN
+    baseline_ref: BL-ACTION-007
+    redesign_ref: RD-ACTION-015
+    issue: null
+    loc: "SRC-DRAFT:509"
+    note: >
+      Иллюстративное число, у оригинала пары нет. Конкретные значения задач
+      живут на планшетах фракций и картах целей — вне задачи по D-004.
+
+  # --- COMBAT -----------------------------------------------------------------
+
+  - id: NUM-073
+    subject: Число фракций, участвующих в одной битве
+    area: COMBAT
+    original: 2
+    redesign: 2
+    unit: фракции
+    match: PASS
+    baseline_ref: BL-COMBAT-001
+    redesign_ref: RD-COMBAT-001
+    issue: null
+    loc: "SRC-DRAFT:385, 450"
+    note: null
+
+  - id: NUM-074
+    subject: Битв в одном регионе за ход игрока
+    area: COMBAT
+    original: 1
+    redesign: 1
+    unit: битва
+    match: PASS
+    baseline_ref: BL-COMBAT-001
+    redesign_ref: RD-ACTION-013
+    issue: null
+    loc: "SRC-DRAFT:438, 755"
+    note: null
+
+  - id: NUM-075
+    subject: Минимальная боевая сила для объявления битвы
+    area: COMBAT
+    original: 1
+    redesign: 1
+    unit: кубик
+    match: PASS
+    baseline_ref: BL-COMBAT-015
+    redesign_ref: RD-ACTION-006
+    issue: null
+    loc: "SRC-DRAFT:382, 749"
+    note: null
+
+  - id: NUM-076
+    subject: Число шагов битвы
+    area: COMBAT
+    original: 4
+    redesign: 3
+    unit: шага
+    match: FAIL
+    baseline_ref: BL-COMBAT-002
+    redesign_ref: RD-COMBAT-002
+    issue: DEV-010
+    loc: "SRC-DRAFT:451-457"
+    note: >
+      Оригинал: способности до боя, броски, назначение результатов, применение
+      результатов. Черновик слил назначение и применение в одну финальную фазу,
+      получив три. Расхождение уже заведено как DEV-010 и решено D-026:
+      трёхфазная подача сохраняется, но внутри финальной фазы явно выделяются
+      два такта. Здесь фиксируется только сам факт различия чисел.
+
+  - id: NUM-077
+    subject: Значение кубика, дающее результат «смерть»
+    area: COMBAT
+    original: 6
+    redesign: 6
+    unit: null
+    match: PASS
+    baseline_ref: BL-COMBAT-006
+    redesign_ref: RD-COMBAT-005
+    issue: null
+    loc: "SRC-DRAFT:481"
+    note: null
+
+  - id: NUM-078
+    subject: Значения кубика, дающие результат «подавление»
+    area: COMBAT
+    original: "4–5"
+    redesign: "4–5"
+    unit: null
+    match: PASS
+    baseline_ref: BL-COMBAT-006
+    redesign_ref: RD-COMBAT-005
+    issue: TISS-001
+    loc: "SRC-DRAFT:481"
+    note: >
+      Числа совпадают. В черновике результат назван «отступление»; по D-019
+      он становится «подавлением» — это терминологическая, а не числовая правка.
+
+  - id: NUM-079
+    subject: Значения кубика, не дающие результата
+    area: COMBAT
+    original: "1–3"
+    redesign: "1–3"
+    unit: null
+    match: PASS
+    baseline_ref: BL-COMBAT-006
+    redesign_ref: RD-COMBAT-005
+    issue: null
+    loc: "SRC-DRAFT:481"
+    note: null
+
+  - id: NUM-080
+    subject: Отрядов, уничтожаемых при невозможности отступить
+    area: COMBAT
+    original: 1
+    redesign: 1
+    unit: отряд
+    match: PASS
+    baseline_ref: BL-COMBAT-013
+    redesign_ref: RD-COMBAT-007
+    issue: null
+    loc: "SRC-DRAFT:488"
+    note: null
+
+  - id: NUM-081
+    subject: Диапазон боевой силы пехотинцев и боевых машин
+    area: COMBAT
+    original: null
+    redesign: "0–3"
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-COMBAT-005
+    redesign_ref: RD-COMBAT-004
+    issue: DEV-006
+    loc: "SRC-DRAFT:472"
+    note: >
+      Оригинал диапазона не задаёт: боевое значение указано на планшете
+      фракции, у части отрядов равно 0, у части вычисляется. Наш диапазон
+      «0–3» — обобщение, живущее на компонентах, вне задачи по D-004.
+      Родственно DEV-006 (стоимость боевой машины 1–3, NUM-020): и там,
+      и тут диапазон надо проверять по планшетам всех восьми фракций.
+
+  # --- GATE -------------------------------------------------------------------
+
+  - id: NUM-082
+    subject: Военных фабрик в одном регионе
+    area: GATE
+    original: 1
+    redesign: 1
+    unit: шт
+    match: PASS
+    baseline_ref: BL-GATE-002
+    redesign_ref: RD-ACTION-004
+    issue: null
+    loc: "SRC-DRAFT:356"
+    note: null
+
+  - id: NUM-083
+    subject: Пехотинцев на одной военной фабрике
+    area: GATE
+    original: 1
+    redesign: null
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-GATE-001
+    redesign_ref: RD-ACTION-012
+    issue: null
+    loc: "SRC-DRAFT:353, 420"
+    note: >
+      Оригинал говорит прямо: более одного Cultist на вратах не бывает, потому
+      конкретные врата всегда контролируются одной фракцией. Черновик пишет
+      «поместите пехотинца поверх фабрики» и числа не называет — правило
+      выводится, но не сформулировано.
+
+  # --- TECH / VICTORY ---------------------------------------------------------
+
+  - id: NUM-084
+    subject: Технологий на фракцию
+    area: TECH
+    original: 6
+    redesign: 6
+    unit: шт
+    match: PASS
+    baseline_ref: BL-TECH-005
+    redesign_ref: RD-TECH-001
+    issue: null
+    loc: "SRC-DRAFT:56, 160, 499"
+    note: null
+
+  - id: NUM-085
+    subject: Задач (слотов требований) на фракцию
+    area: TECH
+    original: 6
+    redesign: 6
+    unit: шт
+    match: PASS
+    baseline_ref: BL-TECH-005
+    redesign_ref: RD-TECH-001
+    issue: null
+    loc: "SRC-DRAFT:55, 106"
+    note: >
+      В оригинале число слотов требований равно числу книг заклинаний: шесть
+      книг закрывают шесть требований планшета (BL-TECH-005, BL-FACTION-001).
+
+  - id: NUM-086
+    subject: Технологий, требуемых для победы
+    area: VICTORY
+    original: 6
+    redesign: 6
+    unit: шт
+    match: PASS
+    baseline_ref: BL-VICTORY-004
+    redesign_ref: RD-VICTORY-002
+    issue: null
+    loc: "SRC-DRAFT:537, 542"
+    note: null
+
+  - id: NUM-087
+    subject: Число источников особых способностей
+    area: TECH
+    original: 3
+    redesign: null
+    unit: источника
+    match: UNKNOWN
+    baseline_ref: BL-TECH-001
+    redesign_ref: RD-TECH-001
+    issue: null
+    loc: "SRC-DRAFT:492-520"
+    note: >
+      Оригинал перечисляет три источника: уникальная способность фракции,
+      книги заклинаний, способность Great Old One. Черновик числа не называет
+      и раздел «Технологии» строит иначе.
+
+  - id: NUM-088
+    subject: Число типов особых способностей
+    area: TECH
+    original: 5
+    redesign: null
+    unit: типов
+    match: UNKNOWN
+    baseline_ref: BL-TECH-002
+    redesign_ref: RD-TECH-003
+    issue: null
+    loc: "SRC-DRAFT:790, 814"
+    note: >
+      Оригинал делит способности на пять категорий по моменту срабатывания.
+      Черновик числа не называет; глоссарий (строка 790) перечисляет только
+      тактические, боевые и финальные, постоянные описаны отдельно (814).
+
+  - id: NUM-089
+    subject: Число условий окончания игры
+    area: VICTORY
+    original: 2
+    redesign: 2
+    unit: условия
+    match: PASS
+    baseline_ref: BL-VICTORY-001
+    redesign_ref: RD-VICTORY-001
+    issue: null
+    loc: "SRC-DRAFT:315, 530-534"
+    note: null
+
+  - id: NUM-090
+    subject: Число игроков, делящих победу при ничьей
+    area: VICTORY
+    original: 2
+    redesign: 2
+    unit: игрока
+    match: PASS
+    baseline_ref: BL-VICTORY-004
+    redesign_ref: RD-VICTORY-004
+    issue: null
+    loc: "SRC-DRAFT:547"
+    note: >
+      Оригинал говорит «двое или более», черновик — «два лидирующих игрока».
+      Разница в формулировке, а не в числе; на механику не влияет.
+
+  # --- UNIT -------------------------------------------------------------------
+
+  - id: NUM-091
+    subject: Число базовых категорий отрядов фракции
+    area: UNIT
+    original: 3
+    redesign: 3
+    unit: категории
+    match: PASS
+    baseline_ref: BL-UNIT-001
+    redesign_ref: RD-UNIT-007
+    issue: MISS-015
+    loc: "SRC-DRAFT:781"
+    note: >
+      Оригинал: Cultists, Monsters, Great Old Ones. Черновик: пехотинец,
+      боевая машина, боевой робот. Число то же. Отдельная проблема
+      (MISS-015): в это определение не попал мех, из-за чего правила,
+      написанные через «отряд», формально его не покрывают.
+
+  - id: NUM-092
+    subject: Число типов отрядов с учётом дополнений
+    area: UNIT
+    original: 5
+    redesign: 4
+    unit: типов
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-005
+    redesign_ref: RD-UNIT-003
+    issue: null
+    loc: "SRC-DRAFT:610, 781"
+    note: >
+      Оригинал: Cultist, Monster, Great Old One, Terror, Elder God (D-011).
+      У нас: пехотинец, боевая машина, боевой робот, мех, — то есть четыре,
+      потому что Elder God решением D-011 признан свойством отдельного
+      боевого робота, а не самостоятельной категорией. Числа различаются
+      осознанно и по решению, поэтому это не FAIL; сопоставить как одно
+      и то же правило нельзя.
+
+  - id: NUM-093
+    subject: Полковников на фракцию
+    area: UNIT
+    original: 1
+    redesign: 1
+    unit: шт
+    match: PASS
+    baseline_ref: BL-UNIT-008
+    redesign_ref: RD-UNIT-001
+    issue: null
+    loc: "SRC-DRAFT:65, 586"
+    note: >
+      В оригинале исключение — фракция Tcho-Tcho с тремя High Priests;
+      у нас такой фракции нет, исключение не переносится.
+
+  - id: NUM-094
+    subject: Нефть за полковника в фазу получения ресурсов
+    area: POWER
+    original: 1
+    redesign: 1
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-UNIT-008
+    redesign_ref: RD-UNIT-001
+    issue: DEV-013
+    loc: "SRC-DRAFT:586"
+    note: >
+      Число совпадает: полковник — пехотинец и приносит 1 нефть, как любой
+      пехотинец. DEV-013 касается слова «дополнительную», из-за которого
+      строка читается как «1 сверх обычной», то есть 2. Само число в правиле
+      верное, дефект словесный.
+
+  - id: NUM-095
+    subject: Стоимость вербовки полковника
+    area: UNIT
+    original: 3
+    redesign: "разнобой: 3 / 2 / как у пехотинца"
+    unit: нефть
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-008
+    redesign_ref: RD-UNIT-001
+    issue: null
+    loc: "SRC-APP-COLONEL-TABLE:35-44; SRC-APP-COLONEL:49; SRC-DRAFT:586"
+    note: >
+      Три источника редизайна дают три разных ответа. Черновик (586):
+      полковник вербуется «по тем же правилам, что и обычный пехотинец», —
+      то есть за 1 нефть. Приложение, подпись под таблицей (49): повторная
+      вербовка стоит 2 нефти. Сама таблица (35–44): «Стоим.» = 3 у восьми
+      полковников и «2/2» у двоих. Оригинал даёт 3. Числа живут на карте
+      лояльности, то есть на компоненте (D-004); выбор между тремя вариантами
+      здесь не делается.
+
+  - id: NUM-096
+    subject: Боевая сила полковника
+    area: UNIT
+    original: 0
+    redesign: 0
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-008
+    redesign_ref: RD-UNIT-002
+    issue: null
+    loc: "SRC-APP-COLONEL-TABLE:35-44"
+    note: >
+      Числа совпадают: 0 в оригинале и 0 у всех десяти уникальных полковников
+      в приложении. Отмечено UNKNOWN, а не PASS, потому что значение живёт
+      на карте лояльности — вне задачи по D-004; подтверждается при выверке
+      компонентов.
+
+  - id: NUM-097
+    subject: Нефть за жертву полковника («Боевое донесение»)
+    area: UNIT
+    original: 2
+    redesign: null
+    unit: нефть
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-012
+    redesign_ref: RD-UNIT-001
+    issue: MISS-001
+    loc: "SRC-DRAFT:597, 600"
+    note: >
+      В оригинале Unspeakable Oath даёт 2 Power. У нас способность называется
+      «Боевое донесение» и напечатана на планшете каждой фракции, в правилах
+      числа нет (MISS-001 закрыт по D-021: свойства юнитов в рулбуке
+      не расписываются). Сверка с планшетами — TERM-061, вне этой задачи.
+
+  - id: NUM-098
+    subject: Боевых машин на фракцию
+    area: UNIT
+    original: null
+    redesign: "8–12"
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-003
+    redesign_ref: RD-SETUP-005
+    issue: null
+    loc: "SRC-DRAFT:70"
+    note: >
+      Оригинал числа Monsters на фракцию не задаёт — оно у каждой фракции своё
+      и напечатано на планшете. Наш диапазон «8–12» проверяется по планшетам,
+      вне задачи по D-004.
+
+  - id: NUM-099
+    subject: Боевых роботов на фракцию
+    area: UNIT
+    original: null
+    redesign: 1
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-004
+    redesign_ref: RD-ACTION-003
+    issue: null
+    loc: "SRC-DRAFT:70, 98, 787"
+    note: >
+      Оригинал числа Great Old Ones на фракцию не задаёт. Черновик пишет
+      «большинство фракций могут иметь только одного», то есть допускает
+      исключения (у Глобал Петролеум их два — «Пастух» и «Чёрный вихрь»).
+      Проверяется по планшетам, вне задачи по D-004.
+
+  - id: NUM-100
+    subject: Боевых кубиков у отряда со свойством Elder God
+    area: UNIT
+    original: 0
+    redesign: null
+    unit: кубиков
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-006
+    redesign_ref: null
+    issue: null
+    loc: "SRC-DRAFT:527, 787"
+    note: >
+      Оригинал: Elder God никогда не бросает боевых кубиков, вместо этого даёт
+      фиксированный эффект. По D-011 у нас это свойство отдельного боевого
+      робота (Moon Systems), а не категория отрядов, и в правилах оно
+      не описано. Сверять со стороны редизайна нечего.
+
+  # --- MAP --------------------------------------------------------------------
+
+  - id: NUM-101
+    subject: Число океанических регионов на карте Земли
+    area: MAP
+    original: 6
+    redesign: null
+    unit: регионов
+    match: UNKNOWN
+    baseline_ref: BL-MAP-001
+    redesign_ref: null
+    issue: null
+    loc: "SRC-DRAFT:111-114"
+    note: >
+      Оригинал перечисляет шесть океанических регионов поимённо. Черновик
+      различие суши и океана вводит, но регионы не перечисляет и числа
+      не называет. Проверяется по самой карте, а не по правилам.
+
+  # --- MODULE: особые фабрики -------------------------------------------------
+
+  - id: NUM-102
+    subject: Особых фабрик цветных (без белой)
+    area: MODULE
+    original: 9
+    redesign: 9
+    unit: шт
+    match: PASS
+    baseline_ref: BL-MODULE-009
+    redesign_ref: RD-MODULE-001
+    issue: null
+    loc: "SRC-APP-FACTORY:8-47"
+    note: >
+      Оригинал: 9 цветных врат. Наша таблица особых фабрик даёт ровно девять
+      цветных строк — синий, зелёный, оранжевый, фиолетовый, красный, розовый,
+      голубой, жёлтый, бирюзовый, — и десятой строкой белую (GLOW).
+      Число из контрольного списка D-010 подтверждено.
+
+  - id: NUM-103
+    subject: Белая (светящаяся) особая фабрика
+    area: MODULE
+    original: 1
+    redesign: 1
+    unit: шт
+    match: PASS
+    baseline_ref: BL-MODULE-009
+    redesign_ref: RD-MODULE-001
+    issue: null
+    loc: "SRC-APP-FACTORY:50"
+    note: >
+      Совпадает и ограничение: создать её можно, только контролируя другую
+      особую фабрику (SRC-DRAFT:580 ↔ BL-MODULE-009).
+
+  - id: NUM-104
+    subject: Особых военных фабрик всего
+    area: MODULE
+    original: 10
+    redesign: 10
+    unit: шт
+    match: PASS
+    baseline_ref: BL-MODULE-009
+    redesign_ref: RD-MODULE-001
+    issue: null
+    loc: "SRC-DRAFT:62"
+    note: >
+      9 цветных плюс 1 белая на обеих сторонах. В перечне компонентов
+      черновика стоит суммарное «10 шт», разбивки нет; разбивка берётся
+      из таблицы приложения (NUM-102, NUM-103).
+
+  - id: NUM-105
+    subject: Число исходов таблицы особых фабрик
+    area: MODULE
+    original: 6
+    redesign: 6
+    unit: исходов
+    match: PASS
+    baseline_ref: BL-MODULE-010
+    redesign_ref: RD-MODULE-001
+    issue: RULE-004
+    loc: "SRC-APP-FACTORY:7; SRC-DRAFT:63, 583"
+    note: >
+      Оригинал: бросок d6, шесть столбцов таблицы. Наша таблица сохранила те же
+      шесть столбцов (1⚀…6⚅), а перечень компонентов заводит 6 карт событий.
+      Число исходов одно и то же. Каким способом исход вытягивается — броском
+      или картой — в черновике не дописано: строка 583 читается «бросьте
+      тяните карту события», это RULE-004.
+
+  - id: NUM-106
+    subject: Военных фабрик в комплекте
+    area: MODULE
+    original: 22
+    redesign: 24
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-MODULE-009
+    redesign_ref: RD-SETUP-002
+    issue: null
+    loc: "SRC-DRAFT:49"
+    note: >
+      Прямой пары нет. Число врат базовой игры в baseline не заведено —
+      оригинальные правила его не называют. Единственное число врат в baseline
+      это 22 серых врат из модуля Colour Gates, и они там не комплект базовой
+      игры, а замена вырубных жетонов. Сопоставлять 24 с 22 как одно и то же
+      число нельзя; проверяется по компонентам оригинала, не по правилам.
+
+  # --- MODULE: наёмники -------------------------------------------------------
+
+  - id: NUM-107
+    subject: Карт лояльности наёмников за одну фазу влияния
+    area: MODULE
+    original: 1
+    redesign: 1
+    unit: карта
+    match: PASS
+    baseline_ref: BL-MODULE-008
+    redesign_ref: RD-MODULE-002
+    issue: null
+    loc: "SRC-DRAFT:602, 617"
+    note: >
+      Совпадает и то, что общее число приобретённых карт не ограничено,
+      и то, что после покупки давление всё равно можно оказать.
+
+  - id: NUM-108
+    subject: Стоимость карты лояльности наёмной боевой машины
+    area: MODULE
+    original: "2 влияния + 2 нефти"
+    redesign: "2 влияния"
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-MODULE-008
+    redesign_ref: RD-MODULE-002
+    issue: DEV-014
+    loc: "SRC-DRAFT:605"
+    note: >
+      Оригинал: единая цена 2 Doom + 2 Power за любую карту лояльности Terror.
+      Черновик берёт только 2 влияния, нефти не берёт. Итоговая цена по тексту
+      черновика — на самой карте («оплатите стоимость, указанную на ней»),
+      то есть число живёт на компоненте: D-004, потому UNKNOWN, а не FAIL.
+      Уже заведено как DEV-014 (OPEN), новым конфликтом не считается.
+
+  - id: NUM-109
+    subject: Стоимость карты лояльности наёмного меха
+    area: MODULE
+    original: "2 влияния + 2 нефти"
+    redesign: "2 нефти + 2 влияния"
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-MODULE-008
+    redesign_ref: RD-MODULE-002
+    issue: DEV-014
+    loc: "SRC-DRAFT:614"
+    note: >
+      Здесь числа как раз совпадают с оригиналом. UNKNOWN по той же причине,
+      что и NUM-108: окончательная цена печатается на карте лояльности (D-004).
+      Вместе NUM-108 и NUM-109 показывают суть DEV-014: единая цена оригинала
+      у нас разъехалась на две разные.
+
+  - id: NUM-110
+    subject: Скрытое влияние за наёмных боевых роботов при давлении
+    area: MODULE
+    original: 0
+    redesign: 0
+    unit: карт
+    match: PASS
+    baseline_ref: BL-MODULE-015
+    redesign_ref: RD-MODULE-006
+    issue: null
+    loc: "SRC-DRAFT:630"
+    note: >
+      Оригинал: за независимых Great Old Ones Elder Signs при Ритуале
+      не даются, только за фракционных. Черновик повторяет дословно.
+
+  - id: NUM-111
+    subject: Наёмных боевых роботов, рекомендуемых для первой партии
+    area: MODULE
+    original: null
+    redesign: "на 1 меньше числа игроков"
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-MODULE-012
+    redesign_ref: RD-MODULE-003
+    issue: null
+    loc: "SRC-DRAFT:622"
+    note: >
+      Рекомендация без пары в оригинале: baseline фиксирует только, что число
+      контролируемых независимых не ограничено. Кандидат в EXTRA, но это
+      решает редактор, а не эта задача.
+
+  - id: NUM-112
+    subject: Числа на картах лояльности наёмных боевых роботов
+    area: MODULE
+    original: null
+    redesign: "стоимость 2–6, сила 0–5 либо формула"
+    unit: нефть / сила
+    match: UNKNOWN
+    baseline_ref: BL-MODULE-012
+    redesign_ref: RD-MODULE-003
+    issue: null
+    loc: "SRC-APP-MERC:17-205"
+    note: >
+      Девять карт: «Краб» 6/3, «Чёрный вихрь» 6/формула, «Пастух» 2/0,
+      «Халиф» 4/5, «Спрут» 6/формула, «Имам» 4/2, «Жнец» 4/формула,
+      «Тексан» 4/формула, «Шрёдингер» 6/формула. Плюс стоимости способностей
+      (0, 1, 2, 5) и чисел в задачах (3 фабрики, 4 фабрики, 3 нефти,
+      3 влияния, 2 жетона). Оригинал характеристик конкретных независимых
+      Great Old Ones в baseline не содержит: BL-MODULE-012 задаёт только
+      механику. Всё это — числа карт лояльности, вне задачи по D-004.
+
+  # --- MODULE: уникальные полковники ------------------------------------------
+
+  - id: NUM-113
+    subject: Число уникальных полковников
+    area: MODULE
+    original: 8
+    redesign: 11
+    unit: шт
+    match: PASS
+    baseline_ref: BL-UNIT-011
+    redesign_ref: RD-UNIT-002
+    issue: DEV-018
+    loc: "SRC-DRAFT:67"
+    note: >
+      ПЕРЕСМОТРЕНО 2026-09-10 при приёмке CODE-03, match изменён с FAIL
+      на PASS. Работа Code верна для тех источников, что были ей даны;
+      ошибка была в самом составе источников.
+      Верное число — 11, подтверждено Alek и файлом
+      Templates/UniqueColonel/uc.md, где ровно одиннадцать пронумерованных
+      полковников: Морроу, Сигэру Исии, Амелия Кейн, Кассий Рэйвен,
+      Виктор Распутин, Эвелина Тайрелл, Джон Крамер, Роберт Клоуз,
+      Виктор Ковач, Ной Гарднер, Генри Брут. Перечень компонентов черновика
+      (SRC-DRAFT:67) совпадает с ним.
+      Десять имён из приложения Drafts — Оберст Херцог, Джеймс Брэддок
+      и далее — относятся к УСТАРЕВШЕМУ набору, см. SRC-002.
+      Расхождение с оригиналом (8) расхождением не является: число
+      уникальных полковников задаётся составом нашего проекта, а не
+      механикой Cthulhu Wars, ровно как число фракций.
+
+  - id: NUM-114
+    subject: Числа на картах уникальных полковников
+    area: MODULE
+    original: "стоимость 3, боевая сила 0"
+    redesign: "стоимость 3 у восьми и 2/2 у двоих, боевая сила 0 у всех"
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-008
+    redesign_ref: RD-UNIT-002
+    issue: SRC-002
+    loc: "SRC-APP-COLONEL-TABLE:35-44"
+    note: >
+      Числа карт лояльности, вне задачи по D-004, match остаётся UNKNOWN.
+      ВАЖНО ДЛЯ ТОГО, КТО БУДЕТ ЭТО ЗАКРЫВАТЬ: запись снята с УСТАРЕВШЕГО
+      источника. Приложение Drafts описывает старый набор из десяти
+      полковников, действующий набор — одиннадцать карт в
+      Templates/UniqueColonel/ (SRC-002). Сверять числа надо по нему,
+      а не по этой таблице; всё сказанное ниже относится к старому набору.
+      Боевая сила совпадала с оригиналом у всех десяти. Стоимость совпадала
+      у восьми; у Уолтера Курца и Владимира Васина стояло «2/2», и что
+      означает эта запись, источник не объясняет. Отдельно: способность
+      Eldritch Wisdom ограничена «один раз за раунд» — числа этого лимита
+      в оригинале на стороне baseline нет.
+
+  - id: NUM-115
+    subject: Стоимость получения карты уникального полковника
+    area: MODULE
+    original: null
+    redesign: 2
+    unit: влияния
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-011
+    redesign_ref: RD-UNIT-002
+    issue: null
+    loc: "SRC-APP-COLONEL:48"
+    note: >
+      В оригинале уникальный High Priest ничего не стоит сверх вербовки:
+      игрок просто решает при вербовке, обычный он или уникальный
+      (BL-UNIT-011). Наше приложение вводит плату 2 влияния за саму карту.
+      Числа с оригинальной стороны нет. Ровно та же подпись под таблицей
+      противоречит и черновику (600), где уникальный полковник закрепляется
+      за игроком навсегда, а в приложении «его может нанять любой игрок».
+
+  # --- MODULE: Лаборатория и энграммы -----------------------------------------
+
+  - id: NUM-116
+    subject: Энграмм на фракцию
+    area: MODULE
+    original: 4
+    redesign: null
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-007
+    redesign_ref: RD-UNIT-004
+    issue: MISS-013
+    loc: "SRC-DRAFT:654-666"
+    note: >
+      Оригинал: жёсткий предел 4 Brain Cylinders на фракцию (BL-UNIT-007,
+      BL-UNIT-016), и при захвате пятого обращать его нельзя. Черновик
+      количества не называет вовсе — это MISS-013 и MISS-017. Число
+      из контрольного списка D-010 на нашей стороне отсутствует.
+
+  - id: NUM-117
+    subject: Стоимость энграммы
+    area: MODULE
+    original: 0
+    redesign: null
+    unit: нефть
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-007
+    redesign_ref: RD-UNIT-004
+    issue: MISS-013
+    loc: "SRC-DRAFT:649-651"
+    note: >
+      Оригинал: стоимость Brain Cylinder равна 0, отдельной строкой. У нас
+      энграммы появляются только заменой пехотинцев за одно действие
+      стоимостью 1 нефть, собственной стоимости у них в тексте нет.
+      Число из контрольного списка D-010 не подтверждено ни в одну сторону.
+
+  - id: NUM-118
+    subject: Боевая сила энграммы
+    area: MODULE
+    original: 0
+    redesign: null
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-007
+    redesign_ref: RD-UNIT-004
+    issue: MISS-013
+    loc: "SRC-DRAFT:655"
+    note: >
+      Оригинал даёт 0 прямо. Черновик говорит, что энграммы «являются
+      пехотинцами во всех отношениях, кроме трёх исключений», то есть силу
+      наследуют от пехотинца, а она печатается на планшете фракции — D-004.
+      Числа в правилах нет.
+
+  - id: NUM-119
+    subject: Стоимость действия «Извлечение сознания»
+    area: MODULE
+    original: 1
+    redesign: 1
+    unit: нефть
+    match: PASS
+    baseline_ref: null
+    redesign_ref: RD-UNIT-004
+    issue: null
+    loc: "SRC-DRAFT:649"
+    note: >
+      Число оригинала взято не из baseline: отдельной записи BL-* про действие
+      Surgery в реестре нет, оно упомянуто только внутри BL-UNIT-007 как
+      единственный способ вывести Brain Cylinder на карту. Значение 1 взято
+      из D-010, где оно проверено по SRC-RB-NEW (~4019–4038) и вики Yuggoth.
+      Пробел baseline стоит закрыть отдельной записью — это к редактору.
+
+  - id: NUM-120
+    subject: Пехотинцев, заменяемых одним «Извлечением сознания»
+    area: MODULE
+    original: 4
+    redesign: 4
+    unit: шт
+    match: PASS
+    baseline_ref: null
+    redesign_ref: RD-UNIT-004
+    issue: null
+    loc: "SRC-DRAFT:650"
+    note: >
+      «Уничтожьте до 4 ваших пехотинцев» ↔ «Eliminate up to 4 of your
+      Cultists». Совпадает и число, и то, что это верхняя граница, а не
+      обязательное количество. Источник оригинала — D-010, в baseline
+      отдельной записи нет; см. NUM-119.
+
+  - id: NUM-121
+    subject: Число исключений в правилах энграмм
+    area: MODULE
+    original: 3
+    redesign: 3
+    unit: исключения
+    match: PASS
+    baseline_ref: BL-UNIT-007
+    redesign_ref: RD-UNIT-004
+    issue: null
+    loc: "SRC-DRAFT:655-660"
+    note: >
+      Совпадают и число, и содержание всех трёх: нельзя вербовать иначе;
+      не перемещается сама, но едет с другим отрядом бесплатно; не получает
+      подавление и не мешает чужому отступлению в свой регион.
+
+  - id: NUM-122
+    subject: Жетонов Лаборатории на партию
+    area: MODULE
+    original: null
+    redesign: 1
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-007
+    redesign_ref: RD-MODULE-007
+    issue: RULE-005
+    loc: "SRC-DRAFT:636-638"
+    note: >
+      Числа Лабораторий в baseline нет: в оригинале Лаборатория — это регион
+      карты Yuggoth и переносимый жетон Laboratory Token, количество
+      не оговорено. Наш текст ставит один жетон в один нестартовый регион.
+
+  - id: NUM-123
+    subject: Рекомендованные регионы для Лаборатории по числу игроков
+    area: MODULE
+    original: null
+    redesign: "3 игрока — 3 региона; 4 игрока — 4 региона; 4 игрока — 5 регионов"
+    unit: null
+    match: UNKNOWN
+    baseline_ref: null
+    redesign_ref: RD-MODULE-007
+    issue: RULE-005
+    loc: "SRC-DRAFT:643-645"
+    note: >
+      Пары в оригинале нет: рекомендаций по размещению Лаборатории на общей
+      карте он не даёт. Само число игроков в черновике сбито — «в партии
+      на 4 игрока» напечатано дважды подряд, вторая строка почти наверняка
+      про пятерых. Это RULE-005; какое число там должно стоять,
+      здесь не решается.
+
+  # --- MODULE: Рой боевых дронов ----------------------------------------------
+
+  - id: NUM-124
+    subject: Фигурок Роя боевых дронов
+    area: MODULE
+    original: 6
+    redesign: null
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-009
+    redesign_ref: RD-UNIT-005
+    issue: null
+    loc: "SRC-DRAFT:670-696"
+    note: >
+      Оригинал: 6 фигурок Slime Mold. Черновик количество не называет
+      ни в разделе про Рой, ни в перечне компонентов — Роя там нет вовсе.
+      Число из контрольного списка D-010 на нашей стороне отсутствует.
+
+  - id: NUM-125
+    subject: Стоимость создания Роя
+    area: MODULE
+    original: "1; 0, если в игре нет ни одного"
+    redesign: "1; 0, если в игре нет ни одного"
+    unit: нефть
+    match: PASS
+    baseline_ref: BL-UNIT-009
+    redesign_ref: RD-UNIT-005
+    issue: null
+    loc: "SRC-DRAFT:689"
+    note: null
+
+  - id: NUM-126
+    subject: Боевая сила Роя
+    area: MODULE
+    original: 2
+    redesign: null
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-009
+    redesign_ref: RD-UNIT-005
+    issue: MISS-014
+    loc: "SRC-DRAFT:687-696"
+    note: >
+      Оригинал даёт 2. Черновик боевую силу Роя не называет; MISS-014 (OPEN)
+      предполагает, что она печатается на карте Контроля сети, то есть
+      на компоненте (D-004). Проверяется при выверке компонентов.
+
+  - id: NUM-127
+    subject: Минимальное число соседних регионов у Узла управления
+    area: MODULE
+    original: null
+    redesign: 3
+    unit: региона
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-009
+    redesign_ref: RD-MODULE-008
+    issue: null
+    loc: "SRC-DRAFT:680"
+    note: >
+      Пары в оригинале нет: там узловой регион с жетоном No Slime задан
+      картой Yuggoth, а не правилом размещения. Наше число — часть адаптации
+      модуля к общей карте, которую оригинал прямо разрешает (D-010).
+
+  - id: NUM-128
+    subject: Жетонов Зоны сети
+    area: MODULE
+    original: null
+    redesign: "3–4"
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-009
+    redesign_ref: RD-MODULE-008
+    issue: null
+    loc: "SRC-DRAFT:683"
+    note: >
+      Пары в оригинале нет по той же причине, что и в NUM-127: области
+      Slime Sea напечатаны на карте Yuggoth, числа правила не задают.
+
+  # --- MODULE: баланс сил и игра на двоих -------------------------------------
+
+  - id: NUM-129
+    subject: Нейтральных рекрутов для варианта «Баланс сил»
+    area: MODULE
+    original: 9
+    redesign: null
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-MODULE-017
+    redesign_ref: RD-MODULE-009
+    issue: RULE-006
+    loc: "SRC-DRAFT:715, 723"
+    note: >
+      Оригинал комплектует модуль девятью серыми Acolytes. У нас берётся
+      рекрут любой неучаствующей фракции, поэтому отдельного числа фигурок
+      нет и быть не должно — механически это эквивалентно (D-023).
+      Числа на нашей стороне не существует.
+
+  - id: NUM-130
+    subject: Предел рекрутов у выравниваемого сильного игрока
+    area: MODULE
+    original: 5
+    redesign: 5
+    unit: шт
+    match: PASS
+    baseline_ref: BL-MODULE-017
+    redesign_ref: RD-MODULE-009
+    issue: null
+    loc: "SRC-DRAFT:715, 718"
+    note: null
+
+  - id: NUM-131
+    subject: Рекрутов у выравниваемого слабого игрока
+    area: MODULE
+    original: 7
+    redesign: 7
+    unit: шт
+    match: PASS
+    baseline_ref: BL-MODULE-017
+    redesign_ref: RD-MODULE-009
+    issue: null
+    loc: "SRC-DRAFT:723"
+    note: null
+
+  - id: NUM-132
+    subject: Игра на двоих — сторона поля и шкала трека
+    area: MODULE
+    original: "поле на 3 игроков, шкала трека на 4"
+    redesign: "поле и трек на 4 игроков"
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-MODULE-001
+    redesign_ref: null
+    issue: DEV-007
+    loc: "SRC-DRAFT:555"
+    note: >
+      Числа найдены с обеих сторон и различаются по стороне поля, но правила
+      сопоставить нельзя: DEV-007 установил, что у нас реализован другой режим
+      (игрок водит две или три фракции), а не оригинальный режим с маркером
+      Распада. По D-021 игра на двоих из нашего рулбука выводится целиком,
+      и строки 554–575 удаляются. Сверка чисел смысла не имеет.
+
+  - id: NUM-133
+    subject: Игра на двоих — фракций на игрока
+    area: MODULE
+    original: 1
+    redesign: "2 или 3"
+    unit: фракции
+    match: UNKNOWN
+    baseline_ref: BL-MODULE-001
+    redesign_ref: null
+    issue: DEV-007
+    loc: "SRC-DRAFT:555, 566-569"
+    note: >
+      Та же причина, что в NUM-132. «Эпический» вариант требует поля на 6–8
+      и шести или более фракций, по три на игрока. Оригинального аналога нет.
+
+  - id: NUM-134
+    subject: Фракционные поправки для игры на двоих
+    area: MODULE
+    original: "требование 12 врат снижается до 10; боевое значение 4"
+    redesign: null
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-MODULE-007
+    redesign_ref: null
+    issue: DEV-007
+    loc: "SRC-DRAFT:554-575"
+    note: >
+      Оригинал держит отдельный список балансных поправок к фракционным
+      способностям для игры на двоих. У нас режим другой (DEV-007) и по D-021
+      из рулбука выводится, поэтому пары нет. Сами поправки фракционные
+      и по D-012 в объём работы над правилами не входят.
+
+  # --- FACTION: комплектность ---------------------------------------------------
+
+  - id: NUM-135
+    subject: Число фракций в игре
+    area: FACTION
+    original: null
+    redesign: null
+    unit: фракций
+    match: UNKNOWN
+    baseline_ref: BL-FACTION-001
+    redesign_ref: RD-SETUP-003
+    issue: null
+    loc: "SRC-DRAFT:38-57"
+    note: >
+      Числа нет ни на одной стороне. В оригинале оно зависит от набора
+      коробок и в правилах не называется. Черновик его тоже не называет —
+      это известная проблема, зафиксированная в CLAUDE.md §10 пункт 2, — хотя
+      от него зависят количества планшетов, карт целей и технологий, маркеров
+      фракций. Значение 8 закреплено в CLAUDE.md §2, но это файл проекта,
+      а не источник редизайна, и в правилах его нет.
+
+  - id: NUM-136
+    subject: Жетонов «Нефтяная вышка» (Глобал Петролеум)
+    area: FACTION
+    original: 12
+    redesign: 12
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-SETUP-003
+    redesign_ref: RD-SETUP-003
+    issue: null
+    loc: "SRC-DRAFT:72"
+    note: >
+      Числа совпадают, но правила сопоставлены неуверенно. Единственное «12»
+      на стороне оригинала — 12 жетонов осквернения фракции Yellow Sign
+      (BL-SETUP-003, exceptions). Соответствие «Глобал Петролеум ↔ Yellow
+      Sign» нигде не установлено: фракции вне задачи по D-004. Ставить PASS
+      на основании одного совпадения числа было бы догадкой.
+
+  - id: NUM-137
+    subject: Жетонов «Община» (Братство Сингулярности)
+    area: FACTION
+    original: null
+    redesign: 4
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-FACTION-001
+    redesign_ref: null
+    issue: null
+    loc: "SRC-DRAFT:74"
+    note: >
+      Фракционный компонент, соответствия в baseline нет: фракционные составы
+      в эталон не заводились (D-004, D-012).
+
+  - id: NUM-138
+    subject: Планшет «Луна» (Moon Systems)
+    area: FACTION
+    original: 1
+    redesign: 1
+    unit: шт
+    match: UNKNOWN
+    baseline_ref: BL-UNIT-010
+    redesign_ref: null
+    issue: null
+    loc: "SRC-DRAFT:76"
+    note: >
+      Тайл Луны в оригинале существует и прямо назван в BL-UNIT-010 как объект,
+      который отрядом не является; числа тайлов baseline не даёт, а привязка
+      «Moon Systems ↔ Bubastis» относится к фракциям (D-004). Совпадение
+      единицы не подтверждает совпадения правил.
+
+  # --- Прочее -----------------------------------------------------------------
+
+  - id: NUM-139
+    subject: Числа в разделе «Советы»
+    area: ROUND
+    original: null
+    redesign: "2–3 раунда; 3–4 технологии"
+    unit: null
+    match: UNKNOWN
+    baseline_ref: BL-ROUND-001
+    redesign_ref: null
+    issue: null
+    loc: "SRC-DRAFT:738, 741"
+    note: >
+      Числа стратегического совета, а не правила: «первые 2–3 раунда» и
+      «боевой робот и 3–4 технологии» как признак второго этапа партии.
+      Прямой пары в baseline нет; ближайшее по смыслу — ориентир оригинала
+      «партия обычно занимает 4–6 циклов фаз» (NUM-044). На игровое поведение
+      не влияют.
