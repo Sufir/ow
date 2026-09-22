@@ -1,0 +1,258 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="295mm" height="120mm"
+     viewBox="0 0 250 100">
+
+<style>
+@font-face {
+  font-family: 'AlienEncounters';
+  src: url('Fonts/AlienEncounters.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.hex {
+  fill:#072158;
+  stroke:#11c5ff;
+  stroke-width:0.35mm;
+  stroke-linejoin:miter;
+  vector-effect:non-scaling-stroke;
+}
+
+.red { stroke:#db63b5; }
+
+.text {
+  font-family: 'AlienEncounters', sans-serif;
+  font-size:2.25mm;
+  fill:#ffffff;
+  text-anchor:middle;
+  dominant-baseline:middle;
+  filter: url(#neonCyan);
+}
+
+.textRed { 
+  fill:#db63b5; 
+  filter: url(#neonRed);
+}
+
+</style>
+
+<defs>
+<path id="hex"
+d="M 9.5 0
+   L 4.75 -8.227241
+   L -4.75 -8.227241
+   L -9.5 0
+   L -4.75 8.227241
+   L 4.75 8.227241 Z"/>
+   
+<path id="hexBig"
+d="M 14.25 0
+   L 7.125 -12.340862
+   L -7.125 -12.340862
+   L -14.25 0
+   L -7.125 12.340862
+   L 7.125 12.340862 Z"/>
+   
+<filter id="neonCyan" x="-40%" y="-40%" width="180%" height="180%">
+  
+  <!-- основной мягкий glow -->
+  <feGaussianBlur in="SourceGraphic"
+                   stdDeviation="0.45"
+                   result="blur1"/>
+
+  <!-- лёгкий дополнительный ореол -->
+  <feGaussianBlur in="SourceGraphic"
+                   stdDeviation="0.9"
+                   result="blur2"/>
+
+  <!-- окрашивание только размытия -->
+  <feColorMatrix in="blur2" type="matrix"
+    values="0 0 0 0 0.086
+            0 0 0 0 0.741
+            0 0 0 0 0.835
+            0 0 0 0.55 0" result="cyanGlow"/>
+
+  <feMerge>
+    <feMergeNode in="cyanGlow"/>
+    <feMergeNode in="blur1"/>
+    <feMergeNode in="SourceGraphic"/>
+  </feMerge>
+
+</filter>
+
+<filter id="neonRed" x="-40%" y="-40%" width="180%" height="180%">
+
+  <feGaussianBlur in="SourceGraphic" stdDeviation="0.45" result="blur1"/>
+  <feGaussianBlur in="SourceGraphic" stdDeviation="0.9" result="blur2"/>
+
+  <!-- чистое цветовое свечение без убийства яркости -->
+  <feFlood flood-color="#ff0000" flood-opacity="0.55" result="tint"/>
+
+  <feComposite in="tint" in2="blur2" operator="in" result="coloredGlow"/>
+
+  <feMerge>
+    <feMergeNode in="coloredGlow"/>
+    <feMergeNode in="blur1"/>
+    <feMergeNode in="SourceGraphic"/>
+  </feMerge>
+
+</filter>
+
+<pattern id="bgPattern"
+         patternUnits="userSpaceOnUse"
+         width="60"
+         height="40">
+
+  <image
+    href="background-fill.png"
+    width="60"
+    height="40"
+    opacity="0.75"
+	style="mix-blend-mode:screen"
+    preserveAspectRatio="none"/>
+
+</pattern>
+</defs>
+
+<rect width="250" height="100" fill="#000032"/>
+
+<rect width="250"
+      height="100"
+      fill="url(#bgPattern)"/>
+
+<!-- image
+  href="border-02.png"
+  x="221"
+  y="77"
+  width="38"
+  height="23"
+  opacity="0.90"
+  style="mix-blend-mode:screen"
+  preserveAspectRatio="xMinYMax meet"/ -->
+
+<image
+  href="decor--vertical01.png"
+  x="233.5"
+  y="60"
+  width="5"
+  height="20"
+  opacity="0.90"
+  style="mix-blend-mode:screen"
+  preserveAspectRatio="xMinYMax meet"/>
+  
+<image
+  href="decor-lamp01.png"
+  x="36.5"
+  y="60"
+  width="20"
+  height="5"
+  opacity="1"
+  style="mix-blend-mode:screen"
+  preserveAspectRatio="xMinYMax meet"/>
+  
+<!-- image
+  href="decor-hex01.png"
+  x="13.5"
+  y="68"
+  width="20"
+  height="20"
+  opacity="1"
+  style="mix-blend-mode:screen"
+  preserveAspectRatio="xMinYMax meet"/ -->
+  
+<image
+  href="decor-hex-border01.png"
+  x="-19.5"
+  y="43.5"
+  width="30"
+  height="30"
+  opacity="1"
+  style="mix-blend-mode:screen"
+  transform="scale(-1,1)"
+  preserveAspectRatio="xMinYMax meet"/>
+  
+<!-- image
+  href="decor-line.png"
+  x="34"
+  y="80"
+  width="190"
+  height="25"
+  opacity="1"
+  style="mix-blend-mode:screen"
+  preserveAspectRatio="xMinYMax meet"/ -->
+
+<g transform="translate(127.5,50)">
+
+<!-- ROW 1 -->
+<g transform="translate(-115,-32)">
+
+<g transform="translate(11,8.227)">
+<use href="#hexBig" class="hex"/>
+<text class="text">0</text>
+</g>
+
+<g transform="translate(30,0)"><use href="#hex" class="hex"/><text class="text">1</text></g>
+<g transform="translate(44.25,8.227)"><use href="#hex" class="hex"/><text class="text">2</text></g>
+<g transform="translate(58.5,0)"><use href="#hex" class="hex"/><text class="text">3</text></g>
+<g transform="translate(72.75,8.227)"><use href="#hex" class="hex"/><text class="text">4</text></g>
+<g transform="translate(87,0)"><use href="#hex" class="hex"/><text class="text">5</text></g>
+<g transform="translate(101.25,8.227)"><use href="#hex" class="hex"/><text class="text">6</text></g>
+<g transform="translate(115.5,0)"><use href="#hex" class="hex"/><text class="text">7</text></g>
+<g transform="translate(129.75,8.227)"><use href="#hex" class="hex"/><text class="text">8</text></g>
+<g transform="translate(144,0)"><use href="#hex" class="hex"/><text class="text">9</text></g>
+<g transform="translate(158.25,8.227)"><use href="#hex" class="hex"/><text class="text">10</text></g>
+<g transform="translate(172.5,0)"><use href="#hex" class="hex"/><text class="text">11</text></g>
+<g transform="translate(186.75,8.227)"><use href="#hex" class="hex"/><text class="text">12</text></g>
+<g transform="translate(201,0)"><use href="#hex" class="hex"/><text class="text">13</text></g>
+<g transform="translate(215.25,8.227)"><use href="#hex" class="hex"/><text class="text">14</text></g>
+
+</g>
+
+<!-- ROW 2 -->
+<g transform="translate(-115,0)">
+
+<g transform="translate(11,8.227)">
+<use href="#hexBig" class="hex"/>
+<text class="text">30</text>
+</g>
+
+<g transform="translate(30,0)"><use href="#hex" class="hex"/><text class="text">29</text></g>
+<g transform="translate(44.25,8.227)"><use href="#hex" class="hex"/><text class="text">28</text></g>
+<g transform="translate(58.5,0)"><use href="#hex" class="hex"/><text class="text">27</text></g>
+<g transform="translate(72.75,8.227)"><use href="#hex" class="hex"/><text class="text">26</text></g>
+<g transform="translate(87,0)"><use href="#hex" class="hex"/><text class="text">25</text></g>
+<g transform="translate(101.25,8.227)"><use href="#hex" class="hex"/><text class="text">24</text></g>
+<g transform="translate(115.5,0)"><use href="#hex" class="hex"/><text class="text">23</text></g>
+<g transform="translate(129.75,8.227)"><use href="#hex" class="hex"/><text class="text">22</text></g>
+<g transform="translate(144,0)"><use href="#hex" class="hex"/><text class="text">21</text></g>
+<g transform="translate(158.25,8.227)"><use href="#hex" class="hex"/><text class="text">20</text></g>
+<g transform="translate(172.5,0)"><use href="#hex" class="hex"/><text class="text">19</text></g>
+<g transform="translate(186.75,8.227)"><use href="#hex" class="hex"/><text class="text">18</text></g>
+<g transform="translate(201,0)"><use href="#hex" class="hex"/><text class="text">17</text></g>
+<g transform="translate(215.25,8.227)"><use href="#hex" class="hex"/><text class="text">16</text></g>
+<g transform="translate(215.25,-8.227)"><use href="#hex" class="hex"/><text class="text">15</text></g>
+
+</g>
+
+<!-- ROW 3 -->
+<g transform="translate(-85,25)">
+
+<g transform="translate(0,0)"><use href="#hex" class="hex red"/><text class="text textRed">31</text></g>
+<g transform="translate(14.25,8.227)"><use href="#hex" class="hex red"/><text class="text textRed">32</text></g>
+<g transform="translate(28.5,0)"><use href="#hex" class="hex red"/><text class="text textRed">33</text></g>
+<g transform="translate(42.75,8.227)"><use href="#hex" class="hex red"/><text class="text textRed">34</text></g>
+<g transform="translate(57,0)"><use href="#hex" class="hex red"/><text class="text textRed">35</text></g>
+<g transform="translate(71.25,8.227)"><use href="#hex" class="hex red"/><text class="text textRed">36</text></g>
+<g transform="translate(85.5,0)"><use href="#hex" class="hex red"/><text class="text textRed">37</text></g>
+<g transform="translate(99.75,8.227)"><use href="#hex" class="hex red"/><text class="text textRed">38</text></g>
+<g transform="translate(114,0)"><use href="#hex" class="hex red"/><text class="text textRed">39</text></g>
+<g transform="translate(128.25,8.227)"><use href="#hex" class="hex red"/><text class="text textRed">40</text></g>
+<g transform="translate(142.5,0)"><use href="#hex" class="hex red"/><text class="text textRed">41</text></g>
+<g transform="translate(156.75,8.227)"><use href="#hex" class="hex red"/><text class="text textRed">42</text></g>
+<g transform="translate(171,0)"><use href="#hex" class="hex red"/><text class="text textRed">43</text></g>
+<g transform="translate(185.25,8.227)"><use href="#hex" class="hex red"/><text class="text textRed">44</text></g>
+
+</g>
+
+</g>
+</svg>
