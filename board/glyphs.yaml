@@ -340,7 +340,7 @@ start_areas_redesign:
   - faction: OW-F-01
     name: Островная Империя
     queue: 1.0
-    start_region_text: юг Тихого океана
+    start_region_text: Юг Тихого океана   # D-059
     regions_3p: [MR-OC-SPAC]
     regions_5p: [MR-OC-SPAC]
     glyph: MG-001

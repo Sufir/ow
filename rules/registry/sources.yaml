@@ -494,3 +494,21 @@ sources:
       («Слой 3») — MAP-002.
       Рядом лежат board/legacy/карта.pdf (сторона «3», 934×468 мм) и
       board/legacy/карта 5.jpg (сторона «5») — растровые версии того же.
+
+  - id: SRC-PG-HPO4
+    side: ORIGINAL
+    priority: 2
+    kind: MODULE
+    title: "Petersen Games — страница продукта High Priests O4"
+    edition: O4
+    url: https://petersengames.com/products/high-priests-o4
+    local_path: null
+    retrieved: 2026-09-24
+    status: AVAILABLE
+    need: null
+    notes: >
+      Взят ради одного факта: «Includes high priests for ALL Factions, including
+      Daemon Sultan (but not Bubastis, since they can't use high priests)».
+      Официальная позиция издателя, снимает двусмысленность фразы рулбука
+      в подготовке Bubastis (FAC-020). Та же мысль в обзоре фракций издателя:
+      https://petersengames.com/blogs/news/cthulhu-wars-expansion-factions-complete-guide
