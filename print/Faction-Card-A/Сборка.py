@@ -18,6 +18,10 @@
 """
 import io, json, math, os, re, sys, html
 
+# Проверка кавычек (D-075): общая для всех печатных компонентов, лежит в print/.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from check_quotes import проверить as проверить_кавычки
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(ROOT, 'Данные')
 TPL_FILE = os.path.join(ROOT, 'Шаблон.html')
@@ -290,14 +294,22 @@ def main():
     файлы = sorted(f for f in os.listdir(DATA_DIR) if f.endswith('.json'))
     if not файлы:
         raise SystemExit('в папке «Данные» нет ни одного .json')
+    не_собраны = []
     for f in файлы:
         if фильтр and фильтр.lower() not in f.lower(): continue
         d = json.load(io.open(os.path.join(DATA_DIR, f), encoding='utf-8'))
+        ошибки = проверить_кавычки(d, f)
+        if ошибки:
+            print('\n'.join(ошибки))
+            не_собраны.append(f)
+            continue
         s, высота_табл, перелив = собрать(d, шаблон)
         имя = 'Планшет — %s.html' % d['название']
         io.open(os.path.join(ROOT, имя), 'w', encoding='utf-8').write(s)
         флаг = '  ← свойства поджаты' if перелив > 0 else ''
         print('%-28s таблица %5.1f мм из %.0f%s' % (d['название'], высота_табл, ROW_BODY, флаг))
+    if не_собраны:
+        raise SystemExit('не собраны из-за кавычек (нужны “ ”, D-075): ' + ', '.join(не_собраны))
 
 
 if __name__ == '__main__':
