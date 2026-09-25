@@ -1,0 +1,2176 @@
+# components.yaml — реестр физических компонентов «Нефтяных войн»
+#
+# Источник истины по вопросу «что физически есть в коробке, из чего сделано
+# и в каком состоянии». Игровые данные компонента (числа отрядов, стоимости,
+# составы фракций, термины, правила) здесь НЕ дублируются — на них стоят ссылки.
+# Схема и словари состояний — rules/registry/SCHEMA.md, раздел «components.yaml».
+#
+# Собирается отчёт: python rules/tools/components.py all → rules/reports/16-components.md
+# Руками правится только этот файл.
+
+meta:
+  updated: 2026-09-24
+  created: 2026-09-22
+  supersedes: >
+    archive/Инвентаризация компонентов (v2, 2026-09-22).xlsx — черновая ревизия
+    от 2026-08-27, снята с работы и перенесена в архив 2026-09-22
+  task_ref: D-004
+  factions_canon: 8
+  counters_note: >
+    Счётчики не проставляются руками — их считает components.py и печатает
+    в шапке отчёта. Здесь только то, что счётчиком не является.
+
+  # Где живёт истина по каждому вопросу. Реестр компонентов ни один из этих
+  # вопросов не решает и чисел оттуда не копирует — только ссылается.
+  truth_map:
+    Состав и количества отрядов фракции: rules/registry/factions.yaml → redesign[].units
+    Уникальные компоненты фракции: rules/registry/factions.yaml → redesign[].extras
+    Очередь расстановки: rules/registry/factions.yaml → meta.queue_scale
+    Числа правил: rules/registry/numbers.yaml
+    Термины и написания: rules/registry/terms.yaml, CLAUDE.md §2
+    Иконки: rules/registry/icons.yaml
+    Как работает правило: rules/RULEBOOK.md
+    Области и смежности поля: board/regions.yaml, board/edges.yaml
+    Геометрия и раскладки поля: board/geo/, board/derived/
+    Решения автора: rules/DECISIONS.md
+    Находки по правилам: rules/registry/issues.yaml
+    Находки по фракциям: rules/registry/factions.yaml → findings
+
+  # Правило дедупликации. Нарушение — дефект реестра, ловится валидатором.
+  dedup_rule: >
+    Количество отрядов фракции в этом файле не пишется ни разу. Запись
+    фракционного компонента несёт count_source: FACTIONS и count_ref на путь
+    внутри factions.yaml; число подставляет отчёт при сборке. Если число
+    понадобилось прямо здесь — значит, запись заведена не там, где надо.
+
+  state_vocab:
+    content: [N/A, TODO, IN-REVIEW, ISSUES, VERIFIED]
+    design: [N/A, NONE, DRAFT, IN-REVIEW, APPROVED]
+    production: [N/A, NONE, READY, PARTIAL, DONE, UNKNOWN]
+
+  # Что означает UNKNOWN: состояние не выяснено, и выдумывать его нельзя.
+  # Такие записи отчёт выносит отдельным списком «требует подтверждения Alek».
+  unknown_policy: >
+    production: UNKNOWN ставится там, где готовый файл есть, старая
+    инвентаризация называла компонент напечатанным, но в перечне физически
+    готового от 2026-09-22 он не назван. Это не «скорее всего готово» —
+    это «не подтверждено».
+
+  # Перечень ниже — устное подтверждение Alek в рабочей сессии 22.09.2026.
+  # Документом проекта он не зафиксирован: ни в DECISIONS.md, ни в STATE.md,
+  # ни в release-notes его нет. На нём стоит production у четырнадцати
+  # записей, поэтому он же — самое слабое звено реестра (COMP-I-022).
+  production_confirmed_2026_09_22: >
+    Перечень названного Alek физически готовым на 22.09.2026: все миниатюры;
+    акрил — энграммы, рой дронов, жетон первого игрока, лаборатория, маркеры
+    фракций; напечатаны трек влияния (победных очков) и треки Судного дня;
+    закуплены маркеры нефти; боевые кубики оклеены наклейками.
+    Остальной акрил (вышки, маркер Судного дня, ЦУ, зоны сети) в перечень
+    не входит — у него production: NONE.
+
+  production_confirmed_2026_09_22_round4: >
+    Четвёртый круг, тем же днём. Зон сети нарезано 4 — количество
+    зафиксировано. Карта «Контроль сети» не сделана: «готовы» третьего
+    круга относилось только к акрилу, к стендам и жетонам. Тайл «Луна»
+    не печатался, картинка сгенерирована.
+
+  production_confirmed_2026_09_22_round3: >
+    Третий круг, тем же днём. Нарезан весь оставшийся акрил: маркер Судного
+    дня, ЦУ, зоны сети, вышки Глобал Петролеум. Планшеты фракций признаны
+    неготовыми совсем — их переверстают и вычитают, только потом печать.
+    Игровое поле объявлено не начатым: есть сырые наброски, топология
+    и реестр областей, полотна нет. Наёмники не начаты и идут последними.
+    Кубики готовы, наклейки печатались с запасом — лишние остались.
+    Все миниатюры готовы. Карты задач и технологий напечатаны, решение
+    о перепечатке — после ещё одной вычитки.
+
+  production_confirmed_2026_09_22_round2: >
+    Второй круг, тем же днём: Alek прошёл список из десяти записей
+    с production: UNKNOWN и ответил по каждой. Напечатано — обычные
+    фабрики, карты скрытого влияния, карты задач, карты технологий,
+    жетоны «Община», особые фабрики, карты уникальных полковников;
+    числовой кубик куплен. Планшеты фракций НЕ напечатаны: требуют
+    доработки. Карты задач и технологий напечатаны, но, по словам Alek,
+    могут потребовать переработки — поэтому у них production: DONE
+    при content: ISSUES. Карты событий фабрик остались UNKNOWN:
+    Alek не помнит и проверит позже. Тайл «Луна» в круг не входил
+    (COMP-I-008).
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ОБЩИЕ КОМПОНЕНТЫ — по одному на коробку, от фракции не зависят
+# ─────────────────────────────────────────────────────────────────────────────
+common:
+
+  - id: COMP-C-01
+    name: Книга правил
+    original: Rulebook
+    original_set: BASE
+    count: 1
+    count_original: 1
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: BOOK
+    spec:
+      format: не выбран
+      pages_draft: 37 (черновик в source/gdocs/pdf)
+    files:
+      - rules/RULEBOOK.md
+      - source/gdocs/pdf/Нефтяные войны (правила).pdf
+    generator: rules/tools/build_rulebook.py
+    master: null
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: NONE
+      production: NONE
+    evidence: >
+      P0–P12 пройдены, финальная QA 13 из 13 PASS
+      (rules/reports/14-final-qa.md), открытых находок ноль (D-051).
+      Вёрстки нет: книга существует только как Markdown.
+    refs: [D-047, D-050, D-051]
+    blocks_print: false           # книгу не блокирует ничто: текст готов
+                                  # и ни на один компонент не опирается
+    findings: []
+    notes: >
+      Вычитку глазами Alek делает отдельно, вне плана работ (STATE.md).
+      Передаточная опись того, что должно быть готово до печати книги, —
+      rules/reports/15-release-notes.md §3.
+
+  - id: COMP-C-02
+    name: Памятки игрока
+    original: Player Hint Cards
+    original_set: BASE
+    count: 5
+    count_original: 4
+    count_source: DECISION
+    count_ref: D-040
+    count_status: FIXED
+    carrier: CARD
+    spec:
+      format: не выбран
+    files: []
+    generator: null
+    master: null
+    truth: rules/RULEBOOK.md
+    state:
+      content: TODO
+      design: NONE
+      production: NONE
+    evidence: Файла нет ни в print/, ни в print/Saved/.
+    refs: [D-040, COMP-I-001]
+    blocks_print: false
+    findings: [COMP-I-001]
+    notes: >
+      Оригинал даёт строго по одной памятке на фракцию, у нас их пять
+      на восемь фракций. Это не пробел: D-040 п. 3 решил оставить пять
+      по целевому составу 3–5 игроков.
+
+  - id: COMP-C-03
+    name: Игровое поле
+    original: Game Board (Earth Map)
+    original_set: BASE
+    count: 4
+    count_original: 2 двусторонние половины (4 стороны)
+    count_source: DERIVED
+    count_ref: board/configs.yaml
+    count_status: FIXED
+    carrier: BANNER
+    spec:
+      material: баннер или неопрен, цельное полотно
+      canvas_mm: 900 × 550
+      projection: южно-полярная азимутальная
+      layouts: [3P, 4P-A, 4P-B, 5P]
+      seam: нет
+      cut: нет
+      edge_wrap: нет
+    files:
+      - board/regions.yaml
+      - board/edges.yaml
+      - board/geo/world-game.geojson
+      - board/derived/
+    generator: board/tools/map.py all, board/tools/worldgeom.py all
+    master: null
+    truth: board/SPEC-BOARD.md
+    state:
+      content: TODO
+      design: NONE
+      production: NONE
+    evidence: >
+      Alek 2026-09-22: «считай ещё не начато, есть только очень сырые
+      черновые наброски и расчёт/реестр». Топология, области, смежности
+      и четыре раскладки собраны и проверяются map.py check — но это
+      содержимое board/, а не компонента: на полотне ещё ничего нет,
+      символы регионов не нанесены (MF-011).
+    refs: [D-040, D-044, D-047, MISS-023, MF-011, MF-016, MF-017]
+    blocks_print: false
+    findings: [COMP-I-002]
+    notes: >
+      Четыре отдельных цельных полотна вместо двух двусторонних половин
+      оригинала. Печать типографская; раскладка на листы офисной бумаги
+      к компоненту отношения не имеет (D-044). Когда полотно будет собрано —
+      сверить §1.1 и §2.1 книги с фактическим компонентом (MISS-023).
+
+  - id: COMP-C-04
+    name: Треки Судного дня
+    original: Ritual of Annihilation Track
+    original_set: BASE
+    count: 2
+    count_original: 3
+    count_source: DECISION
+    count_ref: D-040
+    count_status: FIXED
+    carrier: SHEET
+    spec:
+      sides: оба трека двусторонние — четыре шкалы на два листа
+      note: длина шкалы зависит от числа игроков; конкретные длины в правилах не заданы
+    files:
+      - print/Saved/Трек Судного дня.pdf
+      - art/doomsday/3 игрока v1.1.png
+      - art/doomsday/4 игрока v1.1.png
+      - art/doomsday/5 игроков v1.1.png
+      - art/doomsday/6 игроков v1.1.png
+      - art/doomsday/3-6 игроков универсальный v1.jpg
+    generator: null
+    master: print/Saved/Трек Судного дня.pdf
+    truth: rules/RULEBOOK.md §2.2
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: >
+      Напечатаны — подтверждено Alek 2026-09-22 («планшеты конца света»).
+      Собран трек руками, без генератора: PDF не восстанавливается
+      (README, раздел про print/Saved).
+    refs: [D-040, COMP-I-003]
+    blocks_print: false
+    findings: [COMP-I-003, COMP-I-022]
+    notes: >
+      Два двусторонних листа — решение D-040 п. 5, §1.1 книги приведён к нему.
+      PDF на две страницы это подтверждает. Какие именно четыре шкалы попали
+      на два листа, реестром не зафиксировано: в art/doomsday лежат раскладки
+      на 3, 4, 5 и 6 игроков плюс универсальная (COMP-I-003).
+
+  - id: COMP-C-05
+    name: Маркер Судного дня
+    original: Ritual of Annihilation Marker
+    original_set: BASE
+    count: 1
+    count_original: 1
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: ACRYLIC
+    spec:
+      shape: круглый жетон
+      size: ⌀15 мм
+      art: RGBA 1920×1920, альфа есть
+    files:
+      - acrylic/04. Жетон влияния - 1шт. - ⌀15мм.png
+    generator: null
+    master: acrylic/04. Жетон влияния - 1шт. - ⌀15мм.png
+    truth: rules/RULEBOOK.md §2.2
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: Нарезан — подтверждено Alek 2026-09-22 третьим кругом.
+    refs: [COMP-I-004]
+    blocks_print: false
+    findings: [COMP-I-004]
+    notes: >
+      Имя файла врёт: по роли это маркер Судного дня, а не жетон влияния.
+      Переименование требует согласования (CLAUDE.md §9) — COMP-I-004.
+      Мотив (глаз в неоновом треугольнике) намеренно общий с рубашкой карт
+      скрытого влияния.
+
+  - id: COMP-C-06
+    name: Трек влияния (победных очков)
+    original: Doom Track, 0–30
+    original_set: BASE
+    count: 1
+    count_original: 1
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: SHEET
+    spec:
+      range: размечен дальше порога победы (PLAY-011, решение D-041)
+      note: >
+        30 — порог окончания партии, а не потолок счёта. Влияние выше
+        тридцати считается и сравнивается как обычное. Точная длина трека
+        берётся с напечатанного компонента, а не из глоссария CLAUDE.md §8,
+        который всё ещё пишет «трек 0–30» — COMP-I-020
+    files:
+      - print/VP.svg
+    generator: null
+    master: print/VP.svg
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: Напечатан — подтверждено Alek 2026-09-22.
+    refs: [PLAY-011, D-041]
+    blocks_print: false
+    findings: [COMP-I-020, COMP-I-022]
+    notes: Кладётся поверх трека Судного дня.
+
+  - id: COMP-C-07
+    name: Маркеры нефти
+    original: Power Marker (в составе Faction Markers)
+    original_set: BASE
+    count: 10
+    count_original: по 1 на фракцию
+    count_source: PURCHASE
+    count_ref: null
+    count_status: FIXED
+    carrier: PURCHASED
+    spec:
+      item: пластиковые бочонки нефти
+      art_needed: false
+    files: []
+    generator: null
+    master: null
+    truth: rules/RULEBOOK.md
+    state:
+      content: N/A
+      design: N/A
+      production: DONE
+    evidence: Закуплены — подтверждено Alek 2026-09-22.
+    refs: [COMP-I-022]
+    blocks_print: false
+    findings: [COMP-I-022]
+    notes: >
+      Осознанное отличие от оригинала: там маркер ресурса персональный,
+      по одному на фракцию и в одном комплекте с Doom-маркером. У нас общий
+      пул из 10, а маркер фракции остался один (COMP-F-06).
+
+  - id: COMP-C-08
+    name: Боевые кубики d6
+    original: Battle Dice
+    original_set: BASE
+    count: 20
+    count_original: 20
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: PURCHASED
+    spec:
+      base: белые чистые d6
+      finish: наклейки
+      faces: 6 / 4–5 / 1–3 по умолчанию; символьные грани по желанию (D-040)
+    files:
+      - print/Saved/Dices Print Sheet.pdf
+      - print/Dices.html
+      - print/dices/kill.png
+      - print/dices/retreat.png
+    generator: print/Dices.html, print/generate_dices.py
+    master: print/Saved/Dices Print Sheet.pdf
+    truth: rules/RULEBOOK.md §8.4
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: >
+      Комплект собран: наклейки нанесены на белые чистые d6. Alek 2026-09-22:
+      лист печатался с запасом, лишние наклейки остались — то, что число
+      наклеек не кратно числу кубиков, оказалось намеренным, а не дефектом.
+    refs: [MISS-024, D-019, D-040, ICON-018, ICON-019]
+    blocks_print: false
+    findings: [COMP-I-005, COMP-I-022, COMP-I-023]
+    notes: >
+      Остался один хвост, на компонент не влияющий: файл print/dices/retreat.png
+      несёт терминологию до D-019 — у нас этот результат называется
+      подавлением (COMP-I-023). Иконки книги {KILL} и {SUPPRESS} обязаны
+      рисоваться из этого же арта, иначе одно значение получит два
+      изображения.
+
+  - id: COMP-C-09
+    name: Числовой кубик d6
+    original: нет (наш компонент)
+    original_set: NONE
+    count: 1
+    count_original: 0
+    count_source: DECISION
+    count_ref: D-041
+    count_status: FIXED
+    carrier: PURCHASED
+    spec:
+      item: обычный d6 с цифрами
+      art_needed: false
+    files: []
+    generator: null
+    master: null
+    truth: rules/DECISIONS.md → D-041, PLAY-006
+    state:
+      content: N/A
+      design: N/A
+      production: DONE
+    evidence: >
+      Куплен — подтверждено Alek 2026-09-22 вторым кругом. Решение D-041
+      («заводим один обычный d6») этим закрыто.
+    refs: [D-041, PLAY-006]
+    blocks_print: false
+    findings: [COMP-I-006]
+    notes: >
+      Нужен там, где правила требуют бросок на число, а не на боевой результат.
+      Скорее всего закрывается любым кубиком из хозяйства — подтвердить.
+
+  - id: COMP-C-10
+    name: Жетон первого игрока
+    original: First Player Token
+    original_set: BASE
+    count: 1
+    count_original: 1
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: ACRYLIC
+    spec:
+      shape: круглый жетон, двусторонний
+      size: ⌀30 мм
+      sides: по часовой / против часовой
+      art: RGBA 1254×1254
+    files:
+      - acrylic/08. Жетон первого игрока - ⌀30 мм.png
+    generator: null
+    master: acrylic/08. Жетон первого игрока - ⌀30 мм.png
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: Нарезан — подтверждено Alek 2026-09-22.
+    refs: [COMP-I-007]
+    blocks_print: false
+    findings: [COMP-I-004, COMP-I-007, COMP-I-021, COMP-I-022]
+    notes: >
+      В имени файла нет количества — отступление от конвенции CLAUDE.md §5.
+      Компонент готов, вопрос только к имени файла.
+
+  - id: COMP-C-11
+    name: Военные фабрики (обычные)
+    original: Gates
+    original_set: BASE
+    count: 24
+    count_original: 24
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: TOKEN-CARDBOARD
+    spec:
+      sheet: print/Saved/Factory Tokens v2.pdf, стр. 1 (24 шт.) + 6 шт. на стр. 2
+      spare: 6 (предположительно запас под брак резки)
+    files:
+      - print/Saved/Factory Tokens v2.pdf
+      - print/Factory.html
+      - print/Factory/factory.css
+    generator: print/Factory.html
+    master: print/Saved/Factory Tokens v2.pdf
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: Напечатаны — подтверждено Alek 2026-09-22 вторым кругом.
+    refs: []
+    blocks_print: false
+    findings: []
+    notes: >
+      В PDF фактически 30 фабрик F-00. Шесть лишних — либо запас под брак,
+      как у карт скрытого влияния, либо ошибка раскладки. Не подтверждено.
+
+  - id: COMP-C-12
+    name: Карты скрытого влияния
+    original: Elder Signs (жетоны в мешочке)
+    original_set: BASE
+    count: 36
+    count_original: 36
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: CARD
+    spec:
+      format: Mini USA
+      composition: 18×1, 12×2, 6×3
+      printed: 40 карт (20/13/7) — 4 сверх нормы, запас под брак
+      back: глаз в неоновом треугольнике
+    files:
+      - print/Saved/Карты скрытого влияния - (формат Mini USA).pdf
+      - print/Saved/Cards - Скрытое влияние.json
+      - print/MiniAmericanCards.html
+    generator: print/MiniAmericanCards.html
+    master: print/Saved/Карты скрытого влияния - (формат Mini USA).pdf
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: >
+      Напечатаны — подтверждено Alek 2026-09-22 вторым кругом, совпадает
+      со старой инвентаризацией (запись закрыта 2026-08-27).
+    refs: []
+    blocks_print: false
+    findings: []
+    notes: >
+      Носитель осознанно заменён: в оригинале это жетоны, которые тянут
+      из мешочка вслепую. Числа 18/12/6 совпадают с оригиналом.
+      Терминология в правилах сведена к «карты скрытого влияния».
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ФРАКЦИОННЫЕ КОМПОНЕНТЫ — одна запись на ТИП, состояние по фракциям
+#
+# Количества отрядов здесь не пишутся: они живут в factions.yaml и
+# подставляются отчётом. by_faction содержит только отличия от дефолта.
+# ─────────────────────────────────────────────────────────────────────────────
+faction:
+
+  - id: COMP-F-01
+    name: Планшет фракции
+    original: Faction Card
+    original_set: BASE
+    per_faction: true
+    count_per_faction: 1
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: SHEET
+    spec:
+      format: A4 landscape, двусторонний
+    files:
+      - print/Template.html
+      - print/faction-card/
+      - print/Saved/Faction Card — *.pdf
+      - print/Saved/*.json
+    generator: print/Template.html (состояния — print/Saved/*.json)
+    master: print/Saved/Faction Card — *.pdf
+    truth: rules/registry/factions.yaml → redesign
+    state:
+      content: ISSUES
+      design: DRAFT
+      production: NONE
+    evidence: >
+      Alek 2026-09-22: «не готовы совсем, мы их переверстаем и вычитаем,
+      затем буду печатать». То есть заново проходятся обе оси — и текст,
+      и вёрстка, — и только потом производство. Восемь PDF
+      в print/Saved готовы, но устарели: три несут старое число «Очередь»
+      (D-048), на планшете Moon Systems не хватает правил Луны (D-049)
+      и напечатан чужой блок (FAC-002). PDF собраны из состояний, которые
+      с тех пор изменились, и не восстанавливаются (README).
+    by_faction:
+      OW-F-04:
+        state: {content: VERIFIED, design: DRAFT, production: NONE}
+        reason: >
+          Сверка закрыта 2026-09-24 (D-072): числа совпали с The Ancients 1:1,
+          «Очередь» по D-048 уже в данных. Блок «Общины» переписан без
+          разночтений («не больше одной общины на все регионы с символом…»,
+          PLAY-025), «резерв» в «Боевом донесении» (COMP-I-025 п. 1), 4 жетона
+          «Община» в «Подготовке», группа «Мехи», сноска о наёмных БР по §11.4.3.
+          Оборот: иллюстрация, «Как играть» собран заново по оригиналу, новый
+          «Как играть против». Полковник перекрашен в общий оттенок.
+          Таблица 116,0 мм из 136. design — до приёмки Alek.
+        blocks_print: false
+        refs: [D-048, D-072, PLAY-025, COMP-I-025, COMP-I-027]
+      OW-F-06:
+        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        reason: >
+          Сверка закрыта 2026-09-24 (D-052): числа совпали с оригиналом и всеми
+          источниками. На планшет внесены правила Луны (RED-006, D-049), старт
+          на Луне (FAC-010) вместо чужого блока «Общины» (FAC-002), три
+          пропущенных правила (FAC-019: создание «Зардоза», обязательность
+          «Человекообразных андроидов», «Зардоз» не даёт скрытого влияния
+          за давление) и одно чтение «Взлома систем» (RED-009). Собрано
+          из print/Faction-Card-A/Данные/Moon Systems.json, таблица 121,4 мм
+          из 136. Обе стороны приняты Alek 2026-09-24 (D-058): лицевая —
+          таблица, свойства, Луна, ³He; оборот — иллюстрация «Зардоза», лор,
+          «Как играть» и «Как играть против». Осталось напечатать.
+        refs: [D-048, D-049, D-052, RED-006, RED-009, FAC-002, FAC-010, FAC-019]
+        blocks_print: false
+      OW-F-01:
+        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        reason: >
+          Сверка закрыта 2026-09-24 (D-059), вёрстка и лор — D-060. Числа совпали во всех источниках
+          и с Great Cthulhu: 6/1/4/2/2/1, стоимости 1/3/1/2/3/10-4, силы
+          0/0/1/2/3/6, 8 нефти. Внесено: пропущенная сноска
+          оригинала об обеих задачах на убийство в одной битве (§3.9 книги) —
+          блоком «Задачи на убийство» в левой колонке,
+          термины D-019/D-024/TERM-053/TERM-014, «Диверсия» — «в этой битве»,
+          «10/4» без висячей звёздочки, «Танк МЕГ-01», регион с прописной.
+          Оборот: разрезанные абзацы собраны, «Как играть» сверено с с. 44
+          рулбука, добавлены «Как играть против» и иллюстрация CRAB2.png.
+          Лор переписан (вариант Г, D-060, D-061). Морпех переименован
+          в Моторизированного морпеха (D-062). Таблица 114,8 мм из 136.
+          Обе стороны приняты Alek 2026-09-24 (D-062). Осталось напечатать.
+        refs: [D-059, D-060, D-061, D-062, PLAY-023, COMP-I-012, COMP-I-025]
+        blocks_print: false
+      OW-F-07:
+        state: {content: VERIFIED, design: DRAFT, production: NONE}
+        reason: >
+          Сверка закрыта 2026-09-25 (D-073): числа 1:1 с Opener of the Way,
+          «Очередь» по D-048. Блок создания Альянса (FAC-001) заменён
+          на «Создание БР “Шрёдингер”» по карте оригинала; «Шрёдингер» (COMP-I-012);
+          сноска силы — наёмные не считаются; «Боевое донесение» — фаза влияния
+          и «можете» (COMP-I-029); FAQ-уточнения в «Пространственном сдвиге»
+          и «Мобильной военной фабрике». Оборот: иллюстрация, «Как играть»
+          собран по оригиналу, «Как играть против». Таблица 128,0 мм из 136.
+          design — до приёмки Alek.
+        blocks_print: false
+        refs: [D-048, D-073, FAC-001, COMP-I-012, COMP-I-028, COMP-I-029]
+      OW-F-08:
+        state: {content: ISSUES, design: DRAFT, production: NONE}
+        reason: >
+          На планшете «Абрамс 2220» имеет боевую силу 0, а броски вынесены
+          в отдельный блок «Разведывательная информация». По оригиналу
+          формула и ЕСТЬ его боевая сила: из-за нуля фракция трижды за партию
+          не смогла объявить битву. Правка: проставить «Абрамсу» формулу
+          вместо нуля, отдельный блок убрать. Дополнительно FAC-011: на одном
+          планшете боевой робот назван и «Техасцем», и «Тексаном».
+        refs: [PLAY-034, D-042, FAC-011]
+      OW-F-05:
+        state: {content: VERIFIED, design: DRAFT, production: NONE}
+        reason: >
+          Сверка D-074 (2026-09-25) с картой Black Goat O2: числа 1:1, «Жнец» 8
+          (FAC-003 закрыт), сноска силы с «Универсализацией», создание в три шага
+          по оригиналу («Уберите… в резерв», задачу № 4 не выполняет), «Аватар»
+          и «Клонирование» по карте и FAQ, оборот по «Playing as» и «Thwarting».
+          design — до приёмки Alek.
+        refs: [D-074, FAC-003, COMP-I-029, COMP-I-030]
+      OW-F-03:
+        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        reason: >
+          Сверка закрыта 2026-09-24 (D-065). Числа совпали с Yellow Sign,
+          кроме количеств машин: «Саранча» и десантник 6 и 4 вместо 4 и 2
+          (ошибка PDF, FAC-004). «Шепард» (прежде «Пастух», D-066) — БР (COMP-I-011), «Чёрный вихрь»
+          (COMP-I-012), сила «на треке Судного дня» (PLAY-023 п. 3), сноска
+          n «в битве, на всю группу» (RED-001), «Боевое донесение» и «резерв»
+          (COMP-I-025 п. 2), «Бурение» и «Эффективность» — по оригиналу,
+          12 вышек в «Подготовке». Оборот: иллюстрация «Шепарда», «Как играть»
+          и новый «Как играть против» — сокращены под оборот (вариант А).
+          Таблица 135,4 мм из 136. D-066: «Пастух» переименован в «Шепард»,
+          «бросьте D6», линии-привязки без мелких заломов; лицевая принята
+          Alek 2026-09-24. Лор — вариант Б с тремя правками Alek; обе стороны
+          приняты 2026-09-24 (D-066). Осталось напечатать.
+        refs: [D-065, D-066, PLAY-023, RED-001, FAC-004, COMP-I-011, COMP-I-012, COMP-I-025]
+    refs: [D-048, D-049, D-021, FAC-001]
+    blocks_print: false
+    findings: [COMP-I-009, COMP-I-011, COMP-I-012, COMP-I-019, COMP-I-025, COMP-I-029]
+    notes: >
+      Планшет — единственное место, где живут числа фракции: стоимости
+      отрядов, боевые силы, «Очередь», условия создания боевого робота.
+      Книга их намеренно не дублирует (D-014, D-021). Перед печатью книги
+      «Очередь» и правила Луны обязаны быть на планшетах.
+
+  - id: COMP-F-02
+    name: Фигурки пехотинцев «Рекрут»
+    original: Acolyte Cultists
+    original_set: BASE
+    per_faction: true
+    count_per_faction: null
+    count_source: FACTIONS
+    count_ref: redesign[].units где group = Пехотинцы и name = Рекрут
+    count_status: FIXED
+    carrier: MINIATURE
+    spec:
+      state: закуплены и покрашены
+      art_needed: false
+    files:
+      - print/Units/adept.png
+    generator: null
+    master: null
+    truth: rules/registry/factions.yaml → redesign[].units
+    state:
+      content: VERIFIED
+      design: N/A
+      production: DONE
+    evidence: Миниатюры готовы на 100 % — подтверждено Alek 2026-09-22.
+    by_faction:
+      OW-F-06:
+        state: {content: VERIFIED, design: N/A, production: N/A}
+        reason: >
+          У Moon Systems пехотинцев нет вообще — единственная фракция
+          без них. Прецедент оригинала ровно в парной фракции: у Bubastis
+          тоже нет Acolyte Cultists, их роль играют шесть Earth Cats.
+        refs: []
+    refs: []
+    blocks_print: false
+    findings: [COMP-I-010]
+    notes: >
+      Правила утверждают «пехотинцев всегда 6», и Moon Systems это
+      опровергает — COMP-I-010.
+
+  - id: COMP-F-03
+    name: Фигурка полковника
+    original: High Priest
+    original_set: ONSLAUGHT-1
+    per_faction: true
+    count_per_faction: null
+    count_source: FACTIONS
+    count_ref: redesign[].units где name = Полковник
+    count_status: FIXED
+    carrier: MINIATURE
+    spec:
+      state: закуплены и покрашены
+      art_needed: false
+    files:
+      - print/Units/colonel.png
+    generator: null
+    master: null
+    truth: rules/registry/factions.yaml → redesign[].units
+    state:
+      content: VERIFIED
+      design: N/A
+      production: DONE
+    evidence: Миниатюры готовы на 100 % — подтверждено Alek 2026-09-22.
+    by_faction:
+      OW-F-06:
+        state: {content: VERIFIED, design: N/A, production: N/A}
+        reason: >
+          У Moon Systems полковника нет. Один из признаков пары
+          Moon Systems ↔ Bubastis.
+    refs: [D-047]
+    blocks_print: false
+    findings: []
+    notes: >
+      Полковник — вариант игры, включённый по умолчанию (D-047):
+      он напечатан на планшете каждой фракции, поэтому его не включают,
+      а при желании выключают. Способность «Боевое донесение» одинакова
+      у всех.
+
+  - id: COMP-F-04
+    name: Фигурки боевых машин и мехов
+    original: Monsters; мех — это Terror оригинала под другим именем (D-011)
+    original_set: BASE
+    per_faction: true
+    count_per_faction: null
+    count_source: FACTIONS
+    count_ref: redesign[].units где group = Боевые машины или Боевой мех
+    count_status: FIXED
+    carrier: MINIATURE
+    spec:
+      state: закуплены и покрашены
+      art_needed: false
+    files:
+      - print/Units/
+    generator: null
+    master: null
+    truth: rules/registry/factions.yaml → redesign[].units
+    state:
+      content: VERIFIED
+      design: N/A
+      production: DONE
+    evidence: Миниатюры готовы на 100 % — подтверждено Alek 2026-09-22.
+    by_faction:
+      OW-F-03:
+        state: {content: VERIFIED, design: N/A, production: DONE}
+        reason: >
+          D-065: «Саранча» и Моторизированный десантник — 6 и 4, а не 4 и 2.
+          Состав снят с оригинала: 6 Undead и 4 Byakhee (SRC-RB-NEW, с. 47,
+          COMPONENTS; SRC-WIKI-YS; SRC-FACTIONS). Сомнение было только
+          формальным — «миниатюры готовы на 100 %» прозвучало 22.09, когда
+          реестр нёс 4 и 2; физических количеств фигурок не записывает ни один
+          файл проекта, включая архивные инвентаризации. Alek 2026-09-24
+          сомнение снял (D-066): production DONE по подтверждению 22.09.
+        refs: [D-065, D-066, FAC-004]
+      OW-F-04:
+        state: {content: VERIFIED, design: N/A, production: DONE}
+        reason: >
+          Единственная фракция с мехами «Паладин» — они стоят вместо боевого
+          робота. Мех — не наше изобретение: по D-011 это Terror оригинала
+          под другим именем, «строится как боевая машина, но неуязвим
+          к эффектам против БМ» — дословный перевод его свойства.
+    refs: [D-011, D-032]
+    blocks_print: false
+    findings: []
+    notes: >
+      Подпапки print/Units названы с разнобоем (MoonNet,
+      АиркрафтКорпорэйшн, ГлобалПетролиум, КлонэйдРесерч (переименована
+      в «Клонэйд Ресёрч», D-074),
+      ОстровнаяИмперия, СевероамериканскийАльянс) — привести к эталонным
+      написаниям CLAUDE.md §2 при следующем касании.
+
+  - id: COMP-F-05
+    name: Фигурка боевого робота
+    original: Great Old One
+    original_set: BASE
+    per_faction: true
+    count_per_faction: null
+    count_source: FACTIONS
+    count_ref: redesign[].units где group = Боевой робот
+    count_status: FIXED
+    carrier: MINIATURE
+    spec:
+      state: закуплены и покрашены
+      art_needed: false
+    files:
+      - print/BattleRobots/
+      - art/illustrations/
+    generator: null
+    master: null
+    truth: rules/registry/factions.yaml → redesign[].units
+    state:
+      content: VERIFIED
+      design: N/A
+      production: DONE
+    evidence: >
+      Миниатюры готовы на 100 % — подтверждено Alek 2026-09-22 дважды.
+      Расхождения в написании (COMP-I-012) живут на картах и планшетах,
+      а не на фигурке, и состояние этой записи не меняют.
+    by_faction:
+      OW-F-03:
+        state: {content: VERIFIED, design: N/A, production: DONE}
+        reason: >
+          Два боевых робота — «Шепард» (до D-066 «Пастух») и «Чёрный вихрь».
+          Прецедент оригинала есть (Yellow Sign: Hastur + King in Yellow). D-065: БР
+          (COMP-I-011 закрыт), написание «Чёрный вихрь» на планшете и в
+          factions.yaml (COMP-I-012 по этой паре закрыт).
+      OW-F-04:
+        state: {content: VERIFIED, design: N/A, production: N/A}
+        reason: >
+          Боевого робота нет — вместо него мехи. Прецедент оригинала
+          есть (The Ancients без Great Old One).
+    refs: [PLAY-023, FAC-003, FAC-011]
+    blocks_print: false
+    findings: [COMP-I-011, COMP-I-012, COMP-I-013]
+    notes: >
+      Три расхождения написаний ждут решения: «Краб» / «C.R.A.B.»,
+      «Шрёдингер» / «Шредингер», «Тексан» / «Техасец». Каждое из них —
+      выбор между CLAUDE.md и уже напечатанной картой.
+
+  - id: COMP-F-06
+    name: Маркер фракции на треке влияния
+    original: Faction Markers (Doom + Power)
+    original_set: BASE
+    per_faction: true
+    count_per_faction: 1
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: ACRYLIC
+    spec:
+      shape: шестигранный жетон
+      size: ⌀18 мм
+      art: RGBA 1200×1200, 8 файлов по фракциям
+      variant: «Б. Плашка с гексом» (принят)
+    files:
+      - acrylic/07. Жетоны-логотипы, шестигранные - по 1шт - ⌀18мм/
+      - acrylic/_варианты-логотипов/
+      - art/logos/
+    generator: null
+    master: acrylic/07. Жетоны-логотипы, шестигранные - по 1шт - ⌀18мм/
+    truth: CLAUDE.md §2 (цвета и написания фракций)
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: Нарезаны — подтверждено Alek 2026-09-22 («маркеры фракций»).
+    refs: []
+    blocks_print: false
+    findings: []
+    notes: >
+      У нас на фракцию один маркер, а не два, как в оригинале: нефть
+      отслеживается общим пулом маркеров (COMP-C-07). Отвергнутый вариант
+      «А. Символ с обводкой» лежит в acrylic/_варианты-логотипов/.
+
+  - id: COMP-F-07
+    name: Карты задач (целей)
+    original: Spellbook requirements (условия напечатаны на планшете)
+    original_set: BASE
+    per_faction: true
+    count_per_faction: 6
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: CARD
+    spec:
+      format: Mini USA
+      total: 48
+      back: print/Goals-Tachs/goal-back.png
+    files:
+      - print/Saved/Технологии и задачи.pdf
+      - print/Saved/Cards - Технологии и задачи.json
+      - print/MiniAmericanCardsLandscape.html
+      - print/Goals-Tachs/
+    generator: print/MiniAmericanCardsLandscape.html
+    master: print/Saved/Технологии и задачи.pdf
+    truth: rules/registry/factions.yaml → redesign[].technologies (парные технологии)
+    state:
+      content: ISSUES
+      design: APPROVED
+      production: DONE
+    evidence: >
+      Напечатаны — Alek 2026-09-22: «есть, но возможно потребуют переработки».
+      Поэтому production закрыт, а content остаётся ISSUES: открытые вопросы
+      по текстам карт никуда не делись.
+    by_faction:
+      OW-F-01:
+        state: {content: ISSUES, design: APPROVED, production: DONE}
+        reason: >
+          Сверено 2026-09-24 (D-059), COMP-I-024: задача № 1 пишет «цель»
+          вместо «задачи»; «Бонус: получите» / «Бонус: Получите».
+          Сноска о двух задачах на убийство вынесена на планшет —
+          карты № 2 и № 3 править не нужно.
+        refs: [D-059]
+      OW-F-03:
+        state: {content: ISSUES, design: APPROVED, production: DONE}
+        reason: >
+          Сверено 2026-09-24 (D-065), COMP-I-026: задача № 1 «Создать
+          промышленного робота “Пастуха”» → «Создать боевого робота
+          “Шепард”» (COMP-I-011, D-066) — в JSON генератора внесено,
+          напечатанная карта устарела. Остальные пять совпали с Yellow Sign,
+          бонус на № 5, «3 очка влияния» на № 6.
+        refs: [D-065]
+      OW-F-06:
+        state: {content: ISSUES, design: APPROVED, production: DONE}
+        reason: >
+          Переименования D-054: «Буран» → «Зардоз», CP-1 «Гибсон» → Модель 2.
+          В JSON генератора текст исправлен, напечатанные карты задач № 4
+          и № 6 устарели — перепечатать две карты.
+        refs: [D-054]
+    refs: [COMP-I-011, COMP-I-012]
+    blocks_print: false
+    findings: [COMP-I-011, COMP-I-012, COMP-I-024, COMP-I-026, COMP-I-027, COMP-I-028, COMP-I-030]
+    notes: >
+      Сверх оригинала по носителю: в оригинале шесть условий напечатаны прямо
+      на планшете и отдельного компонента нет. Карта задачи Глобал Петролеум
+      несёт спорное «промышленный робот» — COMP-I-011.
+
+  - id: COMP-F-08
+    name: Карты технологий
+    original: Spellbooks (картонные жетоны-накладки)
+    original_set: BASE
+    per_faction: true
+    count_per_faction: 6
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: CARD
+    spec:
+      format: Mini USA
+      total: 48
+      fit: карта обязана физически ложиться на слот планшета
+      back: print/Goals-Tachs/tech-back2.png
+    files:
+      - print/Saved/Технологии и задачи.pdf
+      - print/Saved/Cards - Технологии и задачи.json
+      - print/MiniAmericanCardsLandscape.html
+    generator: print/MiniAmericanCardsLandscape.html
+    master: print/Saved/Технологии и задачи.pdf
+    truth: rules/registry/factions.yaml → redesign[].technologies
+    state:
+      content: ISSUES
+      design: APPROVED
+      production: DONE
+    evidence: >
+      Напечатаны — Alek 2026-09-22: «есть, но возможно потребуют переработки».
+      Шесть технологий на фракцию зафиксированы в factions.yaml и сверены
+      с картами; content остаётся ISSUES из-за расхождений в текстах.
+    by_faction:
+      OW-F-01:
+        state: {content: ISSUES, design: APPROVED, production: DONE}
+        reason: >
+          Сверено 2026-09-24 (D-059), COMP-I-024. Перепечатать пять карт
+          из шести: «Комбинированная броня» (Мегалодон → Танк МЕГ-01,
+          «отступлений» → «подавлений», D-019), «Погружение» и «Островные
+          аванпосты» («C.R.A.B» без точки), «Муштра» и «Перевербовка»
+          («из вашего запаса» → «резерва», D-024). «Усиление» — по выбору:
+          сокращение «кол-во». Числа всех шести совпали с O3. На «Муштре»
+          «морпехов» → «моторизированных морпехов» (D-062) — в JSON уже.
+        refs: [D-059, D-019, D-024]
+      OW-F-03:
+        state: {content: ISSUES, design: APPROVED, production: DONE}
+        reason: >
+          Сверено 2026-09-24 (D-065), COMP-I-026. Стоимости и эффекты всех
+          шести совпали с Yellow Sign. Перепечатать четыре: «Вторжение»
+          и «Сопровождение» — «ещё одно, другое действие» (RED-002,
+          «second, different Action»); «Вытеснение» (до D-067 «Подавление») — «из запаса» → «из
+          резерва» (D-024); «Разведка месторождений» — «одну карту скрытого
+          влияния». «Черный» → «Чёрный» на «Вторжении» и «Разведке».
+        refs: [D-065, RED-002, D-024]
+      OW-F-04:
+        state: {content: ISSUES, design: APPROVED, production: DONE}
+        reason: >
+          В доке фракций два разных набора технологий: оглавление (остатки
+          «Всемирного Халифата») и тело. Эталон — тело дока и карты.
+          Сверка D-072: числа и эффекты всех шести совпали с The Ancients;
+          правки текста при перепечатке — COMP-I-027.
+      OW-F-08:
+        state: {content: ISSUES, design: APPROVED, production: DONE}
+        reason: >
+          Шестая технология: на карте «Специальная операция», в оглавлении
+          дока «Специальный договор». Эталон — карта.
+      OW-F-06:
+        state: {content: ISSUES, design: APPROVED, production: DONE}
+        reason: >
+          Переименования D-054: «Буран» → «Зардоз», CP-1 «Гибсон» → Модель 2.
+          В JSON генератора текст исправлен, напечатанные карты «Системный сбой»
+          и «Орбитальная катапульта» устарели — перепечатать. Заодно при перепечатке: «Системный сбой»
+          пишет «отступления» вместо «подавления» (D-019).
+    refs: [MISS-025]
+    blocks_print: false
+    findings: [COMP-I-014, COMP-I-024, COMP-I-026, COMP-I-027, COMP-I-028, COMP-I-030]
+    notes: >
+      Сверх оригинала по носителю: в оригинале это картонные жетоны-накладки.
+      Технология «Стелс» сформулирована по-разному на карте и в приложении
+      по фракциям — эталон карта (MISS-025).
+
+  - id: COMP-F-09
+    name: Уникальные жетоны фракции
+    original: разный (Cathedrals, Filth, тайл Луны)
+    original_set: разный
+    per_faction: true
+    count_per_faction: null
+    count_source: FACTIONS
+    count_ref: redesign[].extras
+    count_status: FIXED
+    carrier: разный, см. by_faction
+    spec: {}
+    files: []
+    generator: null
+    master: null
+    truth: rules/registry/factions.yaml → redesign[].extras
+    state:
+      content: VERIFIED
+      design: N/A
+      production: N/A
+    evidence: >
+      Пять фракций из восьми уникальных компонентов не имеют — у них extras
+      пуст. Состояние проставляется только тем трём, у кого они есть.
+    by_faction:
+      OW-F-03:
+        name: Жетоны «Нефтяная вышка»
+        carrier: ACRYLIC
+        spec:
+          shape: стенд
+          size: ↕25 мм
+          art: RGBA 1254×1254
+        files:
+          - acrylic/01. Вышки - стенд - 12шт - ↕️25мм.png
+          - print/Вышка Глобал Петролеум - лицо.png
+          - print/Вышка Глобал Петролеум - задник.png
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
+        reason: >
+          Нарезаны — подтверждено Alek 2026-09-22 третьим кругом. Этим же
+          закрыт вопрос носителя: акрил, а не печать (COMP-I-015).
+        refs: [COMP-I-015]
+      OW-F-04:
+        name: Жетоны «Община»
+        carrier: TOKEN-CARDBOARD
+        spec:
+          sheet: print/Saved/Factory Tokens v2.pdf, стр. 2
+          composition: жетоны двусторонние — плиток на листе вдвое больше, чем жетонов
+        files:
+          - print/Saved/Factory Tokens v2.pdf
+          - print/Factory/community.png
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
+        reason: >
+          Напечатаны — подтверждено Alek 2026-09-22 вторым кругом.
+          Акриловая версия остаётся как альтернатива, приоритет низкий.
+        refs: []
+      OW-F-06:
+        name: Тайл «Луна»
+        carrier: TOKEN-CARDBOARD
+        spec:
+          art: print/Saved/Moon.png, RGB 1254×1254
+        files:
+          - print/Saved/Moon.png
+        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        reason: >
+          Не печатался — Alek 2026-09-22; картинка сгенерирована и принята,
+          задача «перегенерировать в большем разрешении» снята. Правила
+          Луны напечатаны на планшете Moon Systems 2026-09-24 (D-052) —
+          блокер снят, тайл можно печатать вместе с планшетом.
+        refs: [D-049, D-052, RED-006]
+    refs: [COMP-I-008]
+    blocks_print: false
+    findings: [COMP-I-015, COMP-I-021]
+    notes: >
+      Единая точка правды по составу уникальных компонентов —
+      factions.yaml → redesign[].extras. Здесь только носитель, файл
+      и физическое состояние.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# КОМПОНЕНТЫ ВАРИАНТОВ ИГРЫ
+# ─────────────────────────────────────────────────────────────────────────────
+variant:
+
+  - id: COMP-V-01
+    name: Особые военные фабрики
+    original: Colour Out of Space Gate Pack (CW-U7) / Eldritch Gate Pack (CW-U9)
+    original_set: ONSLAUGHT-2
+    count: 10
+    count_original: 8
+    count_source: FILE
+    count_ref: print/Saved/Factory Tokens v2.pdf
+    count_status: FIXED
+    carrier: TOKEN-CARDBOARD
+    spec:
+      ids: S-01…S-10, у каждой свой символ
+      sheet: print/Saved/Factory Tokens v2.pdf, стр. 2
+    files:
+      - print/Saved/Factory Tokens v2.pdf
+      - print/Factory/
+    generator: print/Factory.html
+    master: print/Saved/Factory Tokens v2.pdf
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: >
+      Напечатаны — подтверждено Alek 2026-09-22 вторым кругом. Символы
+      фабрик совпадают с таблицами карт событий.
+    refs: [D-014, D-021]
+    blocks_print: false
+    findings: []
+    notes: >
+      В оригинале эффекты особых врат разыгрываются броском кубика,
+      у нас — картами событий (COMP-V-02). Таблица эффектов живёт
+      на компоненте, книга её не дублирует.
+
+  - id: COMP-V-02
+    name: Карты событий фабрик
+    original: нет (наш компонент)
+    original_set: NONE
+    count: 6
+    count_original: 0
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: CARD
+    spec:
+      printed: 8 карт, две из них эксперимент и в рабочую колоду не входят
+      deck: 6
+    files:
+      - print/Saved/Factory Events.pdf
+      - print/FactoryEvents.html
+      - print/FactoryEvents/
+    generator: print/FactoryEvents.html
+    master: print/Saved/Factory Events.pdf
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: UNKNOWN
+    evidence: >
+      Alek 2026-09-22: «не помню, проверить позже». Старая инвентаризация
+      называет карты напечатанными (запись закрыта 2026-08-27), рабочая
+      колода 6, две лишние — эксперимент. Единственная запись, по которой
+      ответа нет ни за, ни против.
+    refs: [COMP-I-008]
+    blocks_print: false
+    findings: [COMP-I-008]
+    notes: Сверх оригинала целиком — официальных карт событий в оригинале нет.
+
+  - id: COMP-V-03
+    name: Карты уникальных полковников
+    original: Investigators (8) + The Eidolon + The Prophetess
+    original_set: ONSLAUGHT-3
+    count: 11
+    count_original: 10
+    count_source: FILE
+    count_ref: print/Saved/Уникальные полковники.pdf
+    count_status: FIXED
+    carrier: CARD
+    spec:
+      pages: 4
+    files:
+      - print/Saved/Уникальные полковники.pdf
+      - print/UniqueColonel/
+    generator: print/UniqueColonel/index.html
+    master: print/Saved/Уникальные полковники.pdf
+    truth: print/UniqueColonel/uc.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: >
+      Напечатаны — подтверждено Alek 2026-09-22 вторым кругом.
+      В PDF подтверждены 11 карт.
+    refs: [D-014, D-021]
+    blocks_print: false
+    findings: []
+    notes: >
+      Отличие от оригинала: там Investigators вручают противнику как
+      обременение, у нас карта берётся себе. Таблица уникальных полковников
+      живёт на компоненте, книга её не дублирует.
+      Карта «Генри Брут» использует энграммы (COMP-V-06).
+
+  - id: COMP-V-04
+    name: Лаборатория
+    original: область Laboratory на карте Yuggoth
+    original_set: ONSLAUGHT-1
+    count: 1
+    count_original: 1
+    count_source: DERIVED
+    count_ref: null
+    count_status: FIXED
+    carrier: ACRYLIC
+    spec:
+      shape: стенд
+      size: ↔45 мм
+      art: RGBA 1254×1097
+    files:
+      - acrylic/02. Лаборатория - стенд - 1шт - ↔️45мм.png
+      - print/Factory/lab.png
+    generator: null
+    master: acrylic/02. Лаборатория - стенд - 1шт - ↔️45мм.png
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: Нарезана — подтверждено Alek 2026-09-22.
+    refs: []
+    blocks_print: false
+    findings: []
+    notes: >
+      Включает действие «Извлечение сознания» (до 4 пехотинцев) — прямой
+      аналог действия «Хирургия» оригинала. Количество в правилах
+      не задано, выведено как 1. В правилах размещения Лаборатории есть
+      дубль «на 4 игрока» — правится в книге, не в компоненте.
+
+  - id: COMP-V-05
+    name: Узел управления (ЦУ)
+    original: Slime Sea Overlook на карте Yuggoth
+    original_set: ONSLAUGHT-1
+    count: 1
+    count_original: 1
+    count_source: DERIVED
+    count_ref: null
+    count_status: FIXED
+    carrier: ACRYLIC
+    spec:
+      shape: стенд
+      size: ↔45 мм
+      art: RGBA 1254×991
+      placement: регион с тремя и более соседями
+    files:
+      - acrylic/05. ЦУ - стенд - 1шт - ↔️45мм.png
+      - print/Factory/swarm-controller.png
+    generator: null
+    master: acrylic/05. ЦУ - стенд - 1шт - ↔️45мм.png
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: Нарезан — подтверждено Alek 2026-09-22 третьим кругом.
+    refs: []
+    blocks_print: false
+    findings: []
+    notes: Даёт карту «Контроль сети» (COMP-V-08).
+
+  - id: COMP-V-06
+    name: Энграммы
+    original: Brain Cylinders
+    original_set: ONSLAUGHT-1
+    count: 32
+    count_original: 4 на фракцию
+    count_source: FILE
+    count_ref: acrylic/03. Энграммы - 8x4шт - ↕️20мм.png
+    count_status: FIXED
+    carrier: ACRYLIC
+    spec:
+      shape: стенд
+      size: ↕20 мм
+      composition: 8 фракций × 4
+      art: RGBA 1536×1024
+    files:
+      - acrylic/03. Энграммы - 8x4шт - ↕️20мм.png
+    generator: null
+    master: acrylic/03. Энграммы - 8x4шт - ↕️20мм.png
+    truth: rules/registry/factions.yaml → meta.universal
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: Нарезаны — подтверждено Alek 2026-09-22.
+    refs: [D-023, D-040]
+    blocks_print: false
+    findings: []
+    notes: >
+      Четыре на фракцию — совпадает с оригиналом. Правила количества
+      не задают, в действии сказано «до 4». Используются и как фишка-
+      заменитель в варианте «Баланс сил» (COMP-V-11), и картой уникального
+      полковника «Генри Брут».
+
+  - id: COMP-V-07
+    name: Зоны сети
+    original: нет прямого аналога (ближайшее — область Slime Sea)
+    original_set: NONE
+    count: 4
+    count_original: 0
+    count_source: FILE
+    count_ref: нарезанный комплект, пересчитан Alek 2026-09-22
+    count_status: FIXED
+    carrier: ACRYLIC
+    spec:
+      shape: круглый жетон
+      size: ⌀20 мм
+      art: RGBA 1254×1254, альфа есть
+    files:
+      - acrylic/06. Контроль - круглый жетон - ⌀20мм.png
+      - print/Factory/swarm-zone.png
+    generator: null
+    master: null
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: >
+      Нарезаны, ровно 4 — пересчитано Alek 2026-09-22. Резка закрывает
+      и вопрос перерисовки: сюжет принят как есть. Остался только хвост
+      по имени файла (COMP-I-004).
+    refs: [COMP-I-016]
+    blocks_print: false
+    findings: [COMP-I-004, COMP-I-016]
+    notes: >
+      Правила давали вилку «3–4 жетона»; фактически нарезано 4, и это
+      теперь зафиксированное число. Отдельного жетона
+      контроля фабрик у нас нет: контроль обозначается пехотинцем поверх
+      фабрики, как в оригинале.
+
+  - id: COMP-V-08
+    name: Карта «Контроль сети»
+    original: Slime Mold Loyalty Card
+    original_set: ONSLAUGHT-1
+    count: 1
+    count_original: 1
+    count_source: RULES
+    count_ref: null
+    count_status: FIXED
+    carrier: CARD
+    spec:
+      note: при вёрстке на карту ставится боевая сила Роя — 2 (D-040)
+    files: []
+    generator: null
+    master: null
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: NONE
+      production: NONE
+    evidence: >
+      Alek 2026-09-22: «карты ещё нет, только стенды и жетоны». Файла нет
+      ни в print/, ни в print/Saved/. Содержание решено, вёрстки не было.
+    refs: [MISS-014, D-040]
+    blocks_print: false
+    findings: []
+    notes: >
+      Механика повторяет оригинал один в один: при смене владельца
+      ключевой фабрики весь Рой мгновенно меняет хозяина. Боевая сила
+      Роя нигде не напечатана — ставится при вёрстке этой карты.
+
+  - id: COMP-V-09
+    name: Рой боевых дронов
+    original: Slime Molds
+    original_set: ONSLAUGHT-1
+    count: 6
+    count_original: 6
+    count_source: FILE
+    count_ref: acrylic/09. Рой дронов - стенд - 6шт - ↔️35мм.png
+    count_status: FIXED
+    carrier: ACRYLIC
+    spec:
+      shape: стенд
+      size: ↔35 мм
+      art: RGBA 1254×1254
+    files:
+      - acrylic/09. Рой дронов - стенд - 6шт - ↔️35мм.png
+    generator: null
+    master: acrylic/09. Рой дронов - стенд - 6шт - ↔️35мм.png
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: APPROVED
+      production: DONE
+    evidence: Нарезан — подтверждено Alek 2026-09-22.
+    refs: [MISS-014, COMP-I-017]
+    blocks_print: false
+    findings: [COMP-I-017]
+    notes: >
+      Носитель изменился против старой инвентаризации: там значилась
+      миниатюра, по факту сделан акриловый стенд. Стоимость производства
+      0, если Роя нет в игре, иначе 1 — та же логика, что у Слизней
+      оригинала. Заявленная в старом промпте высота ↕28 мм расходится
+      с шириной ↔35 мм в имени файла — COMP-I-017.
+
+  - id: COMP-V-10
+    name: Наёмники — карты лояльности и фигурки
+    original: Neutral Monsters, Cosmic Terrors, Independent Great Old Ones
+    original_set: ONSLAUGHT-1..4
+    count: null
+    count_original: ≈24–26 независимых плюс 12/9/9 нейтральных и 3 Terror
+    count_source: RULES
+    count_ref: null
+    count_status: OPEN
+    carrier: CARD + MINIATURE
+    spec:
+      classes: [боевые машины, мехи, боевые роботы]
+      cost: >
+        не решено. NUM-108 (боевая машина) даёт 2 влияния, NUM-109 (мех) —
+        2 нефти и 2 влияния; в оригинале цена единая. Оба числа под DEV-014,
+        окончательное печатается на карте лояльности при вёрстке
+      limit: не более одной карты лояльности в фазу влияния
+    files:
+      - source/gdocs/pdf/Нефтяные войны (наемники).pdf
+    generator: null
+    master: null
+    truth: rules/RULEBOOK.md
+    state:
+      content: TODO
+      design: NONE
+      production: NONE
+    evidence: >
+      Alek 2026-09-22: «не начаты, в последнюю очередь». Правила описывают
+      механику, но количеств не задают ни для одного из трёх классов,
+      а цена карты лояльности разошлась на две разные (NUM-108 и NUM-109).
+      Компонентной строки нет.
+    refs: [DEV-014, NUM-108, NUM-109, COMP-I-018]
+    blocks_print: false
+    findings: [COMP-I-018]
+    notes: >
+      Три класса наёмников — три отдельных набора карт и фигурок.
+      Ориентир из оригинала: 8–12 нейтральных боевых машин, 3 меха,
+      5–8 наёмных боевых роботов. У каждого наёмного боевого робота своя
+      карта лояльности и своя технология.
+
+  - id: COMP-V-11
+    name: Баланс сил
+    original: Handicap Acolyte — 9 серых акольтов
+    original_set: ONSLAUGHT-3
+    count: 0
+    count_original: 9
+    count_source: DECISION
+    count_ref: D-023
+    count_status: FIXED
+    carrier: NONE
+    spec:
+      substitute: рекрут неучаствующей фракции либо фигурка энграммы
+    files: []
+    generator: null
+    master: null
+    truth: rules/RULEBOOK.md §11
+    state:
+      content: VERIFIED
+      design: N/A
+      production: N/A
+    evidence: >
+      Решение D-023 и D-040: набора серых фигурок не заводим, берём рекрута
+      неучаствующей фракции или энграмму как фишку-заменитель.
+    refs: [D-023, D-040]
+    blocks_print: false
+    findings: []
+    notes: Новых компонентов не требует — запись заведена, чтобы вопрос не поднимался снова.
+
+  - id: COMP-V-12
+    name: Игра на двоих и эпическая игра
+    original: варианты оригинала
+    original_set: NONE
+    count: 0
+    count_original: 0
+    count_source: DECISION
+    count_ref: D-021
+    count_status: FIXED
+    carrier: NONE
+    spec: {}
+    files: []
+    generator: null
+    master: null
+    truth: rules/RULEBOOK.md
+    state:
+      content: VERIFIED
+      design: N/A
+      production: N/A
+    evidence: >
+      Режим «один на один» с маркером Распада в книгу не перенесён;
+      семь записей эталона выведены за объём осознанно.
+    refs: [D-021, D-040]
+    blocks_print: false
+    findings: []
+    notes: >
+      Отдельных компонентов не требует, но требует поля и трека Судного дня
+      на соответствующие составы.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ИЗ ОРИГИНАЛА НЕ БЕРЁМ — записи заведены, чтобы вопрос не открывался заново
+# ─────────────────────────────────────────────────────────────────────────────
+not_taken:
+
+  - id: COMP-N-01
+    original: Elder Signs (36 жетонов) и мешочек
+    original_set: BASE
+    replaced_by: COMP-C-12
+    reason: Носитель осознанно заменён на карты скрытого влияния.
+
+  - id: COMP-N-02
+    original: Spellbooks как картонные жетоны-накладки (24)
+    original_set: BASE
+    replaced_by: COMP-F-08
+    reason: Носитель осознанно заменён на карты технологий.
+
+  - id: COMP-N-03
+    original: Desecration Markers (12, только у Yellow Sign)
+    original_set: BASE
+    replaced_by: null
+    reason: >
+      Уникальный компонент фракции, которой у нас нет. Роль занимают
+      вышки, общины и энграммы.
+
+  - id: COMP-N-04
+    original: High Priest как отдельная фигурка сверх лидера (9)
+    original_set: ONSLAUGHT-1
+    replaced_by: COMP-F-03
+    reason: Роль выполняет полковник.
+
+  - id: COMP-N-05
+    original: второй маркер на фракцию (Power Marker)
+    original_set: BASE
+    replaced_by: COMP-C-07
+    reason: Нефть отслеживается общим пулом из 10 маркеров.
+
+  - id: COMP-N-06
+    original: карты-дополнения Primeval Earth, Dreamlands, Yuggoth, Celaeno, Shaggai
+    original_set: ONSLAUGHT-1..3
+    replaced_by: null
+    reason: >
+      Механики Лаборатории и Роя перенесены с карты Yuggoth на основное поле
+      через жетоны (COMP-V-04, COMP-V-05, COMP-V-07, COMP-V-09).
+
+  - id: COMP-N-07
+    original: Cathedrals (×4) и Chaos Gates (×3)
+    original_set: ONSLAUGHT-3..4
+    replaced_by: COMP-F-09 → OW-F-04
+    reason: Ближайший аналог — жетоны «Община» Братства Сингулярности.
+
+  - id: COMP-N-08
+    original: Cosmic Terrors Pack (CW-U5) — три нейтральные фигурки Terror
+    original_set: ONSLAUGHT-2
+    replaced_by: COMP-V-10
+    reason: >
+      Отвергнут не ранг, а набор. Сам ранг взят и переименован: по D-011
+      «мех» и есть Terror оригинала, «строится как боевая машина, но
+      неуязвим к эффектам против БМ» — дословный перевод его свойства.
+      Наши мехи — фракционные (COMP-F-04) и наёмные (COMP-V-10);
+      отдельного набора из трёх нейтральных фигурок мы не заводим.
+
+  - id: COMP-N-09
+    original: неигровые угрозы — Ледники, Watcher, Worms of Ghroth
+    original_set: ONSLAUGHT-1..3
+    replaced_by: COMP-V-02
+    reason: Роль глобального события играют карты событий фабрик.
+
+  - id: COMP-N-10
+    original: альтернативная победа по Цитаделям (Dreamlands)
+    original_set: ONSLAUGHT-1
+    replaced_by: null
+    reason: >
+      Условия победы у нас единственные: 30 влияния и 6 технологий
+      либо Ядерная катастрофа.
+
+  - id: COMP-N-11
+    original: компонентная часть состава 6–8 игроков
+    original_set: PACK-CW-M4
+    replaced_by: null
+    reason: >
+      Целевой состав 3–5 (D-040, D-047). Компонентная часть 6–8 убрана
+      из книги; отдельных правил для 6–8 в книге нет.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# НАХОДКИ ПО КОМПОНЕНТАМ
+#
+# Здесь только то, что относится к компоненту как к физической вещи.
+# Находки по правилам живут в issues.yaml, по фракциям — в factions.yaml.
+# Дубликатов не заводить: если запись уже есть там, здесь ставится ссылка.
+# ─────────────────────────────────────────────────────────────────────────────
+findings:
+
+  - id: COMP-I-001
+    type: COUNT
+    subject: COMP-C-02
+    title: Памяток 5 при восьми фракциях
+    severity: INFO
+    status: DECIDED
+    detail: >
+      Правила называют 5 памяток. В оригинале памятка строго по одной
+      на фракцию. Фракций у нас 8.
+    proposal: >
+      Компонента нет вовсе: памятку надо сверстать и напечатать.
+      Количество при этом уже решено и пересмотру не подлежит.
+    decision: >
+      D-040 п. 3: «Памяток остаётся 5. По целевому составу» — за партию
+      играют трое-пятеро, восьмая памятка лежала бы в коробке без дела.
+    decided: 2026-09-16
+
+  - id: COMP-I-002
+    type: SPEC
+    subject: COMP-C-03
+    title: Число вариантов поля подтвердить после изготовления
+    severity: INFO
+    status: DEFERRED
+    detail: >
+      Книга о форме поля намеренно молчит. Когда полотно будет собрано,
+      проверить одно: что вариантов на четверых действительно два,
+      и сверить §1.1 и §2.1 с фактическим компонентом.
+    proposal: Сверка после изготовления полотен.
+    decision: D-047, MISS-023 — отложено до реализации компонента.
+    decided: 2026-09-16
+
+  - id: COMP-I-003
+    type: COUNT
+    subject: COMP-C-04
+    title: Сколько треков Судного дня напечатано и на какие составы
+    severity: WARNING
+    status: OPEN
+    detail: >
+      Правила называют 2 трека, оригинал — 3 (на 3, 4 и 5 игроков).
+      PDF на 2 страницы. В art/doomsday лежат раскладки на 3, 4, 5 и 6
+      игроков в версии v1.1 плюс универсальная на 3–6. Alek подтвердил,
+      что треки напечатаны, но сколько и какие — не зафиксировано.
+    proposal: >
+      Записать фактический состав напечатанного и привести к нему §2.2:
+      длины треков в правилах не заданы вовсе.
+    decision: null
+    decided: null
+
+  - id: COMP-I-004
+    type: NAMING
+    subject: [COMP-C-05, COMP-C-10, COMP-V-07]
+    title: Три файла в acrylic/ названы не по конвенции §5
+    severity: WARNING
+    status: OPEN
+    detail: >
+      Все три компонента нарезаны, так что на производство это уже
+      не влияет — влияет на следующий заказ и на чтение папки.
+      1. «04. Жетон влияния - 1шт. - ⌀15мм.png» — по роли это маркер
+      Судного дня, а не жетон влияния.
+      2. «08. Жетон первого игрока - ⌀30 мм.png» — пропущены тип
+      и количество.
+      3. «06. Контроль - круглый жетон - ⌀20мм.png» — по роли это зоны
+      сети, и количества в имени нет, хотя оно теперь известно.
+    proposal: >
+      Переименовать все три одной правкой по конвенции CLAUDE.md §5:
+      «04. Маркер Судного дня - круглый жетон - 1шт - ⌀15мм.png»,
+      «08. Жетон первого игрока - круглый жетон - 1шт - ⌀30мм.png»,
+      «06. Зоны сети - круглый жетон - 4шт - ⌀20мм.png».
+      Переименование требует согласования Alek (CLAUDE.md §9).
+    decision: null
+    decided: null
+
+  - id: COMP-I-005
+    type: SPEC
+    subject: COMP-C-08
+    title: Лист наклеек на кубики не кратен числу кубиков
+    severity: INFO
+    status: CLOSED
+    detail: >
+      На 20 кубиков нужно 20 смертей, 40 подавлений и по 20 каждой цифры,
+      а в листе 80 наклеек (30/25/25). Расхождение выглядело дефектом
+      раскладки.
+    proposal: Пересобрать лист генератором по правильным числам.
+    decision: >
+      Alek 2026-09-22: лист печатался с запасом, лишние наклейки остались.
+      Некратность намеренная, пересобирать нечего. Хвост про имя файла
+      вынесен отдельно — COMP-I-023.
+    decided: 2026-09-22
+
+  - id: COMP-I-006
+    type: COUNT
+    subject: COMP-C-09
+    title: Числовой кубик заведён решением, наличие не подтверждено
+    severity: INFO
+    status: CLOSED
+    detail: >
+      D-041 постановил завести один обычный d6 с цифрами. Есть ли он
+      физически — нигде не было записано; в старой инвентаризации
+      компонента нет вовсе.
+    proposal: Подтвердить наличие или отнести к покупкам.
+    decision: Alek 2026-09-22 — кубик куплен.
+    decided: 2026-09-22
+
+  - id: COMP-I-007
+    type: NAMING
+    subject: COMP-C-10
+    title: В имени файла жетона первого игрока нет количества
+    severity: INFO
+    status: CLOSED
+    detail: >
+      acrylic/08. Жетон первого игрока - ⌀30 мм.png — отступление
+      от конвенции CLAUDE.md §5: пропущены тип и количество.
+    proposal: Привести имя к конвенции.
+    decision: >
+      Объединена в COMP-I-004: три файла в acrylic/ чинятся одной правкой,
+      держать их тремя записями незачем.
+    decided: 2026-09-22
+
+  - id: COMP-I-008
+    type: STATE
+    subject: COMP-V-02
+    title: Карты событий фабрик — единственная запись без ответа
+    severity: INFO
+    status: OPEN
+    detail: >
+      Четыре круга подтверждения 2026-09-22 закрыли всё, кроме одной
+      записи. Напечатаны ли карты событий, Alek не помнит и обещал
+      проверить позже. Старая инвентаризация называет их напечатанными,
+      но этого мало.
+    proposal: >
+      Посмотреть в коробке: рабочая колода из шести карт — ПРОФИЦИТ,
+      ВОЛАТИЛЬНОСТЬ РЫНКОВ, ДЕСТАБИЛИЗАЦИЯ БИРЖИ, СБОЙ ПОСТАВОК,
+      ПЕРЕПРОФИЛИРОВАНИЕ, РЕСТРУКТУРИЗАЦИЯ.
+    decision: null
+    decided: null
+
+  - id: COMP-I-009
+    type: STATE
+    subject: COMP-F-01
+    title: Три планшета обязаны быть перевыпущены после D-048
+    severity: ERROR
+    status: DECIDED
+    detail: >
+      Братство Сингулярности, Moon Systems и Сайнтифик Солюшн несли одно
+      и то же число «Очередь». D-048 развёл их по разным позициям шкалы;
+      актуальные числа — в factions.yaml → meta.queue_scale. Напечатанные
+      PDF хранят старое, а §2.4 книги на эти числа ссылается.
+    proposal: Перевыпустить три PDF из Template.html и перепечатать планшеты.
+    decision: D-048 — шкала на 12 позиций, три общие «10» разведены.
+    decided: 2026-09-22
+
+  - id: COMP-I-010
+    type: SPEC
+    subject: COMP-F-02
+    title: Moon Systems без пехотинцев против «пехотинцев всегда 6»
+    severity: WARNING
+    status: OPEN
+    detail: >
+      Правила трижды утверждают, что у каждой фракции 6 пехотинцев.
+      У Moon Systems их нет ни одного, полковника тоже нет. Формулировка
+      правил неверна и по оригиналу: у Bubastis акольтов тоже нет —
+      их роль играют шесть Earth Cats.
+    proposal: >
+      Переписать формулировку правил так, чтобы она не утверждала
+      «всегда 6»: исключение есть и у нас, и в оригинале. Выдавать
+      Moon Systems пехотинцев не нужно.
+    decision: null
+    decided: null
+
+  - id: COMP-I-011
+    type: SPEC
+    subject: [COMP-F-01, COMP-F-05, COMP-F-07]
+    title: «Пастух» назван промышленным роботом — меняет счёт партии
+    severity: ERROR
+    status: CLOSED
+    detail: >
+      Карта задачи Глобал Петролеум называет «Пастуха» промышленным
+      роботом. Такого типа отряда в правилах нет, на планшете он стоит
+      в группе «БР». §6.3 шаг 4 даёт карту скрытого влияния за каждого
+      боевого робота в игре — от прочтения зависит, одну карту получает
+      игрок или две.
+    proposal: >
+      Зафиксировать «Пастуха» боевым роботом, «промышленный» — эпитет.
+      Решать раньше прочих компонентных правок: влияет на счёт партии.
+    decision: >
+      D-042 — уходит в выверку компонентов (D-004), решать первым.
+      Закрыто D-065 (Alek, 2026-09-24): «Пастух» — боевой робот. Оригинал решает
+      вопрос: King in Yellow — Great Old One, и ритуал даёт Elder Sign за каждого
+      Great Old One фракции в игре (SRC-RB-NEW). «Промышленный» — эпитет, остаётся
+      в «Как играть». Планшет без изменений (группа «БР»); карта задачи № 1
+      правится при перепечатке — COMP-I-026. D-066: робот переименован
+      в «Шепард» везде, кроме истории.
+    decided: 2026-09-24
+
+  - id: COMP-I-012
+    type: NAMING
+    subject: [COMP-F-01, COMP-F-05, COMP-F-07]
+    title: Пять расхождений в написании боевых роботов
+    severity: WARNING
+    status: OPEN
+    detail: >
+      CLAUDE.md §2 фиксирует «Краб», «Шрёдингер», «Тексан», «Чёрный вихрь».
+      На картах, планшетах и в иллюстрациях стоят «C.R.A.B.», «Шредингер»,
+      «Техасец», «Вихрь». Четвёртое расхождение — из PLAY-023 п. 2.
+      Пятое внутри одного компонента: на планшете Североамериканского
+      Альянса боевой робот назван и «Техасцем», и «Тексаном» (FAC-011).
+      Каждое расхождение — выбор между эталоном и уже готовым компонентом.
+    proposal: >
+      По «Тексану» дешевле привести CLAUDE.md к «Техасцу»: карта
+      и иллюстрация уже используют его. По «Шрёдингеру», «Крабу»
+      и «Чёрному вихрю» решение за Alek — каждое требует перевыпуска
+      карты, если оставлять написание CLAUDE.md. Разнобой внутри одного
+      планшета (FAC-011) чинится в любом случае.
+    decision: >
+      Частично, D-059 (2026-09-24): боевой робот Островной Империи — «C.R.A.B.»,
+      как на планшете и всех картах; CLAUDE.md §2 приведён к нему.
+      D-065 (2026-09-24): Глобал Петролеум — «Чёрный вихрь», как в CLAUDE.md §2,
+      на картах, в гуглдоке и в шагах создания; «Вихрь» снят с таблицы и
+      заголовка планшета и из factions.yaml. Открыты две пары («Шрёдингер»,
+      «Тексан») — в чатах своих фракций.
+      D-073 (2026-09-25): Сайнтифик Солюшн — «Шрёдингер», как в CLAUDE.md §2;
+      перепечатать задачу № 6 фракции (COMP-I-028). Открыт только «Тексан».
+    decided: null
+
+  - id: COMP-I-013
+    type: SPEC
+    subject: COMP-F-05
+    title: Характеристики боевого робота Североамериканского Альянса
+    severity: INFO
+    status: CLOSED
+    detail: >
+      Экспорт дока фракций обрывается на Североамериканском Альянсе,
+      характеристик «Тексана» там нет.
+    proposal: Снять состав с планшета и с закупленных миниатюр.
+    decision: >
+      Закрыто: factions.yaml содержит полный состав фракции, включая
+      «Абрамс 2220» и боевого робота. Пробел закрыт реестром фракций.
+    decided: 2026-09-11
+
+  - id: COMP-I-014
+    type: SPEC
+    subject: COMP-F-08
+    title: «Стелс» сформулирован по-разному на карте и в приложении
+    severity: WARNING
+    status: DECIDED
+    detail: >
+      Скобка «как если бы их не было в регионе» есть на карте и отсутствует
+      в приложении по фракциям. Именно она отвечает, считается ли выведенный
+      отряд присутствующим в регионе.
+    proposal: Свести к одной формулировке. Эталон — карта, она совпадает с оригиналом дословно.
+    decision: MISS-025 — решать при выверке компонентов (D-004), эталон карта.
+    decided: 2026-09-22
+
+  - id: COMP-I-015
+    type: SPEC
+    subject: COMP-F-09
+    title: У вышек Глобал Петролеум два носителя
+    severity: INFO
+    status: CLOSED
+    detail: >
+      Есть акриловый стенд (acrylic/01) и печатный арт
+      (print/Вышка Глобал Петролеум - лицо/задник.png). Какой носитель
+      окончательный, нигде не было записано.
+    proposal: Выбрать носитель и убрать второй в archive/.
+    decision: >
+      Alek 2026-09-22: акрил нарезан — носитель выбран им. Печатный
+      вариант в print/ остаётся лежать; перенести его в archive/
+      можно отдельно, по согласованию (CLAUDE.md §9).
+    decided: 2026-09-22
+
+  - id: COMP-I-016
+    type: SPEC
+    subject: COMP-V-07
+    title: Зоны сети — количество не зафиксировано, имя файла не соответствует роли
+    severity: INFO
+    status: CLOSED
+    detail: >
+      acrylic/06 называется «Контроль», хотя по роли это зоны сети вокруг
+      Узла управления, и количества в имени нет. Правила давали вилку «3–4».
+      Прежнее предложение перерисовать сюжет отпало: жетоны нарезаны как есть.
+    proposal: Зафиксировать количество и переименовать файл.
+    decision: >
+      Alek 2026-09-22: нарезано 4 — число вписано в count. Переименование
+      файла ушло в COMP-I-004 вместе с двумя другими.
+    decided: 2026-09-22
+
+  - id: COMP-I-017
+    type: SPEC
+    subject: COMP-V-09
+    title: Заявленный размер Роя расходится с именем файла
+    severity: INFO
+    status: OPEN
+    detail: >
+      Старый промпт называет высоту ↕28 мм, имя файла — ширину ↔35 мм.
+      Компонент уже нарезан, так что расхождение важно только для
+      повторного заказа.
+    proposal: Замерить нарезанное и привести имя файла к факту.
+    decision: null
+    decided: null
+
+  - id: COMP-I-018
+    type: COUNT
+    subject: COMP-V-10
+    title: Количества наёмников не заданы ни для одного из трёх классов
+    severity: WARNING
+    status: OPEN
+    detail: >
+      Правила описывают механику наёмников — карта лояльности покупается
+      не чаще одной за раз, — но количеств не дают ни для боевых машин,
+      ни для мехов, ни для боевых роботов. Компонентной строки нет.
+      Отдельно от количеств не решена и цена: единая цена оригинала
+      разъехалась у нас на две разные (DEV-014, NUM-108, NUM-109).
+    proposal: >
+      Задать три числа. Ориентир из оригинала: 8–12 нейтральных боевых
+      машин, 3 меха, 5–8 наёмных боевых роботов. Без них вариант
+      не комплектуется.
+    decision: null
+    decided: null
+
+  - id: COMP-I-019
+    type: SOURCE-GAP
+    subject: COMP-F-01
+    title: Два источника истины по составу фракции
+    severity: WARNING
+    status: OPEN
+    detail: >
+      README и CLAUDE.md §2 называют источником истины по составу и свойствам
+      фракции файлы print/Saved/Faction Card — *.pdf. Машиночитаемый реестр
+      rules/registry/factions.yaml собран по ним же, но после D-048 он ушёл
+      вперёд: числа «Очередь» у Братства Сингулярности, Moon Systems
+      и Сайнтифик Солюшн в нём новые, а в напечатанных PDF старые.
+      Сверка 2026-09-22 (D-048) показала, что по составу отрядов реестр
+      и PDF совпадают один в один — разошлась только «Очередь». Но пока
+      главный источник не назван, следующая правка разведёт их снова.
+    proposal: >
+      Назначить источником истины factions.yaml, а PDF объявить производным.
+      Препятствие названо: FAC-001 (решение Alek 2026-09-11) запрещает брать
+      print/Saved/*.json как источник — состояния устарели и у Сайнтифик
+      Солюшн содержат данные чужой фракции. Значит порядок такой:
+      сперва перегенерировать JSON из актуального реестра, только потом
+      объявлять PDF производным. Требует правки README («Источники истины»)
+      и CLAUDE.md §2.
+    decision: null
+    decided: null
+
+  - id: COMP-I-020
+    type: SPEC
+    subject: COMP-C-06
+    title: Глоссарий CLAUDE.md §8 всё ещё пишет «трек 0–30»
+    severity: WARNING
+    status: OPEN
+    detail: >
+      D-041 по находке PLAY-011: «влияние выше 30 есть куда отмечать,
+      у нас трек до 44 сейчас». §3.8 книги переписан — тридцать это порог
+      окончания партии, а не потолок счёта. Глоссарий CLAUDE.md §8 остался
+      со старым «Трек 0–30, победа от 30».
+    proposal: >
+      Поправить глоссарий CLAUDE.md §8 и записать фактическую длину трека
+      в spec этой записи, сняв её с напечатанного компонента.
+    decision: null
+    decided: null
+
+  - id: COMP-I-021
+    type: STATE
+    subject: [COMP-C-10, COMP-F-09]
+    title: CLAUDE.md §4 и §10 описывают компоненты, которые с тех пор сделаны
+    severity: INFO
+    status: OPEN
+    detail: >
+      CLAUDE.md §4 требует перегенерировать тайл «Луна» в большем разрешении,
+      §10 п. 6 говорит, что арт жетонов «Община» и тайла «Луна» не заведён,
+      §4 говорит, что арта жетона первого игрока нет. Всё три утверждения
+      устарели: задача по Луне снята, жетон первого игрока нарезан,
+      общины свёрстаны.
+    proposal: >
+      Переписать §4 и §10 CLAUDE.md так, чтобы состояние компонентов
+      они не описывали вовсе, а отсылали к этому реестру. Пока состояние
+      живёт в двух местах, оно будет расходиться при каждой правке.
+    decision: null
+    decided: null
+
+  - id: COMP-I-022
+    type: SOURCE-GAP
+    subject: [COMP-C-04, COMP-C-06, COMP-C-07, COMP-C-08, COMP-C-10]
+    title: Перечень физически готового не зафиксирован ни одним документом
+    severity: WARNING
+    status: OPEN
+    detail: >
+      production почти у всех готовых записей стоит по двум устным перечням
+      Alek от 22.09.2026 (meta.production_confirmed_2026_09_22 и
+      ..._round2). Ни того, ни другого нет ни в DECISIONS.md, ни в STATE.md,
+      ни в release-notes — они живут только внутри самого реестра
+      и ничем не проверяются.
+    proposal: >
+      Завести одно решение в DECISIONS.md с перечнем изготовленного
+      на 22.09.2026 (оба круга) и сослаться на него из meta. Тогда
+      состояние производства станет проверяемым так же, как всё
+      остальное в проекте.
+    decision: null
+    decided: null
+
+  - id: COMP-I-023
+    type: NAMING
+    subject: COMP-C-08
+    title: Файл print/dices/retreat.png несёт терминологию до D-019
+    severity: INFO
+    status: OPEN
+    detail: >
+      У нас этот результат броска называется подавлением, а не отступлением.
+      На физический комплект имя файла не влияет — кубики готовы; влияет
+      на следующую перепечатку и на иконки книги {KILL} и {SUPPRESS},
+      которые обязаны рисоваться из этого же арта.
+    proposal: >
+      Переименовать retreat.png и retreat-simple.png по D-019. Переименование
+      требует согласования (CLAUDE.md §9) и правки print/Dices.html,
+      который на них ссылается.
+    decision: null
+    decided: null
+
+  - id: COMP-I-024
+    type: NAMING
+    subject: [COMP-F-07, COMP-F-08]
+    title: Карты Островной Империи — имена и термины до D-019 и D-024
+    severity: WARNING
+    status: OPEN
+    detail: >
+      Найдено при сверке планшета (D-059). Технологии: «Комбинированная
+      броня» назначает результаты «Мегалодону» — на планшете «Танк МЕГ-01»
+      (PLAY-023 п. 4) — и пишет «отступлений / отступает» вместо
+      «подавлений / подавлен» (D-019); «Погружение» (дважды)
+      и «Островные аванпосты» — «C.R.A.B» без последней точки, в «Погружении»
+      двойной пробел и нет запятой после «Находясь на планшете»; «Муштра»
+      и «Перевербовка» — «из вашего запаса» вместо «из вашего резерва»
+      (D-024); «Усиление» — «любое кол-во». Задачи: № 1 «Выполните эту цель»
+      вместо «задачу»; «Бонус: получите» на № 1 и «Бонус: Получите» на № 6.
+      Числа всех двенадцати карт совпали с оригиналом редакции O3.
+    proposal: >
+      Править print/Saved/Cards - Технологии и задачи.json, packs[0] и packs[1],
+      при перепечатке карт фракции. «Муштра» — эталон названия (карта и тело
+      гуглдока), «Подготовка» живёт только в оглавлении гуглдока.
+    decision: null
+    decided: null
+
+  - id: COMP-I-025
+    type: SPEC
+    subject: COMP-F-01
+    title: Находки сверки Островной Империи, касающиеся других планшетов
+    severity: WARNING
+    status: OPEN
+    detail: >
+      1. «(верните в свой запас)» в «Боевом донесении» — на шести других
+      планшетах (D-024 требует «резерв»); у Островной исправлено, остальные
+      Alek решил править в их чатах. 2. У Глобал Петролеума в «Боевом
+      донесении» выпало «(даже если это не ваш ход)». 3. Альянс: «запад
+      Северной Америки» со строчной — у Островной регион приведён к имени
+      на поле. 4. Эйркрафт Корпорейшн: «Военные трофеи» дают «половину
+      стоимости создания» — для C.R.A.B. (10/4) не сказано, от какой; FAQ
+      оригинала: 2 Power, половина от 4. 5. Эйркрафт Корпорейшн: рулбук CW
+      с. 13 называет две фракции, у которых задачи закрываются одновременно
+      только особым образом, — Great Cthulhu и Crawling Chaos. Сноска
+      Островной внесена (D-059), у Эйркрафт проверить такую же.
+    proposal: Разобрать в чатах Глобал Петролеума, Альянса и Эйркрафт Корпорейшн.
+    decision: >
+      Частично. Глобал Петролеум (D-065): п. 1 и п. 2 внесены — «(даже если это
+      не ваш ход)» и «в свой резерв». Братство Сингулярности (D-072): п. 1 внесён.
+      Открыты п. 1 у четырёх других планшетов, п. 3–5.
+    decided: null
+
+  - id: COMP-I-026
+    type: SPEC
+    subject: [COMP-F-07, COMP-F-08]
+    title: Карты Глобал Петролеум — пять правок при перепечатке
+    severity: WARNING
+    status: OPEN
+    detail: >
+      Сверка D-065 (2026-09-24), числа и эффекты всех двенадцати карт совпали
+      с Yellow Sign. Правки текста: 1. Задача № 1: «Создать промышленного робота
+      “Пастуха”» → «Создать боевого робота “Шепард”» (COMP-I-011, D-066), как № 5.
+      В JSON внесено вместе с переименованием на «Сопровождении» (D-066).
+      2. «Вторжение» и «Сопровождение»: «Затем можете выполнить ещё одно, другое
+      действие» — перенос слова different, компонентный след RED-002 / D-045.
+      3. «Вытеснение» (до D-067 «Подавление», название в JSON уже новое): «из запаса» → «из резерва» (D-024). 4. «Разведка
+      месторождений»: «одно скрытое влияние» → «одну карту скрытого влияния».
+      5. «Черный» → «Чёрный» на «Вторжении» и «Разведке месторождений».
+    proposal: >
+      Править print/Saved/Cards - Технологии и задачи.json, packs[4] и packs[5],
+      и две копии mini-american-cards-…json при перепечатке карт фракции.
+    decision: null
+    decided: null
+
+  - id: COMP-I-027
+    type: SPEC
+    subject: [COMP-F-07, COMP-F-08]
+    title: Карты Братства Сингулярности — правки при перепечатке
+    severity: WARNING
+    status: OPEN
+    detail: >
+      Сверка D-072 (2026-09-24), числа и эффекты всех двенадцати карт совпали
+      с The Ancients. Правки текста: 1. «Предопределение»: «Когда мех “Паладина”
+      убит» → «мех “Паладин”». 2. «Культовый сбор»: «так же получает» → «также».
+      3. «Лоботомия»: «в области» → «в регионе». 4. «Жертва»: не названы область
+      и выбирающий — компонентная часть D-045 / RED-017: «вражеский боевой робот
+      в этой битве», выбирает применивший. 5. Задачи № 5 и № 6: «строит одну
+      боевую машину» → «производит» (§7.3.2); смысл по FAQ — разрешение, §7.5
+      (D-049). 6. Наёмный боевой робот у Братства: §11.4.3 ставит нового робота
+      в регион вашего робота, у Братства его нет — место появления должны
+      назвать карты лояльности (COMP-V-10).
+    proposal: >
+      Править print/Saved/Cards - Технологии и задачи.json, packs[14] и packs[15],
+      при перепечатке карт фракции; п. 6 — при вёрстке карт лояльности наёмных БР.
+    decision: null
+    decided: null
+
+  - id: COMP-I-028
+    type: SPEC
+    subject: [COMP-F-07, COMP-F-08]
+    title: Карты Сайнтифик Солюшн — правки при перепечатке
+    severity: WARNING
+    status: OPEN
+    detail: >
+      Сверка D-073 (2026-09-25). 1. Задачи, № 6: «Создать боевого робота
+      “Шредингера”» → «“Шрёдингера”» (COMP-I-012). 2. Задачи, № 2: «На игровом
+      поле есть 12 фабрик» → «На игровом поле есть 12 фабрик (при игре втроём —
+      10)». Оригинал: эррата O2 к карте Opener («In a 2-3 player game, only
+      10 Gates need to be on the Map»; таблица балансных правок; рулбук CW,
+      правила на двоих: «reduced to 10 (as noted on the Faction Card)»). У нас
+      игра на 3–5, поэтому остаётся «втроём». В гуглдоке «(10 при игре на
+      двоих)» — неверно, на карте оговорки нет вовсе. Место правила — сама
+      задача, как в оригинале, где оговорка напечатана под требованием.
+      В подсчёт идут все фабрики на поле, включая «Шрёдингера» и Луну (оба
+      «считаются фабрикой для любых целей»); фабрика, убранная с поля
+      на планшет, не идёт (FAQ, Cursed Slumber; RULEBOOK §3.4).
+      Решение Alek 2026-09-25 (D-073): «сделать как в оригинале».
+    proposal: >
+      Править print/Saved/Cards - Технологии и задачи.json, packs[12],
+      при перепечатке задач фракции.
+    decision: null
+    decided: null
+
+  - id: COMP-I-029
+    type: SPEC
+    subject: [COMP-F-01]
+    title: «Боевое донесение» на остальных планшетах без фазы влияния
+    severity: WARNING
+    status: CLOSED
+    detail: >
+      Оригинал (Unspeakable Oath, BL-UNIT-012): жертва High Priest в конце
+      любого действия, а также в фазе Gather Power И в фазе Doom. На всех
+      планшетах с полковником была только фаза получения ресурсов. У Сайнтифик
+      Солюшн исправлено (D-073): «В конце действия любого игрока (даже если это
+      не ваш ход), а также в фазе получения ресурсов и в фазе влияния вы можете
+      уничтожить полковника (вернуть в свой резерв) и получить 2 нефти».
+      Осталось: Островная Империя, Глобал Петролеум, Братство Сингулярности,
+      Клонэйд Ресёрч, Североамериканский Альянс, Эйркрафт Корпорейшн
+      (у Moon Systems полковника нет). У трёх из них ещё и «запас» → «резерв»
+      (COMP-I-025 п. 1).
+    proposal: Та же строка в Данные/<Фракция>.json у шести фракций.
+    decision: >
+      D-074: единая строка на всех семи планшетах с полковником, включая
+      Сайнтифик Солюшн (уточнена формулировка D-073): «В конце действия любого
+      игрока, а также в любой момент фазы получения ресурсов (в том числе после
+      правила минимального запаса) или фазы влияния вы можете уничтожить своего
+      полковника на поле (вернуть его в резерв) и получить 2 нефти.»
+    decided: 2026-09-25
+
+  - id: COMP-I-030
+    type: SPEC
+    subject: [COMP-F-07, COMP-F-08]
+    title: Карты Клонэйд Ресёрч — правки при перепечатке
+    severity: WARNING
+    status: OPEN
+    detail: >
+      Сверка D-074 (2026-09-25). 1. Задачи, № 4: «В качестве действия: уничтожьте
+      двух ваших пехотинцев в любых регионах на карте» → «Отдельным действием:
+      уничтожьте двух своих пехотинцев в любых регионах поля. Создание “Жнеца”
+      эту задачу не выполняет.» Оригинал: рулбук CW с. 18 («discrete Action…
+      nor can it be triggered by performing one of those actions»), Arthur
+      Petersen, BGG 1357773. Формулировка самодостаточна: в книгу деталь
+      не выносится (решение Alek). 2. Задачи, № 6: «Создайте боевого робота
+      “Жнеца”» → «“Жнец”» (условное название при родовом слове не склоняется).
+      3. «Заражение»: «танки “Черной смертью”», «присутсвуют» (PLAY-035 п. 3).
+      4. «Армия клонов»: «\"Черной смерти\"» — прямые кавычки, «Чёрной».
+    proposal: >
+      Править print/Saved/Cards - Технологии и задачи.json, packs[8] и [9],
+      при перепечатке карт фракции.
+    decision: null
+    decided: null
