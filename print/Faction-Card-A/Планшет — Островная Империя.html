@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Планшет фракции — <!--#название-->Островная Империя<!--/#название--></title>
+<!--
+  ═══════════════════════════════════════════════════════════════════════════
+  ПЛАНШЕТ ФРАКЦИИ · «Нефтяные войны»
+  ───────────────────────────────────────────────────────────────────────────
+  Этот файл — и шаблон, и готовый образец. Открывается в браузере и сразу
+  показывает собранный планшет: в слотах лежит демо-фракция.
+
+  ДВА СПОСОБА СДЕЛАТЬ СВОЮ ФРАКЦИЮ
+
+  1. Руками. Скопировать файл, заменить содержимое между парными
+     метками вида «#имя»: открывающая и закрывающая. Метки трогать
+     не нужно, они и есть
+     границы правки. Остальное в файле менять не требуется.
+
+  2. Генератором. Положить данные в «Данные/<Фракция>.json» по образцу
+     соседних файлов и выполнить «python3 build.py». Скрипт возьмёт этот
+     шаблон, заменит содержимое тех же слотов и запишет «Планшет — <имя>.html».
+     Оформление он не трогает: правки стиля делаются здесь и подхватываются
+     при следующей сборке.
+
+  СЛОТЫ
+     название     текст в <title> и в шапке левой колонки
+     логотип      один тег <img class="logo-wm"> — подложка за названием
+     подготовка   три строки: регион, очередь и запас нефти, примечание
+     блоки        нумерованные блоки левой колонки («Создание б/р», «Общины»)
+     свойства     блоки свойств средней колонки
+     отряды       строки таблицы отрядов: отряд, разделитель, сноска
+     связи        запасные линии-привязки (см. ниже про скрипт)
+     лор          абзац на обороте
+     как-играть   абзацы советов на обороте
+
+  ЛИСТЫ
+     Лист 1 — лицевая. Печатается с выпуском под обрез: фон вылезает
+              за линию реза на --bleed с каждой стороны, меток реза нет.
+     Лист 2 — оборот. Метки реза — крестики по углам, рамки нет.
+     Печать: Ctrl+P → A4 альбомная → масштаб 100 % → фон включить.
+
+  СКРИПТ В КОНЦЕ ФАЙЛА
+     Делает одно: доводит линии-привязки «заголовок свойства → название
+     отряда» по фактическому положению текста. В разметке уже лежат
+     посчитанные линии — если скрипт не выполнится, напечатаются они.
+     Ничего больше от скрипта не зависит.
+
+  ЧТО ГДЕ В CSS
+     1. Шрифты            подключение четырёх гарнитур проекта
+     2. Переменные        :root — все габариты, кегли и цвета
+     3. Лист и метки реза
+     4. Планшет           фон, выпуск под обрез, декор углов
+     5. Трек нефти        бочка и цепочка ячеек
+     6. Тело              три колонки, левая колонка, свойства
+     7. Таблица отрядов
+     8. Линии-привязки
+     9. Оборот
+  ═══════════════════════════════════════════════════════════════════════════
+-->
+<style>
+@font-face { font-family: "AlienEncounters";  src: url("../Fonts/AlienEncounters.ttf")  format("truetype"); }
+@font-face { font-family: "AgencyFBCyrillic"; src: url("../Fonts/agencyfbcyrillic.ttf") format("truetype"); }
+@font-face { font-family: "OpenGostTypeB";    src: url("../Fonts/OpenGostTypeB.ttf")    format("truetype"); }
+@font-face { font-family: "OilWars";          src: url("../Fonts/Oil Wars.ttf")         format("truetype"); }
+
+:root {
+  /* Все размеры — в миллиметрах, кегли — в пунктах. Это единственное место,
+     где меняются габариты и пропорции: остальной CSS считает от этих величин.
+     Числа, помеченные «синхр.», продублированы в build.py — менять парой.    */
+
+  /* ── ГАБАРИТЫ ──────────────────────────────────────────────────────────── */
+  --card-w:     240mm;   /* синхр. CARD_W. Ширина планшета по линии реза      */
+  --card-h:     170mm;   /* синхр. CARD_H. Высота. Ниже 170 не уходить:       */
+                         /* упирается таблица отрядов самой плотной фракции    */
+  --pad:          6mm;   /* внутреннее поле планшета                          */
+  --bleed:        6mm;   /* выпуск под обрез: фон вылезает за линию реза       */
+  --gap:          4mm;   /* синхр. GAP. Зазор между полосами и колонками      */
+
+  /* ── ПОЛОСЫ ПО ВЕРТИКАЛИ ───────────────────────────────────────────────── */
+  --row-track:   18mm;   /* синхр. ROW_TRACK. Полоса трека нефти             */
+  --row-body:   136mm;   /* синхр. ROW_BODY. Полоса трёх колонок             */
+
+  /* ── КОЛОНКИ ТЕЛА ──────────────────────────────────────────────────────── */
+  --col-left:    66mm;   /* синхр. COL_LEFT.  Название, подготовка, шаги     */
+  --col-abil:    85mm;   /* синхр. COL_ABIL.  Свойства фракции и отрядов     */
+  --col-table:   69mm;   /* синхр. COL_TABLE. Таблица отрядов                */
+
+  /* ── ТРЕК НЕФТИ ────────────────────────────────────────────────────────── */
+  --hex-w:    16.00mm;   /* ширина ячейки. Высота всегда = ширина × 0,866,    */
+  --hex-h:    13.86mm;   /* иначе шестиугольник перестаёт быть правильным.    */
+                         /* 13,86 — вписанный круг под маркер 14–15 мм (D-070) */
+  --barrel-w:  14.5mm;   /* бочка — отметка «0»                              */
+  --barrel-x: -2.67mm;   /* бочка левее поля --pad: рисунок в 3,5 мм от реза  */
+  --track-y:  -2.50mm;   /* цепочка выше полосы трека: верх в 3,5 мм от реза, */
+                         /* низ в 26,57 мм — в 1,4 мм над колонками. Сама     */
+                         /* полоса --row-track и всё под ней не двигаются     */
+  --barrel-y:  0.04mm;   /* бочка по центру цепочки                          */
+  --track-gap: -2.30mm;   /* рамка бочки — рамка ячейки 1. Отрицательный:      */
+                         /* у рисунка бочки справа пусто, по контуру между     */
+                         /* бочкой и ячейками 1–2 остаётся 1,5 мм             */
+
+  /* ── ТАБЛИЦА ОТРЯДОВ ───────────────────────────────────────────────────── */
+  --c-icon:      29mm;   /* колонка силуэта и подписи; «Моторизированный» в 9 pt — 28,8 мм (D-063) */
+  --c-group:      6mm;   /* вертикальная подпись типа отрядов                */
+  --c-stat:   11.33mm;   /* кол-во / стоимость / сила; 29 + 6 + 3 × 11,33 = 69 = --col-table */
+
+  /* ── КЕГЛИ ─────────────────────────────────────────────────────────────── */
+  /* Взяты из оригинального планшета и НЕ уменьшены: это нижняя граница
+     читаемости на домашней печати. Уменьшать нельзя, увеличивать можно.      */
+  --fs-name:     15pt;   /* название фракции, AlienEncounters                */
+  --fs-block:    12pt;   /* заголовок блока левой колонки, OpenGostTypeB     */
+  --fs-prop:   12.5pt;   /* заголовок свойства, OpenGostTypeB прописными.    */
+                         /* 12,5 подобрано так, что высота прописных равна   */
+                         /* высоте прописных Arial bold 10pt — как было      */
+  --fs-body:      9pt;   /* весь основной текст                             */
+  --fs-stat:     18pt;   /* числа в таблице, AgencyFBCyrillic               */
+  --fs-group:     8pt;   /* вертикальная подпись типа отрядов               */
+  --fs-th:        9pt;   /* шапка таблицы, OpenGostTypeB прописными         */
+  --lh:          1.22;   /* интерлиньяж основного текста                    */
+
+  /* ── ЦВЕТА ─────────────────────────────────────────────────────────────── */
+  --ink:       #FFFFFF;  /* основной текст                                   */
+  --cyan:      #11C5FF;  /* акцент: заголовки блоков, символы регионов       */
+  --blue:      #25A4EE;  /* метки, рамки свойств, подписи                    */
+  --bg:        #08182B;  /* фон планшета                                     */
+  --rule:      rgba(37,164,238,.40);   /* линейка под шапкой таблицы         */
+  --hex-line:  #2E86B8;  /* обводка ячейки трека                             */
+  --hex-fill:  #0C2E46;  /* заливка ячейки = фон + 14 % циана                */
+  --pink:      #EE688C;  /* третий цвет: сила, разделители, линии-привязки.   */
+                         /* В оригинале Cthulhu Wars им набрана колонка Combat */
+}
+
+@page { size: A4 landscape; margin: 0; }
+html, body { margin: 0; padding: 0; background: #7A8794; }
+body { font-family: Arial, "Segoe UI", sans-serif; }
+
+.sheet {
+  position: relative; width: 297mm; height: 210mm; background: #FFFFFF;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  page-break-after: always; break-after: page;
+}
+.sheet:last-child { page-break-after: auto; break-after: auto; }
+/* Метки реза только на обороте: лицевая печатается с выпуском под обрез.
+   Крестик в каждом углу: обе линии проходят через угол планшета и заходят
+   на --crop-in внутрь по кромке. После отреза одной стороны у соседних
+   углов остаются части крестиков вдоль перпендикулярных кромок.
+   Положение считается от габарита планшета, менять числа не нужно. */
+.crop { position: absolute; width: 0; height: 0; z-index: 1;   /* над белым фоном оборота */
+        --crop-out: 10mm;   /* наружу от угла, в поле листа          */
+        --crop-in:   5mm;   /* внутрь от угла, по линии реза          */ }
+.crop::before, .crop::after { content: ""; position: absolute; background: #6E7C88; }
+.crop::before { height: .12mm; top: -.06mm;  width:  calc(var(--crop-out) + var(--crop-in)); }
+.crop::after  { width:  .12mm; left: -.06mm; height: calc(var(--crop-out) + var(--crop-in)); }
+.crop.l::before { left:   calc(-1 * var(--crop-out)); }
+.crop.r::before { right:  calc(-1 * var(--crop-out)); }
+.crop.t::after  { top:    calc(-1 * var(--crop-out)); }
+.crop.b::after  { bottom: calc(-1 * var(--crop-out)); }
+
+/* ===== ПЛАНШЕТ ===========================================================
+   Фон: плоская база плюс два мягких подсвета по углам — оба в синеве,
+   заданы прозрачностью фирменного голубого, без ухода в другой тон.
+   ======================================================================== */
+/* Выпуск под обрез. Фон несёт .bleed, поэтому на линии реза нет шва:
+   это один непрерывный градиент, а не два состыкованных. Планшет остаётся
+   240 × 170, вся геометрия и декор внутри него. */
+.bleed {
+  width: calc(var(--card-w) + 2 * var(--bleed));
+  height: calc(var(--card-h) + 2 * var(--bleed));
+  display: flex; align-items: center; justify-content: center;
+  background:
+    radial-gradient(62% 52% at 2% 0%,   rgba(37,164,238,.20) 0%, rgba(37,164,238,0) 72%),
+    radial-gradient(58% 48% at 100% 96%, rgba(17,197,255,.14) 0%, rgba(17,197,255,0) 70%),
+    var(--bg);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.card {
+  position: relative;
+  width: var(--card-w); height: var(--card-h);
+  box-sizing: border-box; padding: var(--pad);
+  color: var(--ink);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  display: flex; flex-direction: column; gap: var(--gap);
+  overflow: hidden;
+}
+/* угловые накладки (сгенерированы) — верх слева и низ справа зеркалом */
+.corner { position: absolute; width: 32mm; height: auto; z-index: 0; pointer-events: none; opacity: .85; }
+.corner.br { bottom: 2.5mm; right: 2.5mm; transform: rotate(180deg); }
+/* правый верхний угол — вектор. viewBox в миллиметрах планшета:
+   1 единица = 1 мм, координаты читаются напрямую. При смене --card-w/--card-h
+   поменять viewBox на те же числа. Запасной спокойный вариант: decor/corner-tr-1.svg */
+/* Групповая прозрачность, а не выбор тусклых цветов: внутренняя иерархия из трёх
+   яркостей сохраняется, а весь угол садится на уровень остального декора.
+   0,62 посчитано из светлоты: #11C5FF на фоне #08182B даёт #0E83AE, светлота 109 —
+   ровно как у правого нижнего угла (#0183D6). Левая полоса тусклее, светлота 84. */
+.corner-tr { position: absolute; left: 0; top: 0; width: var(--card-w); height: var(--card-h);
+             pointer-events: none; z-index: 0; overflow: visible; opacity: .62; }
+
+/* боковая вертикальная накладка в левом поле */
+.side { position: absolute; left: .9mm; top: 31mm; bottom: 3mm; width: 4.4mm;
+        display: flex; flex-direction: column; opacity: .7; z-index: 0; pointer-events: none; }
+.side img { width: 100%; height: 50%; object-fit: fill; display: block; }
+.side img + img { transform: scaleY(-1); }
+
+/* ===== ТРЕК ЗАПАСА НЕФТИ ================================================= */
+/* По горизонтали шкалу двигают --barrel-x и --track-gap: цепочка стоит сразу
+   за бочкой, уменьшение любого из них сдвигает её влево, правый конец уходит
+   от края. Сейчас правый конец — 234,45 мм, как до укрупнения ячеек.
+   По вертикали цепочку и бочку двигают --track-y и --barrel-y: это сдвиг
+   внутри полосы, на раскладку он не влияет, колонки остаются на 28 мм. */
+.track { height: var(--row-track); flex: 0 0 auto; display: flex; align-items: center; }
+.barrel { position: relative; top: var(--barrel-y); width: var(--barrel-w); flex: 0 0 auto;
+          margin-left: var(--barrel-x); }
+.barrel img { width: 100%; height: auto; display: block; }
+.hexfield { position: relative; top: var(--track-y); flex-grow: 1; height: var(--row-track);
+            margin-left: var(--track-gap); }
+/* Ячейки рисует один SVG: штрих центрируется на контуре, поэтому на общих рёбрах
+   две обводки совпадают и толщина везде одинаковая. Дивы .hex несут только числа. */
+.hexgrid { position: absolute; left: 0; top: 0; overflow: visible;
+           -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.hexgrid polygon { fill: var(--hex-fill); stroke: var(--hex-line); stroke-width: .45;
+                   stroke-linejoin: miter; }
+.hex {
+  position: absolute;
+  width: var(--hex-w); height: var(--hex-h);
+  display: flex; align-items: center; justify-content: center;
+}
+.hex span {
+  position: relative; z-index: 1;
+  font-family: "AlienEncounters", sans-serif; font-size: 18pt; color: #9FE8FF;
+}
+
+/* ===== ТЕЛО: ТРИ КОЛОНКИ ================================================= */
+.body { position: relative; z-index: 1; display: flex; gap: var(--gap); height: var(--row-body); flex: 0 0 auto; min-height: 0; }
+.col-left  { width: var(--col-left);  flex: 0 0 auto; display: flex; flex-direction: column; gap: 3.5mm; }
+.col-abil  { width: var(--col-abil);  flex: 0 0 auto; display: flex; flex-direction: column; }
+.col-table { width: var(--col-table); flex: 0 0 auto; }
+
+.logo { width: 15mm; height: 15mm; object-fit: contain; display: block; }
+/* Логотип — полупрозрачной подложкой за названием */
+.head-wm { position: relative; }
+.head-wm .logo-wm { position: absolute; right: -1mm; top: -3mm; width: 27mm; height: 27mm;
+  object-fit: contain; opacity: .30; z-index: 0; pointer-events: none; }
+.head-wm .faction-name { position: relative; z-index: 1; }
+/* весь текст левой колонки — выше логотипа-подложки, иначе он печатается поверх */
+.col-left > div { position: relative; z-index: 1; }
+.faction-name {
+  font-family: "AlienEncounters", sans-serif; font-size: var(--fs-name);
+  line-height: 1.08; text-transform: uppercase; color: #FFFFFF; margin-top: 1.5mm;
+}
+
+.block-title {
+  font-family: "OpenGostTypeB", Arial, sans-serif;
+  font-size: var(--fs-block); font-weight: 700; color: var(--cyan);
+  letter-spacing: .03em; text-transform: uppercase;
+  padding-bottom: 0; margin-bottom: 1.8mm;
+}
+.prep-row { font-size: var(--fs-body); line-height: 1.25; margin-bottom: .5mm; }
+.prep-row b { color: var(--blue); font-weight: 700; }
+.prep-row span { color: #FFFFFF; font-weight: 400; }
+.prep-note { font-size: var(--fs-body); line-height: 1.25; color: var(--blue); margin-top: 1.2mm; }
+
+.steps { counter-reset: step; padding: 0; margin: 0; list-style: none; }
+.steps li { counter-increment: step; font-size: var(--fs-body); line-height: var(--lh); margin-bottom: 1.2mm; padding-left: 4.5mm; position: relative; }
+.steps li::before { content: counter(step) "."; position: absolute; left: 0; font-weight: 700; color: var(--blue); }
+/* Блок левой колонки без нумерации — поле «текст» вместо «шаги» (D-060).
+   С полем «внизу» блок прижимается к низу колонки. */
+.block-text p { font-size: var(--fs-body); line-height: var(--lh); margin: 0 0 1.2mm; }
+.col-left > .pin-bottom { margin-top: auto; }
+.sym { font-family: "OilWars", sans-serif; color: var(--cyan); font-size: 11pt; }
+
+.ability { padding-left: 1.6mm; padding-top: .8mm; border-left: .5mm solid var(--blue); border-top: .5mm solid var(--blue); }
+.ability-name { font-family: "OpenGostTypeB", Arial, sans-serif;
+  font-size: var(--fs-prop); font-weight: 700; color: #FFFFFF; line-height: .98;
+  text-transform: uppercase; letter-spacing: .02em; }
+.ability-note { font-size: var(--fs-body); font-weight: 700; color: var(--blue); line-height: 1.15; margin-bottom: .6mm; }
+.ability-text { font-size: var(--fs-body); line-height: var(--lh); color: var(--ink); }
+
+/* ===== ТАБЛИЦА ОТРЯДОВ =================================================== */
+.units-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.units-table th {
+  font-family: "OpenGostTypeB", Arial, sans-serif;
+  font-size: var(--fs-th); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--blue); text-align: center; padding: 0 0 .8mm; border-bottom: .3mm solid var(--rule);
+}
+
+.units-table td { padding: .8mm 0; vertical-align: middle; }
+.units-table td.u-icon { text-align: center; }
+.units-table td.u-icon img { width: 100%; object-fit: contain; display: block; }
+.units-table td.u-icon .noimg { display: flex; align-items: center; justify-content: center; font-size: 6pt; color: #7796AE; border: .2mm dashed #3A5772; }
+.unit-cap { font-size: var(--fs-body); line-height: 1.05; color: var(--cyan); text-align: center; margin-top: .6mm; }
+.stat { font-family: "AgencyFBCyrillic", Arial, sans-serif; font-size: var(--fs-stat); font-weight: 700; text-align: center; color: #FFFFFF; }
+.stat.count { color: var(--blue); }
+.stat.power { color: var(--pink); }
+.group-label { writing-mode: vertical-rl; text-orientation: mixed; font-size: var(--fs-group); color: var(--blue); text-align: center; white-space: nowrap; }
+.units-table tr.sep td { padding: 0; }
+.unit-sep { height: .3mm; background: linear-gradient(to right, rgba(238,104,140,0), var(--pink), rgba(238,104,140,0)); margin: 1.2mm 0; }
+.units-table tr.cmt td { font-size: var(--fs-body); line-height: 1.2; font-style: italic;
+                         padding: .8mm 0 0; }
+/* Расшифровка значения в колонке «Сила» — тем же розовым, что и само значение.
+   Контраст на фоне #08182B — 5,95:1 при норме AA 4,5:1.
+   Прочие заметки под таблицей остаются белыми: розовый здесь означает «это про силу». */
+.units-table tr.cmt.pw td { color: var(--pink); }
+/* Сноска идёт по центру и с выравненными строками: при выключке влево
+   последнее слово повисает одно в строке, а блок кажется сдвинутым
+   к левому краю таблицы, хотя остальное в ней выровнено по центру. */
+.units-table tr.cmt td { text-align: center; text-wrap: balance; }
+
+.links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.links polyline { fill: none; stroke: var(--pink); stroke-width: .35; stroke-linejoin: round; }
+.links circle { fill: var(--pink); }
+
+/* ===== ОБОРОТ ============================================================ */
+.card.back { background: #FFFFFF; color: #12202E; display: block; padding: 10mm; }
+.card.back::before { display: none; }
+.back-top { margin-bottom: 3mm; }
+.back-top::after { content: ""; display: block; clear: both; }
+.illus { width: 52mm; height: 52mm; float: left; margin: 0 5mm 3mm 0; border: .3mm dashed #9FB2C2; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 8pt; color: #7C8FA0; padding: 2mm; box-sizing: border-box; }
+.lore { font-size: var(--fs-body); line-height: 1.34; }
+/* Заголовок стоит над обеими колонками текста — по центру, иначе вторая колонка
+   висит без заголовка (D-061). */
+.guide-title { font-size: var(--fs-block); font-weight: 700; margin-bottom: 1.5mm; text-align: center; }
+.guide { font-size: var(--fs-body); line-height: 1.34; column-count: 2; column-gap: 6mm; }
+.guide p { margin: 0 0 1.4mm; }
+/* Иллюстрация вместо рамки-заглушки и второй блок советов — «Как играть против».
+   Оба необязательны: без данных печатается заглушка и один блок. */
+.illus:has(img) { border: none; padding: 0; }
+.illus img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.guide + .guide-title { margin-top: 3.5mm; }
+
+@media screen { body { padding: 10mm 0; } .sheet { margin: 0 auto 10mm; box-shadow: 0 4mm 12mm rgba(0,0,0,.35); } }
+</style>
+</head>
+
+<body>
+
+<!-- ═══════════════════ ЛИСТ 1 · ЛИЦЕВАЯ СТОРОНА ═══════════════════════════ -->
+<div class="sheet">
+  <!-- .bleed несёт фон и выпускает его за линию реза; .card — сам планшет -->
+  <div class="bleed">
+  <div class="card">
+
+    <!-- декор: угол внизу справа, вертикальная полоса слева -->
+    <img class="corner br" src="decor/corner-a.png" alt="">
+    <div class="side"><img src="decor/side-rail.png" alt=""><img src="decor/side-rail.png" alt=""></div>
+
+    <!-- декор: правый верхний угол. Координаты SVG — миллиметры планшета,
+         viewBox совпадает с --card-w и --card-h. Спокойный вариант этого
+         угла лежит в decor/corner-tr-1.svg -->
+    <svg class="corner-tr" viewBox="0 0 240 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- три рельса по верхнему полю, скос 45°, плечо по правому полю -->
+      <polyline points="170,2.6 235.5,2.6 237.6,4.7 237.6,44" stroke="#11C5FF" stroke-width=".5" fill="none"/>
+      <polyline points="226.5,4.0 233.8,4.0 235.9,6.1 235.9,30" stroke="#1D6E9E" stroke-width=".35" fill="none"/>
+      <polyline points="228.0,5.3 232.3,5.3 234.4,7.4 234.4,17" stroke="#11C5FF" stroke-width=".3" fill="none"/>
+      <path d="M176,2.6 V1.4 M179,2.6 V1.4 M182,2.6 V1.4" stroke="#1D6E9E" stroke-width=".3"/>
+      <path d="M206,2.6 V1.4 M209,2.6 V1.4 M212,2.6 V1.4" stroke="#1D6E9E" stroke-width=".3"/>
+      <rect x="186" y="2.325" width="14" height=".55" fill="#25A4EE"/>
+      <polygon points="230.25,1.45 232.15,1.45 233.10,2.60 232.15,3.75 230.25,3.75 229.30,2.60"
+               fill="#0C2138" stroke="#11C5FF" stroke-width=".3"/>
+      <polygon points="236.95,15.375 238.25,15.375 238.9,16.5 238.25,17.625 236.95,17.625 236.3,16.5"
+               fill="#0C2138" stroke="#11C5FF" stroke-width=".3"/>
+      <circle cx="170" cy="2.6" r=".55" fill="#11C5FF"/>
+      <circle cx="226.5" cy="4.0" r=".5" fill="#11C5FF"/>
+      <circle cx="237.6" cy="44" r=".55" fill="#11C5FF"/>
+      <!-- плашка в вырезе над 20-й ячейкой: x 225,4..233,6 / y 6,8..11,0.
+           Левый конец срезан под 60° — нижняя грань параллельна ребру
+           19-й ячейки, зазор до него 2,6 мм по горизонтали.
+           Под крупную цепочку (D-064) средний и внутренний рельсы начинаются
+           за 19-й ячейкой, планка легла на верхний рельс, шестигранник
+           сдвинут к вырезу -->
+      <polygon points="226.66,6.79 233.60,6.79 233.60,10.99 226.66,10.99 225.45,8.89"
+               fill="#0C2138" stroke="#11C5FF" stroke-width=".35"/>
+      <path d="M227.75,7.99 H229.75 M227.75,8.89 H229.75 M227.75,9.79 H229.75" stroke="#11C5FF" stroke-width=".28"/>
+      <rect x="230.60" y="7.99" width="1.8" height="1.8" fill="#EE688C"/>
+      <path d="M231.50,6.79 V5.30" stroke="#11C5FF" stroke-width=".3"/>
+    </svg>
+
+    <!-- ─── ТРЕК ЗАПАСА НЕФТИ ────────────────────────────────────────────
+         Цепочка из 20 ячеек. Геометрия фиксированная и считается так:
+           высота ячейки = ширина × 0,866   (правильный шестиугольник)
+           шаг по горизонтали = ширина × 0,6675
+           чётные ячейки опущены на высоту × 0,665
+         Зигзаг круче сот: соседние ячейки сходятся не всем ребром, а его
+         частью. Иначе 20 ячеек под маркер 14–15 мм в ширину не встают (D-064).
+         Сдвинуть ячейку вдоль общего ребра: шаг = ширина × (0,75 − k/4),
+         опуск = высота × (1 + k)/2; сейчас k = 0,33, при k = 0 — обычные соты.
+         Ячейки рисует один SVG: в нём штрих центрируется на контуре, поэтому
+         на общих рёбрах две обводки совпадают и толщина везде одинаковая.
+         Дивы .hex поверх него несут только числа. -->
+    <div class="trackwrap">
+      <div class="track">
+        <div class="barrel"><!--#бочка--><img src="barrel.png" alt="Бочка — деление 0"><!--/#бочка--></div>
+        <div class="hexfield">
+          <svg class="hexgrid" viewBox="0 0 218.920 23.070" width="218.920mm" height="23.070mm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <polygon points="4.000,0.000 12.000,0.000 16.000,6.928 12.000,13.856 4.000,13.856 0.000,6.928"/>
+            <polygon points="14.680,9.214 22.680,9.214 26.680,16.142 22.680,23.070 14.680,23.070 10.680,16.142"/>
+            <polygon points="25.360,0.000 33.360,0.000 37.360,6.928 33.360,13.856 25.360,13.856 21.360,6.928"/>
+            <polygon points="36.040,9.214 44.040,9.214 48.040,16.142 44.040,23.070 36.040,23.070 32.040,16.142"/>
+            <polygon points="46.720,0.000 54.720,0.000 58.720,6.928 54.720,13.856 46.720,13.856 42.720,6.928"/>
+            <polygon points="57.400,9.214 65.400,9.214 69.400,16.142 65.400,23.070 57.400,23.070 53.400,16.142"/>
+            <polygon points="68.080,0.000 76.080,0.000 80.080,6.928 76.080,13.856 68.080,13.856 64.080,6.928"/>
+            <polygon points="78.760,9.214 86.760,9.214 90.760,16.142 86.760,23.070 78.760,23.070 74.760,16.142"/>
+            <polygon points="89.440,0.000 97.440,0.000 101.440,6.928 97.440,13.856 89.440,13.856 85.440,6.928"/>
+            <polygon points="100.120,9.214 108.120,9.214 112.120,16.142 108.120,23.070 100.120,23.070 96.120,16.142"/>
+            <polygon points="110.800,0.000 118.800,0.000 122.800,6.928 118.800,13.856 110.800,13.856 106.800,6.928"/>
+            <polygon points="121.480,9.214 129.480,9.214 133.480,16.142 129.480,23.070 121.480,23.070 117.480,16.142"/>
+            <polygon points="132.160,0.000 140.160,0.000 144.160,6.928 140.160,13.856 132.160,13.856 128.160,6.928"/>
+            <polygon points="142.840,9.214 150.840,9.214 154.840,16.142 150.840,23.070 142.840,23.070 138.840,16.142"/>
+            <polygon points="153.520,0.000 161.520,0.000 165.520,6.928 161.520,13.856 153.520,13.856 149.520,6.928"/>
+            <polygon points="164.200,9.214 172.200,9.214 176.200,16.142 172.200,23.070 164.200,23.070 160.200,16.142"/>
+            <polygon points="174.880,0.000 182.880,0.000 186.880,6.928 182.880,13.856 174.880,13.856 170.880,6.928"/>
+            <polygon points="185.560,9.214 193.560,9.214 197.560,16.142 193.560,23.070 185.560,23.070 181.560,16.142"/>
+            <polygon points="196.240,0.000 204.240,0.000 208.240,6.928 204.240,13.856 196.240,13.856 192.240,6.928"/>
+            <polygon points="206.920,9.214 214.920,9.214 218.920,16.142 214.920,23.070 206.920,23.070 202.920,16.142"/>
+          </svg>
+          <div class="hex" style="left: 0.00mm; top: 0.00mm;"><span>1</span></div>
+          <div class="hex" style="left: 10.68mm; top: 9.21mm;"><span>2</span></div>
+          <div class="hex" style="left: 21.36mm; top: 0.00mm;"><span>3</span></div>
+          <div class="hex" style="left: 32.04mm; top: 9.21mm;"><span>4</span></div>
+          <div class="hex" style="left: 42.72mm; top: 0.00mm;"><span>5</span></div>
+          <div class="hex" style="left: 53.40mm; top: 9.21mm;"><span>6</span></div>
+          <div class="hex" style="left: 64.08mm; top: 0.00mm;"><span>7</span></div>
+          <div class="hex" style="left: 74.76mm; top: 9.21mm;"><span>8</span></div>
+          <div class="hex" style="left: 85.44mm; top: 0.00mm;"><span>9</span></div>
+          <div class="hex" style="left: 96.12mm; top: 9.21mm;"><span>10</span></div>
+          <div class="hex" style="left: 106.80mm; top: 0.00mm;"><span>11</span></div>
+          <div class="hex" style="left: 117.48mm; top: 9.21mm;"><span>12</span></div>
+          <div class="hex" style="left: 128.16mm; top: 0.00mm;"><span>13</span></div>
+          <div class="hex" style="left: 138.84mm; top: 9.21mm;"><span>14</span></div>
+          <div class="hex" style="left: 149.52mm; top: 0.00mm;"><span>15</span></div>
+          <div class="hex" style="left: 160.20mm; top: 9.21mm;"><span>16</span></div>
+          <div class="hex" style="left: 170.88mm; top: 0.00mm;"><span>17</span></div>
+          <div class="hex" style="left: 181.56mm; top: 9.21mm;"><span>18</span></div>
+          <div class="hex" style="left: 192.24mm; top: 0.00mm;"><span>19</span></div>
+          <div class="hex" style="left: 202.92mm; top: 9.21mm;"><span>20</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── ТЕЛО: ТРИ КОЛОНКИ ───────────────────────────────────────────── -->
+    <div class="body">
+
+      <!-- левая колонка: название, подготовка, пошаговые блоки -->
+      <div class="col-left">
+
+        <div class="head-wm">
+          <!--#логотип--><img class="logo-wm" src="../../art/logos/Островная Империя.png" alt=""><!--/#логотип-->
+          <div class="faction-name"><!--#название-->Островная Империя<!--/#название--></div>
+        </div>
+
+        <div>
+          <div class="block-title">Подготовка</div><!--#подготовка-->
+          <div class="prep-row"><b>Стартовый регион:</b> <span>Юг Тихого океана</span></div>
+          <div class="prep-row"><b>Очередь:</b> <span>01.0</span> · <b>Запас нефти:</b> <span>8</span></div>
+          <div class="prep-note">1 фабрика под контролем и 6 рекрутов в стартовом регионе.</div>
+<!--/#подготовка-->
+        </div>
+<!--#блоки-->
+        <div>
+          <div class="block-title">Создание БР “C.R.A.B.”</div>
+          <ol class="steps">
+            <li>В стартовом регионе Островной Империи должна быть фабрика (может быть незанятой или под контролем противника).</li>
+            <li>Заплатите 10 нефти или 4, если создаёте не первый раз.</li>
+            <li>“C.R.A.B.” появляется в стартовом регионе фракции.</li>
+          </ol>
+        </div>
+        <div>
+          <div class="block-title">Задачи на убийство</div>
+          <div class="block-text">
+            <p>Задачи “Уничтожить с помощью Диверсии или убить вражеский отряд в битве” и “Уничтожить с помощью Диверсии или убить два вражеских отряда в битве” можно выполнить в одной битве, только если вы убьёте и/или уничтожите “Диверсией” 3 или более вражеских отряда.</p>
+          </div>
+        </div>
+<!--/#блоки-->
+      </div>
+
+      <!-- средняя колонка: свойства фракции и отрядов.
+           Порядок сверху вниз — как на исходном планшете, первым идёт
+           собственное свойство фракции. Вертикальное положение задаёт
+           margin-top каждого блока: он подтягивает блок к своему отряду.
+           data-link="<имя отряда>" связывает блок с отрядом — по нему
+           скрипт в конце файла рисует линию-привязку. -->
+      <div class="col-abil"><!--#свойства-->
+        <div class="ability" data-link="" style="margin-top: 0.0mm;">
+          <div class="ability-name">Эффективное производство</div>
+          <div class="ability-note">Постоянная</div>
+          <div class="ability-text"><div>• После первого создания боевого робота “C.R.A.B.” каждое последующее его создание стоит всего 4 нефти.</div><div>• Всякий раз, когда вы создаёте любого боевого робота, получите карту скрытого влияния.</div></div>
+        </div>
+        <div class="ability" data-link="Полковник" style="margin-top: 18.2mm;">
+          <div class="ability-name">Боевое донесение</div>
+          <div class="ability-note">Постоянная</div>
+          <div class="ability-text"><div>В конце действия любого игрока, а также в любой момент фазы получения ресурсов (в том числе после правила минимального запаса) или фазы влияния вы можете уничтожить своего полковника на поле (вернуть его в резерв) и получить 2 нефти.</div></div>
+        </div>
+        <div class="ability" data-link="C.R.A.B." data-pull="no" style="margin-top: 18.2mm;">
+          <div class="ability-name">Диверсия</div>
+          <div class="ability-note">Битва. Тактическая подготовка</div>
+          <div class="ability-text"><div>Противник, на свой выбор, уничтожает одну из своих боевых машин или одного из своих пехотинцев в этой битве.</div></div>
+        </div>
+<!--/#свойства-->
+      </div>
+
+      <!-- правая колонка: таблица отрядов, прижата к верху.
+           Типы строк: отряд, разделитель групп (tr.sep),
+           сноска (tr.cmt) и сноска про силу (tr.cmt.pw — розовая). -->
+      <div class="col-table">
+        <table class="units-table">
+          <colgroup>
+            <col style="width: var(--c-icon)"><col style="width: var(--c-group)">
+            <col style="width: var(--c-stat)"><col style="width: var(--c-stat)"><col style="width: var(--c-stat)">
+          </colgroup>
+          <thead>
+            <tr><th>Отряд</th><th></th><th>Кол-во</th><th>Стоим.</th><th>Сила</th></tr>
+          </thead>
+          <tbody><!--#отряды-->
+            <tr>
+              <td class="u-icon"><img src="../Units/adept.png" style="height: 9.0mm;" alt=""><div class="unit-cap" data-uid="Рекрут">Рекрут</div></td><td class="group-label" rowspan="2">Пехотинцы</td>
+              <td class="stat count">6</td><td class="stat">1</td><td class="stat power">0</td>
+            </tr>
+            <tr>
+              <td class="u-icon"><img src="../Units/colonel.png" style="height: 10.5mm;" alt=""><div class="unit-cap" data-uid="Полковник">Полковник</div></td>
+              <td class="stat count">1</td><td class="stat">3</td><td class="stat power">0</td>
+            </tr>
+            <tr class="sep"><td colspan="5"><div class="unit-sep"></div></td></tr>
+            <tr>
+              <td class="u-icon"><img src="../Units/ОстровнаяИмперия/Морпех.png" style="height: 12.0mm;" alt=""><div class="unit-cap" data-uid="Моторизированный морпех">Моторизированный морпех</div></td><td class="group-label" rowspan="3">Боевые машины</td>
+              <td class="stat count">4</td><td class="stat">1</td><td class="stat power">1</td>
+            </tr>
+            <tr>
+              <td class="u-icon"><img src="../Units/ОстровнаяИмперия/Цунами.png" style="height: 12.0mm;" alt=""><div class="unit-cap" data-uid="Робот “Цунами”">Робот “Цунами”</div></td>
+              <td class="stat count">2</td><td class="stat">2</td><td class="stat power">2</td>
+            </tr>
+            <tr>
+              <td class="u-icon"><img src="../Units/ОстровнаяИмперия/Мегалодон.png" style="height: 12.0mm;" alt=""><div class="unit-cap" data-uid="Танк МЕГ-01">Танк МЕГ-01</div></td>
+              <td class="stat count">2</td><td class="stat">3</td><td class="stat power">3</td>
+            </tr>
+            <tr class="sep"><td colspan="5"><div class="unit-sep"></div></td></tr>
+            <tr>
+              <td class="u-icon"><img src="../Units/ОстровнаяИмперия/Краб.png" style="height: 14.5mm;" alt=""><div class="unit-cap" data-uid="C.R.A.B.">C.R.A.B.</div></td><td class="group-label" rowspan="1">БР</td>
+              <td class="stat count">1</td><td class="stat">10/4</td><td class="stat power">6</td>
+            </tr>
+<!--/#отряды-->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- линии-привязки. viewBox в миллиметрах планшета: держать равным
+         --card-w и --card-h. Содержимое пересчитывает скрипт в конце файла -->
+    <svg class="links" viewBox="0 0 240 170" preserveAspectRatio="none"><!--#связи-->
+      <polyline points="161.0,74.1 163.5,74.1 163.5,59.9 169.0,59.9"/>
+      <circle cx="161.0" cy="74.1" r="0.9"/>
+      <polyline points="161.0,121.0 163.5,121.0 163.5,139.0 169.0,139.0"/>
+      <circle cx="161.0" cy="121.0" r="0.9"/>
+    <!--/#связи--></svg>
+
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ЛИСТ 2 · ОБОРОТ ════════════════════════════════════
+     Метки реза — крестики в углах планшета, считаются от его габарита:
+     при смене --card-w / --card-h двигать их не нужно. -->
+<div class="sheet">
+  <div class="crop l t" style="left: calc((297mm - var(--card-w)) / 2); top: calc((210mm - var(--card-h)) / 2);"></div>
+  <div class="crop r t" style="left: calc((297mm + var(--card-w)) / 2); top: calc((210mm - var(--card-h)) / 2);"></div>
+  <div class="crop l b" style="left: calc((297mm - var(--card-w)) / 2); top: calc((210mm + var(--card-h)) / 2);"></div>
+  <div class="crop r b" style="left: calc((297mm + var(--card-w)) / 2); top: calc((210mm + var(--card-h)) / 2);"></div>
+  <div class="card back">
+    <div class="back-top">
+      <div class="illus"><!--#иллюстрация--><img src="../../art/illustrations/CRAB2.png" alt=""><!--/#иллюстрация--></div>
+      <div class="lore"><!--#лор-->Острова Тихого океана никогда не были богаты: нефть везли танкерами, а раз в несколько лет приходила волна и смывала всё, что успели построить. Всё изменил глава одного семейного концерна: он собрал остальные семьи, и вместе они скупили верфи, электростанции и министерства, а затем и само государство. Наступили годы жёсткой руки: комендантский час, военные трибуналы, двенадцатичасовые смены под лозунгом “Сначала завод, потом дом”. Острова стали Империей, хотя императором себя основатель так и не назвал. И чудо случилось: верфи спускали на воду подлодки, заводы собирали надёжных и простых роботов. Семьи, которые он свёл за один стол, правят и сегодня: их наследники заседают в Совете чиновников, где жизни, нефть и время проходят по одной графе. Людей у Империи мало, поэтому каждого рекрута муштруют до автоматизма, а машины строят так, чтобы после гибели их было проще собрать заново, чем оплакивать. Лучшая из них — “C.R.A.B.”, Crew-Rated Abyssal Bastion: обитаемый бастион, шагающий по дну океана. Империя не наступает — она всплывает там, где её не ждут. Говорят, на дне под куполом стоит скрытая столица, а в её глубине, в криокамере, спит сам основатель — мёртвый по документам, живой по показаниям приборов. Совет каждый год продлевает с ним контракт.<!--/#лор--></div>
+    </div>
+    <div class="guide-title">Как играть за данную фракцию</div>
+    <div class="guide"><!--#как-играть-->
+      <p>Ваши технологии и способности, даже неиспользованные, губительно влияют на действия ваших врагов. “Погружение”, “Перевербовка” и “Островные аванпосты” — все они покрывают карту завесой, мешая вашим противникам.</p>
+      <p>Вы быстро получаете технологии в начале игры. Смело выводите “C.R.A.B.” уже во втором-третьем раунде, даже если он уязвим для вражеской атаки. В конце концов, вы можете дёшево создать его заново и получить при этом карту скрытого влияния. Когда ваш боевой робот выйдет на поле боя, выполнить две задачи на убийство или уничтожение будет несложно.</p>
+      <p>В конце игры используйте “Погружение”, чтобы наносить удары по критически важным регионам противника. С “Комбинированной бронёй” или “Усилением” и “Эффективным производством” вы можете безнаказанно бросать свои силы в любую битву. “C.R.A.B.” бросает только шесть кубиков, но “Цунами” с “Усилением” даст вам серьёзный перевес, а “Диверсия” ценнее лишней смерти на кубиках.</p>
+      <p>Островная Империя сосредоточена на разрушении. Из всех фракций ваши отряды — самые эффективные в бою. Однако доступ к скрытому влиянию у вас ограничен, поэтому свою боевую мощь придётся использовать, чтобы разрушать базы врагов и не давать им вырваться вперёд.</p>
+    <!--/#как-играть--></div><!--#против-->
+    <div class="guide-title">Как играть против данной фракции</div>
+    <div class="guide">
+      <p>У Островной Империи очень сильные отряды, но их мало, и каждая потеря для неё — ощутимый удар. Если Империя бросит всю свою мощь против одного региона, она наверняка победит. Уменьшить потери можно, если не складывать все яйца в одну корзину и, конечно, пользоваться любой возможностью ударить, пока игрок за Империю к этому не готов.</p>
+      <p>Уничтожать “C.R.A.B.” чаще всего невыгодно: благодаря знаменитому “Эффективному производству” он скоро вернётся после ремонта, готовый к “Погружению”, и снова превратит вашу жизнь в ад.</p>
+    </div>
+  <!--/#против-->
+  </div>
+</div>
+
+<script>
+/* Привязки «заголовок свойства → название отряда».
+   В разметке уже лежат линии, посчитанные генератором: если скрипт не выполнится,
+   напечатаются они. Здесь координаты берутся из готового макета, поэтому оценка
+   высоты строк в build.py перестаёт влиять на попадание.
+   Правки текста в HTML вручную тоже учитываются — линии пересчитаются сами. */
+(function () {
+  /* Раскладка свойств по фактической высоте блоков. Сборка.py считает её по
+     оценке длины строк и ошибается на несколько миллиметров — здесь то же
+     правило, но по готовому макету:
+     1) каждый блок, привязанный к отряду, тянется центром к подписи отряда,
+        порядок сверху вниз сохраняется, зазор между блоками не меньше 3 мм;
+     2) если колонка плотная (в среднем меньше 8 мм свободного на зазор),
+        притяжение не держим и делим свободное место поровну — иначе блоки
+        слипаются парами;
+     3) не влезло — поджимаем добавленные зазоры, затем сами зазоры поровну;
+     4) осталось больше 12 мм — раздаём часть между блоками.
+     Отступы, записанные генератором, остаются запасным вариантом без скрипта. */
+  function layout(caps) {
+    var col = document.querySelector('.col-abil');
+    if (!col) return;
+    var bl = Array.prototype.slice.call(col.querySelectorAll('.ability'));
+    if (bl.length < 2) return;
+    var MM = 96 / 25.4, G = 3 * MM, H = col.clientHeight, n = bl.length, i;
+    bl.forEach(function (b) { b.style.marginTop = '0px'; });
+    var top0 = col.getBoundingClientRect().top;
+    var h = bl.map(function (b) { return b.getBoundingClientRect().height; });
+    var sumh = h.reduce(function (a, b) { return a + b; }, 0),
+        free = H - sumh, y = [];
+    function place(gaps) {
+      var run = 0;
+      for (i = 0; i < n; i++) { y[i] = run + (i ? gaps[i] : gaps[0]); run = y[i] + h[i]; }
+    }
+    var gaps = [0];
+    if (free / (n - 1) < 8 * MM) {
+      var g = Math.max(0, free / (n - 1));
+      for (i = 1; i < n; i++) gaps.push(g);
+    } else {
+      var t = bl.map(function (b, k) {
+        /* «притяжение»: false в данных — линия есть, но блок к отряду не тянется
+           и встаёт в общий поток (D-060). */
+        if (b.getAttribute('data-pull') === 'no') return null;
+        var c = caps[b.getAttribute('data-link')];
+        if (!c) return null;
+        var r = c.getBoundingClientRect();
+        return r.top + r.height / 2 - top0 - h[k] / 2;
+      });
+      var flow = 0;
+      for (i = 0; i < n; i++) {
+        var yi = (i === 0 || t[i] === null) ? flow : Math.max(flow, t[i]);
+        gaps[i] = i ? yi - flow + G : yi;
+        if (i === 0) gaps[0] = 0;
+        flow = yi + h[i] + G;
+      }
+      var over = flow - G - H;
+      if (over > 0) {
+        var extra = 0;
+        for (i = 1; i < n; i++) extra += gaps[i] - G;
+        var k = extra > 0 ? Math.max(0, 1 - over / extra) : 0;
+        for (i = 1; i < n; i++) gaps[i] = G + (gaps[i] - G) * k;
+      } else {
+        var rest = -over;
+        if (rest > 12 * MM) for (i = 1; i < n; i++) gaps[i] += rest * 0.55 / (n - 1);
+      }
+      var used = sumh; for (i = 1; i < n; i++) used += gaps[i];
+      if (used > H) { var g2 = Math.max(0, free / (n - 1)); for (i = 1; i < n; i++) gaps[i] = g2; }
+    }
+    /* «смещение» в данных (мм, плюс — вниз): ручная доводка после раскладки.
+       Блок сдвигается за счёт соседнего зазора снизу; зазоры не меньше 3 мм,
+       из колонки блок не выходит. Первый блок не двигается (D-073). */
+    for (i = 1; i < n; i++) {
+      var sh = parseFloat(bl[i].getAttribute('data-shift') || '0') * MM;
+      if (!sh) continue;
+      var tot = sumh; for (var j = 1; j < n; j++) tot += gaps[j];
+      var roomDn = i + 1 < n ? gaps[i + 1] - G : H - tot;
+      sh = Math.max(G - gaps[i], Math.min(sh, roomDn));
+      gaps[i] += sh;
+      if (i + 1 < n) gaps[i + 1] -= sh;
+    }
+    for (i = 1; i < n; i++) bl[i].style.marginTop = (gaps[i] / MM).toFixed(2) + 'mm';
+    bl[0].style.marginTop = '0mm';
+  }
+
+  /* Мелкий залом линии-привязки читается как брак: заголовок свойства стоит
+     на 0,5–2 мм выше или ниже подписи отряда. Если перепад меньше 3 мм,
+     блок сдвигается на этот перепад и линия встаёт прямо. Сдвиг берётся
+     из соседних зазоров и не делает их меньше 3 мм; первый блок не двигается,
+     чтобы не отрывать колонку от верха. Сдвинуть нельзя — линия всё равно
+     рисуется прямой на уровне заголовка, если он попадает в высоту подписи.
+     Перепад от 3 мм — обычный залом, он виден явно (D-066). */
+  function nudge(caps, tail) {
+    var col = document.querySelector('.col-abil');
+    if (!col) return;
+    var MM = 96 / 25.4, LIM = 3 * MM, G = 3 * MM,
+        bl = Array.prototype.slice.call(col.querySelectorAll('.ability'));
+    bl.forEach(function (ab, i) {
+      ab.removeAttribute('data-straight');
+      var uid = ab.getAttribute('data-link'), cap = uid && caps[uid],
+          ttl = ab.querySelector('.ability-name');
+      if (!cap || !ttl) return;
+      var tr = tail(ttl), cr = cap.getBoundingClientRect(),
+          d = (cr.top + cr.height / 2) - (tr.top + tr.height / 2);
+      if (Math.abs(d) < 0.1 * MM || Math.abs(d) > LIM) return;
+      var before = parseFloat(ab.style.marginTop || '0') * MM,
+          nx = bl[i + 1],
+          after = nx ? parseFloat(nx.style.marginTop || '0') * MM
+                     : col.getBoundingClientRect().bottom - ab.getBoundingClientRect().bottom,
+          minAfter = nx ? G : 0;
+      if (i > 0 && before + d >= G && after - d >= minAfter) {
+        ab.style.marginTop = ((before + d) / MM).toFixed(2) + 'mm';
+        if (nx) nx.style.marginTop = ((after - d) / MM).toFixed(2) + 'mm';
+      } else if (Math.abs(d) < cr.height / 2) {
+        ab.setAttribute('data-straight', '1');
+      }
+    });
+  }
+
+  function run() {
+    var card = document.querySelector('.card'), svg = document.querySelector('svg.links');
+    if (!card || !svg || !svg.viewBox) return;
+    var box = card.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    var vb = svg.viewBox.baseVal,
+        kx = vb.width / box.width, ky = vb.height / box.height,
+        abil = document.querySelector('.col-abil'), tab = document.querySelector('.col-table');
+    if (!abil || !tab) return;
+    var ax = (abil.getBoundingClientRect().right - box.left) * kx,
+        tx = (tab.getBoundingClientRect().left - box.left) * kx + 4,
+        mx = ax + 2.5, out = '';
+    function cy(el) { var r = el.getBoundingClientRect(); return (r.top + r.height / 2 - box.top) * ky; }
+    /* Точка ставится не у края колонки, а в 2 мм за последней буквой заголовка.
+       Берём прямоугольник последней строки текста, а не блока: у блока правая
+       граница — это вся ширина колонки. */
+    function tail(el) {
+      var rg = document.createRange(); rg.selectNodeContents(el);
+      var rs = rg.getClientRects();
+      return rs.length ? rs[rs.length - 1] : el.getBoundingClientRect();
+    }
+    /* Отряды собираем в карту, а не ищем селектором: в именах есть кавычки
+       («Жнец», ББМП «Саранча»), и селектор на них ломается. */
+    var caps = {};
+    Array.prototype.forEach.call(document.querySelectorAll('.unit-cap[data-uid]'), function (el) {
+      caps[el.getAttribute('data-uid')] = el;
+    });
+    layout(caps);
+    nudge(caps, tail);
+    Array.prototype.forEach.call(document.querySelectorAll('.ability[data-link]'), function (ab) {
+      var uid = ab.getAttribute('data-link');
+      if (!uid) return;
+      var cap = caps[uid],
+          ttl = ab.querySelector('.ability-name');
+      if (!cap || !ttl) return;
+      var tr = tail(ttl),
+          ya = ((tr.top + tr.height / 2 - box.top) * ky).toFixed(1),
+          /* Прямая, если заголовок попадает в высоту подписи: после сдвига
+             блока (nudge) остаются доли миллиметра и округление до 0,1 —
+             этого хватает для видимой ступеньки. Концы берут одну координату (D-068). */
+          yc = cy(cap), hc = cap.getBoundingClientRect().height * ky,
+          yu = (ab.getAttribute('data-straight') || Math.abs(yc - parseFloat(ya)) < hc / 2)
+               ? ya : yc.toFixed(1),
+          A = ((tr.right - box.left) * kx + 2).toFixed(1),
+          /* Линия кончается в 1 мм перед первой буквой подписи отряда:
+             подписи центрированы, и у длинных имён первая буква левее
+             края таблицы. */
+          cr = (function () { var rg = document.createRange(); rg.selectNodeContents(cap);
+                              var rs = rg.getClientRects(); return rs.length ? rs[0] : cap.getBoundingClientRect(); })(),
+          M = mx.toFixed(1), T = Math.max(mx + 1, (cr.left - box.left) * kx - 1).toFixed(1);
+      out += '<polyline points="' + A + ',' + ya + ' ' + M + ',' + ya + ' '
+           + M + ',' + yu + ' ' + T + ',' + yu + '"/>'
+           + '<circle cx="' + A + '" cy="' + ya + '" r="0.9"/>';
+    });
+    if (out) svg.innerHTML = out;
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(run);
+  else window.addEventListener('load', run);
+  window.addEventListener('beforeprint', run);
+})();
+</script>
+</body>
+</html>

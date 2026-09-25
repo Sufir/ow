@@ -33,3 +33,7 @@ archive/
 # rules/tools/registry.py собирает базу из yaml-реестров.
 rules/registry/registry.db
 rules/registry/registry.db-journal
+
+# Черновые прогоны печати планшета фракции: варианты шрифтов, подготовки,
+# все восемь планшетов. Остаются на диске (README, «Готовые PDF в print/Saved/»).
+print/Faction-Card-A/*.pdf

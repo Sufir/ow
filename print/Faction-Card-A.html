@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Планшет фракции — вариант A (214 × 187 мм)</title>
+<!--
+  ============================================================================
+  ПЛАНШЕТ ФРАКЦИИ — ВАРИАНТ A  ·  «Нефтяные войны»
+  ----------------------------------------------------------------------------
+  Размер компонента   214 × 187 мм   (было 297 × 210 → минус 36 % площади)
+  Лист печати         A4 landscape, планшет по центру, метки реза по углам
+  Печать              Ctrl+P → A4 альбомная → 100 % → фон включить → вырезать
+
+  ПОРЯДОК КОЛОНОК ПОВТОРЯЕТ ОРИГИНАЛ:
+     [подготовка / пошаговый блок]  →  [способности]  →  [таблица отрядов]
+  Способности стоят вплотную к таблице, связи «свойство ↔ юнит» рисуются
+  линиями в SVG-слое .links (координаты в мм, правятся руками, см. ниже).
+
+  Заполнено Братством Сингулярности — худшая фракция по объёму текста.
+  ВСЕ РАЗМЕРЫ — в :root, в миллиметрах. Поменял число — поменялась вёрстка.
+  Ни скриптов, ни сети, ни сборки.
+  ============================================================================
+-->
+<style>
+/* ===== ШРИФТЫ ПРОЕКТА (файл лежит в print/, пути относительные) ========== */
+@font-face { font-family: "AlienEncounters";  src: url("Fonts/AlienEncounters.ttf")  format("truetype"); }
+@font-face { font-family: "AgencyFBCyrillic"; src: url("Fonts/agencyfbcyrillic.ttf") format("truetype"); }
+@font-face { font-family: "OpenGostTypeB";    src: url("Fonts/OpenGostTypeB.ttf")    format("truetype"); }
+@font-face { font-family: "OilWars";          src: url("Fonts/Oil Wars.ttf")         format("truetype"); }
+
+:root {
+  /* --- ГАБАРИТЫ --------------------------------------------------------- */
+  --card-w:     214mm;
+  --card-h:     187mm;
+  --pad:          6mm;
+
+  /* --- ВЕРХНЯЯ ПОЛОСА --------------------------------------------------- */
+  --row-top:     37mm;   /* высота = две цепочки гексов                     */
+  --track-w:    120mm;   /* бочка + цепочки                                 */
+  --gap:          4mm;
+
+  /* --- ТЕЛО: ТРИ КОЛОНКИ, ПОРЯДОК КАК В ОРИГИНАЛЕ ----------------------- */
+  --col-prep:    55mm;   /* подготовка + пошаговый блок (робот / общины)    */
+  --col-abil:    70mm;   /* уникальные способности — ВПЛОТНУЮ к таблице     */
+  --col-table:   69mm;   /* таблица отрядов                                 */
+  --row-body:   134mm;   /* задаётся таблицей: 6 строк по 17,2 мм + сноска  */
+
+  /* --- ТРЕК НЕФТИ: правильный плоскотопный гекс, H = W × 0,866 ---------- */
+  --hex-w:     13.5mm;   /* маркер ⌀15 мм выступает ~0,75 мм — как сейчас   */
+  --hex-h:     11.7mm;
+  --barrel:      15mm;
+
+  /* --- ТАБЛИЦА ОТРЯДОВ -------------------------------------------------- */
+  --unit-icon:   12mm;
+  --c-icon:      27mm;
+  --c-group:      6mm;
+  --c-stat:      12mm;
+
+  /* --- ТИПОГРАФИКА ------------------------------------------------------ */
+  --fs-title:    13pt;
+  --fs-h:        10pt;
+  --fs-body:      9pt;
+  --fs-small:     8pt;
+  --fs-stat:     15pt;
+  --lh:          1.22;
+
+  /* --- ЦВЕТА ------------------------------------------------------------ */
+  --ink:       #FFFFFF;
+  --cyan:      #11C5FF;
+  --blue:      #25A4EE;
+  --bg-1:      #061225;
+  --bg-2:      #0B2039;
+  --rule:      rgba(37,164,238,.40);
+  --rule-soft: rgba(37,164,238,.18);
+}
+
+@page { size: A4 landscape; margin: 0; }
+html, body { margin: 0; padding: 0; background: #7A8794; }
+body { font-family: Arial, "Segoe UI", sans-serif; }
+
+.sheet {
+  position: relative; width: 297mm; height: 210mm; background: #FFFFFF;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  page-break-after: always; break-after: page;
+}
+.sheet:last-child { page-break-after: auto; break-after: auto; }
+.crop { position: absolute; background: #000; }
+.crop.h { width: 6mm; height: .18mm; }
+.crop.v { width: .18mm; height: 6mm; }
+
+/* ===== ПЛАНШЕТ =========================================================== */
+.card {
+  position: relative;
+  width: var(--card-w); height: var(--card-h);
+  box-sizing: border-box; padding: var(--pad);
+  color: var(--ink);
+  background:
+    radial-gradient(120% 90% at 10% 0%, #123A5E 0%, rgba(18,58,94,0) 55%),
+    radial-gradient(90% 80% at 100% 100%, #0E2C4C 0%, rgba(14,44,76,0) 60%),
+    linear-gradient(160deg, var(--bg-2) 0%, var(--bg-1) 55%, #04101F 100%);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  display: flex; flex-direction: column; gap: var(--gap);
+  overflow: hidden;
+}
+.card::before, .card::after {
+  content: ""; position: absolute; width: 14mm; height: 14mm;
+  border: .4mm solid var(--cyan); pointer-events: none;
+}
+.card::before { top: 2mm; left: 2mm;  border-right: none; border-bottom: none; }
+.card::after  { bottom: 2mm; right: 2mm; border-left: none; border-top: none; }
+
+/* ===== ВЕРХНЯЯ ПОЛОСА: ТРЕК + ОПОЗНАВАНИЕ ================================ */
+.top { display: flex; gap: var(--gap); height: var(--row-top); flex: 0 0 auto; }
+
+.track { width: var(--track-w); flex: 0 0 auto; display: flex; align-items: flex-start; }
+.barrel { width: var(--barrel); height: var(--row-top); flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
+.barrel svg { width: 14mm; height: 16mm; }
+.hexfield { position: relative; flex-grow: 1; height: var(--row-top); }
+.hex {
+  position: absolute;
+  width: var(--hex-w); height: var(--hex-h);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  background: var(--cyan);                 /* это обводка гекса */
+  display: flex; align-items: center; justify-content: center;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.hex::before {                              /* заливка внутри обводки */
+  content: ""; position: absolute; inset: .45mm;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  background: #0C2138;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.hex span {
+  position: relative; z-index: 1;
+  font-family: "AgencyFBCyrillic", Arial, sans-serif;
+  font-size: 11pt; font-weight: 700; color: var(--cyan);
+}
+
+.ident { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5mm; min-width: 0; }
+.ident-line { display: flex; align-items: center; gap: 2.5mm; }
+.logo { width: 16mm; height: 16mm; flex: 0 0 auto; object-fit: contain; }
+.faction-name {
+  font-family: "AlienEncounters", sans-serif; font-size: var(--fs-title);
+  line-height: 1.05; text-transform: uppercase; letter-spacing: .02em; color: #FFFFFF;
+}
+.region { font-size: var(--fs-small); line-height: 1.2; color: var(--blue); }
+.region b { color: #FFFFFF; font-weight: 700; }
+
+/* ===== ТЕЛО: ТРИ КОЛОНКИ ================================================= */
+.body { display: flex; gap: var(--gap); height: var(--row-body); flex: 0 0 auto; min-height: 0; }
+.col-prep  { width: var(--col-prep);  flex: 0 0 auto; }
+.col-abil  { width: var(--col-abil);  flex: 0 0 auto; }
+.col-table { width: var(--col-table); flex: 0 0 auto; }
+
+.block-title {
+  font-family: "OpenGostTypeB", Arial, sans-serif;
+  font-size: var(--fs-h); font-weight: 700; color: var(--cyan);
+  letter-spacing: .04em; text-transform: uppercase;
+  border-bottom: .3mm solid var(--rule); padding-bottom: .8mm; margin-bottom: 1.8mm;
+}
+
+/* --- блок способности: рамка-уголок как в текущей версии ---------------- */
+.ability { margin-bottom: 2.4mm; padding-left: 1.6mm; border-left: .5mm solid var(--blue); border-top: .5mm solid var(--blue); padding-top: .8mm; }
+.ability:last-child { margin-bottom: 0; }
+.ability-name { font-size: var(--fs-body); font-weight: 700; color: #FFFFFF; line-height: 1.15; }
+.ability-note { font-size: var(--fs-small); font-weight: 700; color: var(--blue); line-height: 1.15; margin-bottom: .5mm; }
+.ability-text { font-size: var(--fs-body); line-height: var(--lh); color: var(--ink); }
+
+.steps { counter-reset: step; padding: 0; margin: 0; list-style: none; }
+.steps li { counter-increment: step; font-size: var(--fs-body); line-height: var(--lh); margin-bottom: 1.2mm; padding-left: 4.5mm; position: relative; }
+.steps li::before { content: counter(step) "."; position: absolute; left: 0; font-weight: 700; color: var(--blue); }
+.sym { font-family: "OilWars", "AgencyFBCyrillic", sans-serif; color: var(--cyan); font-size: 11pt; }
+
+/* ===== ТАБЛИЦА ОТРЯДОВ =================================================== */
+.units-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.units-table th {
+  font-size: 6.5pt; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--blue); text-align: center; padding: 0 0 .8mm; border-bottom: .3mm solid var(--rule);
+}
+.units-table th.th-unit { text-align: left; }
+.units-table td { padding: .8mm 0; vertical-align: middle; }
+.units-table td.u-icon { text-align: center; }
+.units-table td.u-icon img { height: var(--unit-icon); width: 100%; object-fit: contain; display: block; }
+.unit-cap { font-size: 7pt; line-height: 1.05; color: var(--cyan); text-align: center; margin-top: .6mm; }
+.stat { font-family: "AgencyFBCyrillic", Arial, sans-serif; font-size: var(--fs-stat); font-weight: 700; text-align: center; color: #FFFFFF; }
+.stat.count { color: var(--blue); }
+.group-label { writing-mode: vertical-rl; text-orientation: mixed; font-size: 7pt; color: var(--blue); text-align: center; white-space: nowrap; }
+.units-table tr.sep td { padding: 0; }
+.unit-sep { height: .3mm; background: linear-gradient(to right, rgba(17,197,255,0), var(--cyan), rgba(17,197,255,0)); margin: 1.2mm 0; }
+.unit-note { font-size: var(--fs-small); line-height: 1.2; color: var(--ink); font-style: italic; margin-top: 1.8mm; }
+
+/* ===== СВЯЗИ «СВОЙСТВО ↔ ЮНИТ» ==========================================
+   SVG лежит поверх планшета, система координат = миллиметры планшета
+   (viewBox 0 0 214 187). Одна polyline на связь. Правится руками:
+   первая точка — правый край блока способности, последняя — подпись юнита.
+   Для Братства связь одна: «Боевое донесение» → Полковник.
+   ======================================================================== */
+.links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.links polyline { fill: none; stroke: #25A4EE; stroke-width: .35; stroke-linejoin: round; }
+.links circle { fill: #25A4EE; }
+
+/* ===== ОБОРОТ ============================================================ */
+.card.back { background: #FFFFFF; color: #12202E; display: block; padding: 10mm; border: .3mm solid #B8C6D2; }
+.card.back::before, .card.back::after { display: none; }
+.prep-strip { display: flex; gap: 6mm; align-items: baseline; border-bottom: .3mm solid #C8D4DE; padding-bottom: 2.5mm; margin-bottom: 3.5mm; }
+.prep-item { font-size: var(--fs-body); }
+.prep-item b { font-size: var(--fs-h); }
+.back-top { margin-bottom: 3mm; }
+.back-top::after { content: ""; display: block; clear: both; }
+.illus { width: 52mm; height: 52mm; float: left; margin: 0 5mm 3mm 0; border: .3mm dashed #9FB2C2; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 7pt; color: #7C8FA0; padding: 2mm; box-sizing: border-box; }
+.lore { font-size: var(--fs-small); line-height: 1.34; }
+.guide-title { font-size: var(--fs-h); font-weight: 700; margin-bottom: 1.5mm; }
+.guide { font-size: var(--fs-small); line-height: 1.34; column-count: 2; column-gap: 6mm; }
+.guide p { margin: 0 0 1.4mm; }
+
+@media screen { body { padding: 10mm 0; } .sheet { margin: 0 auto 10mm; box-shadow: 0 4mm 12mm rgba(0,0,0,.35); } }
+</style>
+</head>
+<body>
+
+<!-- ======================= ЛИСТ 1 — ЛИЦЕВАЯ СТОРОНА ======================= -->
+<div class="sheet">
+  <div class="crop h" style="left:35.5mm; top:11.5mm;"></div>
+  <div class="crop v" style="left:41.5mm; top:5.5mm;"></div>
+  <div class="crop h" style="right:35.5mm; top:11.5mm;"></div>
+  <div class="crop v" style="right:41.5mm; top:5.5mm;"></div>
+  <div class="crop h" style="left:35.5mm; bottom:11.5mm;"></div>
+  <div class="crop v" style="left:41.5mm; bottom:5.5mm;"></div>
+  <div class="crop h" style="right:35.5mm; bottom:11.5mm;"></div>
+  <div class="crop v" style="right:41.5mm; bottom:5.5mm;"></div>
+
+  <div class="card">
+
+    <!-- ---------- ВЕРХНЯЯ ПОЛОСА ---------- -->
+    <div class="top">
+      <div class="track">
+        <div class="barrel">
+          <svg viewBox="0 0 56 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="28" cy="10" rx="17" ry="6" stroke="#11C5FF" stroke-width="2.6"/>
+            <path d="M11 10v44c0 3.3 7.6 6 17 6s17-2.7 17-6V10" stroke="#11C5FF" stroke-width="2.6"/>
+            <path d="M11 24c0 3.3 7.6 6 17 6s17-2.7 17-6M11 40c0 3.3 7.6 6 17 6s17-2.7 17-6" stroke="#11C5FF" stroke-width="1.8"/>
+            <path d="M28 27c-4 5.4-6.7 8.2-6.7 11.5A6.7 6.7 0 0 0 34.7 38.5C34.7 35.2 32 32.4 28 27z" fill="#11C5FF"/>
+          </svg>
+        </div>
+        <div class="hexfield">
+          <div class="hex" style="left: 0.00mm; top: 0.00mm;"><span>1</span></div>
+          <div class="hex" style="left: 10.12mm; top: 5.85mm;"><span>2</span></div>
+          <div class="hex" style="left: 20.25mm; top: 0.00mm;"><span>3</span></div>
+          <div class="hex" style="left: 30.38mm; top: 5.85mm;"><span>4</span></div>
+          <div class="hex" style="left: 40.50mm; top: 0.00mm;"><span>5</span></div>
+          <div class="hex" style="left: 50.62mm; top: 5.85mm;"><span>6</span></div>
+          <div class="hex" style="left: 60.75mm; top: 0.00mm;"><span>7</span></div>
+          <div class="hex" style="left: 70.88mm; top: 5.85mm;"><span>8</span></div>
+          <div class="hex" style="left: 81.00mm; top: 0.00mm;"><span>9</span></div>
+          <div class="hex" style="left: 91.12mm; top: 5.85mm;"><span>10</span></div>
+          <div class="hex" style="left: 0.00mm; top: 19.55mm;"><span>11</span></div>
+          <div class="hex" style="left: 10.12mm; top: 25.40mm;"><span>12</span></div>
+          <div class="hex" style="left: 20.25mm; top: 19.55mm;"><span>13</span></div>
+          <div class="hex" style="left: 30.38mm; top: 25.40mm;"><span>14</span></div>
+          <div class="hex" style="left: 40.50mm; top: 19.55mm;"><span>15</span></div>
+          <div class="hex" style="left: 50.62mm; top: 25.40mm;"><span>16</span></div>
+          <div class="hex" style="left: 60.75mm; top: 19.55mm;"><span>17</span></div>
+          <div class="hex" style="left: 70.88mm; top: 25.40mm;"><span>18</span></div>
+          <div class="hex" style="left: 81.00mm; top: 19.55mm;"><span>19</span></div>
+          <div class="hex" style="left: 91.12mm; top: 25.40mm;"><span>20</span></div>
+        </div>
+      </div>
+
+      <div class="ident">
+        <div class="ident-line">
+          <img class="logo" src="../art/logos/Братство Сингулярности.png" alt="">
+          <div class="faction-name">Братство<br>Сингулярности</div>
+        </div>
+        <div class="region">Стартовый регион: <b>любой, кроме стартовых регионов других фракций</b></div>
+      </div>
+    </div>
+
+    <!-- ---------- ТЕЛО ---------- -->
+    <div class="body">
+
+      <!-- колонка 1: пошаговый блок фракции (у Братства — «Общины») -->
+      <div class="col-prep">
+        <div class="block-title">Общины</div>
+        <ol class="steps">
+          <li>Общину можно размещать в регионе где уже есть фабрика.</li>
+          <li>Только одну общину можно организовать в одном из регионов с символом <span class="sym">Q</span></li>
+          <li>Только одну общину можно организовать в одном из регионов с символом <span class="sym">W</span></li>
+          <li>Только одну общину можно организовать в одном из регионов с символом <span class="sym">E</span></li>
+          <li>Только одну общину можно организовать в одном из регионов, где нет ни одного из указанных символов: <span class="sym">Q W E</span></li>
+          <li>В отличие от фабрик, вы не «контролируете» общину.</li>
+        </ol>
+      </div>
+
+      <!-- колонка 2: способности — вплотную к таблице -->
+      <div class="col-abil">
+        <div class="ability">
+          <div class="ability-name">Паломничество</div>
+          <div class="ability-note">Фаза влияния</div>
+          <div class="ability-text">Переместите любые свои отряды из одного региона в один другой в любом месте карты.</div>
+        </div>
+        <div class="ability">
+          <div class="ability-name">Боевое донесение</div>
+          <div class="ability-note">Постоянная</div>
+          <div class="ability-text">В конце действия любого игрока (даже если это не ваш ход) или в фазе получения ресурсов уничтожьте полковника (верните в свой запас) и получите 2 нефти.</div>
+        </div>
+        <div class="ability">
+          <div class="ability-name">Религиозные общины</div>
+          <div class="ability-note">Действие. Стоимость: 3 (1)</div>
+          <div class="ability-text">Аналогично строительству военной фабрики. Платите только одну нефть вместо трех, если размещаете общину не по соседству с другой общиной. Выполняя действие «строительство военной фабрики», вы можете вместо этого организовать общину. Как и в случае с фабрикой, у вас должен быть пехотинец в выбранном регионе. Общины всегда принадлежат вам, даже если у вас нет отрядов в соответствующих регионах. Общины — не являются отрядами, и они никаким образом не участвуют битвах. Общины неуязвимы для противника, их нельзя уничтожить или переместить.</div>
+        </div>
+      </div>
+
+      <!-- колонка 3: отряды -->
+      <div class="col-table">
+        <table class="units-table">
+          <colgroup>
+            <col style="width: var(--c-icon)"><col style="width: var(--c-group)">
+            <col style="width: var(--c-stat)"><col style="width: var(--c-stat)"><col style="width: var(--c-stat)">
+          </colgroup>
+          <thead>
+            <tr><th class="th-unit">Отряд</th><th></th><th>Кол-во</th><th>Стоим.</th><th>Сила</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="u-icon"><img src="Units/adept.png" alt=""><div class="unit-cap">Рекрут</div></td>
+              <td class="group-label" rowspan="2">Пехотинцы</td>
+              <td class="stat count">6</td><td class="stat">1</td><td class="stat">0</td>
+            </tr>
+            <tr>
+              <td class="u-icon"><img src="Units/Братство Сингулярности/Полковник.png" alt=""><div class="unit-cap">Полковник</div></td>
+              <td class="stat count">1</td><td class="stat">3</td><td class="stat">0</td>
+            </tr>
+            <tr class="sep"><td colspan="5"><div class="unit-sep"></div></td></tr>
+            <tr>
+              <td class="u-icon"><img src="Units/Братство Сингулярности/Боец.png" alt=""><div class="unit-cap">Фанатик</div></td>
+              <td class="group-label" rowspan="2">Боевые машины</td>
+              <td class="stat count">3</td><td class="stat">3</td><td class="stat">0</td>
+            </tr>
+            <tr>
+              <td class="u-icon"><img src="Units/Братство Сингулярности/Киборг.png" alt=""><div class="unit-cap">Киборг</div></td>
+              <td class="stat count">3</td><td class="stat">4</td><td class="stat">2</td>
+            </tr>
+            <tr class="sep"><td colspan="5"><div class="unit-sep"></div></td></tr>
+            <tr>
+              <td class="u-icon"><img src="Units/Братство Сингулярности/Паладин.png" alt=""><div class="unit-cap">«Паладин»</div></td>
+              <td class="group-label">Боевой мех</td>
+              <td class="stat count">3</td><td class="stat">6</td><td class="stat">7</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="unit-note">Особенность: у Братства нет боевых роботов. При использовании варианта игры с боевыми роботами наемниками, для получения б/р наемника вам не требуется собственный б/р, однако у вас должны быть на карте все четыре общины.</div>
+      </div>
+    </div>
+
+    <!-- ---------- СВЯЗИ «СВОЙСТВО ↔ ЮНИТ» ---------- -->
+    <svg class="links" viewBox="0 0 214 187" preserveAspectRatio="none">
+      <!-- Боевое донесение → Полковник.
+           Точки (x,y) в мм от левого верхнего угла планшета.
+           Колонка способностей кончается на x = 135, таблица начинается на x = 139.
+           Первая точка — правый край блока способности, последняя — подпись юнита.
+           Связей у фракции 1–6: копируй polyline и правь числа. -->
+      <polyline points="134,80 137.5,80 137.5,81.6 145.5,81.6"/>
+      <circle cx="134" cy="80" r="0.9"/>
+    </svg>
+
+  </div>
+</div>
+
+<!-- ======================= ЛИСТ 2 — ОБОРОТ ================================ -->
+<div class="sheet">
+  <div class="crop h" style="left:35.5mm; top:11.5mm;"></div>
+  <div class="crop v" style="left:41.5mm; top:5.5mm;"></div>
+  <div class="crop h" style="right:35.5mm; top:11.5mm;"></div>
+  <div class="crop v" style="right:41.5mm; top:5.5mm;"></div>
+  <div class="crop h" style="left:35.5mm; bottom:11.5mm;"></div>
+  <div class="crop v" style="left:41.5mm; bottom:5.5mm;"></div>
+  <div class="crop h" style="right:35.5mm; bottom:11.5mm;"></div>
+  <div class="crop v" style="right:41.5mm; bottom:5.5mm;"></div>
+
+  <div class="card back">
+    <div class="prep-strip">
+      <div class="prep-item">Очередь: <b>10</b></div>
+      <div class="prep-item">Запас нефти: <b>8</b></div>
+      <div class="prep-item">1 фабрика под контролем и 6 рекрутов в стартовом регионе.</div>
+    </div>
+    <div class="back-top">
+      <div class="illus">иллюстрация фракции<br>52 × 52 мм</div>
+      <div class="lore">Массовый милленаристский неорелигиозный технокульт, известный как Братство Сингулярности, возник на стыке утраченной духовности и одержимости технологиями. Они верят, что человечество сбилось с пути и должно быть «перепрошито» через очищающий апокалипсис. Их проповеди сочетают псевдонаучную терминологию с ритуалами коллективного «просветления», где сознание адептов подвергается глубокой трансформации. Общины культа существуют как замкнутые экосистемы — одновременно коммуны, лаборатории и центры вербовки, где граница между верой и программированием личности стирается. Для приближения Судного дня они применяют изощрённые методы психического воздействия, информационного заражения и точечный террор, оправдывая это высшей целью очищения. В их картине мира старый порядок уже мёртв — осталось лишь ускорить его падение и занять место в новом, «совершенном» цикле.</div>
+    </div>
+    <div class="guide-title">Как играть за данную фракцию</div>
+    <div class="guide">
+      <p>Очевидно, вы должны сосредоточиться на строительстве общин, но необходимо сбалансировать это со строительством фабрик и увеличением вашей армии последователей. Вам нужна достаточная боевая эффективность, чтобы размещать общины без особых помех.</p>
+      <p>Вам понадобятся боевые машины для защиты ваших фабрик, так что Лоботомия или Обращение в веру — хорошие претенденты на то, чтобы быть первыми вашими технологиями. А Жертва может защитить вас, если ваши противники будут использовать ранние стратегии с боевыми роботами.</p>
+      <p>Не платите полную стоимость за отряды, всегда сначала получайте их технологии. Несмотря на кажущиеся неудобства, в долгосрочной перспективе такой подход с лихвой окупается.</p>
+      <p>То что у вас нет боевых роботов, дает значительную экономию энергии в начале игры, вам придется потратить до 4-10 нефти на общины, но поскольку это растянуто во времени, вы (в отличие от других фракций) никогда не теряйте целую фазу действий на создание б/р. И, конечно же, ваши общины дают дополнительную нефть и в конечном счете окупают себя.</p>
+      <p>Ваши слабости в том, что у вас нет боевых роботов и вы должны активно перемещаться по карте. Ваши стратегии должны основываться на этом.</p>
+      <p>Обратите внимание, что с «Паладинами Братства» у вас больше боевых кубиков, чем у многих боевых роботов.</p>
+      <p>У вас есть возможности для ведения переговоров с другими игроками, так как им выгодно, чтобы вы размещали свои общины в регионах с контролируемыми ими фабриками.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

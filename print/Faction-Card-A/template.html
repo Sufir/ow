@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Планшет фракции — @@name@@ (240 × 176 мм)</title>
+<!--
+  ============================================================================
+  ПЛАНШЕТ ФРАКЦИИ · «Нефтяные войны» · вариант A
+  ----------------------------------------------------------------------------
+  Размер компонента   240 × 176 мм   (было 297 × 210 → минус 32 % площади)
+  Лист печати         A4 landscape, планшет по центру, метки реза по углам
+  Печать              Ctrl+P → A4 альбомная → 100 % → фон включить → вырезать
+
+  КОМПОНОВКА (порядок колонок как в оригинале):
+    [опознавание + подготовка + пошаговый блок] → [способности] → [отряды]
+    Таблица отрядов прижата к верху.
+    Способности распределены по вертикали: первой идёт собственная
+    способность фракции, остальные подтянуты к своим юнитам отступами
+    margin-top (значения ниже, в миллиметрах, правятся руками).
+    Связи «свойство ↔ юнит» — линиями в SVG-слое .links, координаты в мм.
+
+  РАЗМЕРЫ СИЛУЭТОВ отражают реальный масштаб миниатюр, но не буквально:
+    рекрут 9 мм · полковник 10,5 · боевые машины 12 · мех 12,5 · б/р 14,5
+
+  КЕГЛИ ВЗЯТЫ ИЗ ОРИГИНАЛА и НЕ УМЕНЬШЕНЫ: текст 9 pt, название свойства
+  10 pt, заголовок блока 12 pt, подпись юнита 9 pt, числа 18 pt.
+
+  ВСЕ РАЗМЕРЫ — в :root, в миллиметрах. Ни скриптов, ни сети, ни сборки.
+  ============================================================================
+-->
+<style>
+@font-face { font-family: "AlienEncounters";  src: url("../Fonts/AlienEncounters.ttf")  format("truetype"); }
+@font-face { font-family: "AgencyFBCyrillic"; src: url("../Fonts/agencyfbcyrillic.ttf") format("truetype"); }
+@font-face { font-family: "OpenGostTypeB";    src: url("../Fonts/OpenGostTypeB.ttf")    format("truetype"); }
+@font-face { font-family: "OilWars";          src: url("../Fonts/Oil Wars.ttf")         format("truetype"); }
+
+:root {
+  /* --- ГАБАРИТЫ --------------------------------------------------------- */
+  --card-w:     240mm;
+  --card-h:     170mm;
+  --pad:          6mm;
+  --bleed:        6mm;   /* запас под погрешность печати и реза */
+  --gap:          4mm;
+
+  /* --- ПОЛОСЫ ----------------------------------------------------------- */
+  --row-track:   18mm;   /* цепочка гексов                                  */
+  --row-body:   136mm;
+
+  /* --- КОЛОНКИ ТЕЛА ----------------------------------------------------- */
+  --col-left:    66mm;
+  --col-abil:    85mm;
+  --col-table:   69mm;
+
+  /* --- ТРЕК НЕФТИ ------------------------------------------------------- */
+  --hex-w:     @@hexw@@mm;
+  --hex-h:     @@hexh@@mm;
+  --barrel-w:  14.5mm;
+  --track-gap:  .5mm;   /* было 2 мм: шкала сдвинута к бочке на 1,5 мм ≈ 4 пт */
+
+  /* --- ТАБЛИЦА ОТРЯДОВ -------------------------------------------------- */
+  --c-icon:      24mm;
+  --c-group:      6mm;
+  --c-stat:      13mm;
+
+  /* --- КЕГЛИ (значения оригинального планшета) -------------------------- */
+  --fs-name:     15pt;
+  --fs-block:    12pt;
+  --fs-prop:   12.5pt;   /* Gost CAPS: высота прописных = Arial bold 10pt */
+  --fs-body:      9pt;
+  --fs-stat:     18pt;
+  --fs-group:     8pt;
+  --fs-th:        9pt;
+  --lh:          1.22;
+
+  /* --- ЦВЕТА ------------------------------------------------------------ */
+  --ink:       #FFFFFF;
+  --cyan:      #11C5FF;
+  --blue:      #25A4EE;
+  --bg:        #08182B;
+  --rule:      rgba(37,164,238,.40);
+  --hex-line:  #2E86B8;  /* обводка ячейки — приглушена, чтобы не спорить с бочкой */
+  --hex-fill:  #0C2E46;  /* лёгкая подсветка ячейки = фон + 14 % циана       */
+  --pink:      #EE688C;  /* третий цвет. В оригинале CW им набрана колонка Combat */
+}
+
+@page { size: A4 landscape; margin: 0; }
+html, body { margin: 0; padding: 0; background: #7A8794; }
+body { font-family: Arial, "Segoe UI", sans-serif; }
+
+.sheet {
+  position: relative; width: 297mm; height: 210mm; background: #FFFFFF;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  page-break-after: always; break-after: page;
+}
+.sheet:last-child { page-break-after: auto; break-after: auto; }
+/* Метки реза только на обороте: лицевая печатается с выпуском под обрез.
+   Тонкие направляющие, не рамка — линии не смыкаются в прямоугольник.
+   Положение считается от габарита планшета, менять числа не нужно. */
+.crop { position: absolute; background: #6E7C88; }
+.crop.h { width: 10mm; height: .12mm; }
+.crop.v { width: .12mm; height: 10mm; }
+
+/* ===== ПЛАНШЕТ ===========================================================
+   Фон: плоская база плюс два мягких подсвета по углам — оба в синеве,
+   заданы прозрачностью фирменного голубого, без ухода в другой тон.
+   ======================================================================== */
+/* Выпуск под обрез. Фон несёт .bleed, поэтому на линии реза нет шва:
+   это один непрерывный градиент, а не два состыкованных. Планшет остаётся
+   240 × 170, вся геометрия и декор внутри него. */
+.bleed {
+  width: calc(var(--card-w) + 2 * var(--bleed));
+  height: calc(var(--card-h) + 2 * var(--bleed));
+  display: flex; align-items: center; justify-content: center;
+  background:
+    radial-gradient(62% 52% at 2% 0%,   rgba(37,164,238,.20) 0%, rgba(37,164,238,0) 72%),
+    radial-gradient(58% 48% at 100% 96%, rgba(17,197,255,.14) 0%, rgba(17,197,255,0) 70%),
+    var(--bg);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.card {
+  position: relative;
+  width: var(--card-w); height: var(--card-h);
+  box-sizing: border-box; padding: var(--pad);
+  color: var(--ink);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  display: flex; flex-direction: column; gap: var(--gap);
+  overflow: hidden;
+}
+/* угловые накладки (сгенерированы) — верх слева и низ справа зеркалом */
+.corner { position: absolute; width: 32mm; height: auto; z-index: 0; pointer-events: none; opacity: .85; }
+.corner.br { bottom: 2.5mm; right: 2.5mm; transform: rotate(180deg); }
+/* правый верхний угол — вектор. viewBox в миллиметрах планшета:
+   1 единица = 1 мм, координаты читаются напрямую. При смене --card-w/--card-h
+   поменять viewBox на те же числа. Запасной спокойный вариант: decor/corner-tr-1.svg */
+/* Групповая прозрачность, а не выбор тусклых цветов: внутренняя иерархия из трёх
+   яркостей сохраняется, а весь угол садится на уровень остального декора.
+   0,62 посчитано из светлоты: #11C5FF на фоне #08182B даёт #0E83AE, светлота 109 —
+   ровно как у правого нижнего угла (#0183D6). Левая полоса тусклее, светлота 84. */
+.corner-tr { position: absolute; left: 0; top: 0; width: var(--card-w); height: var(--card-h);
+             pointer-events: none; z-index: 0; overflow: visible; opacity: .62; }
+
+/* боковая вертикальная накладка в левом поле */
+.side { position: absolute; left: .9mm; top: 31mm; bottom: 3mm; width: 4.4mm;
+        display: flex; flex-direction: column; opacity: .7; z-index: 0; pointer-events: none; }
+.side img { width: 100%; height: 50%; object-fit: fill; display: block; }
+.side img + img { transform: scaleY(-1); }
+
+/* ===== ТРЕК ЗАПАСА НЕФТИ ================================================= */
+/* Зазор бочка — цепочка. Единственное, что двигает шкалу по горизонтали:
+   уменьшение сдвигает всю цепочку влево, правый конец уходит от края. */
+.track { height: var(--row-track); flex: 0 0 auto; display: flex; align-items: center;
+         gap: var(--track-gap); }
+.barrel { width: var(--barrel-w); flex: 0 0 auto; }
+.barrel img { width: 100%; height: auto; display: block; }
+.hexfield { position: relative; flex-grow: 1; height: var(--row-track); }
+/* Ячейки рисует один SVG: штрих центрируется на контуре, поэтому на общих рёбрах
+   две обводки совпадают и толщина везде одинаковая. Дивы .hex несут только числа. */
+.hexgrid { position: absolute; left: 0; top: 0; overflow: visible;
+           -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.hexgrid polygon { fill: var(--hex-fill); stroke: var(--hex-line); stroke-width: .45;
+                   stroke-linejoin: miter; }
+.hex {
+  position: absolute;
+  width: var(--hex-w); height: var(--hex-h);
+  display: flex; align-items: center; justify-content: center;
+}
+.hex span {
+  position: relative; z-index: 1;
+  font-family: "AlienEncounters", sans-serif; font-size: 18pt; color: #9FE8FF;
+}
+
+/* ===== ТЕЛО: ТРИ КОЛОНКИ ================================================= */
+.body { position: relative; z-index: 1; display: flex; gap: var(--gap); height: var(--row-body); flex: 0 0 auto; min-height: 0; }
+.col-left  { width: var(--col-left);  flex: 0 0 auto; display: flex; flex-direction: column; gap: 3.5mm; }
+.col-abil  { width: var(--col-abil);  flex: 0 0 auto; display: flex; flex-direction: column; }
+.col-table { width: var(--col-table); flex: 0 0 auto; }
+
+.logo { width: 15mm; height: 15mm; object-fit: contain; display: block; }
+/* Ш3 — логотип подложкой за названием */
+.head-wm { position: relative; }
+.head-wm .logo-wm { position: absolute; right: -1mm; top: -3mm; width: 27mm; height: 27mm;
+  object-fit: contain; opacity: .30; z-index: 0; pointer-events: none; }
+.head-wm .faction-name, .head-wm .region { position: relative; z-index: 1; }
+/* весь текст левой колонки — выше логотипа-подложки, иначе он печатается поверх */
+.col-left > div { position: relative; z-index: 1; }
+/* Ш4 — логотип уезжает в полосу трека */
+.logo-track { width: 16mm; height: 16mm; object-fit: contain; flex: 0 0 auto; margin-left: 2mm; }
+.faction-name {
+  font-family: "AlienEncounters", sans-serif; font-size: var(--fs-name);
+  line-height: 1.08; text-transform: uppercase; color: #FFFFFF; margin-top: 1.5mm;
+}
+.region { font-size: var(--fs-body); line-height: 1.2; color: var(--blue); margin-top: 1.2mm; }
+.region b { font-weight: 700; }
+.region span { color: #FFFFFF; font-weight: 400; }
+
+.block-title {
+  font-family: "OpenGostTypeB", Arial, sans-serif;
+  font-size: var(--fs-block); font-weight: 700; color: var(--cyan);
+  letter-spacing: .03em; text-transform: uppercase;
+  padding-bottom: 0; margin-bottom: 1.8mm;
+}
+.prep-row { font-size: var(--fs-body); line-height: 1.25; margin-bottom: .5mm; }
+.prep-row b { color: var(--blue); font-weight: 700; }
+.prep-row span { color: #FFFFFF; font-weight: 400; }
+.prep-note { font-size: var(--fs-body); line-height: 1.25; color: var(--blue); margin-top: 1.2mm; }
+
+.steps { counter-reset: step; padding: 0; margin: 0; list-style: none; }
+.steps li { counter-increment: step; font-size: var(--fs-body); line-height: var(--lh); margin-bottom: 1.2mm; padding-left: 4.5mm; position: relative; }
+.steps li::before { content: counter(step) "."; position: absolute; left: 0; font-weight: 700; color: var(--blue); }
+.sym { font-family: "OilWars", sans-serif; color: var(--cyan); font-size: 11pt; }
+
+.ability { padding-left: 1.6mm; padding-top: .8mm; border-left: .5mm solid var(--blue); border-top: .5mm solid var(--blue); }
+.ability-name { font-family: "OpenGostTypeB", Arial, sans-serif;
+  font-size: var(--fs-prop); font-weight: 700; color: #FFFFFF; line-height: .98;
+  text-transform: uppercase; letter-spacing: .02em; }
+.ability-note { font-size: var(--fs-body); font-weight: 700; color: var(--blue); line-height: 1.15; margin-bottom: .6mm; }
+.ability-text { font-size: var(--fs-body); line-height: var(--lh); color: var(--ink); }
+
+/* ===== ТАБЛИЦА ОТРЯДОВ =================================================== */
+.units-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.units-table th {
+  font-family: "OpenGostTypeB", Arial, sans-serif;
+  font-size: var(--fs-th); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--blue); text-align: center; padding: 0 0 .8mm; border-bottom: .3mm solid var(--rule);
+}
+
+.units-table td { padding: .8mm 0; vertical-align: middle; }
+.units-table td.u-icon { text-align: center; }
+.units-table td.u-icon img { width: 100%; object-fit: contain; display: block; }
+.units-table td.u-icon .noimg { display: flex; align-items: center; justify-content: center; font-size: 6pt; color: #7796AE; border: .2mm dashed #3A5772; }
+.unit-cap { font-size: var(--fs-body); line-height: 1.05; color: var(--cyan); text-align: center; margin-top: .6mm; }
+.stat { font-family: "AgencyFBCyrillic", Arial, sans-serif; font-size: var(--fs-stat); font-weight: 700; text-align: center; color: #FFFFFF; }
+.stat.count { color: var(--blue); }
+.stat.power { color: var(--pink); }
+.group-label { writing-mode: vertical-rl; text-orientation: mixed; font-size: var(--fs-group); color: var(--blue); text-align: center; white-space: nowrap; }
+.units-table tr.sep td { padding: 0; }
+.unit-sep { height: .3mm; background: linear-gradient(to right, rgba(238,104,140,0), var(--pink), rgba(238,104,140,0)); margin: 1.2mm 0; }
+.units-table tr.cmt td { font-size: var(--fs-body); line-height: 1.2; font-style: italic;
+                         padding: .8mm 0 0; }
+/* Расшифровка значения в колонке «Сила» — тем же розовым, что и само значение.
+   Контраст на фоне #08182B — 5,95:1 при норме AA 4,5:1.
+   Прочие заметки под таблицей остаются белыми: розовый здесь означает «это про силу». */
+.units-table tr.cmt.pw td { color: var(--pink); }
+/* Сноска идёт по центру и с выравненными строками: при выключке влево
+   последнее слово повисает одно в строке, а блок кажется сдвинутым
+   к левому краю таблицы, хотя остальное в ней выровнено по центру. */
+.units-table tr.cmt td { text-align: center; text-wrap: balance; }
+
+.links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.links polyline { fill: none; stroke: var(--pink); stroke-width: .35; stroke-linejoin: round; }
+.links circle { fill: var(--pink); }
+
+/* ===== ОБОРОТ ============================================================ */
+.card.back { background: #FFFFFF; color: #12202E; display: block; padding: 10mm; }
+.card.back::before { display: none; }
+.prep-strip { display: flex; gap: 6mm; align-items: baseline; border-bottom: .3mm solid #C8D4DE; padding-bottom: 2.5mm; margin-bottom: 3.5mm; font-size: var(--fs-body); }
+.back-top { margin-bottom: 3mm; }
+.back-top::after { content: ""; display: block; clear: both; }
+.illus { width: 52mm; height: 52mm; float: left; margin: 0 5mm 3mm 0; border: .3mm dashed #9FB2C2; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 8pt; color: #7C8FA0; padding: 2mm; box-sizing: border-box; }
+.lore { font-size: var(--fs-body); line-height: 1.34; }
+.guide-title { font-size: var(--fs-block); font-weight: 700; margin-bottom: 1.5mm; }
+.guide { font-size: var(--fs-body); line-height: 1.34; column-count: 2; column-gap: 6mm; }
+.guide p { margin: 0 0 1.4mm; }
+
+@media screen { body { padding: 10mm 0; } .sheet { margin: 0 auto 10mm; box-shadow: 0 4mm 12mm rgba(0,0,0,.35); } }
+</style>
+</head>
+<body data-table-h="@@table_h@@" data-over="@@over@@">
+
+<!-- ======================= ЛИСТ 1 — ЛИЦЕВАЯ СТОРОНА ======================= -->
+<div class="sheet">
+  <div class="bleed">
+  <div class="card">
+    <img class="corner br" src="decor/corner-a.png" alt="">
+    <div class="side"><img src="decor/side-rail.png" alt=""><img src="decor/side-rail.png" alt=""></div>
+
+    <svg class="corner-tr" viewBox="0 0 240 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- три рельса по верхнему полю, скос 45°, плечо по правому полю -->
+      <polyline points="170,2.6 235.5,2.6 237.6,4.7 237.6,44" stroke="#11C5FF" stroke-width=".5" fill="none"/>
+      <polyline points="188,4.0 233.8,4.0 235.9,6.1 235.9,30" stroke="#1D6E9E" stroke-width=".35" fill="none"/>
+      <polyline points="200,5.3 232.3,5.3 234.4,7.4 234.4,17" stroke="#11C5FF" stroke-width=".3" fill="none"/>
+      <!-- насечки -->
+      <path d="M176,2.6 V1.4 M179,2.6 V1.4 M182,2.6 V1.4" stroke="#1D6E9E" stroke-width=".3"/>
+      <path d="M206,2.6 V1.4 M209,2.6 V1.4 M212,2.6 V1.4" stroke="#1D6E9E" stroke-width=".3"/>
+      <!-- залитый сегмент и гекс-узлы -->
+      <rect x="192" y="4.55" width="14" height=".55" fill="#25A4EE"/>
+      <polygon points="217.6,1.45 219.5,1.45 220.45,2.6 219.5,3.75 217.6,3.75 216.65,2.6"
+               fill="#0C2138" stroke="#11C5FF" stroke-width=".3"/>
+      <polygon points="236.95,15.375 238.25,15.375 238.9,16.5 238.25,17.625 236.95,17.625 236.3,16.5"
+               fill="#0C2138" stroke="#11C5FF" stroke-width=".3"/>
+      <!-- точки-терминаторы -->
+      <circle cx="170" cy="2.6" r=".55" fill="#11C5FF"/>
+      <circle cx="226" cy="4.0" r=".5" fill="#11C5FF"/>
+      <circle cx="237.6" cy="44" r=".55" fill="#11C5FF"/>
+      <!-- плашка в вырезе над 20-й: x 223,6..233,4 / y 6,9..11,1.
+           Левый конец срезан под 60° — тот же угол, что у скосов ячеек.
+           Зазор до скоса 19-й ячейки 2,7 мм, до верха 20-й 0,88 мм. -->
+      <polygon points="224.81,6.9 233.0,6.9 233.0,11.1 224.81,11.1 223.6,9.0"
+               fill="#0C2138" stroke="#11C5FF" stroke-width=".35"/>
+      <path d="M226.2,8.1 H228.6 M226.2,9.0 H228.6 M226.2,9.9 H228.6" stroke="#11C5FF" stroke-width=".28"/>
+      <rect x="229.8" y="8.1" width="1.8" height="1.8" fill="#EE688C"/>
+      <path d="M230.7,6.9 V5.3" stroke="#11C5FF" stroke-width=".3"/>
+    </svg>
+    <div class="trackwrap">
+      <div class="track">
+        <div class="barrel"><img src="barrel.png" alt="Бочка — деление 0"></div>
+        <div class="hexfield">@@hexes@@
+        </div>@@headtrack@@
+      </div>
+    </div>
+
+    <div class="body">
+
+      <div class="col-left">
+@@head@@
+
+        <div>
+          <div class="block-title">Подготовка</div>
+          <div class="prep-row"><b>Стартовый регион:</b> <span>@@region@@</span></div>
+          <div class="prep-row"><b>Очередь:</b> <span>@@queue@@</span> · <b>Запас нефти:</b> <span>@@oil@@</span></div>
+          <div class="prep-note">@@notes@@</div>
+        </div>
+
+@@panels@@
+      </div>
+
+      <div class="col-abil">
+@@abilities@@
+      </div>
+
+      <div class="col-table">
+        <table class="units-table">
+          <colgroup>
+            <col style="width: var(--c-icon)"><col style="width: var(--c-group)">
+            <col style="width: var(--c-stat)"><col style="width: var(--c-stat)"><col style="width: var(--c-stat)">
+          </colgroup>
+          <thead>
+            <tr><th>Отряд</th><th></th><th>Кол-во</th><th>Стоим.</th><th>Сила</th></tr>
+          </thead>
+          <tbody>
+@@tbody@@
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <svg class="links" viewBox="0 0 240 @@cardh@@" preserveAspectRatio="none">
+      @@links@@
+    </svg>
+
+  </div>
+  </div>
+</div>
+
+<!-- ======================= ЛИСТ 2 — ОБОРОТ ================================ -->
+<div class="sheet">
+  <div class="crop h" style="left: calc((297mm - var(--card-w)) / 2 - 11mm); top: calc((210mm - var(--card-h)) / 2);"></div>
+  <div class="crop v" style="left: calc((297mm - var(--card-w)) / 2); top: calc((210mm - var(--card-h)) / 2 - 11mm);"></div>
+  <div class="crop h" style="right: calc((297mm - var(--card-w)) / 2 - 11mm); top: calc((210mm - var(--card-h)) / 2);"></div>
+  <div class="crop v" style="right: calc((297mm - var(--card-w)) / 2); top: calc((210mm - var(--card-h)) / 2 - 11mm);"></div>
+  <div class="crop h" style="left: calc((297mm - var(--card-w)) / 2 - 11mm); bottom: calc((210mm - var(--card-h)) / 2);"></div>
+  <div class="crop v" style="left: calc((297mm - var(--card-w)) / 2); bottom: calc((210mm - var(--card-h)) / 2 - 11mm);"></div>
+  <div class="crop h" style="right: calc((297mm - var(--card-w)) / 2 - 11mm); bottom: calc((210mm - var(--card-h)) / 2);"></div>
+  <div class="crop v" style="right: calc((297mm - var(--card-w)) / 2); bottom: calc((210mm - var(--card-h)) / 2 - 11mm);"></div>
+
+  <div class="card back">
+    <div class="back-top">
+      <div class="illus">иллюстрация фракции<br>52 × 52 мм</div>
+      <div class="lore">@@lore@@</div>
+    </div>
+    <div class="guide-title">Как играть за данную фракцию</div>
+    <div class="guide">@@guide@@
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* Привязки «заголовок свойства → название отряда».
+   В разметке уже лежат линии, посчитанные генератором: если скрипт не выполнится,
+   напечатаются они. Здесь координаты берутся из готового макета, поэтому оценка
+   высоты строк в build.py перестаёт влиять на попадание.
+   Правки текста в HTML вручную тоже учитываются — линии пересчитаются сами. */
+(function () {
+  function run() {
+    var card = document.querySelector('.card'), svg = document.querySelector('svg.links');
+    if (!card || !svg || !svg.viewBox) return;
+    var box = card.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    var vb = svg.viewBox.baseVal,
+        kx = vb.width / box.width, ky = vb.height / box.height,
+        abil = document.querySelector('.col-abil'), tab = document.querySelector('.col-table');
+    if (!abil || !tab) return;
+    var ax = (abil.getBoundingClientRect().right - box.left) * kx,
+        tx = (tab.getBoundingClientRect().left - box.left) * kx + 4,
+        mx = ax + 2.5, out = '';
+    function cy(el) { var r = el.getBoundingClientRect(); return (r.top + r.height / 2 - box.top) * ky; }
+    /* Точка ставится не у края колонки, а в 2 мм за последней буквой заголовка.
+       Берём прямоугольник последней строки текста, а не блока: у блока правая
+       граница — это вся ширина колонки. */
+    function tail(el) {
+      var rg = document.createRange(); rg.selectNodeContents(el);
+      var rs = rg.getClientRects();
+      return rs.length ? rs[rs.length - 1] : el.getBoundingClientRect();
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('.ability[data-link]'), function (ab) {
+      var uid = ab.getAttribute('data-link');
+      if (!uid) return;
+      var cap = document.querySelector('.unit-cap[data-uid="' + uid + '"]'),
+          ttl = ab.querySelector('.ability-name');
+      if (!cap || !ttl) return;
+      var tr = tail(ttl),
+          ya = ((tr.top + tr.height / 2 - box.top) * ky).toFixed(1),
+          yu = cy(cap).toFixed(1),
+          A = ((tr.right - box.left) * kx + 2).toFixed(1),
+          M = mx.toFixed(1), T = tx.toFixed(1);
+      out += '<polyline points="' + A + ',' + ya + ' ' + M + ',' + ya + ' '
+           + M + ',' + yu + ' ' + T + ',' + yu + '"/>'
+           + '<circle cx="' + A + '" cy="' + ya + '" r="0.9"/>';
+    });
+    if (out) svg.innerHTML = out;
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(run);
+  else window.addEventListener('load', run);
+  window.addEventListener('beforeprint', run);
+})();
+</script>
+</body>
+</html>

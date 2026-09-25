@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Варианты — трек нефти и шапка</title>
+<style>
+@font-face { font-family: "AlienEncounters";  src: url("../Fonts/AlienEncounters.ttf")  format("truetype"); }
+@font-face { font-family: "AgencyFBCyrillic"; src: url("../Fonts/agencyfbcyrillic.ttf") format("truetype"); }
+@font-face { font-family: "OpenGostTypeB";    src: url("../Fonts/OpenGostTypeB.ttf")    format("truetype"); }
+
+:root{
+  --hex-w: 13.8mm; --hex-h: 11.95mm; --pitch: 10.35mm;
+  --cyan:#11C5FF; --blue:#25A4EE; --bg:#08182B; --ink:#fff;
+}
+@page { size: A4 landscape; margin: 0; }
+html,body{margin:0;padding:0;background:#7A8794;font-family:Arial,sans-serif;}
+.sheet{position:relative;width:297mm;height:210mm;background:#08182B;box-sizing:border-box;
+       padding:14mm 18mm;color:#fff;overflow:hidden;page-break-after:always;
+       -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.sheet:last-child{page-break-after:auto;}
+h1{font-family:"OpenGostTypeB",sans-serif;font-size:15pt;color:var(--cyan);margin:0 0 2mm;
+   letter-spacing:.04em;text-transform:uppercase;}
+.sub{font-size:8.5pt;color:#93B8D8;margin:0 0 6mm;}
+.lab{font-size:9pt;color:#7FDCFF;margin:0 0 1.4mm;font-weight:700;}
+.lab span{color:#93B8D8;font-weight:400;}
+.row{margin-bottom:5.5mm;}
+
+/* --- трек --------------------------------------------------------------- */
+.track{display:flex;align-items:center;gap:2mm;position:relative;}
+.barrel{width:15.6mm;flex:0 0 auto;}
+.barrel img{width:100%;height:auto;display:block;}
+.field{position:relative;flex-grow:1;height:20mm;}
+.hex{position:absolute;width:var(--hex-w);height:var(--hex-h);
+     clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+     display:flex;align-items:center;justify-content:center;
+     -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.hex::before{content:"";position:absolute;inset:.45mm;
+     clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+     -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.hex b{position:relative;z-index:1;font-family:"AlienEncounters",sans-serif;font-weight:400;}
+
+/* тональные схемы */
+.t-bright .hex{background:var(--cyan);} .t-bright .hex::before{background:#0C2138;}
+.t-bright .hex b{color:var(--cyan);}
+.t-muted  .hex{background:#1D6E9E;}     .t-muted  .hex::before{background:#0B1E33;}
+.t-muted  .hex b{color:#8FE3FF;}
+.t-fill   .hex{background:#15486B;}     .t-fill   .hex::before{background:#123D5C;}
+.t-fill   .hex b{color:#BFEEFF;}
+
+.n-s .hex b{font-size:11pt;}
+.n-m .hex b{font-size:15pt;}
+.n-l .hex b{font-size:18pt;}
+
+/* выделенная стартовая ячейка */
+.hex.start{background:#7FDCFF;}
+.hex.start::before{background:#16405E;}
+.hex.start b{color:#FFFFFF;}
+
+/* рельсы и насечки */
+.rails{position:absolute;left:17.6mm;right:0;bottom:1.2mm;height:3mm;pointer-events:none;}
+.rails svg{width:100%;height:100%;overflow:visible;}
+
+/* --- шапка -------------------------------------------------------------- */
+.heads{display:flex;gap:8mm;}
+.head{width:66mm;flex:0 0 auto;border:.25mm dashed rgba(147,184,216,.35);padding:2mm;box-sizing:border-box;height:46mm;}
+.logo{width:15mm;height:15mm;object-fit:contain;display:block;}
+.logo.big{width:24mm;height:24mm;}
+.fname{font-family:"AlienEncounters",sans-serif;font-size:15pt;line-height:1.08;text-transform:uppercase;}
+.fname.sm{font-size:12.5pt;}
+.region{font-size:9pt;line-height:1.2;color:var(--blue);margin-top:1.2mm;}
+.region b{color:#fff;}
+.h-inline{display:flex;gap:2.5mm;align-items:flex-start;}
+.h-stack{position:relative;}
+.h-stack .logo{position:absolute;right:0;top:0;opacity:.28;}
+.thead{display:flex;align-items:flex-end;gap:0;border-bottom:.3mm solid rgba(37,164,238,.4);padding-bottom:.8mm;}
+.thead .c{width:13mm;text-align:center;font-size:8pt;text-transform:uppercase;color:var(--blue);}
+.thead .u{width:24mm;font-size:8pt;text-transform:uppercase;color:var(--blue);}
+.thead .g{width:6mm;}
+.icons{width:41mm;display:block;}
+</style>
+</head>
+<body>
+
+<!-- ================= ЛИСТ 1 — ТРЕК ================= -->
+<div class="sheet">
+  <h1>Трек запаса нефти — пять тональных вариантов</h1>
+  <p class="sub">Всё в реальном размере: гекс 13,8 × 11,95 мм, шаг 10,35 мм, маркер ⌀15 мм выступает на 0,6 мм. Бочка и иконки заново вырезаны из подложки — раньше альфа резалась по яркости и даже чистый циан получал 57 % непрозрачности.</p>
+
+  <div class="row">
+    <p class="lab">Т1 · как сейчас <span>— старая бочка (бледная), яркая обводка, число 11 pt</span></p>
+    <div class="track t-bright n-s">
+      <div class="barrel"><img src="barrel-old.png" alt=""></div>
+      <div class="field" id="f1"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <p class="lab">Т2 · бочка в полную силу <span>— та же шкала, бочка перевыбрана, число 11 pt</span></p>
+    <div class="track t-bright n-s">
+      <div class="barrel"><img src="barrel.png" alt=""></div>
+      <div class="field" id="f2"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <p class="lab">Т3 · числа на всю ячейку <span>— яркая шкала, число 18 pt</span></p>
+    <div class="track t-bright n-l">
+      <div class="barrel"><img src="barrel.png" alt=""></div>
+      <div class="field" id="f3"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <p class="lab">Т4 · шкала приглушена, числа яркие <span>— обводка #1D6E9E, число 18 pt #8FE3FF</span></p>
+    <div class="track t-muted n-l">
+      <div class="barrel"><img src="barrel.png" alt=""></div>
+      <div class="field" id="f4"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <p class="lab">Т5 · Т4 + декор оригинала <span>— рельсы под треком, насечки, выделена стартовая ячейка 8</span></p>
+    <div class="track t-muted n-l">
+      <div class="barrel"><img src="barrel.png" alt=""></div>
+      <div class="field" id="f5"></div>
+      <div class="rails">
+        <svg viewBox="0 0 210 6" preserveAspectRatio="none">
+          <path d="M0 3.4 H150 L154 1.2 H210" stroke="#1D6E9E" stroke-width=".45" fill="none"/>
+          <rect x="0" y="4.2" width="118" height="1.1" fill="#29C5F6"/>
+          <rect x="126" y="4.2" width="84" height="1.1" fill="#29C5F6"/>
+          <path d="M74 3.4 L78 -1.6 M80 3.4 L84 -1.6" stroke="#29C5F6" stroke-width=".4" fill="none"/>
+          <circle cx="150" cy="3.4" r=".9" fill="#29C5F6"/>
+          <circle cx="122" cy="4.75" r=".9" fill="#29C5F6"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ЛИСТ 2 — ШАПКА ================= -->
+<div class="sheet">
+  <h1>Шапка фракции — четыре варианта</h1>
+  <p class="sub">Колонка 66 мм в реальном размере. Пунктир — граница колонки, на планшете его нет. Проблема исходного: логотип занимает целую строку, справа от него пусто.</p>
+
+  <div class="heads">
+    <div class="head">
+      <p class="lab" style="margin-bottom:1.5mm">Ш1 · как сейчас</p>
+      <img class="logo" src="../../art/logos/Глобал Петролеум.png" alt="">
+      <div class="fname" style="margin-top:1.5mm">Глобал Петролеум</div>
+      <div class="region">Стартовый регион: <b>Европа</b></div>
+    </div>
+
+    <div class="head">
+      <p class="lab" style="margin-bottom:1.5mm">Ш2 · логотип и название в строку</p>
+      <div class="h-inline">
+        <img class="logo" src="../../art/logos/Глобал Петролеум.png" alt="">
+        <div class="fname sm">Глобал<br>Петролеум</div>
+      </div>
+      <div class="region">Стартовый регион: <b>Европа</b></div>
+    </div>
+
+    <div class="head h-stack">
+      <p class="lab" style="margin-bottom:1.5mm">Ш3 · логотип подложкой</p>
+      <img class="logo big" src="../../art/logos/Глобал Петролеум.png" alt="">
+      <div class="fname" style="margin-top:6mm">Глобал Петролеум</div>
+      <div class="region">Стартовый регион: <b>Европа</b></div>
+    </div>
+  </div>
+
+  <div class="heads" style="margin-top:8mm">
+    <div class="head" style="width:150mm;height:auto">
+      <p class="lab" style="margin-bottom:2mm">Ш4 · логотип уезжает в полосу трека, в колонке остаётся только название</p>
+      <div class="track t-muted n-l" style="height:20mm">
+        <div class="barrel"><img src="barrel.png" alt=""></div>
+        <div class="field" id="f6" style="width:96mm"></div>
+        <img class="logo" src="../../art/logos/Глобал Петролеум.png" alt="" style="margin-left:2mm">
+      </div>
+      <div class="fname" style="margin-top:3mm">Глобал Петролеум</div>
+      <div class="region">Стартовый регион: <b>Европа</b></div>
+    </div>
+  </div>
+
+  <h1 style="margin-top:9mm">Шапка таблицы отрядов</h1>
+  <p class="sub">Иконки «n / нефть / сила» тоже лежат в подложке — вырезаны, 65,8 × 15,7 мм. Слева текущий текстовый вариант, справа иконки оригинала.</p>
+  <div class="heads">
+    <div class="head" style="width:69mm;height:auto">
+      <div class="thead"><div class="u">Отряд</div><div class="g"></div><div class="c">Кол-во</div><div class="c">Стоим.</div><div class="c">Сила</div></div>
+    </div>
+    <div class="head" style="width:80mm;height:auto">
+      <img class="icons" src="icons-header.png" alt="" style="width:66mm">
+    </div>
+  </div>
+</div>
+
+<script>
+const W=13.8, P=10.35, H=11.95;
+function fill(id, start){
+  const el=document.getElementById(id); if(!el) return;
+  const n = id==='f6' ? 9 : 20;
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');
+    d.className='hex'+(start&&(i+1)===8?' start':'');
+    d.style.left=(i*P)+'mm';
+    d.style.top=((i%2)?H/2:0)+'mm';
+    d.innerHTML='<b>'+(i+1)+'</b>';
+    el.appendChild(d);
+  }
+}
+['f1','f2','f3','f4','f6'].forEach(x=>fill(x,false));
+fill('f5',true);
+</script>
+</body>
+</html>
