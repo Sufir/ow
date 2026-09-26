@@ -1,0 +1,12 @@
+# Очередь скачивания для rules/tools/fetch.py. По строке на адрес.
+#   https://адрес — комментарий           → тред BGG: .md через API; остальное: .mhtml + .md
+#   [страница] https://адрес — комментарий → всегда через браузер, с картинками
+# Скачанные строки стираются; то, что не скачалось, остаётся.
+https://boardgamegeek.com/thread/2189926 — They Break Through и задачи № 5–6 (бесплатная машина противникам)
+https://boardgamegeek.com/thread/2174311 — Ancients spellbook question
+https://boardgamegeek.com/thread/2178394 — Worship Services / Cathedrals and Eradication
+https://boardgamegeek.com/thread/2273796 — Do Ancients have to be involved in the battle (Unholy Ground)
+https://boardgamegeek.com/thread/3143413 — Ancients Unholy Ground
+# Во вторую очередь
+https://boardgamegeek.com/thread/2515838 — Extinction: можно ли вернуть Yothan
+https://boardgamegeek.com/thread/2242456 — Ancients question

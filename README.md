@@ -88,6 +88,7 @@
 |---|---|
 | Материал оригинальной Cthulhu Wars | `source/cthulhu-wars/` |
 | Новый экспорт нашего гуглдока | `source/gdocs/` |
+| Страница из сети (тред BGG, статья) | `source/web/`, через `rules/tools/fetch.py` |
 | Правка правил, реестра, решения | `rules/` |
 | Что угодно про игровое поле | `board/` |
 | Ассет или шаблон печатного компонента | `print/` |
@@ -149,6 +150,13 @@
 частью каталога, где он нужен, либо удаляется в ту же сессию. Каталога `tmp/` нет
 и заводить его не надо.
 
+Убирает `python rules/tools/cleanup.py` по очереди `rules/tools/cleanup-queue.txt`.
+Строка `архив: путь` — может пригодиться, файл переносится
+в `archive/уборка-ГГГГ-ММ-ДД/` с тем же путём. Строка `удалить: путь` — точно
+мусор, удаляется насовсем; так можно только новые файлы, которых нет в истории
+git. Служебный мусор (`__pycache__`, `Thumbs.db` и т. п.) скрипт находит
+и удаляет сам. Игнорируемое (`archive/`, `board/legacy/`) не трогает никогда.
+
 ---
 
 ## Как запускать
@@ -160,6 +168,8 @@ python rules/tools/build_rulebook.py      # пересобрать RULEBOOK.md �
 python rules/tools/qa_final.py            # финальная QA по книге
 python board/tools/map.py all             # пересобрать раскладки поля и board/reports/11-map.md
 python board/tools/worldgeom.py all       # пересобрать эталонную географию
+python rules/tools/cleanup.py             # уборка: лишнее в archive/, мусор удалить (--dry — показать)
+python rules/tools/fetch.py               # скачать адреса из rules/tools/fetch-queue.txt в source/web/ (--dry — показать)
 ```
 
 Скрипты определяют пути от собственного расположения — запускаются из любого каталога.

@@ -273,7 +273,8 @@ body {
   line-height: 1.1;
   color: #fc1a24;
   text-shadow: 0 0 8px rgba(255, 92, 92, 0.55);
-  width: calc(100% - 12mm);
+  /* Поле текста задачи 55 мм: шире прежних 51 мм на 4 мм (D-080). */
+  width: calc(100% - 8mm);
   text-align: center;
   white-space: pre-wrap;
   outline: none;
@@ -349,6 +350,40 @@ body {
 
 .front-card.is-tech .tech-content {
   display: block;
+}
+
+/* Раскладка карты технологии (D-079): название и фаза на высоте, где они
+   стоят у технологии в шесть строк; описание по центру карты, отступ
+   считает layoutTechCard() в скрипте. */
+.front-card.is-tech .tech-content {
+  position: absolute;
+  top: 5.2mm;
+  left: 5mm;
+  width: calc(100% - 10mm);
+}
+
+/* Название технологии — как заголовок свойства на планшете: OpenGostTypeB
+   прописными, 12,5 pt при тексте 9 pt, то есть 1,39 кегля описания (D-079). */
+.tech-title {
+  font-family: 'OpenGostTypeB', Arial, sans-serif;
+  font-size: 13.9px;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  line-height: .98;
+}
+
+/* Значок нефти и символы регионов — как .sym на планшете (ICON-001):
+   11 pt при тексте 9 pt, то есть 1,222 кегля текста; строку не раздвигает,
+   центр кольца на центре цифр; начертание текста на значок не влияет. */
+.goal-text span[style*="OilWars"],
+.tech-note span[style*="OilWars"],
+.tech-desc span[style*="OilWars"] {
+  font-size: 1.2222em;
+  line-height: 0;
+  vertical-align: -0.055em;
+  font-style: normal;
+  font-weight: 400;
+  font-synthesis: none;
 }
 
 .back-card {

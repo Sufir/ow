@@ -120,6 +120,7 @@
       titleHtml: String(card && card.titleHtml != null ? card.titleHtml : ''),
       titleFontPx: Number.isFinite(Number(card && card.titleFontPx)) ? Number(card.titleFontPx) : null,
       note: String(card && card.note != null ? card.note : ''),
+      noteHtml: String(card && card.noteHtml != null ? card.noteHtml : ''),
       noteFontPx: Number.isFinite(Number(card && card.noteFontPx)) ? Number(card.noteFontPx) : null,
       desc: String(card && card.desc != null ? card.desc : ''),
       descHtml: String(card && card.descHtml != null ? card.descHtml : ''),
@@ -180,6 +181,7 @@
             title: String(card.title || ''),
             titleHtml: String(card.titleHtml || ''),
             note: String(card.note || ''),
+            noteHtml: String(card.noteHtml || ''),
             desc: String(card.desc || ''),
             descHtml: String(card.descHtml || '')
           };
@@ -504,6 +506,35 @@
     return null;
   }
 
+  // Раскладка карты технологии (D-079). Название и фаза стоят на высоте
+  // top из CSS — там же, где у технологий в шесть строк. Описание
+  // стоит по центру карты, но не ближе своего margin-top к подписи фазы.
+  // Если блок целиком не помещается под 5,5 мм, он центрируется, как было
+  // до D-079: длинные технологии раскладка не меняет.
+  function layoutTechCard(card) {
+    if (!card || !card.classList.contains('is-tech')) return;
+    const content = card.querySelector('.tech-content');
+    const desc = card.querySelector('.tech-desc');
+    if (!content || !desc) return;
+    content.style.top = '';
+    desc.style.marginTop = '';
+    const padBottom = parseFloat(getComputedStyle(card).paddingBottom) || 0;
+    const pinTop = parseFloat(getComputedStyle(content).top) || 0;
+    const centeredTop = (card.clientHeight - padBottom - content.offsetHeight) / 2;
+    if (centeredTop < pinTop - 0.5) {
+      content.style.top = `${Math.max(0, Math.round(centeredTop * 10) / 10)}px`;
+      return;
+    }
+    const top0 = content.offsetTop + desc.offsetTop;
+    const ideal = card.clientHeight / 2 - desc.offsetHeight / 2;
+    const shift = Math.max(0, ideal - top0);
+    if (shift > 0.5) desc.style.marginTop = `calc(1.3mm + ${Math.round(shift * 10) / 10}px)`;
+  }
+
+  function layoutAllTechCards() {
+    document.querySelectorAll('.front-card.is-tech').forEach(layoutTechCard);
+  }
+
   function applyRichCommand(editableNode, command, value) {
     if (!editableNode) return;
     editableNode.focus();
@@ -572,7 +603,7 @@
 
         goalText.innerHTML = sanitizeRichHtml(source.goalRichText || source.text);
         techTitle.innerHTML = sanitizeRichHtml(source.techCard.titleHtml || plainTextToEditableHtml(source.techCard.title || ''));
-        techNote.textContent = source.techCard.note || '';
+        techNote.innerHTML = sanitizeRichHtml(source.techCard.noteHtml || plainTextToEditableHtml(source.techCard.note || ''));
         techDesc.innerHTML = sanitizeRichHtml(source.techCard.descHtml || plainTextToEditableHtml(source.techCard.desc || ''));
         const presetGoalFont = Number.isFinite(state.packs[source.packIndex].goalTextFontPx[source.innerIndex])
           ? Number(state.packs[source.packIndex].goalTextFontPx[source.innerIndex])
@@ -610,7 +641,7 @@
           lastRichOwner = editableNode;
         }
 
-        [goalText, techDesc].forEach((editableNode) => {
+        [goalText, techDesc, techNote].forEach((editableNode) => {
           editableNode.addEventListener('keyup', () => saveRichSelection(editableNode));
           editableNode.addEventListener('mouseup', () => saveRichSelection(editableNode));
           editableNode.addEventListener('focus', () => saveRichSelection(editableNode));
@@ -664,8 +695,29 @@
           const activeField = node.dataset.activeField || '';
           if (activeField.indexOf('goal-text') >= 0) return goalText;
           if (activeField.indexOf('tech-desc') >= 0) return techDesc;
-          if (lastRichOwner === goalText || lastRichOwner === techDesc) return lastRichOwner;
+          if (activeField.indexOf('tech-note') >= 0) return techNote;
+          if (lastRichOwner === goalText || lastRichOwner === techDesc || lastRichOwner === techNote) return lastRichOwner;
           return null;
+        }
+
+        // Сохранить форматируемое поле, в котором применили шрифт, B или I.
+        // Подпись фазы тоже форматируемая: в ней стоит значок нефти (ICON-001).
+        function saveRichField(targetNode, pack) {
+          if (targetNode === goalText) {
+            pack.goalRichTexts[source.innerIndex] = sanitizeRichHtml(goalText.innerHTML);
+            pack.frontTexts[source.innerIndex] = readMultilineEditableText(goalText);
+            return;
+          }
+          const target = pack.techCards[source.innerIndex];
+          if (!target) return;
+          if (targetNode === techNote) {
+            target.noteHtml = sanitizeRichHtml(techNote.innerHTML);
+            target.note = techNote.textContent || '';
+          } else {
+            target.descHtml = sanitizeRichHtml(techDesc.innerHTML);
+            target.desc = readMultilineEditableText(techDesc);
+          }
+          layoutTechCard(node);
         }
 
         function restoreRichSelection(targetNode) {
@@ -696,15 +748,7 @@
           saveRichSelection(targetNode);
           const pack = state.packs[source.packIndex];
           if (!pack) return;
-          if (targetNode === goalText) {
-            pack.goalRichTexts[source.innerIndex] = sanitizeRichHtml(goalText.innerHTML);
-            pack.frontTexts[source.innerIndex] = readMultilineEditableText(goalText);
-          } else {
-            const target = pack.techCards[source.innerIndex];
-            if (!target) return;
-            target.descHtml = sanitizeRichHtml(techDesc.innerHTML);
-            target.desc = readMultilineEditableText(techDesc);
-          }
+          saveRichField(targetNode, pack);
           scheduleSave();
         });
         boldBtn.addEventListener('click', (event) => {
@@ -717,12 +761,7 @@
           saveRichSelection(targetNode);
           const pack = state.packs[source.packIndex];
           if (!pack) return;
-          if (targetNode === goalText) pack.goalRichTexts[source.innerIndex] = sanitizeRichHtml(goalText.innerHTML);
-          else {
-            const target = pack.techCards[source.innerIndex];
-            if (!target) return;
-            target.descHtml = sanitizeRichHtml(techDesc.innerHTML);
-          }
+          saveRichField(targetNode, pack);
           scheduleSave();
         });
         italicBtn.addEventListener('click', (event) => {
@@ -735,12 +774,7 @@
           saveRichSelection(targetNode);
           const pack = state.packs[source.packIndex];
           if (!pack) return;
-          if (targetNode === goalText) pack.goalRichTexts[source.innerIndex] = sanitizeRichHtml(goalText.innerHTML);
-          else {
-            const target = pack.techCards[source.innerIndex];
-            if (!target) return;
-            target.descHtml = sanitizeRichHtml(techDesc.innerHTML);
-          }
+          saveRichField(targetNode, pack);
           scheduleSave();
         });
 
@@ -774,6 +808,7 @@
           if (!target) return;
           target.titleHtml = sanitizeRichHtml(techTitle.innerHTML);
           target.title = readMultilineEditableText(techTitle);
+          layoutTechCard(node);
           scheduleSave();
         });
         techNote.addEventListener('input', () => {
@@ -782,6 +817,8 @@
           const target = pack.techCards[source.innerIndex];
           if (!target) return;
           target.note = techNote.textContent || '';
+          target.noteHtml = sanitizeRichHtml(techNote.innerHTML);
+          layoutTechCard(node);
           scheduleSave();
         });
         techDesc.addEventListener('input', () => {
@@ -792,6 +829,7 @@
           target.descHtml = sanitizeRichHtml(techDesc.innerHTML);
           target.desc = readMultilineEditableText(techDesc);
           target.descFontPx = fitTechDescFont(techDesc);
+          layoutTechCard(node);
           scheduleSave();
         });
         frontGrid.appendChild(node);
@@ -842,6 +880,8 @@
       sheetsRoot.appendChild(backSheet);
     }
     state.currentPairIndex = clampIndex(state.currentPairIndex, pairCount);
+    layoutAllTechCards();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutAllTechCards);
     renderToolbarState();
     scheduleSave();
   }
