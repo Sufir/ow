@@ -2,7 +2,7 @@
 
 - Записей в ORIGINAL BASELINE: **107**
 - Записей в REDESIGN BASELINE: **69**
-- Всего issue: **146**
+- Всего issue: **147**
 - Проверено чисел: **139** (FAIL: 5, UNKNOWN: 61)
 - Терминов в карте: **79**
 - Иконок в реестре: **44**
@@ -13,7 +13,7 @@
 |---|---|
 | CRITICAL | 10 |
 | ERROR | 49 |
-| WARNING | 54 |
+| WARNING | 55 |
 | INFO | 33 |
 
 ## По типу
@@ -21,7 +21,7 @@
 | Тип | Кол-во |
 |---|---|
 | AMBIGUITY | 11 |
-| DEVIATION | 24 |
+| DEVIATION | 25 |
 | EXTRA | 1 |
 | ICON | 1 |
 | MISSING | 23 |
@@ -38,4 +38,5 @@
 | APPLIED | 54 |
 | CLOSED | 19 |
 | DECIDED | 63 |
+| OPEN | 1 |
 | WONTFIX | 10 |

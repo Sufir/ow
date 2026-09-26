@@ -539,28 +539,28 @@ faction:
     spec:
       format: A4 landscape, двусторонний
     files:
-      - print/Template.html
-      - print/faction-card/
+      - print/Faction-Card-A/Шаблон.html
+      - print/Faction-Card-A/Сборка.py
+      - print/Faction-Card-A/Данные/*.json
       - print/Saved/Faction Card — *.pdf
-      - print/Saved/*.json
-    generator: print/Template.html (состояния — print/Saved/*.json)
+    generator: print/Faction-Card-A/Сборка.py (вёрстка — Шаблон.html, содержимое — Данные/*.json)
     master: print/Saved/Faction Card — *.pdf
     truth: rules/registry/factions.yaml → redesign
     state:
-      content: ISSUES
-      design: DRAFT
+      content: VERIFIED
+      design: APPROVED
       production: NONE
     evidence: >
-      Alek 2026-09-22: «не готовы совсем, мы их переверстаем и вычитаем,
-      затем буду печатать». То есть заново проходятся обе оси — и текст,
-      и вёрстка, — и только потом производство. Восемь PDF
-      в print/Saved готовы, но устарели: три несут старое число «Очередь»
-      (D-048), на планшете Moon Systems не хватает правил Луны (D-049)
-      и напечатан чужой блок (FAC-002). PDF собраны из состояний, которые
-      с тех пор изменились, и не восстанавливаются (README).
+      Восемь сверок закрыты решениями D-052…D-077, по одной на фракцию: числа
+      сведены с оригиналом, FAQ и эрратой, тексты переписаны, вёрстка принята.
+      Alek 2026-09-26: «планшеты готовы» — этим закрыта ось design у четырёх
+      последних (D-078). Восемь PDF пересобраны из нового конвейера
+      print/Faction-Card-A/ и выложены в print/Saved, заменив экспорты апреля;
+      A4 landscape, по две страницы, лицевая с выпуском 6 мм, метки реза
+      на обороте. production остаётся NONE: не напечатано.
     by_faction:
       OW-F-04:
-        state: {content: VERIFIED, design: DRAFT, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: NONE}
         reason: >
           Сверка закрыта 2026-09-24 (D-072): числа совпали с The Ancients 1:1,
           «Очередь» по D-048 уже в данных. Блок «Общины» переписан без
@@ -605,7 +605,7 @@ faction:
         refs: [D-059, D-060, D-061, D-062, PLAY-023, COMP-I-012, COMP-I-025]
         blocks_print: false
       OW-F-07:
-        state: {content: VERIFIED, design: DRAFT, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: NONE}
         reason: >
           Сверка закрыта 2026-09-25 (D-073): числа 1:1 с Opener of the Way,
           «Очередь» по D-048. Блок создания Альянса (FAC-001) заменён
@@ -631,7 +631,7 @@ faction:
         refs: [PLAY-034, D-042, RED-003, FAC-011, COMP-I-012, COMP-I-025, D-076, COMP-I-031]
         blocks_print: false
       OW-F-05:
-        state: {content: VERIFIED, design: DRAFT, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: NONE}
         reason: >
           Сверка D-074 (2026-09-25) с картой Black Goat O2: числа 1:1, «Жнец» 8
           (FAC-003 закрыт), сноска силы с «Универсализацией», создание в три шага
@@ -639,6 +639,18 @@ faction:
           и «Клонирование» по карте и FAQ, оборот по «Playing as» и «Thwarting».
           design — до приёмки Alek.
         refs: [D-074, FAC-003, COMP-I-029, COMP-I-030]
+      OW-F-02:
+        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        reason: >
+          Сверка D-077 (2026-09-25) с картой Crawling Chaos: числа 1:1,
+          значения актуального издания (FAC-017). «Военные трофеи» по FAQ
+          (текущая стоимость, наёмные, выбор за каждого, округление вниз),
+          «Авиация» с ценой перемещения, блок «Задачи на оплату» (COMP-I-025
+          п. 4–5), сноска силы без технологий наёмных, «Создание БР “Спрут”».
+          Файлы логотипа, юнитов и иллюстрации переименованы. Оборот по
+          «Playing as» и «Thwarting», лор — вариант А «Посланник». Таблица
+          131,7 мм из 136. design — до приёмки Alek.
+        refs: [D-077, FAC-017, COMP-I-025, COMP-I-032]
       OW-F-03:
         state: {content: VERIFIED, design: APPROVED, production: NONE}
         reason: >
@@ -932,7 +944,7 @@ faction:
         refs: [D-054]
     refs: [COMP-I-011, COMP-I-012]
     blocks_print: false
-    findings: [COMP-I-011, COMP-I-012, COMP-I-024, COMP-I-026, COMP-I-027, COMP-I-028, COMP-I-030, COMP-I-031]
+    findings: [COMP-I-011, COMP-I-012, COMP-I-024, COMP-I-026, COMP-I-027, COMP-I-028, COMP-I-030, COMP-I-031, COMP-I-032]
     notes: >
       Сверх оригинала по носителю: в оригинале шесть условий напечатаны прямо
       на планшете и отдельного компонента нет. Карта задачи Глобал Петролеум
@@ -1011,7 +1023,7 @@ faction:
           пишет «отступления» вместо «подавления» (D-019).
     refs: [MISS-025]
     blocks_print: false
-    findings: [COMP-I-014, COMP-I-024, COMP-I-026, COMP-I-027, COMP-I-028, COMP-I-030, COMP-I-031]
+    findings: [COMP-I-014, COMP-I-024, COMP-I-026, COMP-I-027, COMP-I-028, COMP-I-030, COMP-I-031, COMP-I-032]
     notes: >
       Сверх оригинала по носителю: в оригинале это картонные жетоны-накладки.
       Технология «Стелс» сформулирована по-разному на карте и в приложении
@@ -2041,7 +2053,7 @@ findings:
     subject: COMP-F-01
     title: Находки сверки Островной Империи, касающиеся других планшетов
     severity: WARNING
-    status: OPEN
+    status: CLOSED
     detail: >
       1. «(верните в свой запас)» в «Боевом донесении» — на шести других
       планшетах (D-024 требует «резерв»); у Островной исправлено, остальные
@@ -2060,8 +2072,11 @@ findings:
       не ваш ход)» и «в свой резерв». Братство Сингулярности (D-072): п. 1 внесён.
       Открыты п. 1 у четырёх других планшетов, п. 3–5.
       Североамериканский Альянс (D-076): п. 3 внесён — «Запад Северной Америки»;
-      п. 1 закрыт ещё D-074. Открыты п. 4–5 (Эйркрафт Корпорейшн).
-    decided: null
+      п. 1 закрыт ещё D-074. Эйркрафт Корпорейшн (D-077): п. 4 — «половину
+      стоимости, за которую этого робота можно создать сейчас» (FAQ Ктулху);
+      п. 5 — блок «Задачи на оплату» (4 + 6 нефти одним действием за 10).
+      Закрыто целиком.
+    decided: 2026-09-25
 
   - id: COMP-I-026
     type: SPEC
@@ -2204,5 +2219,28 @@ findings:
       Править print/Saved/Cards - Технологии и задачи.json, packs[10] и [11],
       при перепечатке карт фракции. Текст «Специальной операции» — на решение
       Alek при перепечатке.
+    decision: null
+    decided: null
+
+  - id: COMP-I-032
+    type: SPEC
+    subject: [COMP-F-07, COMP-F-08]
+    title: Карты Эйркрафт Корпорейшн — правки при перепечатке
+    severity: WARNING
+    status: OPEN
+    detail: >
+      Сверка D-077 (2026-09-25), числа и эффекты карт совпали с Crawling Chaos.
+      1. «Маневренность»: «б/р» → «боевой робот»; «результат смерть примененное
+      к “Спруту” считается отступлением» → «смерть, назначенная “Спруту”,
+      становится подавлением» (D-019). 2. «Шантаж»: «если они не смогут прийти
+      к согласию, то вы получаете выпавшее число нефти» — привести к общей
+      формуле §3.9 (RED-010, D-045); на карте нет переворота после использования
+      (в гуглдоке есть). 3. «Стелс» — MISS-025. 4. «Камикадзе»: лишняя запятая
+      «За каждого из них, противник». 5. Задачи № 3 и № 6: «3 фабрики. ИЛИ» —
+      точка перед «ИЛИ»; оговорка «4 + 6 одним действием за 10» теперь
+      на планшете (D-077).
+    proposal: >
+      Править print/Saved/Cards - Технологии и задачи.json, packs[2] и [3],
+      при перепечатке карт фракции.
     decision: null
     decided: null
