@@ -202,6 +202,26 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
 .side img { width: 100%; height: 50%; object-fit: fill; display: block; }
 .side img + img { transform: scaleY(-1); }
 
+/* ===== ФОНОВЫЙ ДЕКОР ФРАКЦИИ ============================================ */
+/* Поле «декор» в данных. Картинка уже окрашена в циан и розовый проекта
+   (исходники генераций лежат рядом в decor/), здесь задаётся только место,
+   прозрачность и затухание краёв. Два вида места:
+   .decor-fill — заполняет свободное место под блоками левой колонки
+                 и сам подстраивается под её высоту;
+   .decor-abs  — прямоугольник в мм планшета, для мест вне левой колонки. */
+.col-left > .decor-fill { flex: 1 1 0; min-height: 0; z-index: 0; pointer-events: none; }
+.decor-fill img { position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+                  object-fit: contain; object-position: center bottom; }
+.decor-abs { position: absolute; z-index: 0; pointer-events: none; overflow: hidden; }
+.decor-abs img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; }
+.fade-top { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18%);
+                    mask-image: linear-gradient(to bottom, transparent 0, #000 18%); }
+.fade-sides { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+                      mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%); }
+/* диагональ из левого нижнего угла вправо-вверх: выше неё гаснет, ниже ярко */
+.fade-diag { -webkit-mask-image: linear-gradient(143deg, transparent 0, transparent 18%, #000 45%);
+                     mask-image: linear-gradient(143deg, transparent 0, transparent 18%, #000 45%); }
+
 /* ===== ТРЕК ЗАПАСА НЕФТИ ================================================= */
 /* По горизонтали шкалу двигают --barrel-x и --track-gap: цепочка стоит сразу
    за бочкой, уменьшение любого из них сдвигает её влево, правый конец уходит
@@ -212,7 +232,9 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
 .barrel { position: relative; top: var(--barrel-y); width: var(--barrel-w); flex: 0 0 auto;
           margin-left: var(--barrel-x); }
 .barrel img { width: 100%; height: auto; display: block; }
-.hexfield { position: relative; top: var(--track-y); flex-grow: 1; height: var(--row-track);
+/* z-index 2 — выше .body (z-index 1): иначе логотип-подложка и декор левой
+   колонки, заходящие вверх на полосу трека, ложатся поверх ячеек. */
+.hexfield { position: relative; z-index: 2; top: var(--track-y); flex-grow: 1; height: var(--row-track);
             margin-left: var(--track-gap); }
 /* Ячейки рисует один SVG: штрих центрируется на контуре, поэтому на общих рёбрах
    две обводки совпадают и толщина везде одинаковая. Дивы .hex несут только числа. */
@@ -227,7 +249,7 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
 }
 .hex span {
   position: relative; z-index: 1;
-  font-family: "AlienEncounters", sans-serif; font-size: 18pt; color: #9FE8FF;
+  font-family: "AlienEncounters", sans-serif; font-size: 20pt; color: #9FE8FF;
 }
 
 /* ===== ТЕЛО: ТРИ КОЛОНКИ ================================================= */
@@ -267,7 +289,19 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
    С полем «внизу» блок прижимается к низу колонки. */
 .block-text p { font-size: var(--fs-body); line-height: var(--lh); margin: 0 0 1.2mm; }
 .col-left > .pin-bottom { margin-top: auto; }
-.sym { font-family: "OilWars", sans-serif; color: var(--cyan); font-size: 11pt; }
+/* Значки шрифта Oil Wars в тексте: символы регионов {Q} {W} {E} и нефть {R}.
+   line-height 0 — строку не раздвигает: восходящий у шрифта Oil Wars 1000
+   при высоте значков 700, и без этого строка со значком вырастает на 1 мм.
+   vertical-align — центр кольца на центр цифр: значок выше цифр на 1,2 pt
+   и стоит на базовой линии, поэтому без сдвига выглядит приподнятым.
+   Символы регионов — голубые. Нефть {R}, ICON-001 — цвета текста, в который
+   вставлена (решение Alek 25.09.2026), и вплотную к числу: «10{R}» (Сборка.py).
+   Начертание окружающего текста на значок не влияет: у шрифта одно начертание,
+   и без запрета браузер наклоняет значок в курсиве и утолщает в полужирном. */
+.sym { font-family: "OilWars", sans-serif; color: var(--cyan); font-size: 11pt;
+       line-height: 0; vertical-align: -0.055em;
+       font-style: normal; font-weight: 400; font-synthesis: none; }
+.sym.sym-R { color: inherit; }
 
 .ability { padding-left: 1.6mm; padding-top: .8mm; border-left: .5mm solid var(--blue); border-top: .5mm solid var(--blue); }
 .ability-name { font-family: "OpenGostTypeB", Arial, sans-serif;
@@ -339,6 +373,10 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
   <!-- .bleed несёт фон и выпускает его за линию реза; .card — сам планшет -->
   <div class="bleed">
   <div class="card">
+
+    <!-- декор фракции вне левой колонки: место задаётся в данных.
+         Стоит первым, чтобы рамочный декор ниже рисовался поверх него -->
+    <!--#декор-поле--><!--/#декор-поле-->
 
     <!-- декор: угол внизу справа, вертикальная полоса слева -->
     <img class="corner br" src="decor/corner-a.png" alt="">
@@ -451,7 +489,7 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
         <div>
           <div class="block-title">Подготовка</div><!--#подготовка-->
           <div class="prep-row"><b>Стартовый регион:</b> <span>любой свободный</span></div>
-          <div class="prep-row"><b>Очередь:</b> <span>12.0</span> · <b>Запас нефти:</b> <span>8</span></div>
+          <div class="prep-row"><b>Очередь:</b> <span>12.0</span> · <b>Запас:</b> <span>8<span class="sym sym-R">R</span></span></div>
           <div class="prep-note">1 фабрика под контролем и 6 рекрутов в стартовом регионе.</div>
 <!--/#подготовка-->
         </div>
@@ -460,11 +498,14 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
           <div class="block-title">Создание БР “Шрёдингер”</div>
           <ol class="steps">
             <li>У вас есть “Тесла-танк” на поле.</li>
-            <li>Заплатите 6 нефти.</li>
+            <li>Заплатите 6<span class="sym sym-R">R</span>.</li>
             <li>Замените “Тесла-танк” на “Шрёдингера” (танк возвращается в резерв).</li>
           </ol>
         </div>
 <!--/#блоки-->
+        <!--#декор-колонка-->
+        <div class="decor-fill fade-top" style="opacity: 0.39;"><img src="decor/bg-scientific-portal.png" alt=""></div>
+        <!--/#декор-колонка-->
       </div>
 
       <!-- средняя колонка: свойства фракции и отрядов.
@@ -477,17 +518,17 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
         <div class="ability" data-link="" style="margin-top: 0.0mm;">
           <div class="ability-name">Пространственный сдвиг</div>
           <div class="ability-note">Действие. Стоимость: 1</div>
-          <div class="ability-text"><div>Выберите свой отряд стоимостью 3 нефти или более в регионе, где есть фабрика и нет вражеских боевых роботов (в том числе наёмных). Переместите этот отряд и фабрику (вместе с контролирующим её отрядом) в любой регион поля, где нет фабрик.</div></div>
+          <div class="ability-text"><div>Выберите свой отряд стоимостью 3<span class="sym sym-R">R</span> или более в регионе, где есть фабрика и нет вражеских боевых роботов (в том числе наёмных). Переместите этот отряд и фабрику (вместе с контролирующим её отрядом) в любой регион поля, где нет фабрик.</div></div>
         </div>
         <div class="ability" data-link="Полковник" data-shift="8.0" style="margin-top: 3.0mm;">
           <div class="ability-name">Боевое донесение</div>
           <div class="ability-note">Постоянная</div>
-          <div class="ability-text"><div>В конце действия любого игрока (даже если это не ваш ход), а также в фазе получения ресурсов и в фазе влияния вы можете уничтожить полковника (вернуть в свой резерв) и получить 2 нефти.</div></div>
+          <div class="ability-text"><div>В конце действия любого игрока, а также в любой момент фазы получения ресурсов (в том числе после правила минимального запаса) или фазы влияния вы можете уничтожить своего полковника на поле (вернуть его в резерв) и получить 2<span class="sym sym-R">R</span>.</div></div>
         </div>
-        <div class="ability" data-link="“Шрёдингер”" data-shift="-6.0" style="margin-top: 38.1mm;">
+        <div class="ability" data-link="“Шрёдингер”" data-shift="-6.0" style="margin-top: 34.2mm;">
           <div class="ability-name">Мобильная военная фабрика</div>
           <div class="ability-note">Постоянная</div>
-          <div class="ability-text"><div>“Шрёдингер” считается фабрикой для любых целей, кроме способности “Пространственный сдвиг”.</div><div>Пехотинцы не берут его под контроль и не встают на него, незанятым он не бывает: нефть и влияние он приносит вам как фабрика под вашим контролем.</div><div>Может находиться в регионе с другой фабрикой.</div></div>
+          <div class="ability-text"><div>“Шрёдингер” считается фабрикой для любых целей, кроме способности “Пространственный сдвиг”.</div><div>Пехотинцы не берут его под контроль и не встают на него, незанятым он не бывает: <span class="sym sym-R">R</span> и влияние он приносит вам как фабрика под вашим контролем.</div><div>Может находиться в регионе с другой фабрикой.</div></div>
         </div>
 <!--/#свойства-->
       </div>
@@ -531,7 +572,7 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
               <td class="u-icon"><img src="../Units/Сайнтифик Солюшн/Шрёдингер.png" style="height: 14.5mm;" alt=""><div class="unit-cap" data-uid="“Шрёдингер”">“Шрёдингер”</div></td><td class="group-label" rowspan="1">БР</td>
               <td class="stat count">1</td><td class="stat">6</td><td class="stat power">n</td>
             </tr>
-            <tr class="cmt pw"><td colspan="5">n — сила равна удвоенному количеству вражеских боевых роботов в игре. Наёмные боевые роботы не считаются.</td></tr>
+            <tr class="cmt pw"><td colspan="5">n — сила отряда равна удвоенному числу вражеских боевых роботов в игре. Наёмные боевые роботы не считаются.</td></tr>
 <!--/#отряды-->
           </tbody>
         </table>
