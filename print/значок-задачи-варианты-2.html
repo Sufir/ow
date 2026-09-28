@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Карты задач — знак «Внимание», наш вместо системного</title>
+<style>
+@font-face { font-family:'OpenGostTypeB'; src:url('Fonts/OpenGostTypeB.ttf') format('truetype'); font-weight:normal; font-style:normal; }
+@font-face { font-family:'OilWars'; src:url('Fonts/Oil Wars.ttf') format('truetype'); font-weight:normal; font-style:normal; }
+
+body { margin:0; padding:24px 28px 60px; background:#121A22; color:#D8E4EE;
+       font-family:Arial,"Segoe UI",sans-serif; }
+h1 { font-size:20px; margin:0 0 4px; color:#FFF; font-weight:600; }
+.lead { font-size:13px; color:#8FA8BC; margin:0 0 8px; max-width:840px; line-height:1.5; }
+h2 { font-size:15px; margin:30px 0 4px; color:#5BC8F5; font-weight:600; }
+h2 .tag { color:#EE688C; font-weight:400; }
+.note { font-size:12.5px; color:#8FA8BC; margin:0 0 12px; max-width:840px; line-height:1.5; }
+
+.card { position:relative; width:63mm; height:41mm; overflow:hidden;
+        background:#fff url("Goals-Tachs/face.png") center/cover no-repeat;
+        display:flex; align-items:center; justify-content:center; padding-bottom:3mm; }
+.goal-text { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+             font-family:Arial,"Segoe UI",sans-serif; font-size:13px; line-height:1.1;
+             color:#fc1a24; text-shadow:0 0 8px rgba(255,92,92,.55);
+             width:calc(100% - 8mm); text-align:center; white-space:pre-wrap; }
+.mark { position:absolute; left:50%; bottom:calc(100% + 1.2mm); transform:translateX(-50%);
+        line-height:0; }
+.cards { display:flex; gap:14px; flex-wrap:wrap; }
+.sep { height:1px; background:#22303C; margin:34px 0 0; }
+.foot { font-size:12.5px; color:#8FA8BC; margin-top:30px; max-width:840px; line-height:1.55; }
+.foot b { color:#D8E4EE; font-weight:600; }
+.v0 .goal-text::before { content:'⚠️'; position:absolute; left:50%; bottom:calc(100% + 1.2mm);
+  transform:translateX(-50%); font-size:16px; line-height:1; }
+</style>
+</head>
+<body>
+
+<h1>Карты задач — знак «Внимание» нашей рисовкой</h1>
+<p class="lead">Смысл тот же: на экран пришло сообщение о новой задаче. Меняется только то,
+чем знак нарисован — вместо эмодзи системного шрифта наш вектор, одинаковый на любой машине
+и в типографии. Слева короткая задача, справа самая длинная.</p>
+
+<h2>Как сейчас <span class="tag">— системный эмодзи</span></h2>
+<p class="note">Цветной глиф из шрифта Windows. На другой машине рисуется иначе, цветной эмодзи
+плохо переживает типографский RIP.</p>
+<div class="cards">
+  <div class="card v0"><div class="goal-text">Создать боевого робота “C.R.A.B.”.</div></div>
+  <div class="card v0"><div class="goal-text">Вы контролируете
+не менее 3 фабрик в океанских регионах.
+ИЛИ
+В океанских регионах
+не менее 4 любых фабрик.</div></div>
+</div>
+
+<div class="sep"></div>
+
+<h2>А. Тот же треугольник, наш вектор, жёлтый</h2>
+<p class="note">Один в один по смыслу и силуэту, только нарисован нами: заливка и обводка,
+без свечения. Ничего в игре не меняется, уходит только зависимость от шрифта системы.</p>
+<div class="cards">
+  <div class="card"><div class="goal-text"><span class="mark"><svg width="17" height="15" viewBox="0 0 34 30"><path d="M17 1.5 32.5 28.5H1.5Z" fill="#F2B21C" stroke="#8A6208" stroke-width="1.6" stroke-linejoin="round"/><rect x="15.4" y="10" width="3.2" height="9.5" rx="1.2" fill="#1A1206"/><rect x="15.4" y="21.4" width="3.2" height="3.2" rx="1.4" fill="#1A1206"/></svg></span>Создать боевого робота “C.R.A.B.”.</div></div>
+  <div class="card"><div class="goal-text"><span class="mark"><svg width="17" height="15" viewBox="0 0 34 30"><path d="M17 1.5 32.5 28.5H1.5Z" fill="#F2B21C" stroke="#8A6208" stroke-width="1.6" stroke-linejoin="round"/><rect x="15.4" y="10" width="3.2" height="9.5" rx="1.2" fill="#1A1206"/><rect x="15.4" y="21.4" width="3.2" height="3.2" rx="1.4" fill="#1A1206"/></svg></span>Вы контролируете
+не менее 3 фабрик в океанских регионах.
+ИЛИ
+В океанских регионах
+не менее 4 любых фабрик.</div></div>
+</div>
+
+<h2>Б. Треугольник контуром, в цвет задачи</h2>
+<p class="note">Тот же знак, но не заливкой, а тонким контуром со свечением — как сам текст
+задачи. Лицевая сторона становится одноцветной, знак читается как часть той же надписи.</p>
+<div class="cards">
+  <div class="card"><div class="goal-text"><span class="mark"><svg width="17" height="15" viewBox="0 0 34 30" style="filter:drop-shadow(0 0 3px rgba(255,92,92,.75))"><path d="M17 2.5 32 28H2Z" fill="none" stroke="#fc1a24" stroke-width="2.2" stroke-linejoin="round"/><rect x="15.6" y="11" width="2.8" height="8.4" rx="1.1" fill="#fc1a24"/><rect x="15.6" y="21.6" width="2.8" height="2.8" rx="1.3" fill="#fc1a24"/></svg></span>Создать боевого робота “C.R.A.B.”.</div></div>
+  <div class="card"><div class="goal-text"><span class="mark"><svg width="17" height="15" viewBox="0 0 34 30" style="filter:drop-shadow(0 0 3px rgba(255,92,92,.75))"><path d="M17 2.5 32 28H2Z" fill="none" stroke="#fc1a24" stroke-width="2.2" stroke-linejoin="round"/><rect x="15.6" y="11" width="2.8" height="8.4" rx="1.1" fill="#fc1a24"/><rect x="15.6" y="21.6" width="2.8" height="2.8" rx="1.3" fill="#fc1a24"/></svg></span>Вы контролируете
+не менее 3 фабрик в океанских регионах.
+ИЛИ
+В океанских регионах
+не менее 4 любых фабрик.</div></div>
+</div>
+
+<h2>В. Уведомление на экране</h2>
+<p class="note">Буквально то, что описывает мотивация: рамка окна на мониторе, в ней
+восклицательный знак. Не общий «осторожно», а «пришло сообщение» — ближе к сеттингу,
+и силуэт не такой дорожный.</p>
+<div class="cards">
+  <div class="card"><div class="goal-text"><span class="mark"><svg width="20" height="15" viewBox="0 0 40 30" style="filter:drop-shadow(0 0 3px rgba(255,92,92,.7))"><path d="M3 3h34v19H23l-3 5-3-5H3Z" fill="none" stroke="#fc1a24" stroke-width="2.2" stroke-linejoin="round"/><rect x="18.6" y="8" width="2.8" height="6.6" rx="1.1" fill="#fc1a24"/><rect x="18.6" y="16.2" width="2.8" height="2.8" rx="1.3" fill="#fc1a24"/></svg></span>Создать боевого робота “C.R.A.B.”.</div></div>
+  <div class="card"><div class="goal-text"><span class="mark"><svg width="20" height="15" viewBox="0 0 40 30" style="filter:drop-shadow(0 0 3px rgba(255,92,92,.7))"><path d="M3 3h34v19H23l-3 5-3-5H3Z" fill="none" stroke="#fc1a24" stroke-width="2.2" stroke-linejoin="round"/><rect x="18.6" y="8" width="2.8" height="6.6" rx="1.1" fill="#fc1a24"/><rect x="18.6" y="16.2" width="2.8" height="2.8" rx="1.3" fill="#fc1a24"/></svg></span>Вы контролируете
+не менее 3 фабрик в океанских регионах.
+ИЛИ
+В океанских регионах
+не менее 4 любых фабрик.</div></div>
+</div>
+
+<h2>Г. Строка «ВНИМАНИЕ» вместо картинки</h2>
+<p class="note">Типографика вместо иконки: ГОСТ прописными с разрядкой и скошенные штрихи
+по бокам — та же графика, что у заголовков на планшете. Читается сходу и на просвет,
+иконку опознавать не нужно.</p>
+<div class="cards">
+  <div class="card"><div class="goal-text"><span class="mark" style="display:flex;align-items:center;gap:1.4mm;line-height:1;white-space:nowrap"><svg width="9" height="7" viewBox="0 0 18 14"><path d="M17 1 4 1 1 7l3 6h13" fill="none" stroke="#fc1a24" stroke-width="2"/></svg><span style="font-family:OpenGostTypeB,Arial,sans-serif;font-size:8.5px;letter-spacing:.22em;color:#fc1a24">ВНИМАНИЕ</span><svg width="9" height="7" viewBox="0 0 18 14"><path d="M1 1h13l3 6-3 6H1" fill="none" stroke="#fc1a24" stroke-width="2"/></svg></span>Создать боевого робота “C.R.A.B.”.</div></div>
+  <div class="card"><div class="goal-text"><span class="mark" style="display:flex;align-items:center;gap:1.4mm;line-height:1;white-space:nowrap"><svg width="9" height="7" viewBox="0 0 18 14"><path d="M17 1 4 1 1 7l3 6h13" fill="none" stroke="#fc1a24" stroke-width="2"/></svg><span style="font-family:OpenGostTypeB,Arial,sans-serif;font-size:8.5px;letter-spacing:.22em;color:#fc1a24">ВНИМАНИЕ</span><svg width="9" height="7" viewBox="0 0 18 14"><path d="M1 1h13l3 6-3 6H1" fill="none" stroke="#fc1a24" stroke-width="2"/></svg></span>Вы контролируете
+не менее 3 фабрик в океанских регионах.
+ИЛИ
+В океанских регионах
+не менее 4 любых фабрик.</div></div>
+</div>
+
+<p class="foot"><b>Что рекомендую:</b> В. Мотивация у знака — «пришло сообщение на экран»,
+и окно уведомления говорит это прямо, тогда как жёлтый треугольник читается как дорожный
+«осторожно». Он же одноцветный с текстом, поэтому не спорит с ним за внимание.
+<br><br><b>Если менять не хочется,</b> берите А: тот же знак пиксель в пиксель, но наш —
+уходит единственная реальная проблема, зависимость от шрифта системы.
+<br><br>Любой из четырёх — это вектор внутри страницы: ни шрифта, ни картинки рядом не нужно,
+в PDF уходит как есть. Клипарт со стороны не брал намеренно: лицензия и стиль,
+а нарисовать этот знак — четыре строки.</p>
+
+</body>
+</html>
