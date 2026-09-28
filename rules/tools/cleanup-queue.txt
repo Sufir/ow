@@ -6,3 +6,5 @@
 удалить: _to_delete
 удалить: print/petroleum-cards-preview.html
 удалить: print/clonaid-cards-preview.html
+удалить: print/aircraft-cards-preview-1.html
+удалить: print/aircraft-cards-preview-2.html
