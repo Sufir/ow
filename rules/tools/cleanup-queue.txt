@@ -14,3 +14,6 @@
 удалить: print/island-cards-preview-1.html
 удалить: print/island-cards-preview-2.html
 удалить: print/значок-задачи-варианты-1.html
+удалить: print/значок-задачи-варианты-2.html
+удалить: print/значок-задачи-варианты-3.html
+архив: print/значок-задачи-гекс-1.html

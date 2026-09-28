@@ -280,14 +280,20 @@ body {
   outline: none;
 }
 
+/* Знак «Внимание» на картах задач: гекс с выбитым восклицательным знаком,
+   розовый #EE688C — третий цвет проекта (D-089). Вектор внутри CSS:
+   ни шрифта системы, ни файла рядом, глиф одинаков на любой машине.
+   Знак вырезан fill-rule evenodd, поэтому сквозь него виден арт карты. */
 .goal-text::before {
-  content: '⚠️';
+  content: '';
   position: absolute;
   left: 50%;
-  bottom: calc(100% + 1.2mm);
+  bottom: calc(100% + 1.3mm);
   transform: translateX(-50%);
-  font-size: 16px;
-  line-height: 1;
+  width: 15px;
+  height: 17px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 34'><path fill-rule='evenodd' fill='%23EE688C' d='M15 1.6 27.4 8.8v14.4L15 30.4 2.6 23.2V8.8ZM13.6 9.4h2.8v9h-2.8zM13.6 20.6h2.8v2.8h-2.8z'/></svg>") center/contain no-repeat;
+  filter: drop-shadow(0 0 3px rgba(238, 104, 140, .75));
   user-select: none;
   pointer-events: none;
 }
