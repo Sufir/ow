@@ -915,9 +915,9 @@ faction:
     master: print/Saved/Технологии и задачи.pdf
     truth: rules/registry/factions.yaml → redesign[].technologies (парные технологии)
     state:
-      content: ISSUES
+      content: VERIFIED
       design: APPROVED
-      production: DONE
+      production: NONE
     evidence: >
       Напечатаны — Alek 2026-09-22: «есть, но возможно потребуют переработки».
       Поэтому production закрыт, а content остаётся ISSUES: открытые вопросы
@@ -940,12 +940,12 @@ faction:
           Сверено 2026-09-28 (D-081), COMP-I-026 закрыта. Шесть условий
           совпали с картой фракции Yellow Sign (SRC-RB-NEW, с. 47) 1:1.
           № 1 — «Создать боевого робота “Шепард”» (D-066); № 2–4 —
-          «Разместить “Нефтяную вышку” в регионе, отмеченном символом …»
-          с точкой, символы без жирного; № 6 — «выберите противника —
-          он получает 3 влияния». Вёрстка принята Alek по странице
-          сравнения. production — NONE: напечатанные карты в старой
-          редакции, до перепечатки.
-        refs: [D-065, D-066, D-081]
+          «Разместить “Нефтяную вышку” в регионе с символом …» (D-087,
+          было «отмеченном символом»), символы без жирного; № 6 —
+          «выберите противника — он получает 3 влияния». Вёрстка принята
+          Alek по странице сравнения. production — NONE: напечатанные карты
+          в старой редакции, до перепечатки.
+        refs: [D-065, D-066, D-081, D-087]
       OW-F-06:
         state: {content: VERIFIED, design: APPROVED, production: NONE}
         reason: >
@@ -965,9 +965,9 @@ faction:
           на планшете; № 5–6 — «обязан бесплатно произвести» из резерва,
           наёмные в счёт, «кому нечего или негде — пропускается» (Р1, D-049
           в части «разрешения» снят). № 5–6 — 12 px, поле текста 55 мм.
-          Вёрстка принята Alek по странице сравнения. production — NONE:
-          до перепечатки.
-        refs: [D-072, D-080]
+          Вёрстка принята Alek по странице сравнения. D-087 — неразрывные
+          пробелы после «в» и «с» в № 1–4. production — NONE: до перепечатки.
+        refs: [D-072, D-080, D-087]
       OW-F-05:
         state: {content: VERIFIED, design: APPROVED, production: NONE}
         reason: >
@@ -1049,9 +1049,9 @@ faction:
     master: print/Saved/Технологии и задачи.pdf
     truth: rules/registry/factions.yaml → redesign[].technologies
     state:
-      content: ISSUES
+      content: VERIFIED
       design: APPROVED
-      production: DONE
+      production: NONE
     evidence: >
       Напечатаны — Alek 2026-09-22: «есть, но возможно потребуют переработки».
       Шесть технологий на фракцию зафиксированы в factions.yaml и сверены
