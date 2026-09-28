@@ -11,3 +11,5 @@
 удалить: print/Faction-Card-A/значок-способности-варианты-1.html
 удалить: print/aircraft-cards-preview-1.html
 удалить: print/aircraft-cards-preview-2.html
+удалить: print/island-cards-preview-1.html
+удалить: print/island-cards-preview-2.html
