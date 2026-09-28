@@ -3,3 +3,6 @@
 #   удалить: путь   — точно мусор → удаляется насовсем (только новые файлы)
 # Выполненные строки стираются; то, что сделать отказались, остаётся.
 удалить: print/brotherhood-cards-preview.html
+удалить: _to_delete
+удалить: print/petroleum-cards-preview.html
+удалить: print/clonaid-cards-preview.html
