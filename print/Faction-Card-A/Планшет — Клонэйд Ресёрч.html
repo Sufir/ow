@@ -307,6 +307,12 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
 .ability-name { font-family: "OpenGostTypeB", Arial, sans-serif;
   font-size: var(--fs-prop); font-weight: 700; color: #FFFFFF; line-height: .98;
   text-transform: uppercase; letter-spacing: .02em; }
+/* Значок фракции перед названием её уникальной способности (вариант C, D-084):
+   15 pt, розовый — третий цвет планшета. Прописные и разрядка заголовка на него
+   не действуют; строку не раздвигает. */
+.umark { font-family: "OilWars", sans-serif; font-size: 15pt; color: var(--pink);
+         font-weight: 400; font-style: normal; font-synthesis: none; text-transform: none;
+         letter-spacing: 0; line-height: 0; vertical-align: -0.14em; margin-right: 1.2mm; }
 .ability-note { font-size: var(--fs-body); font-weight: 700; color: var(--blue); line-height: 1.15; margin-bottom: .6mm; }
 .ability-text { font-size: var(--fs-body); line-height: var(--lh); color: var(--ink); }
 
@@ -516,7 +522,7 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
            скрипт в конце файла рисует линию-привязку. -->
       <div class="col-abil"><!--#свойства-->
         <div class="ability" data-link="" style="margin-top: 0.0mm;">
-          <div class="ability-name">Клонирование</div>
+          <div class="ability-name"><span class="umark">5</span>Клонирование</div>
           <div class="ability-note">Постоянная</div>
           <div class="ability-text"><div>Когда вы производите боевые машины, вы можете за одно действие произвести несколько боевых машин (в том числе наёмных) одного или разных типов в одном или нескольких регионах с контролируемыми вами фабриками.</div><div>Вербовкой вы по-прежнему вербуете только одного пехотинца.</div></div>
         </div>
