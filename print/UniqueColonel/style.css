@@ -1,3 +1,31 @@
+@font-face {
+  font-family: "Liberation Sans";
+  src: url("../Fonts/LiberationSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Liberation Sans";
+  src: url("../Fonts/LiberationSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Liberation Sans";
+  src: url("../Fonts/LiberationSans-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Liberation Sans";
+  src: url("../Fonts/LiberationSans-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+
 @page {
   size: A4;
   margin: 0;
@@ -13,7 +41,7 @@ body {
   background-color: #ffffff;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
-  font-family: Arial, sans-serif;
+  font-family: "Liberation Sans", sans-serif;
 }
 
 .page {
@@ -81,7 +109,7 @@ body {
 }
 
 .title {
-  font-family: Arial, sans-serif;
+  font-family: "Liberation Sans", sans-serif;
   font-size: 8.5pt;
   font-weight: bold;
   color: #ffffff;
@@ -90,7 +118,7 @@ body {
 }
 
 .flavor {
-  font-family: Arial, sans-serif;
+  font-family: "Liberation Sans", sans-serif;
   font-size: 5.4pt;
   font-style: italic;
   color: #aaaaaa;

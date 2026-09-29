@@ -5701,3 +5701,111 @@ Faction Spellbook you receive, taken during the Doom Phase.
   `rules/reports/rulebook-draft.md` §7.3.5, `rules/registry/components.yaml` (`COMP-C-02`),
   `rules/tasks/ПЛАН-КОМПОНЕНТЫ.md`
 - **Связанные:** `COMP-C-02`, `COMP-I-001`, `D-040`, `D-020`, `D-014`, `D-021`, `D-075`, `ICON-001`
+
+---
+
+## D-091 — Основной шрифт компонентов: Liberation Sans вместо Arial
+
+- **Дата:** 2026-09-29
+- **Контекст:** Alek: мероприятие фанатское и некоммерческое, нужен свободный шрифт
+  вместо Arial — простой, без засечек, максимально близкий по виду и размерам,
+  чтобы готовые компоненты не поехали.
+
+### Итог в одну строку
+
+**Liberation Sans 2.1.5** (SIL OFL 1.1) во всех живых компонентах вместо Arial. Файлы —
+`print/Fonts/LiberationSans-*.ttf`, подключение — `@font-face` в каждой странице.
+Раскладка не изменилась нигде: ни одного переноса строки, ни одного сдвига блока.
+
+### Почему Liberation Sans
+
+1. **Ширины знаков = Arial 7.06.** Латиница, кириллица, греческий, пунктуация —
+   0 расхождений во всех четырёх начертаниях. Расходятся только иврит и две редкие
+   буквы кириллицы в курсиве (ҵ, ӷ), в наших текстах их нет.
+2. **Высота строки = Arial.** Вертикальные метрики (hhea, OS/2 typo, win) совпадают.
+3. **Кернинг на наших текстах = Arial.** 598 уникальных строк компонентов, набранных
+   HarfBuzz с кернингом: ширина совпадает до единицы шрифта. По всем 31 329 парам
+   из 177 знаков расходятся 7–9 пар на начертание, все — неразрывный пробел рядом
+   с латинскими A, F, L, P, T, Y или ’.
+4. **Лицензия OFL:** встраивать в PDF и раздавать можно, в том числе в Git.
+
+### Что смотрели и отбросили
+
+- **Arimo 1.33** — тот же рисунок (Liberation 2 — его ответвление), но свой кернинг:
+  63 строки из 598 уже или шире, до 8 % кегля; в полужирном иначе кернингуются
+  ~600 пар кириллицы. Переносы сейчас не меняет, запас хуже.
+- **PT Astra Sans** — метрический аналог Times New Roman, а не Arial (ParaType;
+  обсуждение google/fonts#565). Текст переверстается. Файл скачать не удалось,
+  не замерян.
+- **Nimbus Sans (URW)** — клон Helvetica: кириллица по ширине расходится у 84 знаков
+  из 144 общих; лицензия AGPL.
+
+### Сверка
+
+1. **Раскладка в Chromium**, экран и печать, эталон — системный Arial 7.06: восемь
+   планшетов, демо `Шаблон.html`, памятка в трёх видах печати, карты технологий и
+   задач, скрытое влияние, события фабрик, уникальные полковники. Переносов, сдвигов
+   блоков и изменений высоты страниц нет. `Сборка.py` на новом шаблоне собирает
+   восемь планшетов байт в байт как правленые.
+2. **PDF под Linux.** У Arial есть таблица VDMX, у Liberation нет. Chromium под Linux
+   при печати берёт высоту строки из VDMX, и в PDF из контейнера текст с настоящим
+   Arial стоит на 0,25–1 мм ниже, чем с Liberation. Arial без VDMX даёт ровно
+   раскладку Liberation.
+3. **PDF с Windows** (`Factory Events.pdf`, `Уникальные полковники.pdf`, Opera на
+   Chrome 145) по положению строк совпадают с Liberation и с Arial без VDMX, а не
+   с Arial+VDMX: на Windows сдвига нет.
+4. **Мастера планшетов (26.09) и `Технологии и задачи.pdf` (28.09) уже набраны
+   Liberation Sans:** контейнер подставлял его вместо Arial. Arial в мастерах:
+   `Памятка*.pdf`, `Factory Events.pdf`, `Уникальные полковники.pdf`.
+
+### Разница, которая осталась
+
+Только рисунок букв: прописные у Liberation на 4 % ниже (1409 против 1466 единиц),
+строчные на 2 % выше (1082 против 1062), иначе нарисованы G, R, t, 1. Габариты
+строк и блоков те же.
+
+### Что сделано
+
+- `print/Fonts/`: `LiberationSans-Regular/Bold/Italic/BoldItalic.ttf` — релиз 2.1.5
+  с github.com/liberationfonts, `LiberationSans-OFL.txt` — лицензия.
+- `@font-face` на четыре начертания и замена `Arial` в объявлениях шрифта:
+  `Faction-Card-A/Шаблон.html` и восемь `Планшет — *.html`, `Памятка.html`,
+  `mini-cards/cards-landscape-sixes.css`, `mini-cards/cards.css`,
+  `FactoryEvents/FactoryEvents.css`, `UniqueColonel/style.css`. В редакторе карт
+  (`MiniAmericanCardsLandscape.html`) пункт списка шрифтов «Arial» → «Liberation Sans».
+- Документы: `CLAUDE.md` §4 (новый подраздел «Основной шрифт» и п. 5 планшета),
+  `components.yaml` (`COMP-C-02`), `ПРОМПТ-памятки.md`, `ПРОМПТ-памятка-битвы.md`,
+  комментарий в `Сборка.py`.
+
+### Не тронуто, и почему
+
+- **Снятое с работы:** `Template.html` и `faction-card/`, `Faction-Card-A.html`,
+  `Faction-Card-A/template.html`, `build.py`, `variants.html`, старые состояния
+  `print/Saved/*.json`, `print/docs/`.
+- **Страницы сравнения вариантов** (`*-cards-preview*.html`, `значок-*.html`,
+  `moon-systems-icon-preview.html`, `памятка-битвы-preview-*.html`) — черновики,
+  большая часть уже в очереди уборки.
+- **Эскизы поля** (`board/tools/layout.py`, `sketch.py`) — там первым стоит
+  DejaVu Sans, Arial только запасной; панель кнопок `Factory/factory.css` —
+  шрифт интерфейса, на печать не идёт.
+- **Готовые PDF в `print/Saved/`** не перевыкладывались: README — только когда
+  комплект уходит в печать.
+- Записи DECISIONS до `D-091` и комментарий к `--fs-prop` в шаблоне («высота
+  прописных = Arial bold 10pt») — это история расчёта.
+
+### Что осталось
+
+- Файлы Arial (`print/Fonts/arial*.ttf`, `ARIALN*.TTF`, `ariblk.ttf`,
+  `art/fonts/ofont.ru_Arial*.ttf`, `arial.zip`) — в очереди уборки на архив: работе
+  не нужны, в Git им нельзя (лицензия Monotype).
+- При следующем экспорте мастеров — `pdffonts`: встроен `LiberationSans`.
+
+- **Результат:** `print/Fonts/LiberationSans-*.ttf`, `print/Fonts/LiberationSans-OFL.txt`,
+  `print/Faction-Card-A/Шаблон.html`, `print/Faction-Card-A/Планшет — *.html` (8),
+  `print/Faction-Card-A/Сборка.py`, `print/Памятка.html`,
+  `print/mini-cards/cards-landscape-sixes.css`, `print/mini-cards/cards.css`,
+  `print/MiniAmericanCardsLandscape.html`, `print/FactoryEvents/FactoryEvents.css`,
+  `print/UniqueColonel/style.css`, `CLAUDE.md`, `rules/registry/components.yaml`,
+  `rules/tasks/ПРОМПТ-памятки.md`, `rules/tasks/ПРОМПТ-памятка-битвы.md`,
+  `rules/tools/cleanup-queue.txt`
+- **Связанные:** `D-063`, `D-066`, `D-068`, `D-087`, `D-090`, `COMP-C-02`

@@ -26,6 +26,34 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('../Fonts/LiberationSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('../Fonts/LiberationSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('../Fonts/LiberationSans-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('../Fonts/LiberationSans-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
 :root {
   --a4-w: 210mm;
   --a4-h: 297mm;
@@ -48,7 +76,7 @@ body {
   padding: 0;
   background: #e8e8e8;
   color: #1b1b1b;
-  font-family: Arial, sans-serif;
+  font-family: "Liberation Sans", sans-serif;
 }
 
 .toolbar {
@@ -216,7 +244,7 @@ body {
   border-radius: 1mm;
   background: rgba(15, 18, 24, 0.45);
   color: #fff;
-  font-family: Arial, "Segoe UI", sans-serif;
+  font-family: "Liberation Sans", "Segoe UI", sans-serif;
   font-size: 9px;
   padding: 0 1.1mm;
   min-width: 18mm;
@@ -229,7 +257,7 @@ body {
   border-radius: 1mm;
   background: rgba(15, 18, 24, 0.45);
   color: #fff;
-  font-family: Arial, "Segoe UI", sans-serif;
+  font-family: "Liberation Sans", "Segoe UI", sans-serif;
   font-size: 11px;
   line-height: 1;
   cursor: pointer;
@@ -251,7 +279,7 @@ body {
   border-radius: 1mm;
   background: rgba(15, 18, 24, 0.45);
   color: #fff;
-  font-family: Arial, "Segoe UI", sans-serif;
+  font-family: "Liberation Sans", "Segoe UI", sans-serif;
   font-size: 12px;
   line-height: 1;
   cursor: pointer;
@@ -268,7 +296,7 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  font-family: Arial, "Segoe UI", sans-serif;
+  font-family: "Liberation Sans", "Segoe UI", sans-serif;
   font-size: 13px;
   line-height: 1.1;
   color: #fc1a24;
@@ -312,7 +340,7 @@ body {
 .tech-title,
 .tech-note,
 .tech-desc {
-  font-family: Arial, "Segoe UI", sans-serif;
+  font-family: "Liberation Sans", "Segoe UI", sans-serif;
   outline: none;
 }
 
@@ -371,7 +399,7 @@ body {
 /* Название технологии — как заголовок свойства на планшете: OpenGostTypeB
    прописными, 12,5 pt при тексте 9 pt, то есть 1,39 кегля описания (D-079). */
 .tech-title {
-  font-family: 'OpenGostTypeB', Arial, sans-serif;
+  font-family: 'OpenGostTypeB', "Liberation Sans", sans-serif;
   font-size: 13.9px;
   text-transform: uppercase;
   letter-spacing: .02em;

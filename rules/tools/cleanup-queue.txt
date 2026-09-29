@@ -18,3 +18,8 @@
 удалить: print/значок-задачи-варианты-3.html
 архив: print/значок-задачи-гекс-1.html
 удалить: print/памятка-preview-*.html
+архив: print/Fonts/arial*.ttf
+архив: print/Fonts/ARIALN*.TTF
+архив: print/Fonts/ariblk.ttf
+архив: art/fonts/ofont.ru_Arial*.ttf
+архив: art/fonts/arial.zip

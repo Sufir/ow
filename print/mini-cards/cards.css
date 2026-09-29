@@ -5,6 +5,34 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('../Fonts/LiberationSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('../Fonts/LiberationSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('../Fonts/LiberationSans-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('../Fonts/LiberationSans-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
 :root {
   --a4-w: 210mm;
   --a4-h: 297mm;
@@ -27,7 +55,7 @@ body {
   padding: 0;
   background: #e8e8e8;
   color: #1b1b1b;
-  font-family: Arial, sans-serif;
+  font-family: "Liberation Sans", sans-serif;
 }
 
 .toolbar {

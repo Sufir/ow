@@ -63,6 +63,10 @@
 @font-face { font-family: "AgencyFBCyrillic"; src: url("../Fonts/agencyfbcyrillic.ttf") format("truetype"); }
 @font-face { font-family: "OpenGostTypeB";    src: url("../Fonts/OpenGostTypeB.ttf")    format("truetype"); }
 @font-face { font-family: "OilWars";          src: url("../Fonts/Oil Wars.ttf")         format("truetype"); }
+@font-face { font-family: "Liberation Sans"; src: url("../Fonts/LiberationSans-Regular.ttf")    format("truetype"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Liberation Sans"; src: url("../Fonts/LiberationSans-Bold.ttf")       format("truetype"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Liberation Sans"; src: url("../Fonts/LiberationSans-Italic.ttf")     format("truetype"); font-weight: 400; font-style: italic; }
+@font-face { font-family: "Liberation Sans"; src: url("../Fonts/LiberationSans-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; }
 
 :root {
   /* Все размеры — в миллиметрах, кегли — в пунктах. Это единственное место,
@@ -133,7 +137,7 @@
 
 @page { size: A4 landscape; margin: 0; }
 html, body { margin: 0; padding: 0; background: #7A8794; }
-body { font-family: Arial, "Segoe UI", sans-serif; }
+body { font-family: "Liberation Sans", "Segoe UI", sans-serif; }
 
 .sheet {
   position: relative; width: 297mm; height: 210mm; background: #FFFFFF;
@@ -272,7 +276,7 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
 }
 
 .block-title {
-  font-family: "OpenGostTypeB", Arial, sans-serif;
+  font-family: "OpenGostTypeB", "Liberation Sans", sans-serif;
   font-size: var(--fs-block); font-weight: 700; color: var(--cyan);
   letter-spacing: .03em; text-transform: uppercase;
   padding-bottom: 0; margin-bottom: 1.8mm;
@@ -304,7 +308,7 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
 .sym.sym-R { color: inherit; }
 
 .ability { padding-left: 1.6mm; padding-top: .8mm; border-left: .5mm solid var(--blue); border-top: .5mm solid var(--blue); }
-.ability-name { font-family: "OpenGostTypeB", Arial, sans-serif;
+.ability-name { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif;
   font-size: var(--fs-prop); font-weight: 700; color: #FFFFFF; line-height: .98;
   text-transform: uppercase; letter-spacing: .02em; }
 /* Значок фракции перед названием её уникальной способности (вариант C, D-084):
@@ -319,7 +323,7 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
 /* ===== ТАБЛИЦА ОТРЯДОВ =================================================== */
 .units-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .units-table th {
-  font-family: "OpenGostTypeB", Arial, sans-serif;
+  font-family: "OpenGostTypeB", "Liberation Sans", sans-serif;
   font-size: var(--fs-th); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
   color: var(--blue); text-align: center; padding: 0 0 .8mm; border-bottom: .3mm solid var(--rule);
 }
@@ -329,7 +333,7 @@ body { font-family: Arial, "Segoe UI", sans-serif; }
 .units-table td.u-icon img { width: 100%; object-fit: contain; display: block; }
 .units-table td.u-icon .noimg { display: flex; align-items: center; justify-content: center; font-size: 6pt; color: #7796AE; border: .2mm dashed #3A5772; }
 .unit-cap { font-size: var(--fs-body); line-height: 1.05; color: var(--cyan); text-align: center; margin-top: .6mm; }
-.stat { font-family: "AgencyFBCyrillic", Arial, sans-serif; font-size: var(--fs-stat); font-weight: 700; text-align: center; color: #FFFFFF; }
+.stat { font-family: "AgencyFBCyrillic", "Liberation Sans", sans-serif; font-size: var(--fs-stat); font-weight: 700; text-align: center; color: #FFFFFF; }
 .stat.count { color: var(--blue); }
 .stat.power { color: var(--pink); }
 .group-label { writing-mode: vertical-rl; text-orientation: mixed; font-size: var(--fs-group); color: var(--blue); text-align: center; white-space: nowrap; }
