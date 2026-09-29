@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Памятка игрока</title>
+<!--
+  Памятка игрока — COMP-C-02. Чистовик, 29.09.2026.
+  Пять одинаковых памяток, по одной каждому игроку (§2.2 п. 6, D-040).
+  A6, 105 × 148 мм, двусторонняя: сторона 1 — раунд, сторона 2 — действия. Кегль текста 9 pt.
+
+  Как устроено:
+    • текст — только в JSON ниже (<script id="pamyatka-data">), {R} — нефть, {Q} {W} {E} — символы регионов;
+    • оформление — только в CSS этого файла, цвета и гарнитуры — из print/Faction-Card-A/Шаблон.html;
+    • три вида печати переключаются кнопками: «В размер» — две страницы 105 × 148;
+      «A4 ×2 с метками реза» — лист A4 альбомный, две памятки, выпуск 6 мм, метки реза на обороте;
+      «A4 ×4 без полей» — лист A4 книжный, четыре памятки встык, только для печати без полей.
+    • метки реза — всегда крестики с заходом внутрь вдоль кромки: после первого реза по ним режут дальше.
+  Кавычки на компоненте — только “ ” (D-075). Проверка: python3 print/check_quotes.py.
+  Над стороной, у которой текст вылез за поле, на экране появляется красная надпись.
+  Декор — только на лицевой стороне (DECOR_FRONT), вектор; на обороте декора нет.
+-->
+<style>
+@font-face { font-family: "OpenGostTypeB"; src: url("Fonts/OpenGostTypeB.ttf") format("truetype"); }
+@font-face { font-family: "OilWars";       src: url("Fonts/Oil Wars.ttf")      format("truetype"); }
+
+:root {
+  --w: 105mm;  --h: 148mm;    /* габарит памятки по линии реза */
+  --pad: 5mm;                 /* поле от линии реза до текста */
+  --bleed: 6mm;               /* выпуск под обрез в раскладке A4, как у планшета */
+  --fs: 9pt;                  /* кегль текста; ниже 9 не опускать */
+  --lh: 1.22;                 /* интерлиньяж как на планшете */
+  --ink:  #FFFFFF;            /* основной текст */
+  --cyan: #11C5FF;            /* заголовки разделов */
+  --num:  #9FE8FF;            /* номера, маркеры, названия фаз и действий */
+  --bg:   #08182B;            /* фон */
+  --rule: rgba(37,164,238,.40);
+  --pink: #EE688C;            /* разделитель разделов */
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #7A8794; font-family: Arial, "Liberation Sans", sans-serif; }
+
+/* ——— панель (только на экране) ——— */
+.bar { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: .3mm solid #999;
+       padding: 3mm 8mm; display: flex; gap: 2mm 6mm; align-items: center; flex-wrap: wrap; font-size: 10.5pt; }
+.bar .grp { display: flex; gap: 1.5mm; align-items: center; }
+.bar button { font: inherit; padding: 1.1mm 3mm; border: .3mm solid #555; background: #fff; cursor: pointer; }
+.bar button[aria-pressed="true"] { background: #111; color: #fff; border-color: #111; }
+.bar .hint { color: #444; }
+.warn { position: absolute; top: 1mm; left: 1mm; z-index: 5; background: #fff; color: #B3261E; padding: .5mm 1.5mm;
+        font: 700 9pt Arial, sans-serif; }
+
+/* ——— листы ——— */
+.pages { padding: 8mm 0; display: flex; flex-direction: column; align-items: center; gap: 8mm; }
+.sheet { position: relative; background: #fff; overflow: hidden; box-shadow: 0 3mm 10mm rgba(0,0,0,.35);
+         break-after: page; page-break-after: always; }
+.sheet:last-child { break-after: auto; page-break-after: auto; }
+body.a6 .sheet { width: calc(var(--w) + .5mm); height: calc(var(--h) + .5mm); }
+body.a4 .sheet { width: 297mm; height: 210mm; }
+body.a4x4 .sheet { width: 210mm; height: 297mm; }
+
+/* ——— памятка ——— */
+.bleed { position: absolute;
+  background:
+    radial-gradient(70% 45% at 0% 0%,    rgba(37,164,238,.20) 0%, rgba(37,164,238,0) 72%),
+    radial-gradient(65% 40% at 100% 100%, rgba(17,197,255,.14) 0%, rgba(17,197,255,0) 70%),
+    var(--bg);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.card { position: absolute; width: var(--w); height: var(--h); padding: var(--pad); color: var(--ink); }
+.card .drop { position: relative; z-index: 1; height: 100%; }
+/* декор лицевой стороны: уголок «шкала и соты» и боковая линия с узлами — один вектор (вариант Д2, решение Alek 29.09.2026).
+   Координаты — миллиметры памятки от левого верхнего угла по линии реза. Цвета уже смешаны с фоном:
+   #0E83AE = #11C5FF при 0,62 (как уголок планшета), #154D72 = #1D6E9E при 0,62, #1A6FA4 = #25A4EE при 0,62,
+   #D76082 = #EE688C при 0,9. Полупрозрачный слой не используется — на печати он давал заметный прямоугольник. */
+.decor { position: absolute; left: 0; top: 0; width: var(--w); height: var(--h); z-index: 0; pointer-events: none; overflow: visible; }
+
+/* ——— текст ——— */
+.u { position: relative; font-size: var(--fs); line-height: var(--lh); }
+.u + .u { margin-top: 1.2mm; }
+.u + .u:not(.blk) { margin-top: 0; }                         /* продолжение того же раздела */
+.drop > .u.blk:not(:first-child) { margin-top: 2.8mm; }      /* воздух перед новым разделом */
+.drop > .u.blk:not(:first-child)::before {
+  content: ""; display: block; height: .3mm; margin: 0 0 2.2mm;
+  background: linear-gradient(to right, rgba(238,104,140,0), var(--pink), rgba(238,104,140,0));
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.body > :last-child, .body li:last-child { margin-bottom: 0; }
+.body h3 { font-family: "OpenGostTypeB", Arial, sans-serif; font-weight: 700; color: var(--cyan);
+           font-size: calc(var(--fs) * 1.2); letter-spacing: .03em; text-transform: uppercase;
+           line-height: 1; margin: 0 0 1.4mm; }
+.body p { margin: 0 0 .5mm; }
+.body b { font-weight: 700; }
+.body .normal { font-weight: 400; }
+.body .ph { display: flex; align-items: baseline; gap: 1.6mm; margin: .9mm 0 .35mm; }
+.body .ph .n { font-family: "OpenGostTypeB", Arial, sans-serif; font-weight: 700; color: var(--num);
+               font-size: calc(var(--fs) * 1.35); line-height: .8; min-width: 2.6mm; }
+.body .ph .t { font-weight: 700; color: var(--num); }
+.body .ph .t .normal { color: var(--ink); }
+.body .dots { list-style: none; margin: 0 0 .7mm; padding: 0; }
+.body .dots li { position: relative; padding-left: 3mm; margin: 0 0 .15mm; }
+.body .dots li::before { content: ""; position: absolute; left: .4mm; top: .52em; width: 1.1mm; height: 1.1mm;
+                         background: var(--num); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.body .steps { counter-reset: st; list-style: none; margin: 0 0 .7mm; padding: 0; }
+.body .steps.from0 { counter-reset: st -1; }                  /* этап 0 — карта события особых фабрик */
+.body .steps li { counter-increment: st; position: relative; padding-left: 4.2mm; margin: 0 0 .25mm; }
+.body .steps li::before { content: counter(st) "."; position: absolute; left: 0; font-weight: 700; color: var(--num); }
+.body .acts > div { display: grid; grid-template-columns: 1fr auto; column-gap: 2mm;
+                    border-top: .3mm solid var(--rule); padding: .4mm 0 .45mm; }
+.body .acts > div:first-child { border-top: none; padding-top: 0; }
+.body .acts > div > b { color: var(--num); }
+.body .acts .cost { text-align: right; white-space: nowrap; font-weight: 700; }
+.body .acts .req  { grid-column: 1 / -1; }
+.sym { font-family: "OilWars", sans-serif; font-size: 1.22em; line-height: 0; vertical-align: -0.055em;
+       font-style: normal; font-weight: 400; font-synthesis: none; color: var(--cyan); }
+.sym.R { color: inherit; }                                   /* нефть — цветом текста (ICON-001) */
+
+/* ——— метки реза (оборот раскладок A4) ———
+   Крестики толщиной 0,1 мм: на белом поле — почти чёрные, на тёмном фоне — белые,
+   чтобы были видны везде, в том числе внутри, вдоль кромки памятки. */
+.marks { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+@media print {
+  html, body { background: #fff; }
+  .bar, .warn { display: none !important; }
+  .pages { padding: 0; gap: 0; display: block; }
+  .sheet { box-shadow: none; }
+}
+</style>
+<style id="page-rule">@page { size: 4.14in 5.84in; margin: 0; }</style>
+</head>
+<body class="a6">
+
+<div class="bar">
+  <div class="grp" role="group" aria-label="Вид печати">
+    <b>Печать:</b>
+    <button type="button" data-mode="a6" aria-pressed="true">В размер, 105 × 148</button>
+    <button type="button" data-mode="a4" aria-pressed="false">A4 ×2 с метками реза</button>
+    <button type="button" data-mode="a4x4" aria-pressed="false">A4 ×4 без полей</button>
+  </div>
+  <span class="hint" id="hint"></span>
+</div>
+
+<div class="pages" id="pages"></div>
+
+<script type="application/json" id="pamyatka-data">
+{
+  "компонент": "COMP-C-02",
+  "формат": "A6, 105 × 148 мм, двусторонняя",
+  "кегль": "9pt",
+  "стороны": [
+    [
+      {
+        "раздел": true,
+        "html": "<h3>Раунд</h3>\n<div class=\"ph\"><span class=\"n\">1</span><span class=\"t\">Фаза получения ресурсов</span></div>\n<ul class=\"dots\">\n<li>+1{R} за каждого вашего пехотинца в игре</li>\n<li>+2{R} за каждую фабрику под вашим контролем</li>\n<li>+1{R} за каждую незанятую фабрику на поле</li>\n<li>+1{R} за каждого захваченного пехотинца, верните владельцу</li>\n<li>способности планшета и технологии</li>\n</ul>\n<p>Затем тот, у кого меньше половины наибольшего запаса {R}, поднимает свой до этой половины (округление вверх).</p>\n<div class=\"ph\"><span class=\"n\">2</span><span class=\"t\">Фаза определения первого игрока</span></div>\n<p>Первым игроком становится тот, у кого больше всех {R}; при равенстве решает прежний первый игрок. Первый игрок выбирает направление хода на текущий раунд.</p>"
+      },
+      {
+        "раздел": false,
+        "html": "<div class=\"ph\"><span class=\"n\">3</span><span class=\"t\">Фаза влияния</span></div>\n<ol class=\"steps from0\">\n<li>Вытяните карту события при игре с особыми фабриками.</li>\n<li>Продвижение: получите по 1 влиянию за каждую фабрику под вашим контролем.</li>\n<li>Оказание давления: по очереди с первого игрока каждый может один раз заплатить {R} по значению маркера Судного дня. Сдвиньте маркер на одно деление вперёд и получите по 1 влиянию за каждую фабрику под вашим контролем и по карте скрытого влияния за каждого боевого робота своей фракции в игре. Способности фазы влияния срабатывают в эту же очередь, до или после давления и даже без него.</li>\n<li>Проверка окончания игры.</li>\n</ol>\n<div class=\"ph\"><span class=\"n\">4</span><span class=\"t\">Фаза действий: <span class=\"normal\">игроки по очереди выполняют ходы</span></span></div>\n<p>Если на начало хода у вас есть {R}:</p>\n<ul class=\"dots\">\n<li>можете выполнить сколько угодно свободных действий;</li>\n<li>выполните ровно одно основное действие;</li>\n<li>снова — сколько угодно свободных действий.</li>\n</ul>\n<p>Пас — вместо основного действия: потеряйте всю вашу {R}.</p>\n<p>Фаза длится, пока {R} есть хотя бы у одного игрока.</p>"
+      }
+    ],
+    [
+      {
+        "раздел": true,
+        "html": "<h3>Общие действия</h3>\n<div class=\"acts\">\n<div><b>Вербовка пехотинца</b><span class=\"cost\">n{R}</span><span class=\"req\">Выставьте одного пехотинца в регион с любым вашим отрядом, а если у вас нет отрядов на поле, то в любой регион.</span></div>\n<div><b>Производство боевой машины или меха</b><span class=\"cost\">n{R}</span><span class=\"req\">Выставьте одну боевую машину или мех в регион, где вы контролируете фабрику.</span></div>\n<div><b>Создание боевого робота</b><span class=\"cost\">n{R}</span><span class=\"req\">Выполните шаги, указанные на вашем планшете.</span></div>\n<div><b>Строительство военной фабрики</b><span class=\"cost\">3{R}</span><span class=\"req\">Поставьте фабрику в регион с вашим пехотинцем, если обычной там ещё нет.</span></div>\n<div><b>Перемещение</b><span class=\"cost\">1{R} за отряд</span><span class=\"req\">Переместите один или больше своих отрядов в смежные регионы, каждый — не более раза за ход.</span></div>\n<div><b>Битва</b><span class=\"cost\">1{R}</span><span class=\"req\">Выберите регион, где есть ваши и вражеские отряды, и одного противника в нём. Ваша боевая сила там должна быть не менее 1. В одном регионе не более одной битвы за ход.</span></div>\n<div><b>Захват пехотинца</b><span class=\"cost\">1{R}</span><span class=\"req\">В регионе с вашей боевой машиной, мехом или боевым роботом. Боевая машина и мех захватывают, если пехотинца не прикрывает боевая машина, мех или боевой робот его фракции; боевой робот — если не прикрывает боевой робот. Кого отдать, решает владелец; пленный — на ваш планшет.</span></div>\n</div>"
+      },
+      {
+        "раздел": true,
+        "html": "<h3>Свободные действия</h3>\n<div class=\"acts\">\n<div><b>Захватить или покинуть военную фабрику</b><span class=\"cost\">0{R}</span><span class=\"req\">Поставьте своего пехотинца на незанятую фабрику в его регионе или снимите с фабрики.</span></div>\n<div><b>Свободная битва</b><span class=\"cost\">1{R} за битву</span><span class=\"req\">Когда у вас все шесть технологий: битв за ход сколько угодно.</span></div>\n</div>"
+      }
+    ]
+  ]
+}
+</script>
+
+<script>
+const DATA = JSON.parse(document.getElementById('pamyatka-data').textContent);
+const MM = 96 / 25.4;
+const HINT = {                                // подробности печати — print/ПЕЧАТЬ.md
+  a6: 'Две страницы 105 × 148 мм. Масштаб 100 %, поля — нет, фон — включить. Подробно — print/ПЕЧАТЬ.md.',
+  a4: 'A4 альбомный, две памятки, выпуск 6 мм; страница 1 — лицо, страница 2 — оборот с метками реза. На пятерых — три листа. Подробно — print/ПЕЧАТЬ.md.',
+  a4x4: 'A4 книжный, четыре памятки без полей — только для печати без полей; страница 1 — лицо, страница 2 — оборот с метками реза. На пятерых — два листа. Подробно — print/ПЕЧАТЬ.md.',
+};
+
+function sym(html) {                       // {R} → значок нефти, {Q} {W} {E} → символы регионов
+  return html.replace(/\{([RQWE])\}/g, (m, L) => `<span class="sym${L === 'R' ? ' R' : ''}">${L}</span>`);
+}
+const DECOR_FRONT = `  <polyline points="58,2.4 98.8,2.4 102.8,6.4 102.8,144.5" stroke="#0E83AE" stroke-width=".45" fill="none"/>
+  <polyline points="80,3.9 98.2,3.9 101.3,7 101.3,13" stroke="#154D72" stroke-width=".3" fill="none"/>
+  <path d="M60,2.4 V1.2 M62,2.4 V1.2 M64,2.4 V1.2" stroke="#154D72" stroke-width=".3"/>
+    <rect x="66" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/><rect x="68.2" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/>
+    <rect x="70.4" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/><rect x="72.6" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/>
+    <rect x="74.8" y="3.3" width="1.6" height=".9" fill="#103F61"/><rect x="77" y="3.3" width="1.6" height=".9" fill="#0D2E49"/>
+  <path d="M83.6,6.6 L84.8,5.4 M85.2,6.6 L86.4,5.4 M86.8,6.6 L88,5.4 M88.4,6.6 L89.6,5.4" stroke="#154D72" stroke-width=".3"/>
+  <path d="M97.9,8.6 H101.3" stroke="#154D72" stroke-width=".3"/>
+  <polygon points="90.40,8.60 91.15,7.30 92.65,7.30 93.40,8.60 92.65,9.90 91.15,9.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/>
+  <polygon points="92.65,7.30 93.40,6.00 94.90,6.00 95.65,7.30 94.90,8.60 93.40,8.60" fill="#0A1E33" stroke="#154D72" stroke-width=".3"/>
+  <polygon points="94.90,8.60 95.65,7.30 97.15,7.30 97.90,8.60 97.15,9.90 95.65,9.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/>
+  <circle cx="91.9" cy="8.6" r=".45" fill="#0E83AE"/>
+  <circle cx="58" cy="2.4" r=".5" fill="#0E83AE"/>
+  <polygon points="102.8,24.20 103.65,24.90 103.65,27.10 102.8,27.80 101.95,27.10 101.95,24.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,25.65 H101.75 M101.25,26.35 H101.75 M103.85,25.65 H104.35 M103.85,26.35 H104.35" stroke="#0E83AE" stroke-width=".25"/><polygon points="102.8,46.20 103.65,46.90 103.65,49.10 102.8,49.80 101.95,49.10 101.95,46.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,47.65 H101.75 M101.25,48.35 H101.75 M103.85,47.65 H104.35 M103.85,48.35 H104.35" stroke="#0E83AE" stroke-width=".25"/><polygon points="102.8,68.20 103.65,68.90 103.65,71.10 102.8,71.80 101.95,71.10 101.95,68.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,69.65 H101.75 M101.25,70.35 H101.75 M103.85,69.65 H104.35 M103.85,70.35 H104.35" stroke="#0E83AE" stroke-width=".25"/><polygon points="102.8,90.20 103.65,90.90 103.65,93.10 102.8,93.80 101.95,93.10 101.95,90.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,91.65 H101.75 M101.25,92.35 H101.75 M103.85,91.65 H104.35 M103.85,92.35 H104.35" stroke="#0E83AE" stroke-width=".25"/><polygon points="102.8,112.20 103.65,112.90 103.65,115.10 102.8,115.80 101.95,115.10 101.95,112.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,113.65 H101.75 M101.25,114.35 H101.75 M103.85,113.65 H104.35 M103.85,114.35 H104.35" stroke="#0E83AE" stroke-width=".25"/><polygon points="102.8,134.20 103.65,134.90 103.65,137.10 102.8,137.80 101.95,137.10 101.95,134.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,135.65 H101.75 M101.25,136.35 H101.75 M103.85,135.65 H104.35 M103.85,136.35 H104.35" stroke="#0E83AE" stroke-width=".25"/>
+  <circle cx="102.8" cy="144.5" r=".5" fill="#0E83AE"/>
+  <rect x="79.4" y="3.3" width="1.6" height=".9" fill="#D76082"/>
+  <polygon points="92.65,9.90 93.40,8.60 94.90,8.60 95.65,9.90 94.90,11.20 93.40,11.20" fill="#0A1E33" stroke="#D76082" stroke-width=".35"/>
+  <circle cx="94.15" cy="9.9" r=".5" fill="#D76082"/>
+  `;
+
+function card(side) {                       // одна сторона памятки
+  const c = document.createElement('div'); c.className = 'card';
+  if (side === 0) c.insertAdjacentHTML('beforeend', `<svg class="decor" viewBox="0 0 105 148" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${DECOR_FRONT}</svg>`);
+  const d = document.createElement('div'); d.className = 'drop'; c.appendChild(d);
+  for (const b of DATA['стороны'][side]) {
+    const u = document.createElement('section'); u.className = 'u' + (b['раздел'] ? ' blk' : '');
+    const body = document.createElement('div'); body.className = 'body'; body.innerHTML = sym(b.html);
+    u.appendChild(body); d.appendChild(u);
+  }
+  return c;
+}
+function marks(segs, dark, SW, SH) {        // метки реза: отрезок делится на части над тёмным фоном и над белым полем
+  const inDark = (x, y) => dark.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
+  let light = '', ink = '';
+  for (const [x1, y1, x2, y2] of segs) {
+    const ts = [0, 1], vert = x1 === x2;
+    for (const [a, b, c, d] of dark) for (const v of (vert ? [b, d] : [a, c])) {
+      const t = vert ? (v - y1) / (y2 - y1) : (v - x1) / (x2 - x1);
+      if (t > 0 && t < 1) ts.push(t);
+    }
+    ts.sort((p, q) => p - q);
+    const P = t => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+    for (let k = 0; k + 1 < ts.length; k++) {
+      if (ts[k + 1] - ts[k] < 1e-6) continue;
+      const [ax, ay] = P(ts[k]), [bx, by] = P(ts[k + 1]), [mx, my] = P((ts[k] + ts[k + 1]) / 2);
+      const d = `M${ax.toFixed(3)},${ay.toFixed(3)} L${bx.toFixed(3)},${by.toFixed(3)} `;
+      if (inDark(mx, my)) light += d; else ink += d;
+    }
+  }
+  const box = document.createElement('div');
+  box.innerHTML = `<svg class="marks" viewBox="0 0 ${SW} ${SH}" style="width:${SW}mm;height:${SH}mm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`
+    + `<path d="${ink}" stroke="#1A1A1A" stroke-width=".1" fill="none"/><path d="${light}" stroke="#FFFFFF" stroke-width=".1" fill="none"/></svg>`;
+  return box.firstChild;
+}
+function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
+function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
+
+function build(mode) {
+  document.body.className = mode;
+  document.getElementById('page-rule').textContent = mode === 'a6'
+    // 4,14 × 5,84 дюйма = 105,2 × 148,3 мм: Chrome всё равно округляет страницу вверх до сотых дюйма
+    // и не закрашивает остаток, поэтому просим округлённый размер сразу; памятка стоит в левом верхнем углу
+    ? '@page { size: 4.14in 5.84in; margin: 0; }'
+    : mode === 'a4' ? '@page { size: A4 landscape; margin: 0; }' : '@page { size: A4; margin: 0; }';
+  document.querySelectorAll('.bar button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+  document.getElementById('hint').textContent = HINT[mode];
+  const pages = document.getElementById('pages'); pages.innerHTML = '';
+  const W = 105, H = 148, B = 6;
+  for (const side of [0, 1]) {
+    const sh = div('sheet'); pages.appendChild(sh);
+    if (mode === 'a6') {
+      // фон с запасом 0,5 мм вправо и вниз: Chrome делает страницу PDF на 0,16 мм больше заказанной
+      sh.appendChild(place(div('bleed'), 0, 0, W + .5, H + .5));
+      sh.appendChild(place(card(side), 0, 0, W, H));
+      continue;
+    }
+    if (mode === 'a4x4') {
+      // A4 книжный без полей: четыре памятки встык, по вертикали по центру (запас 0,5 мм сверху и снизу).
+      // Фон — на весь лист: принтер без полей чуть растягивает картинку за край, белого края не будет.
+      // Раскладка симметрична — при двусторонней печати ничего не зеркалится.
+      const base = place(div('bleed'), 0, 0, 210, 297); base.style.background = 'var(--bg)'; sh.appendChild(base);
+      const y0 = (297 - 2 * H) / 2;
+      for (const [x, y] of [[0, y0], [W, y0], [0, y0 + H], [W, y0 + H]]) {
+        sh.appendChild(place(div('bleed'), x, y, W, H));                  // подсвет фона — у каждой памятки свой, как в размер
+        sh.appendChild(place(card(side), x, y, W, H));
+      }
+      if (side === 1) {
+        const cy = y0 + H, L = 10, A = 6;                                  // метки только на обороте
+        sh.appendChild(marks([
+          [W, 0, W, L], [W, 297 - L, W, 297],                               // вертикальный рез — у верхнего и нижнего края
+          [0, cy, L, cy], [210 - L, cy, 210, cy],                           // горизонтальный рез — у левого и правого края
+          [W - A, cy, W + A, cy], [W, cy - A, W, cy + A],                   // крестик в центре: оба реза
+        ], [[0, 0, 210, 297]], 210, 297));
+      }
+      continue;
+    }
+    // A4 альбомный: две памятки, выпуски встык, раскладка симметрична — при двусторонней печати ничего не зеркалится
+    const span = W + 2 * B + W, mx = (297 - span) / 2, my = (210 - H) / 2;
+    const xs = [mx, mx + W + 2 * B];                                   // левые линии реза памяток
+    const dark = [];
+    for (const x of xs) {
+      sh.appendChild(place(div('bleed'), x - B, my - B, W + 2 * B, H + 2 * B));
+      sh.appendChild(place(card(side), x, my, W, H));
+      dark.push([x - B, my - B, x + W + B, my + H + B]);
+    }
+    if (side === 1) {                                                   // метки реза — только на обороте
+      // Крестик в каждом углу, как у планшета: обе линии идут через угол наружу на 10 мм и внутрь
+      // вдоль кромки на 4 мм. Отрезали одну сторону — у соседних углов остаются части крестиков
+      // по перпендикулярным кромкам, по ним режется дальше.
+      const OUT = 10, IN = 4, segs = [];
+      for (const x of xs) for (const [cx, dx] of [[x, 1], [x + W, -1]]) for (const [cy, dy] of [[my, 1], [my + H, -1]]) {
+        segs.push([cx - dx * OUT, cy, cx + dx * IN, cy]);               // по горизонтальной линии реза
+        segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);               // по вертикальной линии реза
+      }
+      sh.appendChild(marks(segs, dark, 297, 210));
+    }
+  }
+  // проверка: текст не должен вылезать за поле
+  document.querySelectorAll('.card .drop').forEach(d => {
+    let bottom = d.getBoundingClientRect().top;
+    d.querySelectorAll(':scope > .u').forEach(u => bottom = Math.max(bottom, u.getBoundingClientRect().bottom));
+    const over = (bottom - d.getBoundingClientRect().bottom) / MM;
+    if (over > 0.2) { const w = div('warn'); w.textContent = `перебор ${over.toFixed(1)} мм`; d.closest('.sheet').appendChild(w); }
+  });
+}
+
+document.querySelectorAll('.bar button').forEach(b => b.addEventListener('click', () => { history.replaceState(null, '', '#' + b.dataset.mode); build(b.dataset.mode); }));
+document.fonts.ready.then(() => build(['#a4', '#a4x4'].includes(location.hash) ? location.hash.slice(1) : 'a6'));
+</script>
+</body>
+</html>

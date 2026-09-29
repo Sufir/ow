@@ -20,6 +20,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 ФАЙЛЫ = [
     'Faction-Card-A/Данные/*.json',          # планшеты фракций, COMP-F-01
     'Saved/Cards - Технологии и задачи.json', # карты задач и технологий, COMP-F-07/08
+    'Памятка.html',                           # памятка игрока, COMP-C-02: JSON в <script id="pamyatka-data">
 ]
 
 ЗАПРЕЩЕНО = {'«': 'ёлочка «', '»': 'ёлочка »', '„': 'лапка „', '"': 'прямая "'}
@@ -68,12 +69,21 @@ def проверить(данные, имя=''):
     return ошибки
 
 
+def _данные(p):
+    """JSON-файл — как есть; HTML-страница компонента — JSON из её <script type="application/json">."""
+    текст = io.open(p, encoding='utf-8').read()
+    if p.endswith('.html'):
+        блоки = re.findall(r'<script type="application/json"[^>]*>(.*?)</script>', текст, re.S)
+        return [json.loads(б) for б in блоки]
+    return json.loads(текст)
+
+
 def main():
     import glob
     пути = sys.argv[1:] or sorted(p for m in ФАЙЛЫ for p in glob.glob(os.path.join(ROOT, m)))
     всего = 0
     for p in пути:
-        ош = проверить(json.load(io.open(p, encoding='utf-8')), os.path.relpath(p, ROOT))
+        ош = проверить(_данные(p), os.path.relpath(p, ROOT))
         for строка in ош:
             print(строка)
         всего += len(ош)
