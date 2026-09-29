@@ -6,7 +6,3 @@
 удалить: print/petroleum-cards-preview.html
 удалить: print/clonaid-cards-preview.html
 удалить: print/Faction-Card-A/значок-способности-варианты-1.html
-удалить: print/Faction-Card-A/цифры-таблицы-варианты-1.html
-архив: print/Fonts/agencyfbcyrillic.ttf
-удалить: print/Faction-Card-A/цифры-таблицы-варианты-2.html
-удалить: print/Faction-Card-A/цифры-таблицы-варианты-3.html
