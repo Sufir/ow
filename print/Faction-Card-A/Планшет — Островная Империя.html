@@ -60,7 +60,7 @@
 -->
 <style>
 @font-face { font-family: "AlienEncounters";  src: url("../Fonts/AlienEncounters.ttf")  format("truetype"); }
-@font-face { font-family: "AgencyFBCyrillic"; src: url("../Fonts/agencyfbcyrillic.ttf") format("truetype"); }
+@font-face { font-family: "Rationale";        src: url("../Fonts/Rationale-Regular.ttf")  format("truetype"); }
 @font-face { font-family: "OpenGostTypeB";    src: url("../Fonts/OpenGostTypeB.ttf")    format("truetype"); }
 @font-face { font-family: "OilWars";          src: url("../Fonts/Oil Wars.ttf")         format("truetype"); }
 @font-face { font-family: "Liberation Sans"; src: url("../Fonts/LiberationSans-Regular.ttf")    format("truetype"); font-weight: 400; font-style: normal; }
@@ -118,7 +118,7 @@
                          /* 12,5 подобрано так, что высота прописных равна   */
                          /* высоте прописных Arial bold 10pt — как было      */
   --fs-body:      9pt;   /* весь основной текст                             */
-  --fs-stat:     18pt;   /* числа в таблице, AgencyFBCyrillic               */
+  --fs-stat:  19.65pt;   /* числа в таблице, Rationale: высота цифр как у прежнего Agency FB 18 pt */
   --fs-group:     8pt;   /* вертикальная подпись типа отрядов               */
   --fs-th:        9pt;   /* шапка таблицы, OpenGostTypeB прописными         */
   --lh:          1.22;   /* интерлиньяж основного текста                    */
@@ -333,7 +333,7 @@ body { font-family: "Liberation Sans", "Segoe UI", sans-serif; }
 .units-table td.u-icon img { width: 100%; object-fit: contain; display: block; }
 .units-table td.u-icon .noimg { display: flex; align-items: center; justify-content: center; font-size: 6pt; color: #7796AE; border: .2mm dashed #3A5772; }
 .unit-cap { font-size: var(--fs-body); line-height: 1.05; color: var(--cyan); text-align: center; margin-top: .6mm; }
-.stat { font-family: "AgencyFBCyrillic", "Liberation Sans", sans-serif; font-size: var(--fs-stat); font-weight: 700; text-align: center; color: #FFFFFF; }
+.stat { font-family: "Rationale", "Liberation Sans", sans-serif; font-size: var(--fs-stat); font-weight: 700; word-spacing: -.31pt; text-align: center; color: #FFFFFF; }
 .stat.count { color: var(--blue); }
 .stat.power { color: var(--pink); }
 .group-label { writing-mode: vertical-rl; text-orientation: mixed; font-size: var(--fs-group); color: var(--blue); text-align: center; white-space: nowrap; }

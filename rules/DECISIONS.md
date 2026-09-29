@@ -5919,3 +5919,77 @@ Faction Spellbook you receive, taken during the Doom Phase.
   (`COMP-C-13`), `rules/tasks/ПЛАН-КОМПОНЕНТЫ.md`
 - **Связанные:** `COMP-C-13`, `COMP-C-02`, `COMP-C-08`, `D-090`, `D-091`, `D-026`, `D-045`,
   `D-080`, `D-081`, `D-084`, `D-019`, `ICON-018`, `ICON-019`
+
+---
+
+## D-093 — Числа таблицы отрядов и таблицы кубика: Rationale вместо Agency FB
+
+- **Дата:** 2026-09-29
+- **Контекст:** Alek: Agency FB Cyrillic — коммерческий шрифт Font Bureau (1997)
+  с неофициальной кириллизацией Oryol-World Design, «All rights reserved», и лежит
+  в открытом репозитории. Нужна свободная замена; ею же набрать цифры таблицы
+  кубика на памятке битвы.
+
+### Итог в одну строку
+
+**Rationale** (Cyreal, SIL OFL 1.1) — числа таблицы отрядов на всех восьми планшетах
+и цифры таблицы кубика на памятке битвы. Файл — `print/Fonts/Rationale-Regular.ttf`.
+Высота цифр та же, что была; таблицы и строки не сдвинулись.
+
+### Как выбирали
+
+Alek смотрел три страницы вариантов на настоящих таблицах Островной Империи
+(«10/4») и Глобал Петролеума («n ± 1») и таблице кубика:
+
+1. **ГОСТ (OpenGost Type B/A)** — отвергнут: «слишком круглый». К тому же при той же
+   высоте цифр «10/4» и «n ± 1» не влезали в колонку 11,33 мм.
+2. **Agdasima** (OFL) — сделан как замена Agency FB, ширины знаков 1:1. «Хорош,
+   но кругловат».
+3. **Turret Road** (OFL) — «хороший, но слишком разнузданный, выбивается из дизайна».
+   К тому же широкий: влезал только с цифрами на 18 % ниже.
+4. Oswald, Roboto Condensed, Saira Extra Condensed, Agdasima Bold — смотрели,
+   не выбраны.
+5. **Rationale — «лучше всего смотрится».**
+
+### Параметры
+
+- Планшет: `--fs-stat` 18 pt → **19,65 pt** — высота цифр как у Agency FB 18 pt;
+  `word-spacing: -.31pt` — пробел в «n ± 1» той же ширины, что был. Полужирный,
+  как и у Agency FB, дорисовывает браузер (у шрифта одно начертание).
+- Самые широкие ячейки: «10/4» — 10,05 мм, «n ± 1» — 10,1 мм из 11,33. Высота всех
+  восьми таблиц и каждой строки та же; `Сборка.py` собирает планшеты байт в байт
+  как правленые.
+- Памятка битвы: `.dice .v` — Rationale 1,169 em, высота цифр та же, что была
+  у ГОСТа. Высота таблицы кубика и страниц та же; во всех трёх видах печати сдвинулись
+  только пиктограммы внутри строки кубика — по горизонтали, до 0,45 мм, потому что
+  цифры стали уже.
+- Кириллицы в Rationale нет — в этих местах она не нужна: цифры, n, +, −, /, «–».
+
+### Что сделано
+
+- `print/Fonts/Rationale-Regular.ttf` (Google Fonts, версия 1.011) и
+  `Rationale-OFL.txt`.
+- `Faction-Card-A/Шаблон.html` и восемь `Планшет — *.html`: `@font-face`,
+  `--fs-stat`, `.stat`.
+- `Памятка — битва.html`: `@font-face`, `.dice .v`.
+- Редактор карт: `@font-face` в `mini-cards/cards-landscape-sixes.css` и пункт
+  списка шрифтов в `MiniAmericanCardsLandscape.html` — Rationale вместо Agency FB.
+  Ни одна карта Agency FB не использовала.
+- `CLAUDE.md` §4, `components.yaml` (`COMP-C-13`, памятка битвы — `font_size`).
+- `print/Fonts/agencyfbcyrillic.ttf` — в очереди уборки на архив.
+
+### Что осталось
+
+- Мастера PDF планшетов и памятки битвы набраны прежними шрифтами; перевыкладывать —
+  когда комплект уйдёт в печать (README).
+- Снятое с работы (`Faction-Card-A.html`, `template.html`, `faction-card/`,
+  `variants.html`) ссылается на `agencyfbcyrillic.ttf`: после уборки эти страницы
+  останутся без шрифта цифр. Они не используются.
+- Agency FB остаётся в истории Git — чистить историю не просили.
+
+- **Результат:** `print/Fonts/Rationale-Regular.ttf`, `print/Fonts/Rationale-OFL.txt`,
+  `print/Faction-Card-A/Шаблон.html`, `print/Faction-Card-A/Планшет — *.html` (8),
+  `print/Памятка — битва.html`, `print/mini-cards/cards-landscape-sixes.css`,
+  `print/MiniAmericanCardsLandscape.html`, `CLAUDE.md`, `rules/registry/components.yaml`,
+  `rules/tools/cleanup-queue.txt`
+- **Связанные:** `D-091`, `D-092`
