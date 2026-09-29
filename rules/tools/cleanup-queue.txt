@@ -3,25 +3,6 @@
 #   удалить: путь   — точно мусор → удаляется насовсем (только новые файлы)
 # Выполненные строки стираются; то, что сделать отказались, остаётся.
 удалить: print/brotherhood-cards-preview.html
-удалить: _to_delete
 удалить: print/petroleum-cards-preview.html
 удалить: print/clonaid-cards-preview.html
-удалить: print/naa-cards-preview-1.html
-удалить: print/naa-cards-preview-2.html
 удалить: print/Faction-Card-A/значок-способности-варианты-1.html
-удалить: print/aircraft-cards-preview-1.html
-удалить: print/aircraft-cards-preview-2.html
-удалить: print/island-cards-preview-1.html
-удалить: print/island-cards-preview-2.html
-удалить: print/значок-задачи-варианты-1.html
-удалить: print/значок-задачи-варианты-2.html
-удалить: print/значок-задачи-варианты-3.html
-архив: print/значок-задачи-гекс-1.html
-удалить: print/памятка-preview-*.html
-архив: print/Fonts/arial*.ttf
-архив: print/Fonts/ARIALN*.TTF
-архив: print/Fonts/ariblk.ttf
-архив: art/fonts/ofont.ru_Arial*.ttf
-архив: art/fonts/arial.zip
-удалить: print/памятка-битвы-preview-*.html
-удалить: print/памятка-битвы-декор-варианты.html
