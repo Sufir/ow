@@ -5796,8 +5796,8 @@ Faction Spellbook you receive, taken during the Doom Phase.
 ### Что осталось
 
 - Файлы Arial (`print/Fonts/arial*.ttf`, `ARIALN*.TTF`, `ariblk.ttf`,
-  `art/fonts/ofont.ru_Arial*.ttf`, `arial.zip`) — в очереди уборки на архив: работе
-  не нужны, в Git им нельзя (лицензия Monotype).
+  `art/fonts/ofont.ru_Arial*.ttf`, `arial.zip`) — уборкой перенесены в архив, затем
+  удалены (разрешение Alek 29.09.2026): работе не нужны, в Git им нельзя (лицензия Monotype).
 - При следующем экспорте мастеров — `pdffonts`: встроен `LiberationSans`.
 
 - **Результат:** `print/Fonts/LiberationSans-*.ttf`, `print/Fonts/LiberationSans-OFL.txt`,
@@ -5976,7 +5976,7 @@ Alek смотрел три страницы вариантов на настоя
   списка шрифтов в `MiniAmericanCardsLandscape.html` — Rationale вместо Agency FB.
   Ни одна карта Agency FB не использовала.
 - `CLAUDE.md` §4, `components.yaml` (`COMP-C-13`, памятка битвы — `font_size`).
-- `print/Fonts/agencyfbcyrillic.ttf` — в очереди уборки на архив.
+- `print/Fonts/agencyfbcyrillic.ttf` — удалён (разрешение Alek 29.09.2026), в архив не ушёл.
 
 ### Что осталось
 
