@@ -5873,6 +5873,9 @@ Faction Spellbook you receive, taken during the Doom Phase.
    Post-Battle», «Third Party Effects occur in Turn Order»; BGG 1478298 — «followed by
    third parties in turn order». Памятка «Battle Player Aid Indepth V3» (BGG 3062789,
    `source/Cthulhu_Wars_-_Battle_-_Player_Aid_-_Indepth-V3.pdf`) порядка не задаёт.
+   В полном треде сборника (`source/Compilation of FAQs*.mhtml`) участник поправил раннюю
+   редакцию составителя — «I thought that was attacker first then defender, then other
+   factions (except for crawling chaos madness)», — и составитель её исправил. Возражений нет.
    Правило Alek: достоверного ответа нет — вариант А.
 2. **§7.3.6 — лимит двух битв абсолютный:** «третью битву подряд не открывает никакая
    способность» вместо «такая способность». FAQ, Energy Nexus: «You can only do 2 total
