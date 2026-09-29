@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Памятка битвы</title>
+<!--
+  Памятка битвы — отдельная памятка к COMP-C-02 (D-090: битва на основную не вошла). Чистовик, 29.09.2026.
+  A6, 105 × 148 мм, двусторонняя: сторона 1 — ход битвы, сторона 2 — отступление и особые случаи. Кегль текста 9 pt.
+  Оформление и печать — как у print/Памятка.html; отличия: таблица кубика, пиктограммы результатов,
+  воздух между разделами 2,2 / 1,8 мм вместо 2,8 / 2,2 (решение Alek, пробник 5).
+
+  Как устроено:
+    • текст — только в JSON ниже (<script id="pamyatka-data">), {R} — нефть,
+      {KILL} и {SUPPRESS} — пиктограммы смерти и подавления: print/dices/kill-simple-cut.png, retreat-simple-cut.png —
+      арт наклеек кубиков (kill-simple.png, retreat-simple.png, они же в мастере Dices Print Sheet.pdf) с вырезанным фоном;
+    • оформление — только в CSS этого файла;
+    • три вида печати: «В размер» — две страницы 105 × 148; «A4 ×2 с метками реза» — A4 альбомный, две памятки,
+      выпуск 6 мм, метки на обороте; «A4 ×4 без полей» — A4 книжный, четыре памятки встык.
+  Текст сверен с rules/RULEBOOK.md: 3.9, 7.3.6, 8.1–8.10, глоссарий. Пробники — print/памятка-битвы-preview-1…10.
+  Кавычки на компоненте — только “ ” (D-075). Проверка: python3 print/check_quotes.py.
+  Декор — вектор, цвета смешаны с фоном заранее. Сторона 1 — угловой, без боковой линии (DECOR_SIDE[0]),
+  сторона 2 — Д2 памятки игрока. Варианты стороны 1 — print/памятка-битвы-декор-варианты.html.
+-->
+<style>
+@font-face { font-family: "OpenGostTypeB"; src: url("Fonts/OpenGostTypeB.ttf") format("truetype"); }
+@font-face { font-family: "OilWars";       src: url("Fonts/Oil Wars.ttf")      format("truetype"); }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-Regular.ttf")    format("truetype"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-Bold.ttf")       format("truetype"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-Italic.ttf")     format("truetype"); font-weight: 400; font-style: italic; }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; }
+
+:root {
+  --w: 105mm;  --h: 148mm;    /* габарит памятки по линии реза */
+  --pad: 5mm;                 /* поле от линии реза до текста */
+  --bleed: 6mm;               /* выпуск под обрез в раскладке A4, как у планшета */
+  --fs: 9pt;                  /* кегль текста; ниже 9 не опускать */
+  --lh: 1.22;                 /* интерлиньяж как на планшете */
+  --ink:  #FFFFFF;            /* основной текст */
+  --cyan: #11C5FF;            /* заголовки разделов */
+  --num:  #9FE8FF;            /* номера, маркеры, названия фаз и действий */
+  --bg:   #08182B;            /* фон */
+  --rule: rgba(37,164,238,.40);
+  --pink: #EE688C;            /* разделитель разделов */
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #7A8794; font-family: "Liberation Sans", sans-serif; }
+
+/* ——— панель (только на экране) ——— */
+.bar { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: .3mm solid #999;
+       padding: 3mm 8mm; display: flex; gap: 2mm 6mm; align-items: center; flex-wrap: wrap; font-size: 10.5pt; }
+.bar .grp { display: flex; gap: 1.5mm; align-items: center; }
+.bar button { font: inherit; padding: 1.1mm 3mm; border: .3mm solid #555; background: #fff; cursor: pointer; }
+.bar button[aria-pressed="true"] { background: #111; color: #fff; border-color: #111; }
+.bar .hint { color: #444; }
+.warn { position: absolute; top: 1mm; left: 1mm; z-index: 5; background: #fff; color: #B3261E; padding: .5mm 1.5mm;
+        font: 700 9pt "Liberation Sans", sans-serif; }
+
+/* ——— листы ——— */
+.pages { padding: 8mm 0; display: flex; flex-direction: column; align-items: center; gap: 8mm; }
+.sheet { position: relative; background: #fff; overflow: hidden; box-shadow: 0 3mm 10mm rgba(0,0,0,.35);
+         break-after: page; page-break-after: always; }
+.sheet:last-child { break-after: auto; page-break-after: auto; }
+body.a6 .sheet { width: calc(var(--w) + .5mm); height: calc(var(--h) + .5mm); }
+body.a4 .sheet { width: 297mm; height: 210mm; }
+body.a4x4 .sheet { width: 210mm; height: 297mm; }
+
+/* ——— памятка ——— */
+.bleed { position: absolute;
+  background:
+    radial-gradient(70% 45% at 0% 0%,    rgba(37,164,238,.20) 0%, rgba(37,164,238,0) 72%),
+    radial-gradient(65% 40% at 100% 100%, rgba(17,197,255,.14) 0%, rgba(17,197,255,0) 70%),
+    var(--bg);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.card { position: absolute; width: var(--w); height: var(--h); padding: var(--pad); color: var(--ink); }
+.card .drop { position: relative; z-index: 1; height: 100%; }
+/* декор лицевой стороны: уголок «шкала и соты» и боковая линия с узлами — один вектор (вариант Д2, решение Alek 29.09.2026).
+   Координаты — миллиметры памятки от левого верхнего угла по линии реза. Цвета уже смешаны с фоном:
+   #0E83AE = #11C5FF при 0,62 (как уголок планшета), #154D72 = #1D6E9E при 0,62, #1A6FA4 = #25A4EE при 0,62,
+   #D76082 = #EE688C при 0,9. Полупрозрачный слой не используется — на печати он давал заметный прямоугольник. */
+/* декор угла (соты Д2, прицел, кубик, шевроны: x от 90,4 мм, y до 12,2 мм) стоит над правым краем первых строк: текст его обтекает */
+.decor-gap { float: right; width: 10.8mm; height: 7.4mm; }
+.decor { position: absolute; left: 0; top: 0; width: var(--w); height: var(--h); z-index: 0; pointer-events: none; overflow: visible; }
+
+/* ——— текст ——— */
+.u { position: relative; font-size: var(--fs); line-height: var(--lh); }
+.u + .u { margin-top: 1.2mm; }
+.u + .u:not(.blk) { margin-top: 0; }                         /* продолжение того же раздела */
+.drop > .u.blk:not(:first-child) { margin-top: 2.2mm; }      /* воздух перед новым разделом; у памятки игрока 2,8 */
+.drop > .u.blk:not(:first-child)::before {
+  content: ""; display: block; height: .3mm; margin: 0 0 1.8mm;   /* у памятки игрока 2,2 */
+  background: linear-gradient(to right, rgba(238,104,140,0), var(--pink), rgba(238,104,140,0));
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.body > :last-child, .body li:last-child { margin-bottom: 0; }
+.body h3 { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; color: var(--cyan);
+           font-size: calc(var(--fs) * 1.2); letter-spacing: .03em; text-transform: uppercase;
+           line-height: 1; margin: 0 0 1.4mm; }
+.body p { margin: 0 0 .5mm; }
+.body b { font-weight: 700; }
+.body .normal { font-weight: 400; }
+.body .center { text-align: center; }
+.body .nw { white-space: nowrap; }                             /* значок не отрывать от соседнего слова */
+/* таблица кубика: три результата в строку, между ними — тонкие разделители */
+.body .dice { display: flex; gap: 0; margin: 1mm 0 1.2mm; font-size: 1.12em; }
+.body .dice > span { flex: 1 1 auto; display: flex; align-items: center; gap: 1mm; justify-content: center;
+                     padding: .3mm 1mm; white-space: nowrap; line-height: 1.1; }
+.body .dice > span + span { border-left: .3mm solid var(--rule); }
+.body .dice .v { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; color: var(--num); font-size: 1.35em; }
+.pic { width: auto; height: 1.3em; vertical-align: -.32em; margin: -.3em .15em; }     /* пиктограмма в строке её не раздвигает */
+.body .dice .pic { height: 2em; vertical-align: middle; margin: 0; }
+.body .ph { display: flex; align-items: baseline; gap: 1.6mm; margin: .9mm 0 .35mm; }
+.body .ph .n { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; color: var(--num);
+               font-size: calc(var(--fs) * 1.35); line-height: .8; min-width: 2.6mm; }
+.body .ph .t { font-weight: 700; color: var(--num); }
+.body .ph .t .normal { color: var(--ink); }
+.body .dots { list-style: none; margin: 0 0 .7mm; padding: 0; }
+.body .dots li { position: relative; padding-left: 3mm; margin: 0 0 .15mm; }
+.body .dots li::before { content: ""; position: absolute; left: .4mm; top: .52em; width: 1.1mm; height: 1.1mm;
+                         background: var(--num); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.body .steps { counter-reset: st; list-style: none; margin: 0 0 .7mm; padding: 0; }
+.body .steps.from0 { counter-reset: st -1; }                  /* этап 0 — карта события особых фабрик */
+.body .steps li { counter-increment: st; position: relative; padding-left: 4.2mm; margin: 0 0 .25mm; }
+.body .steps li::before { content: counter(st) "."; position: absolute; left: 0; font-weight: 700; color: var(--num); }
+.body .acts > div { display: grid; grid-template-columns: 1fr auto; column-gap: 2mm;
+                    border-top: .3mm solid var(--rule); padding: .4mm 0 .45mm; }
+.body .acts > div:first-child { border-top: none; padding-top: 0; }
+.body .acts > div > b { color: var(--num); }
+.body .acts .cost { text-align: right; white-space: nowrap; font-weight: 700; }
+.body .acts .req  { grid-column: 1 / -1; }
+.sym { font-family: "OilWars", sans-serif; font-size: 1.22em; line-height: 0; vertical-align: -0.055em;
+       font-style: normal; font-weight: 400; font-synthesis: none; color: var(--cyan); }
+.sym.R { color: inherit; }                                   /* нефть — цветом текста (ICON-001) */
+
+/* ——— метки реза (оборот раскладок A4) ———
+   Крестики толщиной 0,1 мм: на белом поле — почти чёрные, на тёмном фоне — белые,
+   чтобы были видны везде, в том числе внутри, вдоль кромки памятки. */
+.marks { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+@media print {
+  html, body { background: #fff; }
+  .bar, .warn { display: none !important; }
+  .pages { padding: 0; gap: 0; display: block; }
+  .sheet { box-shadow: none; }
+}
+</style>
+<style id="page-rule">@page { size: 4.14in 5.84in; margin: 0; }</style>
+</head>
+<body class="a6">
+
+<div class="bar">
+  <div class="grp" role="group" aria-label="Вид печати">
+    <b>Печать:</b>
+    <button type="button" data-mode="a6" aria-pressed="true">В размер, 105 × 148</button>
+    <button type="button" data-mode="a4" aria-pressed="false">A4 ×2 с метками реза</button>
+    <button type="button" data-mode="a4x4" aria-pressed="false">A4 ×4 без полей</button>
+  </div>
+  <span class="hint" id="hint"></span>
+</div>
+
+<div class="pages" id="pages"></div>
+
+<script type="application/json" id="pamyatka-data">
+{
+  "компонент": "памятка битвы — запись в реестре при сдаче",
+  "формат": "A6, 105 × 148 мм, двусторонняя",
+  "кегль": "9pt",
+  "стороны": [
+    [
+      {
+        "раздел": true,
+        "html": "<h3>Битва</h3>\n<p>В битве всегда участвуют два игрока, всеми своими отрядами в регионе. <b>Атакующий</b> — тот, кто объявил битву, <b>защищающийся</b> — выбранный им противник.</p>"
+      },
+      {
+        "раздел": false,
+        "html": "<div class=\"ph\"><span class=\"n\">1</span><span class=\"t\">Тактическая подготовка</span></div>\n<p>Сначала атакующий, по желанию, применяет все доступные ему тактические эффекты, затем защищающийся.</p>"
+      },
+      {
+        "раздел": false,
+        "html": "<div class=\"ph\"><span class=\"n\">2</span><span class=\"t\">Сражение</span></div>\n<p>Каждая сторона бросает столько кубиков, какова суммарная боевая сила её отрядов в битве.</p>\n<p>В этот момент срабатывают эффекты “Битва. Сражение”.</p>"
+      },
+      {
+        "раздел": false,
+        "html": "<div class=\"ph\"><span class=\"n\">3</span><span class=\"t\">Финал, такт 1: <span class=\"normal\">назначение результатов</span></span></div>\n<p>Каждая сторона сама назначает своим отрядам результаты, выпавшие у противника. Одному отряду можно назначить не больше одного результата, лишние игнорируются.</p>\n<div class=\"dice\"><span><span class=\"v\">6</span>{KILL}смерть</span><span><span class=\"v\">4–5</span>{SUPPRESS}подавление</span><span><span class=\"v\">1–3</span>промах</span></div>\n<ol class=\"steps\"><li>Смерти и уничтожения назначаются одновременно.</li><li>Подавления — только отрядам без смерти и уничтожения.</li></ol>"
+      },
+      {
+        "раздел": false,
+        "html": "<p><b>Если несколько эффектов меняют тип результата,</b> то каждый срабатывает один раз, по группам: 1) говорящие о выброшенных результатах; 2) остальные, меняющие тип; 3) затем запущенные уже назначенным результатом.</p>"
+      },
+      {
+        "раздел": false,
+        "html": "<div class=\"ph\"><span class=\"n\">3</span><span class=\"t\">Финал, такт 2: <span class=\"normal\">применение результатов</span></span></div>\n<ol class=\"steps\"><li>Уничтоженные отряды одновременно уходят в резерв.</li><li>Затем так же убитые.</li><li>Затем подавленные отряды отступают.</li><li>Срабатывают эффекты после применения результатов.</li><li>Выдаётся технология, заработанная в этой битве.</li></ol>"
+      },
+      {
+        "раздел": true,
+        "html": "<p class=\"center\"><b>Если важен порядок: атакующий → защищающийся → фракции вне битвы по порядку хода.</b></p>"
+      }
+    ],
+    [
+      {
+        "раздел": true,
+        "html": "<h3>Смерть и уничтожение</h3>\n<p>Смерть — только выпавшая на боевом кубике 6.</p><p>Уничтожение — любое удаление с поля: убитый отряд уничтожен, но не всякий уничтоженный убит.</p><p>Эффект, срабатывающий через уничтожение, активируется и от смерти, но не наоборот.</p>"
+      },
+      {
+        "раздел": true,
+        "html": "<h3>Отступление</h3>\n<p>Подавленные отряды уходят в смежные регионы по выбору владельца, первым атакующий. Это не перемещение.</p>\n<ul class=\"dots\">\n<li>Нельзя в регион с отрядами фракции, с которой шла битва.</li>\n<li>Если некуда отступить, то владелец уничтожает один подавленный отряд, остальные остаются на месте.</li>\n<li>Пехотинец, отступивший или убитый, покидает фабрику.</li>\n</ul>"
+      },
+      {
+        "раздел": true,
+        "html": "<h3>Выбывшие отряды</h3>\n<p><b>Выведенный из битвы во время тактической подготовки</b> отряд не даёт силы, не получает результатов и своих эффектов больше не применяет. Если такой отряд остался в регионе, до конца битвы его не считают присутствующим; контроль над фабрикой за таким отрядом сохраняется.</p>\n<p><b>Убитый или уничтоженный в финале</b> отряд свои финальные эффекты применяет, задним числом они не отменяются.</p>"
+      },
+      {
+        "раздел": true,
+        "html": "<h3>Особые случаи</h3>\n<p><b>Битва окончена до бросков,</b> если у стороны не осталось в ней отрядов: кубики не бросают, способности не применяют, <span class=\"nw\">{R} не</span> возвращается. Пехотинец на фабрике — тоже отряд.</p>"
+      },
+      {
+        "раздел": false,
+        "html": "<p><b>Фракция вне битвы</b> вмешивается только финальным эффектом, в момент из его текста.</p>"
+      },
+      {
+        "раздел": false,
+        "html": "<p><b>Не больше двух битв подряд.</b> Если две битвы уже объявлены одна за другой, третью объявить нельзя никакими способностями. Свободной битвы в свой ход это не касается.</p>"
+      }
+    ]
+  ]
+}
+</script>
+
+<script>
+const DATA = JSON.parse(document.getElementById('pamyatka-data').textContent);
+const MM = 96 / 25.4;
+const HINT = {                                // подробности печати — print/ПЕЧАТЬ.md
+  a6: 'Две страницы 105 × 148 мм. Масштаб 100 %, поля — нет, фон — включить. Подробно — print/ПЕЧАТЬ.md.',
+  a4: 'A4 альбомный, две памятки, выпуск 6 мм; страница 1 — лицо, страница 2 — оборот с метками реза. Подробно — print/ПЕЧАТЬ.md.',
+  a4x4: 'A4 книжный, четыре памятки без полей — только для печати без полей; страница 1 — лицо, страница 2 — оборот с метками реза. Подробно — print/ПЕЧАТЬ.md.',
+};
+
+const PIC = { KILL: ['dices/kill-simple-cut.png', 'смерть', 351], SUPPRESS: ['dices/retreat-simple-cut.png', 'подавление', 315] };
+function sym(html) {                       // {R} → значок нефти, {Q} {W} {E} → символы регионов, {KILL} {SUPPRESS} → пиктограммы
+  return html.replace(/\{([RQWE])\}/g, (m, L) => `<span class="sym${L === 'R' ? ' R' : ''}">${L}</span>`)
+             .replace(/\{(KILL|SUPPRESS)\}/g, (m, k) => `<img class="pic" src="${PIC[k][0]}" width="${PIC[k][2]}" height="360" alt="${PIC[k][1]}">`);
+}
+const DECOR_D2 = `  <polyline points="58,2.4 98.8,2.4 102.8,6.4 102.8,144.5" stroke="#0E83AE" stroke-width=".45" fill="none"/>
+  <polyline points="80,3.9 98.2,3.9 101.3,7 101.3,13" stroke="#154D72" stroke-width=".3" fill="none"/>
+  <path d="M60,2.4 V1.2 M62,2.4 V1.2 M64,2.4 V1.2" stroke="#154D72" stroke-width=".3"/>
+    <rect x="66" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/><rect x="68.2" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/>
+    <rect x="70.4" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/><rect x="72.6" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/>
+    <rect x="74.8" y="3.3" width="1.6" height=".9" fill="#103F61"/><rect x="77" y="3.3" width="1.6" height=".9" fill="#0D2E49"/>
+  <path d="M83.6,6.6 L84.8,5.4 M85.2,6.6 L86.4,5.4 M86.8,6.6 L88,5.4 M88.4,6.6 L89.6,5.4" stroke="#154D72" stroke-width=".3"/>
+  <path d="M97.9,8.6 H101.3" stroke="#154D72" stroke-width=".3"/>
+  <polygon points="90.40,8.60 91.15,7.30 92.65,7.30 93.40,8.60 92.65,9.90 91.15,9.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/>
+  <polygon points="92.65,7.30 93.40,6.00 94.90,6.00 95.65,7.30 94.90,8.60 93.40,8.60" fill="#0A1E33" stroke="#154D72" stroke-width=".3"/>
+  <polygon points="94.90,8.60 95.65,7.30 97.15,7.30 97.90,8.60 97.15,9.90 95.65,9.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/>
+  <circle cx="91.9" cy="8.6" r=".45" fill="#0E83AE"/>
+  <circle cx="58" cy="2.4" r=".5" fill="#0E83AE"/>
+  <polygon points="102.8,24.20 103.65,24.90 103.65,27.10 102.8,27.80 101.95,27.10 101.95,24.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,25.65 H101.75 M101.25,26.35 H101.75 M103.85,25.65 H104.35 M103.85,26.35 H104.35" stroke="#0E83AE" stroke-width=".25"/><polygon points="102.8,46.20 103.65,46.90 103.65,49.10 102.8,49.80 101.95,49.10 101.95,46.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,47.65 H101.75 M101.25,48.35 H101.75 M103.85,47.65 H104.35 M103.85,48.35 H104.35" stroke="#0E83AE" stroke-width=".25"/><polygon points="102.8,68.20 103.65,68.90 103.65,71.10 102.8,71.80 101.95,71.10 101.95,68.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,69.65 H101.75 M101.25,70.35 H101.75 M103.85,69.65 H104.35 M103.85,70.35 H104.35" stroke="#0E83AE" stroke-width=".25"/><polygon points="102.8,90.20 103.65,90.90 103.65,93.10 102.8,93.80 101.95,93.10 101.95,90.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,91.65 H101.75 M101.25,92.35 H101.75 M103.85,91.65 H104.35 M103.85,92.35 H104.35" stroke="#0E83AE" stroke-width=".25"/><polygon points="102.8,112.20 103.65,112.90 103.65,115.10 102.8,115.80 101.95,115.10 101.95,112.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,113.65 H101.75 M101.25,114.35 H101.75 M103.85,113.65 H104.35 M103.85,114.35 H104.35" stroke="#0E83AE" stroke-width=".25"/><polygon points="102.8,134.20 103.65,134.90 103.65,137.10 102.8,137.80 101.95,137.10 101.95,134.90" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/><path d="M101.25,135.65 H101.75 M101.25,136.35 H101.75 M103.85,135.65 H104.35 M103.85,136.35 H104.35" stroke="#0E83AE" stroke-width=".25"/>
+  <circle cx="102.8" cy="144.5" r=".5" fill="#0E83AE"/>
+  <rect x="79.4" y="3.3" width="1.6" height=".9" fill="#D76082"/>
+  <polygon points="92.65,9.90 93.40,8.60 94.90,8.60 95.65,9.90 94.90,11.20 93.40,11.20" fill="#0A1E33" stroke="#D76082" stroke-width=".35"/>
+  <circle cx="94.15" cy="9.9" r=".5" fill="#D76082"/>
+  `;
+
+const DECORS = {
+  Д2: DECOR_D2,
+  У1: `  <polyline points="62,2.4 98.8,2.4 102.8,6.4 102.8,14" stroke="#0E83AE" stroke-width=".45" fill="none"/>
+  <circle cx="62" cy="2.4" r=".5" fill="#0E83AE"/><circle cx="102.8" cy="14" r=".5" fill="#0E83AE"/>
+  <path d="M64,2.4 V1.2 M66,2.4 V1.2 M68,2.4 V1.2" stroke="#154D72" stroke-width=".3"/>
+    <rect x="70" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/><rect x="72.2" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/>
+    <rect x="74.4" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/><rect x="76.6" y="3.3" width="1.6" height=".9" fill="#103F61"/>
+    <rect x="78.8" y="3.3" width="1.6" height=".9" fill="#0D2E49"/>
+  <polyline points="82,3.9 98.2,3.9 101.3,7 101.3,11" stroke="#154D72" stroke-width=".3" fill="none"/>
+  <path d="M94.4,4.2 V5.4 M94.4,11 V12.2 M90.6,8.2 H91.8 M97,8.2 H98.2" stroke="#154D72" stroke-width=".3"/>
+  <circle cx="94.4" cy="8.2" r="2.6" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/>
+  <circle cx="94.4" cy="8.2" r="1.15" fill="none" stroke="#D76082" stroke-width=".35"/>
+  <circle cx="94.4" cy="8.2" r=".35" fill="#D76082"/>
+`,   // Прицел
+  У2: `  <polyline points="62,2.4 98.8,2.4 102.8,6.4 102.8,14" stroke="#0E83AE" stroke-width=".45" fill="none"/>
+  <circle cx="62" cy="2.4" r=".5" fill="#0E83AE"/><circle cx="102.8" cy="14" r=".5" fill="#0E83AE"/>
+  <path d="M64,2.4 V1.2 M66,2.4 V1.2 M68,2.4 V1.2" stroke="#154D72" stroke-width=".3"/>
+    <rect x="70" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/><rect x="72.2" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/>
+    <rect x="74.4" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/><rect x="76.6" y="3.3" width="1.6" height=".9" fill="#103F61"/>
+    <rect x="78.8" y="3.3" width="1.6" height=".9" fill="#0D2E49"/>
+  <polyline points="82,3.9 98.2,3.9 101.3,7 101.3,11" stroke="#154D72" stroke-width=".3" fill="none"/>
+  <rect x="91.4" y="5.3" width="5.8" height="5.8" rx=".8" fill="#0A1E33" stroke="#0E83AE" stroke-width=".3"/>
+  <circle cx="93.1" cy="6.9" r=".42" fill="#0E83AE"/><circle cx="95.5" cy="6.9" r=".42" fill="#0E83AE"/>
+  <circle cx="93.1" cy="8.2" r=".42" fill="#0E83AE"/><circle cx="95.5" cy="8.2" r=".42" fill="#0E83AE"/>
+  <circle cx="93.1" cy="9.5" r=".42" fill="#0E83AE"/><circle cx="95.5" cy="9.5" r=".42" fill="#D76082"/>
+  <path d="M84.6,6.6 L85.8,5.4 M86.2,6.6 L87.4,5.4 M87.8,6.6 L89,5.4" stroke="#154D72" stroke-width=".3"/>
+`,   // Кубик
+  У3: `  <polyline points="62,2.4 98.8,2.4 102.8,6.4 102.8,14" stroke="#0E83AE" stroke-width=".45" fill="none"/>
+  <circle cx="62" cy="2.4" r=".5" fill="#0E83AE"/><circle cx="102.8" cy="14" r=".5" fill="#0E83AE"/>
+  <path d="M64,2.4 V1.2 M66,2.4 V1.2 M68,2.4 V1.2" stroke="#154D72" stroke-width=".3"/>
+    <rect x="70" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/><rect x="72.2" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/>
+    <rect x="74.4" y="3.3" width="1.6" height=".9" fill="#1A6FA4"/><rect x="76.6" y="3.3" width="1.6" height=".9" fill="#103F61"/>
+    <rect x="78.8" y="3.3" width="1.6" height=".9" fill="#0D2E49"/>
+  <polyline points="82,3.9 98.2,3.9 101.3,7 101.3,11" stroke="#154D72" stroke-width=".3" fill="none"/>
+  <polyline points="90.6,6.2 92.2,8.2 90.6,10.2" stroke="#154D72" stroke-width=".45" fill="none"/>
+  <polyline points="92.9,6.2 94.5,8.2 92.9,10.2" stroke="#0E83AE" stroke-width=".45" fill="none"/>
+  <polyline points="95.2,6.2 96.8,8.2 95.2,10.2" stroke="#D76082" stroke-width=".45" fill="none"/>
+  <path d="M97.9,8.2 H101.3" stroke="#154D72" stroke-width=".3"/>
+`,   // Шевроны
+};
+const DECOR_NAMES = { У1: 'Прицел', У2: 'Кубик', У3: 'Шевроны' };
+// сторона 1 — угловой декор без боковой линии (вариант выбирается), сторона 2 — Д2 памятки игрока
+const DECOR_SIDE = ['У1', 'Д2'];
+function card(side, decor = DECOR_SIDE[side]) {                       // одна сторона памятки
+  const c = document.createElement('div'); c.className = 'card';
+  c.insertAdjacentHTML('beforeend', `<svg class="decor" viewBox="0 0 105 148" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${DECORS[decor]}</svg>`);
+  const d = document.createElement('div'); d.className = 'drop'; c.appendChild(d);
+  for (const b of DATA['стороны'][side]) {
+    const u = document.createElement('section'); u.className = 'u' + (b['раздел'] ? ' blk' : '');
+    const body = document.createElement('div'); body.className = 'body'; body.innerHTML = sym(b.html);
+    u.appendChild(body); d.appendChild(u);
+  }
+  { const b0 = d.querySelector('.body'); b0.insertBefore(div('decor-gap'), b0.firstChild); }   // отступ под декор угла — внутри первого раздела
+  return c;
+}
+function marks(segs, dark, SW, SH) {        // метки реза: отрезок делится на части над тёмным фоном и над белым полем
+  const inDark = (x, y) => dark.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
+  let light = '', ink = '';
+  for (const [x1, y1, x2, y2] of segs) {
+    const ts = [0, 1], vert = x1 === x2;
+    for (const [a, b, c, d] of dark) for (const v of (vert ? [b, d] : [a, c])) {
+      const t = vert ? (v - y1) / (y2 - y1) : (v - x1) / (x2 - x1);
+      if (t > 0 && t < 1) ts.push(t);
+    }
+    ts.sort((p, q) => p - q);
+    const P = t => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+    for (let k = 0; k + 1 < ts.length; k++) {
+      if (ts[k + 1] - ts[k] < 1e-6) continue;
+      const [ax, ay] = P(ts[k]), [bx, by] = P(ts[k + 1]), [mx, my] = P((ts[k] + ts[k + 1]) / 2);
+      const d = `M${ax.toFixed(3)},${ay.toFixed(3)} L${bx.toFixed(3)},${by.toFixed(3)} `;
+      if (inDark(mx, my)) light += d; else ink += d;
+    }
+  }
+  const box = document.createElement('div');
+  box.innerHTML = `<svg class="marks" viewBox="0 0 ${SW} ${SH}" style="width:${SW}mm;height:${SH}mm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`
+    + `<path d="${ink}" stroke="#1A1A1A" stroke-width=".1" fill="none"/><path d="${light}" stroke="#FFFFFF" stroke-width=".1" fill="none"/></svg>`;
+  return box.firstChild;
+}
+function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
+function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
+
+function build(mode) {
+  document.body.className = mode;
+  document.getElementById('page-rule').textContent = mode === 'a6'
+    // 4,14 × 5,84 дюйма = 105,2 × 148,3 мм: Chrome всё равно округляет страницу вверх до сотых дюйма
+    // и не закрашивает остаток, поэтому просим округлённый размер сразу; памятка стоит в левом верхнем углу
+    ? '@page { size: 4.14in 5.84in; margin: 0; }'
+    : mode === 'a4' ? '@page { size: A4 landscape; margin: 0; }' : '@page { size: A4; margin: 0; }';
+  document.querySelectorAll('.bar button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+  document.getElementById('hint').textContent = HINT[mode];
+  const pages = document.getElementById('pages'); pages.innerHTML = '';
+  const W = 105, H = 148, B = 6;
+  for (const side of [0, 1]) {
+    const sh = div('sheet'); pages.appendChild(sh);
+    if (mode === 'a6') {
+      // фон с запасом 0,5 мм вправо и вниз: Chrome делает страницу PDF на 0,16 мм больше заказанной
+      sh.appendChild(place(div('bleed'), 0, 0, W + .5, H + .5));
+      sh.appendChild(place(card(side), 0, 0, W, H));
+      continue;
+    }
+    if (mode === 'a4x4') {
+      // A4 книжный без полей: четыре памятки встык, по вертикали по центру (запас 0,5 мм сверху и снизу).
+      // Фон — на весь лист: принтер без полей чуть растягивает картинку за край, белого края не будет.
+      // Раскладка симметрична — при двусторонней печати ничего не зеркалится.
+      const base = place(div('bleed'), 0, 0, 210, 297); base.style.background = 'var(--bg)'; sh.appendChild(base);
+      const y0 = (297 - 2 * H) / 2;
+      for (const [x, y] of [[0, y0], [W, y0], [0, y0 + H], [W, y0 + H]]) {
+        sh.appendChild(place(div('bleed'), x, y, W, H));                  // подсвет фона — у каждой памятки свой, как в размер
+        sh.appendChild(place(card(side), x, y, W, H));
+      }
+      if (side === 1) {
+        const cy = y0 + H, L = 10, A = 6;                                  // метки только на обороте
+        sh.appendChild(marks([
+          [W, 0, W, L], [W, 297 - L, W, 297],                               // вертикальный рез — у верхнего и нижнего края
+          [0, cy, L, cy], [210 - L, cy, 210, cy],                           // горизонтальный рез — у левого и правого края
+          [W - A, cy, W + A, cy], [W, cy - A, W, cy + A],                   // крестик в центре: оба реза
+        ], [[0, 0, 210, 297]], 210, 297));
+      }
+      continue;
+    }
+    // A4 альбомный: две памятки, выпуски встык, раскладка симметрична — при двусторонней печати ничего не зеркалится
+    const span = W + 2 * B + W, mx = (297 - span) / 2, my = (210 - H) / 2;
+    const xs = [mx, mx + W + 2 * B];                                   // левые линии реза памяток
+    const dark = [];
+    for (const x of xs) {
+      sh.appendChild(place(div('bleed'), x - B, my - B, W + 2 * B, H + 2 * B));
+      sh.appendChild(place(card(side), x, my, W, H));
+      dark.push([x - B, my - B, x + W + B, my + H + B]);
+    }
+    if (side === 1) {                                                   // метки реза — только на обороте
+      // Крестик в каждом углу, как у планшета: обе линии идут через угол наружу на 10 мм и внутрь
+      // вдоль кромки на 4 мм. Отрезали одну сторону — у соседних углов остаются части крестиков
+      // по перпендикулярным кромкам, по ним режется дальше.
+      const OUT = 10, IN = 4, segs = [];
+      for (const x of xs) for (const [cx, dx] of [[x, 1], [x + W, -1]]) for (const [cy, dy] of [[my, 1], [my + H, -1]]) {
+        segs.push([cx - dx * OUT, cy, cx + dx * IN, cy]);               // по горизонтальной линии реза
+        segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);               // по вертикальной линии реза
+      }
+      sh.appendChild(marks(segs, dark, 297, 210));
+    }
+  }
+  // проверка: текст не должен вылезать за поле
+  document.querySelectorAll('.card .drop').forEach(d => {
+    let bottom = d.getBoundingClientRect().top;
+    d.querySelectorAll(':scope > .u').forEach(u => bottom = Math.max(bottom, u.getBoundingClientRect().bottom));
+    const over = (bottom - d.getBoundingClientRect().bottom) / MM;
+    if (over > 0.2) { const w = div('warn'); w.textContent = `перебор ${over.toFixed(1)} мм`; d.closest('.sheet').appendChild(w); }
+  });
+}
+
+document.querySelectorAll('.bar button').forEach(b => b.addEventListener('click', () => { history.replaceState(null, '', '#' + b.dataset.mode); build(b.dataset.mode); }));
+Promise.all([document.fonts.ready, ...Object.values(PIC).map(([s]) => new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = s; }))]).then(() => build(['#a4', '#a4x4'].includes(location.hash) ? location.hash.slice(1) : 'a6'));
+</script>
+</body>
+</html>

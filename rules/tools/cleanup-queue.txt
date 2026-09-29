@@ -23,3 +23,5 @@
 архив: print/Fonts/ariblk.ttf
 архив: art/fonts/ofont.ru_Arial*.ttf
 архив: art/fonts/arial.zip
+удалить: print/памятка-битвы-preview-*.html
+удалить: print/памятка-битвы-декор-варианты.html

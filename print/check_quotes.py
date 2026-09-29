@@ -21,6 +21,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
     'Faction-Card-A/Данные/*.json',          # планшеты фракций, COMP-F-01
     'Saved/Cards - Технологии и задачи.json', # карты задач и технологий, COMP-F-07/08
     'Памятка.html',                           # памятка игрока, COMP-C-02: JSON в <script id="pamyatka-data">
+    'Памятка — битва.html',                   # памятка битвы: JSON в <script id="pamyatka-data">
 ]
 
 ЗАПРЕЩЕНО = {'«': 'ёлочка «', '»': 'ёлочка »', '„': 'лапка „', '"': 'прямая "'}
