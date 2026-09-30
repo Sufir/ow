@@ -77,6 +77,7 @@
 | `board/geo/world-*.geojson`, `board/geo/world-*.svg` | `board/tools/worldgeom.py all` | нет |
 | `board/geo/classic-base.*`, `board/geo/classic-base-report.md` | `board/tools/classic.py all` | нет |
 | `board/geo/board-MC-5P.geojson`, `.svg`, `.html` | `board/tools/slice5.py all` (проверка — `board/tools/boardcheck.py`) | нет |
+| `board/geo/board-MC-3P.*`, `board-MC-4P-A.*`, `board-MC-4P-B.*` — `.geojson`, `.svg`, `.html` | `board/tools/glue.py all`, после `slice5.py` (проверка — `board/tools/boardcheck.py`) | нет |
 | `board/sketch/` | `board/tools/sketch.py` | нет |
 | `rules/reports/16-components.md` | `rules/tools/components.py all` | нет |
 

@@ -186,3 +186,34 @@ python3 board/tools/boardcheck.py all --board board/geo/board-MC-5P.geojson   # 
 
 Зависимости — `numpy`, `shapely`, `scipy`, `pyyaml`. Файлы пишутся и при красной
 проверке (проба); код возврата 1, пока есть отказы. Отчёт — `rules/tasks/поле-1-report.md`.
+
+## Поля на троих и на четверых — `board-MC-3P.*`, `board-MC-4P-A.*`, `board-MC-4P-B.*`
+
+Склейка областей MC-5P (этап 2, `D-098`). Генератор — `board/tools/glue.py`. Своей
+геометрии у него нет: область стороны «3» — объединение областей MC-5P с `parent` = её id
+(`board/regions.yaml`), океаны, Антарктида и области стороны «5» — те же полигоны MC-5P
+до вершины (`SPEC-BOARD` §3.1, §3.2; сверяется при каждой сборке).
+
+| Полотно | Слева | Справа | Областей |
+|---|---|---|---:|
+| `board-MC-3P` | «3» | «3» | 13 |
+| `board-MC-4P-A` | «3» | «5» | 17 |
+| `board-MC-4P-B` | «5» | «3» | 17 |
+
+Файлы — как у MC-5P: `.geojson` — источник истины, `.svg` — картинка, `.html` — просмотр
+с графом, метриками, островами-декором, черновиком, контуром основы и склейкой краёв.
+Запись и отрисовка — общий модуль `board/tools/boardview.py`, им пользуются `slice5.py`
+и `glue.py`.
+
+Очертания правятся только выше по цепочке: контур материков — `classic.py`, деление
+стороны «5» — `slice5.py`. После любой правки пересобираются все четыре полотна:
+
+```
+python3 board/tools/classic.py all     # основа
+python3 board/tools/slice5.py all      # MC-5P
+python3 board/tools/glue.py all        # MC-3P, MC-4P-A, MC-4P-B; одно — glue.py all MC-3P
+python3 board/tools/boardcheck.py all --board board/geo/board-MC-3P.geojson   # только проверка
+```
+
+Файлы пишутся и при красной проверке; код возврата 1, если есть отказы.
+Отчёт — `rules/tasks/поле-2-report.md`.
