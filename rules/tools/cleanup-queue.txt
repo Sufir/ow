@@ -6,3 +6,4 @@
 удалить: print/petroleum-cards-preview.html
 удалить: print/clonaid-cards-preview.html
 удалить: print/Faction-Card-A/значок-способности-варианты-1.html
+удалить: print/энграммы-preview-*.html

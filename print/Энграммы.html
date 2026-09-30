@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Энграммы</title>
+<!--
+  Карты энграмм — COMP-V-13, вариант «Лаборатория и энграммы» (RULEBOOK §11.5). Чистовик, 30.09.2026.
+  Восемь карт, по одной на фракцию: по ней игрок водит свои четыре энграммы до конца партии.
+  Tarot 70 × 120 мм, двусторонняя, кегль текста 8 pt; движок и оформление — копия print/Контроль сети.html (D-094).
+    лицевая — таблица отряда (энграмма, пехотинец, 4 / 0 / 0), “Извлечение сознания”, “Ограничения энграмм”;
+    оборот — “Энграмма — пехотинец”, “Перепрошивка”, “Предел”.
+  У семи фракций текст один; у Moon Systems свой: у фракции нет пехотинцев, энграммы она делает из андроидов,
+  а первую получает перепрошивкой (оригинал: FAQ Bubastis «can Earth Cats be turned into Brain Cylinders? — Yes»).
+  Стоимость 0 и сила 0 — по оригиналу (Yuggoth, Brain Cylinders: «0 Combat… for all game purposes their cost is 0»).
+  Пробники — print/энграммы-preview-1…5.
+
+  Как устроено:
+    • текст — только в JSON ниже (<script id="card-data">): общий и отдельный для Moon Systems; оформление — только в CSS;
+    • энграмма — вырезка из общего листа acrylic/03 (SVG viewBox по «рамке» фракции), логотип — art/logos, как на планшете;
+    • таблица отряда — как .units-table планшета и “Контроля сети”: шапка OpenGostTypeB, числа Rationale;
+    • два вида печати: «В размер» — 16 страниц 70 × 120, лицо и оборот каждой фракции подряд;
+      «A4 с метками реза» — 4 страницы A4 книжных, по четыре карты с выпуском 6 мм; оборот зеркален по столбцам
+      под двустороннюю печать с переворотом по длинному краю, метки реза (крестики) — на обороте.
+  Шрифты: Liberation Sans — текст (D-091), Rationale — числа таблицы (D-093), OpenGostTypeB — заголовки,
+  Oil Wars — значок нефти {R} (ICON-001). Кавычки — только “ ” (D-075). Проверка: python3 print/check_quotes.py.
+-->
+<style>
+@font-face { font-family: "OpenGostTypeB"; src: url("Fonts/OpenGostTypeB.ttf") format("truetype"); }
+@font-face { font-family: "Rationale";     src: url("Fonts/Rationale-Regular.ttf") format("truetype"); }
+@font-face { font-family: "OilWars";       src: url("Fonts/Oil Wars.ttf")      format("truetype"); }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-Regular.ttf")    format("truetype"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-Bold.ttf")       format("truetype"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-Italic.ttf")     format("truetype"); font-weight: 400; font-style: italic; }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; }
+
+:root {
+  --w: 70mm;  --h: 120mm;     /* Tarot, по линии реза */
+  --pad: 3.2mm;               /* поле от линии реза до текста */
+  --fs: 8pt;                  /* кегль текста */
+  --lh: 1.2;
+  --gap: 1.2mm;               /* наименьший воздух между разделами; свободное место делится поровну (см. .body) */
+  --ink:  #FFFFFF;
+  --cyan: #11C5FF;            /* заголовки разделов, подпись отряда */
+  --blue: #25A4EE;            /* шапка таблицы, количество — как на планшете */
+  --num:  #9FE8FF;            /* номера и маркеры списков */
+  --bg:   #08182B;
+  --rule: rgba(37,164,238,.40);
+  --pink: #EE688C;            /* сила, разделители разделов */
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #7A8794; font-family: "Liberation Sans", sans-serif; }
+
+/* ——— панель (только на экране) ——— */
+.bar { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: .3mm solid #999;
+       padding: 3mm 8mm; display: flex; gap: 2mm 6mm; align-items: center; flex-wrap: wrap; font-size: 10.5pt; }
+.bar .grp { display: flex; gap: 1.5mm; align-items: center; }
+.bar button { font: inherit; padding: 1.1mm 3mm; border: .3mm solid #555; background: #fff; cursor: pointer; }
+.bar button[aria-pressed="true"] { background: #111; color: #fff; border-color: #111; }
+.bar .hint { color: #444; }
+.warn { position: absolute; top: 1mm; left: 1mm; z-index: 5; background: #fff; color: #B3261E; padding: .5mm 1.5mm;
+        font: 700 9pt "Liberation Sans", sans-serif; }
+
+/* ——— листы ——— */
+.pages { padding: 8mm 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8mm; }
+body.a4 .pages { flex-direction: column; align-items: center; flex-wrap: nowrap; }
+.sheet { position: relative; background: #fff; overflow: hidden; box-shadow: 0 3mm 10mm rgba(0,0,0,.35);
+         break-after: page; page-break-after: always; }
+.sheet:last-child { break-after: auto; page-break-after: auto; }
+body.size .sheet { width: calc(var(--w) + .5mm); height: calc(var(--h) + .5mm); }
+body.a4 .sheet { width: 210mm; height: 297mm; }
+
+/* ——— карта ——— */
+.bleed { position: absolute;
+  background:
+    radial-gradient(70% 45% at 0% 0%,    rgba(37,164,238,.20) 0%, rgba(37,164,238,0) 72%),
+    radial-gradient(65% 40% at 100% 100%, rgba(17,197,255,.14) 0%, rgba(17,197,255,0) 70%),
+    var(--bg);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.card { position: absolute; width: var(--w); height: var(--h); padding: var(--pad); color: var(--ink);
+        display: flex; flex-direction: column; }
+
+/* шапка: название слева, логотип фракции справа */
+.head { display: flex; align-items: center; justify-content: space-between; gap: 2mm; margin-bottom: 1.2mm; min-height: 7mm; }
+.head .t { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; font-size: 13pt; letter-spacing: .04em;
+           text-transform: uppercase; line-height: 1; }
+.head .logo { height: 7mm; width: auto; display: block; }
+.rule0 { border-top: .3mm solid var(--rule); margin: .2mm 0 1.3mm; }
+.rule0.over-table { margin-bottom: 1.1mm; }
+
+/* энграмма — вырезка из общего листа acrylic/03 */
+.fig { display: block; }
+.fig svg { display: block; height: 100%; width: auto; margin: 0 auto; overflow: hidden; }
+
+/* таблица отряда — как на планшете (Faction-Card-A/Шаблон.html, .units-table) и на “Контроле сети” */
+.units-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 0 0 1.2mm; flex: 0 0 auto; }
+.units-table th { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-size: var(--fs); font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--blue); text-align: center; padding: 0 0 .7mm; border-bottom: .3mm solid var(--rule); }
+.units-table td { padding: .7mm 0 .3mm; vertical-align: middle; }
+.units-table td.u-icon { text-align: center; }
+.units-table td.u-icon .fig { height: 12mm; }
+.unit-cap { font-size: var(--fs); line-height: 1.05; color: var(--cyan); text-align: center; margin-top: .4mm; }
+.ustat { font-family: "Rationale", "Liberation Sans", sans-serif; font-size: 17.5pt; font-weight: 700; word-spacing: -.31pt;
+         text-align: center; color: #FFFFFF; line-height: 1; }
+.ustat.count { color: var(--blue); }
+.ustat.power { color: var(--pink); }
+.group-label { writing-mode: vertical-rl; text-orientation: mixed; font-size: calc(var(--fs) * .8); line-height: 1; color: var(--blue);
+               text-align: center; white-space: nowrap; }
+
+/* текст */
+.body { font-size: var(--fs); line-height: var(--lh); flex: 1 1 auto; display: flex; flex-direction: column; justify-content: space-between; }
+/* Свободное место делится поровну: над первым разделом, между разделами и под последним (как на “Контроле сети”) */
+.body::before, .body::after { content: ""; display: block; flex: 0 0 0; }
+.body h3 { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; color: var(--cyan);
+           font-size: calc(var(--fs) * 1.2); letter-spacing: .03em; text-transform: uppercase; line-height: 1; margin: 0 0 1mm; }
+.body .sep { flex: 0 0 auto; height: .3mm; margin: calc(var(--gap) / 2) 0;
+  background: linear-gradient(to right, rgba(238,104,140,0), var(--pink), rgba(238,104,140,0));
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.body p { margin: 0 0 .5mm; }
+.body b { font-weight: 700; }
+.body .dots { list-style: none; margin: 0; padding: 0; }
+.body .dots li { position: relative; padding-left: 2.6mm; margin: 0 0 .35mm; }
+.body .dots li::before { content: ""; position: absolute; left: .2mm; top: .5em; width: 1mm; height: 1mm; background: var(--num);
+                         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.body .steps { counter-reset: st; list-style: none; margin: 0; padding: 0; }
+.body .steps li { counter-increment: st; position: relative; padding-left: 3.4mm; margin: 0 0 .35mm; }
+.body .steps li::before { content: counter(st) "."; position: absolute; left: 0; font-weight: 700; color: var(--num); }
+/* значок нефти (ICON-001): вплотную к числу, цветом текста, строку не раздвигает */
+.sym { font-family: "OilWars", sans-serif; font-size: 1.22em; line-height: 0; vertical-align: -0.055em;
+       font-style: normal; font-weight: 400; font-synthesis: none; color: inherit; }
+
+/* ——— метки реза (оборот раскладки A4) ——— */
+.marks { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+@media print {
+  html, body { background: #fff; }
+  .bar, .warn { display: none !important; }
+  .pages { padding: 0; gap: 0; display: block; }
+  .sheet { box-shadow: none; }
+}
+</style>
+<style id="page-rule">@page { size: 2.76in 4.73in; margin: 0; }</style>
+</head>
+<body class="size">
+
+<div class="bar">
+  <div class="grp" role="group" aria-label="Вид печати">
+    <b>Печать:</b>
+    <button type="button" data-mode="size" aria-pressed="true">В размер, 70 × 120</button>
+    <button type="button" data-mode="a4" aria-pressed="false">A4 с метками реза</button>
+  </div>
+  <span class="hint" id="hint"></span>
+</div>
+
+<div class="pages" id="pages"></div>
+
+<script type="application/json" id="card-data">
+{
+  "компонент": "COMP-V-13, карты энграмм",
+  "формат": "Tarot 70 × 120 мм, двусторонняя, 8 шт. (по одной на фракцию)",
+  "кегль": "8pt",
+  "лист энграмм": "../acrylic/03. Энграммы - 8x4шт - ↕️20мм.png",
+  "папка логотипов": "../art/logos/",
+  "таблица": { "количество": "4", "стоимость": "0", "сила": "0" },
+  "фракции": [
+    { "название": "Островная Империя",         "рамка": [138,   8, 232, 484] },
+    { "название": "Эйркрафт Корпорейшн",       "рамка": [490,   8, 222, 484] },
+    { "название": "Глобал Петролеум",          "рамка": [820,   8, 228, 484] },
+    { "название": "Братство Сингулярности",    "рамка": [1180,  8, 222, 484] },
+    { "название": "Клонэйд Ресёрч",            "рамка": [130, 496, 280, 498] },
+    { "название": "Moon Systems",              "рамка": [489, 496, 224, 498], "текст": "Moon Systems" },
+    { "название": "Сайнтифик Солюшн",          "рамка": [822, 496, 247, 498] },
+    { "название": "Североамериканский Альянс", "рамка": [1176, 496, 241, 498] }
+  ],
+  "текст": {
+    "общий": [
+      "<section><h3>Извлечение сознания</h3><p>Доступно тому, кто контролирует фабрику в регионе с Лабораторией.</p><p><b>В качестве действия (1{R}):</b> уничтожьте до четырёх своих пехотинцев в игре и замените их таким же числом энграмм точно в тех же регионах.</p><p>Энграмма, заменившая пехотинца на фабрике, сразу занимает его место и снова берёт фабрику под контроль.</p></section><section><h3>Ограничения энграмм</h3><ol class=\"steps\"><li>Нельзя завербовать. На поле выводится только “Извлечением сознания” и перепрошивкой.</li><li>Не перемещается сама. Другой ваш отряд, перемещаясь из её региона, берёт с собой любое число энграмм без дополнительной платы.</li><li>Нельзя назначить подавление, и способности не заставляют её отступать. Не мешает вражеским отрядам отступать в её регион.</li></ol></section>",
+      "<section><h3>Энграмма — пехотинец</h3><ul class=\"dots\"><li>Выполняет любые действия, кроме перемещения.</li><li>Приносит 1{R} в фазу получения ресурсов.</li><li>Строит фабрики, берёт их под контроль и покидает их.</li><li>Позволяет вербовать пехотинцев в своём регионе.</li><li>Служит целью любых эффектов на пехотинцев, но не на рекрутов.</li></ul></section><section><h3>Перепрошивка</h3><p>Захватив энграмму, вы можете вместо обычного пленения перепрошить её. Поставьте на её место свою энграмму из резерва. Захваченная энграмма возвращается в резерв владельца.</p><p>Перепрошивка считается захватом для задач, технологий и способностей.</p></section><section><h3>Предел</h3><p>Если у вас в игре уже четыре энграммы, захваченную перепрошить нельзя: она ложится на ваш планшет, как обычный захваченный пехотинец.</p></section>"
+    ],
+    "Moon Systems": [
+      "<section><h3>Извлечение сознания</h3><p>Доступно тому, кто контролирует фабрику в регионе с Лабораторией.</p><p><b>В качестве действия (1{R}):</b> уничтожьте до четырёх своих андроидов в игре и замените их таким же числом энграмм точно в тех же регионах.</p><p>Андроиды не контролируют фабрики: первую энграмму вы получите только перепрошивкой.</p></section><section><h3>Ограничения энграмм</h3><ol class=\"steps\"><li>Нельзя завербовать. На поле выводится только “Извлечением сознания” и перепрошивкой.</li><li>Не перемещается сама. Другой ваш отряд, перемещаясь из её региона, берёт с собой любое число энграмм без дополнительной платы.</li><li>Нельзя назначить подавление, и способности не заставляют её отступать. Не мешает вражеским отрядам отступать в её регион.</li></ol></section>",
+      "<section><h3>Энграмма — пехотинец</h3><ul class=\"dots\"><li>Выполняет любые действия, кроме перемещения.</li><li>Приносит 1{R} в фазу получения ресурсов.</li><li>Строит фабрики, берёт их под контроль и покидает их.</li><li>Позволяет вербовать пехотинцев в своём регионе.</li><li>Служит целью любых эффектов на пехотинцев, но не на рекрутов.</li><li>В отличие от андроидов, её можно захватить.</li></ul></section><section><h3>Перепрошивка</h3><p>Захватив энграмму, вы можете вместо обычного пленения перепрошить её. Поставьте на её место свою энграмму из резерва. Захваченная энграмма возвращается в резерв владельца.</p><p>Перепрошивка считается захватом для задач, технологий и способностей.</p></section><section><h3>Предел</h3><p>Если у вас в игре уже четыре энграммы, захваченную перепрошить нельзя: она ложится на ваш планшет, как обычный захваченный пехотинец.</p></section>"
+    ]
+  }
+}
+</script>
+
+<script>
+const DATA = JSON.parse(document.getElementById('card-data').textContent);
+const MM = 96 / 25.4;
+const SHEET = encodeURI(DATA['лист энграмм']);
+const FR = DATA['фракции'];
+const HINT = {                                // подробности печати — print/ПЕЧАТЬ.md
+  size: '16 страниц 70 × 120 мм: лицо и оборот каждой фракции подряд. Масштаб 100 %, поля — нет, фон — включить, двусторонняя.',
+  a4: 'A4 книжный, 4 страницы: по четыре карты с выпуском 6 мм; оборот зеркален по столбцам — двусторонняя с переворотом по длинному краю. Метки реза на обороте. Подробно — print/ПЕЧАТЬ.md.',
+};
+function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
+function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
+function sym(html) { return html.replace(/\{R\}/g, '<span class="sym">R</span>'); }
+function fig(f) {                             // энграмма фракции: рамка на общем листе → viewBox
+  const [x, y, w, h] = FR[f]['рамка'];
+  return `<span class="fig"><svg viewBox="${x} ${y} ${w} ${h}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`
+    + `<image href="${SHEET}" x="0" y="0" width="1536" height="1024"/></svg></span>`;
+}
+function logo(f) { return encodeURI(DATA['папка логотипов'] + FR[f]['название'] + '.png'); }
+function table(f) {                           // таблица отряда — как .units-table планшета
+  const t = DATA['таблица'];
+  return `<table class="units-table"><colgroup><col style="width:24mm"><col style="width:6mm"><col><col><col></colgroup>
+    <thead><tr><th>Отряд</th><th></th><th>Кол-во</th><th>Стоим.</th><th>Сила</th></tr></thead>
+    <tbody><tr><td class="u-icon">${fig(f)}<div class="unit-cap">Энграмма</div></td><td class="group-label">Пехотинец</td>
+      <td class="ustat count">${t['количество']}</td><td class="ustat">${t['стоимость']}</td><td class="ustat power">${t['сила']}</td></tr></tbody></table>`;
+}
+function card(f, side) {                      // одна сторона карты фракции f
+  const c = div('card');
+  const html = sym(DATA['текст'][FR[f]['текст'] || 'общий'][side]);
+  c.innerHTML = `<div class="head"><span class="t">Энграммы</span><img class="logo" src="${logo(f)}" alt=""></div>
+    ${side === 0 ? '<div class="rule0 over-table"></div>' + table(f) : '<div class="rule0"></div>'}<div class="body">${html}</div>`;
+  c.querySelectorAll('.body > section + section').forEach(x => x.before(div('sep')));
+  return c;
+}
+function marks(segs, dark, SW, SH) {          // метки реза: части над тёмным фоном — светлые, над белым полем — тёмные
+  const inDark = (x, y) => dark.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
+  let light = '', ink = '';
+  for (const [x1, y1, x2, y2] of segs) {
+    const ts = [0, 1], vert = x1 === x2;
+    for (const [a, b, c, d] of dark) for (const v of (vert ? [b, d] : [a, c])) {
+      const t = vert ? (v - y1) / (y2 - y1) : (v - x1) / (x2 - x1);
+      if (t > 0 && t < 1) ts.push(t);
+    }
+    ts.sort((p, q) => p - q);
+    const P = t => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+    for (let k = 0; k + 1 < ts.length; k++) {
+      if (ts[k + 1] - ts[k] < 1e-6) continue;
+      const [ax, ay] = P(ts[k]), [bx, by] = P(ts[k + 1]), [mx, my] = P((ts[k] + ts[k + 1]) / 2);
+      const d = `M${ax.toFixed(3)},${ay.toFixed(3)} L${bx.toFixed(3)},${by.toFixed(3)} `;
+      if (inDark(mx, my)) light += d; else ink += d;
+    }
+  }
+  const box = document.createElement('div');
+  box.innerHTML = `<svg class="marks" viewBox="0 0 ${SW} ${SH}" style="width:${SW}mm;height:${SH}mm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`
+    + `<path d="${ink}" stroke="#1A1A1A" stroke-width=".1" fill="none"/><path d="${light}" stroke="#FFFFFF" stroke-width=".1" fill="none"/></svg>`;
+  return box.firstChild;
+}
+
+function build(mode) {
+  document.body.className = mode;
+  document.getElementById('page-rule').textContent = mode === 'size'
+    // 2,76 × 4,73 дюйма = 70,1 × 120,1 мм: Chrome округляет страницу вверх до сотых дюйма и не закрашивает остаток,
+    // поэтому просим округлённый размер сразу; карта стоит в левом верхнем углу, фон — с запасом 0,5 мм
+    ? '@page { size: 2.76in 4.73in; margin: 0; }'
+    : '@page { size: A4; margin: 0; }';
+  document.querySelectorAll('.bar button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+  document.getElementById('hint').textContent = HINT[mode];
+  const pages = document.getElementById('pages'); pages.innerHTML = '';
+  const W = 70, H = 120, B = 6;
+  if (mode === 'size') {
+    FR.forEach((_, f) => { for (const side of [0, 1]) {
+      const sh = div('sheet'); pages.appendChild(sh);
+      sh.appendChild(place(div('bleed'), 0, 0, W + .5, H + .5));
+      sh.appendChild(place(card(f, side), 0, 0, W, H));
+    } });
+  } else {
+    // A4 книжный: 2 × 2 карты, выпуски встык, блок по центру листа. На обороте столбцы меняются местами:
+    // при перевороте по длинному краю левый столбец лица ложится на правый столбец оборота.
+    const cw = W + 2 * B, ch = H + 2 * B, x0 = (210 - 2 * cw) / 2, y0 = (297 - 2 * ch) / 2;
+    for (let g = 0; g < FR.length; g += 4) for (const side of [0, 1]) {
+      const sh = div('sheet'); pages.appendChild(sh);
+      const segs = [], dark = [];
+      for (let k = 0; k < 4 && g + k < FR.length; k++) {
+        const col = side === 0 ? k % 2 : 1 - k % 2, row = Math.floor(k / 2);
+        const x = x0 + col * cw + B, y = y0 + row * ch + B;
+        sh.appendChild(place(div('bleed'), x - B, y - B, cw, ch));
+        sh.appendChild(place(card(g + k, side), x, y, W, H));
+        dark.push([x - B, y - B, x + W + B, y + H + B]);
+        // крестик в каждом углу: обе линии идут через угол наружу на 10 мм и внутрь вдоль кромки на 4 мм
+        const OUT = 10, IN = 4;
+        for (const [cx, dx] of [[x, 1], [x + W, -1]]) for (const [cy, dy] of [[y, 1], [y + H, -1]]) {
+          segs.push([cx - dx * OUT, cy, cx + dx * IN, cy]);
+          segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);
+        }
+      }
+      if (side === 1) sh.appendChild(marks(segs, dark, 210, 297));         // метки реза — только на обороте
+    }
+  }
+  // проверка: текст не должен вылезать за поле; мерить после загрузки шрифтов @font-face
+  document.fonts.ready.then(() => requestAnimationFrame(() => document.querySelectorAll('div.card').forEach(c => {
+    const b = c.querySelector('.body'), last = b.lastElementChild;
+    const over = (last.getBoundingClientRect().bottom - (c.getBoundingClientRect().bottom - parseFloat(getComputedStyle(c).paddingBottom))) / MM;
+    if (over > 0.2) { const w = div('warn'); w.textContent = `перебор ${over.toFixed(1)} мм`; c.closest('.sheet').appendChild(w); }
+  })));
+}
+
+document.querySelectorAll('.bar button').forEach(b => b.addEventListener('click', () => { history.replaceState(null, '', '#' + b.dataset.mode); build(b.dataset.mode); }));
+Promise.all([document.fonts.ready, new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = SHEET; })])
+  .then(() => build(location.hash === '#a4' ? 'a4' : 'size'));
+</script>
+</body>
+</html>
