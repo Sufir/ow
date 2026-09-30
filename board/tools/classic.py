@@ -325,6 +325,9 @@ SMOOTH = [('europe', SMOOTH_EU, box(-10, -10, 900, 600)),
           ('north_america', 2.0, box(-10, -10, 400, 92)),       # север Америки: архипелаг не пестрит (Alek)
           ('asia', 1.2, box(700, -10, 900, 600)),               # Азия восточнее Ирана: берег ровнее, как у остальных
           ('australia', 3.0, box(-10, -10, 900, 600))]          # Австралия: рамка тянет её по вертикали в 1,7 раза — зубцы в иглы (Alek)
+ARCTIC_NUDGE = [box(278, 48, 334, 92), box(230, 20, 290, 45)]   # мм карты: Баффинова земля, Элсмир
+ARC_GAP, ARC_MAX = 4.0, 6.0      # мм: пролив до соседней суши после сдвига; сдвиг не больше
+ASIA_DECOR_KEEP = box(840, 160, 890, 225)   # мм карты: Япония — единственный декор Азии
 CAPE_WIN = box(138, 280, 192, 352)   # мм карты: мыс Йорк
 CAPE_CLOSE, CAPE_OPEN, CAPE_TRIM = 10.0, 5.0, 6.0   # мм: углы у основания заполнить, кончик тоньше 10 мм срезать, верх на 6 мм ниже
 SMOOTH_KEEP = U([box(540, 170, 575, 200),      # Босфор и Дарданеллы: Чёрное море остаётся озером
@@ -349,6 +352,9 @@ CORRECTIONS = [
     ('Юго-Восточная Азия', 'острова южнее 10° с. ш. (Суматра, Калимантан, Сулавеси, Ява) — декор, хвост Малакки срезан по 10°', 'рамка Южной Азии тянет их по вертикали вдвое с лишним: «огрызки» (Alek)'),
     ('Австралия', 'рамка уже на 12 мм и выше на 21', 'Юг Тихого шире между Австралией и Южной Америкой; место взято у Индийского вокруг Австралии (Alek)'),
     ('Берег Австралии', 'сглажен на 3 мм; мыс Йорк толще и на 6 мм короче', 'рамка тянет материк по вертикали в 1,7 раза сильнее, чем по горизонтали: зубцы восточного берега и мыс становились иглами (Alek 30.09.2026)'),
+    ('Канадский архипелаг', f'Баффинова земля и Элсмир придвинуты к материку до пролива {ARC_GAP:g} мм (сдвиг до {ARC_MAX:g} мм)', 'Alek 30.09.2026: северные острова ближе к Америке'),
+    ('Декор под сушей', 'часть острова-декора, на которую легла суша, убрана', 'остров Вайгач лёг на берег Скандинавии пятном (Alek 30.09.2026)'),
+    ('Острова Азии', 'декор убран весь, кроме Японии: Юго-Восточная Азия, Филиппины, Тайвань, Хайнань, Шри-Ланка, Кипр, Новосибирские', 'Alek 30.09.2026: смущают'),
     ('Антарктида: сдвиг', f'на {-ANT_DX:g} мм левее', 'эксперимент (Alek 30.09.2026)'),
     ('Мадагаскар', f'придвинут к Африке, пролив {MAD_GAP:g} мм', 'оторванный, не прибавлял Африке места и съедал Индийский узким местом (Alek)'),
     ('Берег Европы', f'сглажен на {SMOOTH_EU:g} мм: фьорды, шхеры и узкие заливы засыпаны, узкие мысы срезаны', 'U/A Европы и Скандинавии ≥ 0,55 (SPEC §6): моря и заливы как сущности не важны (Alek 30.09.2026)'),
@@ -369,6 +375,38 @@ def antarctic_keep():
     right = [(846 + d + 26*s, 466 + 68*(1 - np.cos(s*np.pi/2))) for s in t]   # спуск под нижний край
     return Polygon(rough(left) + [(left[-1][0], 400), (right[0][0], 400)] + rough(right, seed=11)
                    + [(884 + d, 536), (398 + d, 536)]).buffer(0)
+
+
+
+
+def nudge_arctic(g):
+    """острова Канадского архипелага ближе к материку: к ближайшей точке материка, пока пролив
+    до любой соседней суши не станет ARC_GAP, но не дальше ARC_MAX"""
+    from shapely.ops import nearest_points
+    for zone in ARCTIC_NUDGE:
+        parts = polys(g)
+        isl = [p for p in parts if p.representative_point().within(zone) and p.area > MIN_PART]
+        if not isl:
+            continue
+        p = isl[0]
+        rest = U(q for q in parts if not q.equals(p))
+        main = max(parts, key=lambda q: q.area)
+        a, b = nearest_points(p, main)
+        v = np.subtract(b.coords[0], a.coords[0])
+        v = v / np.hypot(*v)
+        lo, hi = 0.0, ARC_MAX
+        if affinity.translate(p, *(v * hi)).distance(rest) >= ARC_GAP:
+            lo = hi
+        else:
+            for _ in range(40):
+                mid = (lo + hi)/2
+                lo, hi = (mid, hi) if affinity.translate(p, *(v * mid)).distance(rest) >= ARC_GAP else (lo, mid)
+        g = U([rest, affinity.translate(p, *(v * lo))])
+        NUDGED.append((round(lo, 1), [round(float(c), 2) for c in v]))
+    return g
+
+
+NUDGED = []
 
 
 def cape_york(g):
@@ -441,6 +479,8 @@ def assemble(w):
             mm = affinity.translate(m, mid, 0)
             lo, hi = (mid, hi) if mm.intersects(rest) or mm.distance(rest) < MAD_GAP else (lo, mid)
         C['africa'] = mp(U([rest, affinity.translate(m, hi, 0)]))
+    # Баффинова земля и Элсмир ближе к материку: до пролива ARC_GAP мм (Alek 30.09.2026)
+    C['north_america'] = mp(nudge_arctic(C['north_america']))
     # лужи, которые сглаживание заперло между островами, мельче PUDDLE — суше вокруг
     water = polys(MAP.difference(U(C.values())))
     for p in water:
@@ -453,6 +493,15 @@ def assemble(w):
     for k in ['europe', 'asia', 'africa', 'north_america', 'south_america', 'australia', 'antarctica']:
         C[k] = mp(C[k].difference(taken))
         taken = U([taken, C[k]])
+    # декор, на который легла суша (сглаживание, сдвиги), — без неё: иначе пятно поверх берега (Alek 30.09.2026)
+    land = U(C.values())
+    kept = []
+    for k, p in DECOR:
+        for q in polys(p.difference(land.buffer(0.3))):
+            if q.area >= DECOR_MIN:
+                kept.append((k, q))
+    # острова-декор Азии убраны, кроме Японии (Alek 30.09.2026: «смущают»)
+    DECOR[:] = [(k, p) for k, p in kept if k != 'asia' or p.representative_point().within(ASIA_DECOR_KEEP)]
     return C
 
 

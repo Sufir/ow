@@ -153,7 +153,7 @@ def build_one(layout, fc5, feats, spec5, with_pack):
         decor.append((r5 if r5 in spec['type'] else spec5['group'][r5], g))
     out = GEO / f'board-{layout}'
     out.with_suffix('.geojson').write_text(json.dumps(fc, ensure_ascii=False), encoding='utf-8')
-    out.with_suffix('.svg').write_text(bv.svg(R, spec, f'Нефтяные войны — поле {who} ({layout}), склейка MC-5P'), encoding='utf-8')
+    out.with_suffix('.svg').write_text(bv.svg(R, spec, f'Нефтяные войны — поле {who} ({layout}), склейка MC-5P', decor=decor), encoding='utf-8')
     out.with_suffix('.html').write_text(bv.html(
         R, s5.load_base()[0], spec, chk, log, nodes=nodes, decor=decor,
         page_title=f'Поле {layout} — склейка', heading=heading, generator='board/tools/glue.py',

@@ -165,12 +165,18 @@ def svg_regions(R, spec):
     return (''.join(oc) + f'<g clip-path="url(#ocmask)"><g filter="url(#blend)">{bl}</g></g>' + ''.join(ld))
 
 
-def svg(R, spec, title):
+def svg(R, spec, title, decor=()):
+    """decor — [(область, полигон)] островов-декора: поверх океана, цвет области, та же линия берега"""
     W, H = bc.CANVAS
+    dec = ''.join(f'<path class="ld" fill="{COLOUR[rid]}" d="{path_d(g)}"/>' for rid, g in decor)
+    import labels as lb
+    names = lb.svg_layer(lb.place(R, spec, decor)[0])
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W:g}mm" height="{H:g}mm" viewBox="0 0 {W:g} {H:g}">\n'
             f'<title>{title}</title>\n<defs>{blend_defs(R, spec)}</defs>'
             f'<rect width="{W:g}" height="{H:g}" fill="#ece8df"/>'
-            f'<g stroke-linejoin="round"><style>.ld{{stroke:#2c2a26;stroke-width:.35}}</style>{svg_regions(R, spec)}</g>'
+            f'<style>{lb.font_css()}</style>'
+            f'<g stroke-linejoin="round"><style>.ld{{stroke:#2c2a26;stroke-width:.35}}</style>{svg_regions(R, spec)}{dec}</g>'
+            f'<g id="names">{names}</g>'
             f'<rect x="{X0:g}" y="{Y0:g}" width="{X1 - X0:g}" height="{Y1 - Y0:g}" fill="none" stroke="#2c2a26" stroke-width="0.4"/>'
             f'\n</svg>\n')
 
@@ -227,6 +233,10 @@ def html(R, C, spec, chk, log, *, nodes, decor, page_title, heading, generator, 
     W, H = bc.CANVAS
     rows = chk['rows']
     glayer = graph_layer(spec, chk, nodes)
+    import labels as lb
+    names, names_miss = lb.place(R, spec, decor)
+    if names_miss:
+        log = list(log) + ['подписи не поместились: ' + ', '.join(names_miss)]
     draft = urllib.parse.quote(DRAFT.relative_to(GEO.parent).as_posix())
     base = ''.join(f'<path d="{path_d(g)}"/>' for g in C.values())
     decor = ''.join(f'<path fill="{COLOUR[rid]}" d="{path_d(g)}"><title>остров-декор: '
@@ -258,6 +268,7 @@ def html(R, C, spec, chk, log, *, nodes, decor, page_title, heading, generator, 
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{page_title}</title>
 <style>
+{lb.font_css()}
 :root{{--bg:#f4f1ea;--fg:#23211d;--mut:#6b665c;--line:#d6d0c4;--ok:#2f7d4a;--warn:#a86a00;--bad:#b3261e}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme=light]){{--bg:#1d1c1a;--fg:#ece8df;--mut:#a39d91;--line:#3a3833;--ok:#7fc79a;--warn:#e6b35c;--bad:#f2867e}}}}
 body{{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,sans-serif}}
@@ -269,7 +280,7 @@ h1{{font-size:20px;margin:0 0 4px}} p.sub{{margin:0 0 12px;color:var(--mut)}}
 svg#map{{width:100%;height:auto;display:block;border-radius:6px}}
 #regions path.ld{{stroke:#2c2a26;stroke-width:.35;stroke-linejoin:round}}
 #base path{{fill:none;stroke:#fff;stroke-width:.7;stroke-dasharray:2 1.4}}
-#decor path{{stroke:#2c2a26;stroke-width:.3;stroke-dasharray:1 .8;opacity:.85}}
+#decor path{{stroke:#2c2a26;stroke-width:.35;stroke-linejoin:round}}
 #graph line{{stroke-width:1.1;stroke-linecap:round}}
 #graph .eok{{stroke:#1d6b3a}} #graph .ewarn{{stroke:#c77800;stroke-dasharray:3 1.5}}
 #graph .efail{{stroke:#d0161b;stroke-width:1.6;stroke-dasharray:1.2 1.6}}
@@ -290,7 +301,8 @@ h2{{font-size:16px;margin:18px 0 8px}} .big{{font-size:17px;font-weight:600}}
 <p class="sub">Полотно {W:g} × {H:g} мм · сборка {date.today().isoformat()}, <code>{generator}</code> · проверка <code>board/tools/boardcheck.py</code></p>
 <p class="big {"bad" if nf else "ok"}">{"Отказов: " + str(nf) if nf else "Зелёное: отказов нет"} · предупреждений: {nw}</p>
 <div class="ctl">
-<label><input type="checkbox" id="c-lab" checked> Подписи: id и метрики</label>
+<label><input type="checkbox" id="c-names" checked> Подписи областей</label>
+<label><input type="checkbox" id="c-lab"> Метрики: id, A, U, N</label>
 <label><input type="checkbox" id="c-graph" checked> Граф: центры и рёбра</label>
 <label><input type="checkbox" id="c-base"> Контур основы</label>
 <label><input type="checkbox" id="c-decor" checked> Острова-декор</label>
@@ -298,7 +310,7 @@ h2{{font-size:16px;margin:18px 0 8px}} .big{{font-size:17px;font-weight:600}}
 <label>прозрачность <input type="range" id="r-op" min="10" max="90" value="50" disabled></label>
 <label><input type="checkbox" id="c-wrap"> Склейка краёв: показать соседний край</label>
 </div>
-<p class="sub">Граф: зелёная линия — ребро с касанием ≥ 25 мм, оранжевый пунктир — 8–25 мм, красный пунктир — ребро не держится (&lt; 8 мм или нет), сплошной красный — лишнее касание или зазор несмежных &lt; 12 мм. Ребро через склейку рисуется двумя кусками у краёв. Острова-декор (пунктир) — не суша областей: рисуются поверх океана, цвет — регион, к которому относятся. Подписи: A и U в см², N — пехота/машины/роботы, ★ — стартовая.</p>{notep}
+<p class="sub">Граф: зелёная линия — ребро с касанием ≥ 25 мм, оранжевый пунктир — 8–25 мм, красный пунктир — ребро не держится (&lt; 8 мм или нет), сплошной красный — лишнее касание или зазор несмежных &lt; 12 мм. Ребро через склейку рисуется двумя кусками у краёв. Острова-декор — не суша областей: рисуются поверх океана, цвет — регион, к которому относятся. Подписи: A и U в см², N — пехота/машины/роботы, ★ — стартовая.</p>{notep}
 <svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W:g} {H:g}">
 <defs>{blend_defs(R, spec)}</defs>
 <rect x="-200" width="{W + 400:g}" height="{H:g}" fill="#ece8df"/>
@@ -309,7 +321,8 @@ h2{{font-size:16px;margin:18px 0 8px}} .big{{font-size:17px;font-weight:600}}
 <g id="decor">{decor}</g>
 <clipPath id="cmap"><rect id="cmaprect" x="{X0:g}" y="{Y0:g}" width="{X1 - X0:g}" height="{Y1 - Y0:g}"/></clipPath>
 <g id="graph" clip-path="url(#cmap)">{glayer}</g>
-<g id="labels">{labels_layer(spec, rows, nodes)}</g>
+<g id="names">{lb.svg_layer(names)}</g>
+<g id="labels" style="display:none">{labels_layer(spec, rows, nodes)}</g>
 <rect x="{X0:g}" y="{Y0:g}" width="{X1 - X0:g}" height="{Y1 - Y0:g}" fill="none" stroke="#2c2a26" stroke-width="0.4"/>
 </svg>
 <div class="cols">
@@ -324,6 +337,7 @@ h2{{font-size:16px;margin:18px 0 8px}} .big{{font-size:17px;font-weight:600}}
 const $=id=>document.getElementById(id);
 const show=(id,on)=>{{$(id).style.display=on?'':'none'}};
 $('c-lab').onchange=e=>show('labels',e.target.checked);
+$('c-names').onchange=e=>show('names',e.target.checked);
 $('c-graph').onchange=e=>show('graph',e.target.checked);
 $('c-base').onchange=e=>show('base',e.target.checked);
 $('c-decor').onchange=e=>show('decor',e.target.checked);
