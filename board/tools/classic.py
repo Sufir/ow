@@ -44,8 +44,10 @@ CANVAS_W, CANVAS_H, MARGIN = 900.0, 550.0, 10.0      # SPEC-BOARD §2: поло�
 W, H = CANVAS_W - 2*MARGIN, CANVAS_H - 2*MARGIN      # прямоугольник карты 880 × 530
 MAP = box(0, 0, W, H)                                # внутренние координаты карты, сдвиг на MARGIN при записи
 
-MIN_PART = 40.0      # мм²: острова мельче выбрасываются
+MIN_PART = 100.0     # мм²: острова мельче выбрасываются — ТЗ-ЭСКИЗ §10.1: у области нет кусков мельче 1 см²
 MIN_HOLE = 25.0      # мм²: водоёмы внутри суши мельче — засыпаются
+DECOR_MIN = 20.0     # мм²: острова от этого размера до MIN_PART — не суша, а декор с пометкой материка
+DECOR = []           # (материк, полигон в мм карты) — заполняет assemble()
 GAP_MIN = 12.0       # мм: несмежные материки (SPEC-BOARD §4.2)
 CONTACT_MIN = 8.0    # мм: смежные материки (SPEC-BOARD §4.1)
 TOP_MIN = 15.0       # мм: полоса Северного Ледовитого над сушей не рвётся
@@ -104,9 +106,20 @@ RONNE = Polygon([(-80, -76.2), (-74, -76.0), (-66, -75.4), (-61.5, -74.3), (-56,
 # Босфор закрыт: Чёрное море — озеро, как Каспий. Иначе вода Северной Атлантики
 # через волосяной пролив достаёт до берегов, где на стороне «5» будет Северная Азия
 BOSPORUS = Polygon([(28.85, 40.95), (29.3, 40.95), (29.3, 41.4), (28.85, 41.4)])
+# Гудзонов залив засыпан (поле-1, Alek 30.09.2026: «эта дыра необходима?» — нет):
+# Северная Америка сплошная, её областям нужна рабочая площадь
+HUDSON_FILL = Polygon([(-96, 64.3), (-87.5, 64.4), (-81, 63.3), (-78.3, 62.4), (-76.8, 60.5), (-76.8, 56),
+                       (-78.5, 51), (-83, 50.8), (-96, 56.5)])
 GREENLAND_ZONE = Polygon([(-74, 59.5), (-10, 59.5), (-10, 84), (-60, 84), (-74, 78)])
 NAARC_ZONE = Polygon([(-130, 70.6), (-60, 70.6), (-60, 84), (-130, 84)])
 MIDEAST_ZONE = Polygon([(25, 10), (25, 43.2), (37, 42), (48, 43.5), (54, 41), (63, 37.5), (63, 10)])
+# Юго-Восточная Азия южнее 10° с. ш. — декор (Alek 30.09.2026: «огрызки внизу убрать»):
+# рамка Южной Азии тянет их по вертикали втрое; хвост Малакки, Суматра, Калимантан, Сулавеси, Ява
+SEASIA_DECOR = Polygon([(94, 10), (160, 10), (160, -12), (94, -12)])
+# Тенассерим и Малакка южнее 14,5° с. ш. срезаны: рамка тянет их в нитку (Alek: «хвосты»)
+MALAY_CUT = Polygon([(94, 14.5), (100.4, 14.5), (100.4, 0), (94, 0)])
+SCHINA_ZONE = Polygon([(108, 18), (125, 18), (125, 33.5), (116, 35), (108, 35)])
+JAPAN_ZONE = Polygon([(129.4, 30), (147, 30), (147, 46.5), (139.5, 46.5), (131.5, 35.2), (129.4, 34.2)])
 NASIA_ZONE = Polygon([(25, 43.2), (37, 42), (48, 43.5), (54, 41), (63, 37.5), (75, 40), (90, 48), (120, 53),
                       (135, 47.5), (141, 48), (150, 47), (200, 47), (200, 85), (25, 85)])
 
@@ -140,6 +153,7 @@ def load_sources():
     au = keep(au, lambda p: p.bounds[3] < -10.5 and p.bounds[0] < 160              # Н. Гвинея, Океания, НЗ
               and not (p.bounds[0] > 143 and p.bounds[3] < -39.4))                  # Тасмания
     af = U([af, RED_SEA_FILL.difference(asia)])
+    na = U([na, HUDSON_FILL])
     asia = U([asia, BOSPORUS.difference(eu)])
 
     S = {}
@@ -156,7 +170,12 @@ def load_sources():
     S['mideast'] = asia.intersection(MIDEAST_ZONE)
     asia = asia.difference(MIDEAST_ZONE)
     S['nasia'] = asia.intersection(NASIA_ZONE)
-    S['sasia'] = asia.difference(NASIA_ZONE)
+    sas = asia.difference(NASIA_ZONE)
+    S['seasia'] = U(p for p in polys(sas.intersection(SEASIA_DECOR)) if p.bounds[3] < 9.95)   # только острова
+    S['japan'] = sas.difference(SEASIA_DECOR).intersection(JAPAN_ZONE)
+    rest = sas.difference(SEASIA_DECOR).difference(JAPAN_ZONE).difference(MALAY_CUT)
+    S['schina'] = rest.intersection(SCHINA_ZONE)
+    S['sasia'] = rest.difference(SCHINA_ZONE)
     S['australia'] = au
     S['antarctica'] = U([an, RONNE]).intersection(box(-95, -85, 112, -60))
     return S
@@ -179,18 +198,20 @@ def pt(f, lon, lat):
 
 FRAMES = {
     #               источник                          цель на карте
-    'na':         ((-168, 72, -52.6, 25),        (18, 42, 344, 238)),
-    'naarc':      ((-125, 83, -60, 70.6),        (126, 22, 290, 52)),      # арктические острова поджаты к полосе
-    'greenland':  ((-73, 83.6, -12, 60),         (302, 24, 388, 90)),      # уменьшена вдвое против Канады
+    'na':         ((-168, 72, -52.6, 25),        (14, 34, 348, 243)),      # поле-1: ниже на 5 мм, выше на 8 — растёт в Ледовитый
+    'naarc':      ((-125, 83, -60, 70.6),        (126, 16, 290, 44)),      # арктические острова поджаты к полосе
+    'greenland':  ((-73, 83.6, -12, 60),         (305, 24, 391, 90)),      # уменьшена вдвое против Канады
     'iceland':    ((-24.5, 66.6, -13.5, 63.4),   (408, 46, 436, 60)),
     'sa':         ((-81.3, 12.4, -34.8, -55.9),  (214, 292, 424, 500)),
     'europe':     ((-10, 71.2, 60, 36),          (410, 28, 684, 212)),     # Европа ×3.3 по площади против Азии
     'africa':     ((-17.5, 37.3, 51.4, -34.8),   (426, 238, 655, 478)),    # уже и западнее: место Аравии
     'nasia':      ((60, 77.7, 190, 43.5),        (670, 26, 868, 164)),     # Сибирь сжата по долготе
-    'sasia':      ((63, 53, 146, 1.3),           (726, 134, 868, 356)),    # Индия уже: место Аравии
+    'sasia':      ((63, 53, 141, 1.3),           (726, 134, 872, 328)),
+    'schina':     ((108, 35, 125, 18),           (809, 202, 868, 266)),    # поле-1: юго-восток Китая шире вправо (Alek)    # Индия уже: место Аравии; поле-1: восток шире (Alek)
+    'japan':      ((129.3, 45.6, 146, 30.8),     (851, 164, 873, 214)),    # Япония своей рамкой: Азия расширена вправо
     'mideast':    ((34, 40, 62, 12.5),           (592, 186, 720, 330)),    # крупнее Африки: Аравия круглая, как в оригинале
-    'australia':  ((113.2, -10.7, 153.6, -39.1), (4, 283, 214, 500)),     # вмещает две области: и НЗ
-    'antarctica': ((-75, -63, 110, -78),         (450, 456, 943, 516)),
+    'australia':  ((113.2, -10.7, 153.6, -39.1), (4, 277, 202, 515)),     # вмещает две области: и НЗ; поле-1: уже и выше — место Югу Тихого за счёт Индийского (Alek)
+    'antarctica': ((-75, -63, 110, -78),         (450, 448, 943, 516)),   # верх поднят на 8 мм (поле-1): U/A Антарктиды ≥ 0,55
 }
 F = {k: rect_frame(*v) for k, v in FRAMES.items()}
 eu, af = F['europe'], F['africa']
@@ -202,7 +223,8 @@ ANCHORS = {'oldworld': [
     ((32.6, 30.0), pt(af, 32.4, 30.0)), ((34.3, 31.4), pt(af, 34.0, 31.4)), ((43.4, 12.6), pt(af, 43.2, 12.2))]}
 ANCHOR_W = 25.0
 GROUPS = {'americas': ['na', 'naarc', 'greenland', 'sa'],
-          'oldworld': ['europe', 'mideast', 'nasia', 'sasia', 'africa'],
+          'oldworld': ['europe', 'mideast', 'nasia', 'sasia', 'schina', 'africa', 'seasia'],
+          'japan': ['japan'],
           'iceland': ['iceland'],
           'oceania': ['australia'],
           'antarctica': ['antarctica']}
@@ -269,20 +291,67 @@ def warp_all(S):
 # 4. сборка материков и игровые правки на полотне
 # ---------------------------------------------------------------------------
 
-PANAMA_WIN = box(228, 272, 272, 318)
-PANAMA_NW = Polygon([(180, 240), (300, 240), (258.5, 291.5), (243.5, 307.5), (180, 330)])
+# Панама (поле-1). Координаты — мм карты (полотно минус 10). Рамка Северной Америки
+# опущена, перешеек сам доходит до Колумбии; стык сглаживается в окне PANAMA_WIN
+# и целиком отходит Северной Америке.
+PANAMA_WIN = box(-2, -2, -1, -1)          # сглаживание стыка не нужно: перешеек сам входит в Колумбию
+PANAMA_NW = box(-100, -100, 1000, 1000)
+# Пролив поперёк перешейка между Коста-Рикой и Панамой: ME-074 — Север Атлантики
+# и Север Тихого смежны напрямую, их общая граница — ширина пролива, ≥ 8 мм
+# (MF-010, как в оригинале). Alek 30.09.2026: уже, чем 9,6 мм, Америки ближе.
+STRAIT_Y, STRAIT_W = 288.0, 9.2            # мм карты: северный берег пролива и его ширина
+STRAIT_X = (238, 262)                      # от Тихого океана до Карибского моря поперёк Панамы
+STRAIT = Polygon(rough([(STRAIT_X[0], STRAIT_Y), (250, STRAIT_Y - 0.3), (STRAIT_X[1], STRAIT_Y)], amp=0.35, seed=21)
+                 + rough([(STRAIT_X[1], STRAIT_Y + STRAIT_W), (250, STRAIT_Y + STRAIT_W + 0.3),
+                          (STRAIT_X[0], STRAIT_Y + STRAIT_W)], amp=0.35, seed=22))
+# Панама и карибский берег Колумбии и Венесуэлы — Северной Америке: на стороне «5»
+# это южный кусок Центральной Америки. Он граничит с Западом и Востоком Южной Америки
+# (ME-005, ME-004) и отгораживает Запад Южной Америки от Северной Атлантики (MF-010:
+# «полоса Центральной Америки идёт по берегу до самого Востока Южной Америки»).
+PANAMA_TO_SA = box(236, 316.9, 278, 334)
+CARIB = Polygon([(230, 294), (246, 294), (256, 290), (275, 290), (304, 294), (318, 301), (320, 316),
+                 (280, 317), (252, 317), (235, 317)])
+PANAMA_STRAIT_MIN = 8.0
+# Сглаживание берега Европы, мм (поле-1): без него у Европы и Скандинавии U/A 0,545 и 0,52
+# при минимуме 0,55 (SPEC §6) — площадь уходит в фьорды и узкие мысы, где фигура не встаёт
+SMOOTH_EU = 1.5
+MAD_ZONE = box(620, 380, 670, 460)       # мм карты: где искать Мадагаскар
+MAD_GAP = 2.5                            # мм: пролив между Мадагаскаром и Африкой
+MAD_DY = 10.0                            # мм: сдвиг вниз — остров ложится в изгиб берега, пролив ровный
+PUDDLE = 200.0       # мм²: запертая вода мельче — засыпается
+SMOOTH = [('europe', SMOOTH_EU, box(-10, -10, 900, 600)),
+          ('north_america', 2.0, box(-10, -10, 400, 92)),       # север Америки: архипелаг не пестрит (Alek)
+          ('asia', 1.2, box(700, -10, 900, 600))]               # Азия восточнее Ирана: берег ровнее, как у остальных
+SMOOTH_KEEP = U([box(540, 170, 575, 200),      # Босфор и Дарданеллы: Чёрное море остаётся озером
+                 box(575, 38, 625, 80)])      # горло Белого моря: море остаётся Ледовитому
+# Карибский берег Колумбии и Венесуэлы с Панамой — к Северной Америке: на стороне «5»
+# это южный кусок Центральной Америки. Он граничит с Западом и Востоком Южной Америки
+# (ME-005, ME-004) и отгораживает Запад Южной Америки от Северной Атлантики (MF-010:
+# «полоса Центральной Америки идёт по берегу до самого Востока Южной Америки»).
+CARIB = Polygon([(222, 286), (252, 286), (266, 282), (292, 286), (314, 293), (318, 300), (316, 315),
+                 (282, 316.5), (252, 314.5), (236, 314), (222, 310)])
 
 CORRECTIONS = [
     ('Красное море', 'засыпано южнее 18,8° с. ш., север — озеро', 'ME-011: Восточная Африка — Аравия граничат по суше'),
     ('Ближний Восток', 'своя рамка крупнее соседних: Африка ужата и сдвинута к западу, Индия ужата по долготе', 'Аравия должна резаться в круглую область, как в оригинале; без этого её U < 55 см²'),
     ('Босфор', 'закрыт, Чёрное море — озеро', 'через волосяной пролив Северная Атлантика доставала бы до берегов будущей Северной Азии'),
     ('Ледник Ронне—Фильхнера', 'дорисован по кромке', 'без него море Уэдделла режет Антарктиду надвое'),
-    ('Панамский перешеек', 'перерисован одной гладкой шейкой, ≈15 мм контакта', 'стык двух рамок давал рваный берег; узел целиком — этап областей'),
+    ('Панамский перешеек', 'рамка Северной Америки опущена — перешеек сам входит в Колумбию', 'Америки ближе друг к другу, как в оригинале (Alek)'),
+    ('Панамский пролив', f'перешеек между Коста-Рикой и Панамой прорезан проливом ≈{STRAIT_W:g} мм, самое узкое место ≈8,6', 'ME-074: Север Атлантики и Север Тихого смежны напрямую, их общая граница ≥ 8 мм — это ширина пролива (MF-010, как в оригинале); Alek: уже 9,6 мм, Америки ближе'),
+    ('Гудзонов залив', 'засыпан', 'Alek 30.09.2026: дыра в Северной Америке не нужна; её областям нужна рабочая площадь'),
+    ('Северная Америка', 'рамка ниже на 5 мм и выше на 8 — растёт в полосу Ледовитого, шире на 8 мм', 'трём областям не хватало площади: U материка 209 при нужных ≈ 230; Америки ближе друг к другу (Alek)'),
+    ('Южная Азия', 'рамка до 141° в. д. шире на 4 мм — восточный берег Китая и Кореи на 8–10 мм ближе к краю; Япония — своей рамкой', 'Alek: Азию можно смело расширить вправо'),
+    ('Юго-Восточная Азия', 'острова южнее 10° с. ш. (Суматра, Калимантан, Сулавеси, Ява) — декор, хвост Малакки срезан по 10°', 'рамка Южной Азии тянет их по вертикали вдвое с лишним: «огрызки» (Alek)'),
+    ('Австралия', 'рамка уже на 12 мм и выше на 21', 'Юг Тихого шире между Австралией и Южной Америкой; место взято у Индийского вокруг Австралии (Alek)'),
+    ('Мадагаскар', f'придвинут к Африке, пролив {MAD_GAP:g} мм', 'оторванный, не прибавлял Африке места и съедал Индийский узким местом (Alek)'),
+    ('Берег Европы', f'сглажен на {SMOOTH_EU:g} мм: фьорды, шхеры и узкие заливы засыпаны, узкие мысы срезаны', 'U/A Европы и Скандинавии ≥ 0,55 (SPEC §6): моря и заливы как сущности не важны (Alek 30.09.2026)'),
+    ('Граница Северной и Южной Америки', 'Панама и карибский берег Колумбии и Венесуэлы — Северной Америке', 'на стороне «5» это южный кусок Центральной Америки: граничит с Западом и Востоком Южной Америки и отгораживает Запад Южной Америки от Северной Атлантики (MF-010)'),
     ('Новая Зеландия', 'отдельной сушей не рисуется; Австралия увеличена, область «Новая Зеландия» нарезается из её восточной половины', 'как в черновике «карта 5» и в оригинале; ME-002 — граница по суше'),
     ('Гренландия', 'часть Северной Америки, подвинута к Канадскому архипелагу', 'как в черновике и оригинале: арктические острова — в Северной Америке'),
     ('Антарктида', 'концы уходят под нижний край кривой, а не срезаны по вертикали', 'как в оригинале: материк — выступ из нижнего края'),
+    ('Антарктида: толщина', 'верх рамки поднят на 8 мм (+14 см²)', 'полоса у нижнего края давала U/A 0,53 при минимуме 0,55 (SPEC §6): край полотна тоже граница рабочей зоны'),
     ('Арктические острова', 'Шпицберген, ЗФИ, Новая Земля, Северная Земля, Новосибирские убраны; Канадский архипелаг поджат', 'полоса Северного Ледовитого не рвётся'),
-    ('Мелкие острова', f'мельче {MIN_PART:.0f} мм² на полотне убраны; Гавайи, Галапагосы, Фолкленды, Азоры, Канары, Новая Гвинея, Океания, Тасмания и Сахалин — тоже', 'нет в черновике и оригинале, мусор на поле'),
+    ('Мелкие острова', f'от {DECOR_MIN:.0f} мм² до {MIN_PART/100:.0f} см² — не суша, а декор с пометкой материка (Гаити, Тринидад, Шри-Ланка, Хайнань, Кипр, Корсика, Сардиния, Ванкувер, мелочь архипелагов); мельче — убраны; Гавайи, Галапагосы, Фолкленды, Азоры, Канары, Новая Гвинея, Океания, Тасмания и Сахалин — тоже', 'нет в черновике и оригинале, мусор на поле'),
 ]
 
 
@@ -299,7 +368,8 @@ def assemble(w):
     C['north_america'] = UC([w['na'], w['naarc'], w['greenland']])
     C['south_america'] = w['sa']
     C['europe'] = UC([w['europe'], w['iceland']])
-    C['asia'] = UC([w['mideast'], w['nasia'], w['sasia']])
+    C['asia'] = UC([w['mideast'], w['nasia'], w['sasia'], w['schina'], w['japan']])
+    DECOR.extend(('asia', p) for p in polys(w['seasia'].intersection(MAP)) if p.area >= DECOR_MIN)
     C['africa'] = w['africa']
     C['australia'] = w['australia']
     C['antarctica'] = w['antarctica']
@@ -310,11 +380,53 @@ def assemble(w):
     neck = both.buffer(2.5).buffer(-2.5).buffer(-1.2).buffer(1.2).buffer(1.6).intersection(PANAMA_WIN)
     C['north_america'] = UC([C['north_america'].difference(PANAMA_WIN), neck.intersection(PANAMA_NW)])
     C['south_america'] = UC([C['south_america'].difference(PANAMA_WIN), neck.difference(PANAMA_NW)])
+    back = C['north_america'].intersection(PANAMA_TO_SA)      # хвост перешейка южнее полосы — Колумбии
+    C['south_america'] = UC([C['south_america'], back])
+    C['north_america'] = C['north_america'].difference(PANAMA_TO_SA)
+    moved = C['south_america'].intersection(CARIB)
+    C['north_america'] = UC([C['north_america'], moved])
+    C['south_america'] = C['south_america'].difference(CARIB)
+    for k in ('north_america', 'south_america'):
+        C[k] = C[k].difference(STRAIT)
+    # южный кусок Центральной Америки сглажен: стык перешейка с Колумбией даёт зубцы
+    south = C['north_america'].intersection(CARIB.buffer(1))
+    smooth = south.buffer(1.5).buffer(-1.5).buffer(-1.0).buffer(1.0).intersection(CARIB.buffer(1)).difference(STRAIT)
+    C['north_america'] = UC([C['north_america'].difference(CARIB.buffer(1)), smooth])
+    C['south_america'] = C['south_america'].difference(smooth)
 
     def dehole(p):
         return Polygon(p.exterior, [r for r in p.interiors if Polygon(r).area >= MIN_HOLE])
     for k in C:
+        DECOR.extend((k, p) for p in polys(C[k]) if DECOR_MIN <= p.area < MIN_PART)
         C[k] = mp(U(dehole(p) for p in polys(C[k]) if p.area >= MIN_PART))
+    # берег сглажен: заливы и проливы уже 2·r мм засыпаны, мысы тоньше срезаны — в окнах SMOOTH,
+    # кроме окон SMOOTH_KEEP: там узкие проливы, которые сглаживание открыло бы или закрыло
+    for k, r, win in SMOOTH:
+        e0 = C[k]
+        sm = e0.buffer(-r).buffer(r).buffer(r).buffer(-r)
+        e1 = U([sm.intersection(win).difference(SMOOTH_KEEP), e0.difference(win), e0.intersection(win).intersection(SMOOTH_KEEP)])
+        DECOR.extend((k, p) for p in polys(e1) if DECOR_MIN <= p.area < MIN_PART)
+        C[k] = mp(U(p for p in polys(e1) if p.area >= MIN_PART))
+    # Мадагаскар придвинут к Африке с узким проливом MAD_GAP: оторванный, он не прибавлял
+    # Африке места и съедал Индийский узким местом (Alek 30.09.2026)
+    parts = polys(C['africa'])
+    mad = [p for p in parts if p.representative_point().within(MAD_ZONE) and p.area > MIN_PART]
+    if mad:
+        m = affinity.translate(mad[0], 0, MAD_DY)          # ниже, в изгиб берега Мозамбика
+        rest = U(p for p in parts if not p.equals(mad[0]))
+        lo, hi = -60.0, 20.0                                # и к западу — до пролива MAD_GAP
+        for _ in range(40):
+            mid = (lo + hi)/2
+            mm = affinity.translate(m, mid, 0)
+            lo, hi = (mid, hi) if mm.intersects(rest) or mm.distance(rest) < MAD_GAP else (lo, mid)
+        C['africa'] = mp(U([rest, affinity.translate(m, hi, 0)]))
+    # лужи, которые сглаживание заперло между островами, мельче PUDDLE — суше вокруг
+    water = polys(MAP.difference(U(C.values())))
+    for p in water:
+        if p.intersects(MAP.exterior) or p.area >= PUDDLE:
+            continue
+        k = max(C, key=lambda k: p.boundary.intersection(C[k].buffer(0.05)).length)
+        C[k] = mp(U([C[k], p.buffer(0.02)]))
     # наложения: кто раньше в списке, тот и владеет
     taken = Polygon()
     for k in ['europe', 'asia', 'africa', 'north_america', 'south_america', 'australia', 'antarctica']:
@@ -396,6 +508,13 @@ def check(C, ocean, lakes, warpers=None):
     rest = MultiPolygon([p for p in C['north_america'].geoms if not any(p.equals(q) for q in gl)])
     gg = min((q.distance(rest) for q in gl), default=0)
     res.append((len(gl) == 1 and gg >= 3, f'Гренландия читается островом: до Канады {gg:.1f} мм (≥ 3)'))
+    nag = sorted(C['north_america'].geoms, key=lambda p: -p.area)
+    main = nag[0]
+    south = [p for p in nag[1:] if p.intersects(CARIB) and p.area > 500]
+    sw = min((p.distance(main) for p in south), default=0)
+    res.append((len(south) == 1 and sw >= PANAMA_STRAIT_MIN,
+                f'Панамский пролив: ширина {sw:.1f} мм (≥ {PANAMA_STRAIT_MIN:.0f}), южный кусок Центральной Америки '
+                f'{sum(p.area for p in south)/100:.1f} см²'))
     res.append((len(polys(ocean)) == 1, f'Мировой океан связен: {len(polys(ocean))} кусок'))
     if warpers is not None:
         g, u = arabia_probe(C, warpers)
@@ -408,11 +527,15 @@ def check(C, ocean, lakes, warpers=None):
 # ---------------------------------------------------------------------------
 
 def to_canvas(g, tol=0.12):
-    return affinity.translate(g.simplify(tol, preserve_topology=True), MARGIN, MARGIN)
+    g = affinity.translate(g.simplify(tol, preserve_topology=True), MARGIN, MARGIN)
+    return mp(U(p for p in polys(g) if p.area >= MIN_PART)) if g.geom_type != 'Polygon' else g   # крошки после упрощения
 
 
 def rnd(geom):
-    return json.loads(json.dumps(mapping(shapely.set_precision(geom, 0.01))))
+    g = shapely.set_precision(geom, 0.01)
+    if g.geom_type == 'MultiPolygon':            # сетка 0,01 мм оставляет вырожденные крошки — вон
+        g = MultiPolygon([p for p in g.geoms if p.area >= 1.0])
+    return json.loads(json.dumps(mapping(g)))
 
 
 def geojson(C, ocean, lakes, res):
@@ -429,6 +552,10 @@ def geojson(C, ocean, lakes, res):
     for i, (nm, p) in enumerate(lakes, 1):
         feats.append({'type': 'Feature', 'properties': {'id': f'lake-{i}', 'type': 'INLAND_WATER', 'name_ru': nm,
                       'area_cm2': round(p.area/100, 1)}, 'geometry': rnd(to_canvas(p))})
+    for i, (k, p) in enumerate(sorted(DECOR, key=lambda t: (t[0], -t[1].area)), 1):
+        feats.append({'type': 'Feature', 'properties': {'id': f'decor-{i}', 'type': 'DECOR_ISLAND', 'continent': k,
+                      'area_mm2': round(p.area), 'note': 'остров-декор: не суша области, рисуется поверх океана, '
+                      'относится к своему материку (Alek 30.09.2026)'}, 'geometry': rnd(to_canvas(p))})
     return {
         'type': 'FeatureCollection',
         'metadata': {

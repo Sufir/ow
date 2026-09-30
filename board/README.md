@@ -43,12 +43,8 @@ python tools/map.py all      # check + build + verify + report
 python tools/map.py check    # только валидация YAML
 ```
 
-Python на машине нет — гонять в Docker, как и `registry.py`:
-
-```
-docker run --rm -v "C:/YandexDisk/Oil Wars/rules/:/w" -w /w python:3.12-slim \
-  sh -c "pip install --quiet pyyaml && python tools/map.py all"
-```
+Из корня репозитория — `python3 board/tools/map.py all`, нужен `pyyaml`.
+Docker не нужен (30.09.2026).
 
 ## Что здесь считается истиной
 
