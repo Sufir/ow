@@ -449,7 +449,7 @@ def png(R, C, spec, path, chk=None):
     d = ImageDraw.Draw(im)
     for rid in spec['areas']:
         for p in polys(R[rid]):
-            d.polygon([(x * s, y * s) for x, y in p.exterior.coords], fill=bv.TINT[rid], outline='#222')
+            d.polygon([(x * s, y * s) for x, y in p.exterior.coords], fill=bv.COLOUR[rid], outline='#222')
             for r in p.interiors:
                 d.line([(x * s, y * s) for x, y in r.coords], fill='#222')
     for x in range(0, int(W) + 1, 50):

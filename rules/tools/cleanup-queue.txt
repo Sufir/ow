@@ -9,3 +9,4 @@
 удалить: print/энграммы-preview-*.html
 архив: rules/tasks/ПРОМПТ-поле-1-геометрия.md
 архив: board/tools/partition.py
+удалить: board/geo/palette-test.html

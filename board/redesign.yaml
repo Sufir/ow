@@ -1,6 +1,9 @@
 # redesign.yaml — области карты «Нефтяных войн» и их соответствие оригиналу.
 # Источник имён: подписи на карте (board/legacy/карта.pdf, board/legacy/карта 5.jpg) и имена слоёв
 # в board/legacy/карта 5.psd. Слой «Слой 3» в PSD не назван — идентифицирован по подписи.
+# colour — заливка области на всех полотнах, где она есть (COMP-C-03, этап 3, шаг 1; D-099).
+#   Подобрана board/tools/palette.py по графу четырёх раскладок и принята Alek 30.09.2026;
+#   board/tools/boardview.py берёт цвета отсюда. Поменять — правка здесь и пересборка slice5.py, glue.py.
 
 regions:
   - id: OW-OC-ARC
@@ -8,159 +11,186 @@ regions:
     psd_layer: Северный ледовитый
     baseline_ref: MR-OC-ARC
     match: EXACT
+    colour: '#D6E8F0'
 
   - id: OW-OC-NPAC
     name_ru: Север Тихого океана
     psd_layer: Север Тихого океана
     baseline_ref: MR-OC-NPAC
     match: EXACT
+    colour: '#44849F'
 
   - id: OW-OC-SPAC
     name_ru: Юг Тихого океана
     psd_layer: Юг Тихого океана
     baseline_ref: MR-OC-SPAC
     match: EXACT
+    colour: '#0C4C78'
 
   - id: OW-OC-NATL
     name_ru: Север Атлантического океана
     psd_layer: Северная Атлантика
     baseline_ref: MR-OC-NATL
     match: EXACT
+    colour: '#1A5269'
 
   - id: OW-OC-SATL
     name_ru: Юг Атлантического океана
     psd_layer: Южная Атлантика
     baseline_ref: MR-OC-SATL
     match: EXACT
+    colour: '#158C9F'
 
   - id: OW-OC-IND
     name_ru: Индийский океан
     psd_layer: Индийский океан
     baseline_ref: MR-OC-IND
     match: EXACT
+    colour: '#38BEDC'
 
   - id: OW-SH-ANT
     name_ru: Антарктида
     psd_layer: Антарктида
     baseline_ref: MR-SH-ANT
     match: EXACT
+    colour: '#F4F4F1'
 
   - id: OW-L3-NAM
     name_ru: Северная Америка
     psd_layer: Сев. Америка
     baseline_ref: MR-L3-NAM
     match: EXACT
+    colour: '#904818'
 
   - id: OW-L3-SAM
     name_ru: Южная Америка
     psd_layer: Южная Америка
     baseline_ref: MR-L3-SAM
     match: EXACT
+    colour: '#A67469'
 
   - id: OW-L3-AUS
     name_ru: Австралия
     psd_layer: Австралия
     baseline_ref: MR-L3-AUS
     match: EXACT
+    colour: '#6E8767'
 
   - id: OW-R3-EUR
     name_ru: Европа
     psd_layer: Европа
     baseline_ref: MR-R3-EUR
     match: EXACT
+    colour: '#D8D800'
 
   - id: OW-R3-ASI
     name_ru: Азия
     psd_layer: Азия
     baseline_ref: MR-R3-ASI
     match: EXACT
+    colour: '#9D7297'
 
   - id: OW-R3-AFR
     name_ru: Африка
     psd_layer: Африка
     baseline_ref: MR-R3-AFR
     match: EXACT
+    colour: '#C00030'
 
   - id: OW-L5-NAMW
     name_ru: Запад Северной Америки
     psd_layer: Сев. Америка - запад
     baseline_ref: MR-L5-NAMW
     match: EXACT
+    colour: '#904818'
 
   - id: OW-L5-NAME
     name_ru: Восток Северной Америки
     psd_layer: Сев. Америка - восток
     baseline_ref: MR-L5-NAME
     match: EXACT
+    colour: '#B57547'
 
   - id: OW-L5-CAM
     name_ru: Центральная Америка
     psd_layer: Центральная америка
     baseline_ref: MR-L5-CAM
     match: EXACT
+    colour: '#BF8E4B'
 
   - id: OW-L5-SAMW
     name_ru: Запад Южной Америки
     psd_layer: Южная Америка - запад
     baseline_ref: MR-L5-SAMW
     match: EXACT
+    colour: '#B4605C'
 
   - id: OW-L5-SAME
     name_ru: Восток Южной Америки
     psd_layer: Южная Америка - восток
     baseline_ref: MR-L5-SAME
     match: EXACT
+    colour: '#79463C'
 
   - id: OW-L5-AUS
     name_ru: Австралия
     psd_layer: Австралия
     baseline_ref: MR-L5-AUS
     match: EXACT
+    colour: '#527244'
 
   - id: OW-L5-NZL
     name_ru: Новая Зеландия
     psd_layer: Новая зеландия
     baseline_ref: MR-L5-NZL
     match: EXACT
+    colour: '#759E70'
 
   - id: OW-R5-SCA
     name_ru: Скандинавия
     psd_layer: Скандинавия
     baseline_ref: MR-R5-SCA
     match: EXACT
+    colour: '#9A9656'
 
   - id: OW-R5-EUR
     name_ru: Европа
     psd_layer: Европа
     baseline_ref: MR-R5-EUR
     match: EXACT
+    colour: '#D8D800'
 
   - id: OW-R5-ASIN
     name_ru: Северная Азия
     psd_layer: Северная Азия
     baseline_ref: MR-R5-ASIN
     match: EXACT
+    colour: '#376C59'
 
   - id: OW-R5-ASIS
     name_ru: Южная Азия
     psd_layer: Азия
     baseline_ref: MR-R5-ASIS
     match: EXACT
+    colour: '#9F728F'
 
   - id: OW-R5-ARB
     name_ru: Аравийский полуостров
     psd_layer: Слой 3
     baseline_ref: MR-R5-ARB
     match: EXACT
+    colour: '#BA9658'
 
   - id: OW-R5-AFRW
     name_ru: Западная Африка
     psd_layer: Африка западная
     baseline_ref: MR-R5-AFRW
     match: EXACT
+    colour: '#C00030'
 
   - id: OW-R5-AFRE
     name_ru: Восточная Африка
     psd_layer: Африка восточная
     baseline_ref: MR-R5-AFRE
     match: EXACT
+    colour: '#A37379'
