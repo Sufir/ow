@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Контроль сети</title>
+<!--
+  Карта «Контроль сети» — COMP-V-08, вариант «Рой боевых дронов» (RULEBOOK §11.6). Чистовик, 29.09.2026.
+  Tarot 70 × 120 мм, как карты лояльности наёмников. Двусторонняя, кегль текста 8 pt:
+    сторона А «Без контроля» — лежит в центре стола, пока фабрику в Узле управления не контролирует никто;
+    сторона Б «Под контролем» — у игрока, контролирующего эту фабрику: таблица отряда, развёртывание, ограничения.
+  Боевая сила Роя 2 (MISS-014, D-040) — в книге не печатается, живёт только здесь: в таблице стороны Б
+  и в тексте стороны А. Пробники — print/контроль-сети-preview-2…9.
+
+  Как устроено:
+    • текст — только в JSON ниже (<script id="card-data">); оформление — только в CSS этого файла;
+    • таблица отряда — как .units-table планшета (Faction-Card-A/Шаблон.html) в масштабе карты:
+      шапка OpenGostTypeB прописными синим, числа Rationale (кол-во синим, стоимость белым, сила розовым);
+    • два вида печати: «В размер» — две страницы 70 × 120; «A4 с метками реза» — A4 книжный, карта с выпуском 6 мм,
+      страница 1 — сторона А, страница 2 — сторона Б с метками реза (крестики).
+  Шрифты: Liberation Sans — текст (D-091), Rationale — числа таблицы (D-093), OpenGostTypeB — заголовки.
+  Кавычки на компоненте — только “ ” (D-075). Проверка: python3 print/check_quotes.py.
+-->
+<style>
+@font-face { font-family: "OpenGostTypeB"; src: url("Fonts/OpenGostTypeB.ttf") format("truetype"); }
+@font-face { font-family: "Rationale";     src: url("Fonts/Rationale-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-Regular.ttf")    format("truetype"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-Bold.ttf")       format("truetype"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-Italic.ttf")     format("truetype"); font-weight: 400; font-style: italic; }
+@font-face { font-family: "Liberation Sans"; src: url("Fonts/LiberationSans-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; }
+
+:root {
+  --w: 70mm;  --h: 120mm;     /* Tarot, по линии реза */
+  --pad: 3.2mm;               /* поле от линии реза до текста */
+  --bleed: 6mm;               /* выпуск под обрез в раскладке A4, как у памяток */
+  --fs: 8pt;                  /* кегль текста */
+  --lh: 1.2;
+  --gap: 1.2mm;               /* наименьший воздух между разделами; свободное место делится поровну (см. .body) */
+  --ink:  #FFFFFF;
+  --cyan: #11C5FF;            /* заголовки разделов, подпись отряда */
+  --blue: #25A4EE;            /* шапка таблицы, количество — как на планшете */
+  --num:  #9FE8FF;            /* номера и маркеры списков */
+  --bg:   #08182B;
+  --rule: rgba(37,164,238,.40);
+  --pink: #EE688C;            /* сила, разделители разделов, метка стороны А */
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #7A8794; font-family: "Liberation Sans", sans-serif; }
+
+/* ——— панель (только на экране) ——— */
+.bar { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: .3mm solid #999;
+       padding: 3mm 8mm; display: flex; gap: 2mm 6mm; align-items: center; flex-wrap: wrap; font-size: 10.5pt; }
+.bar .grp { display: flex; gap: 1.5mm; align-items: center; }
+.bar button { font: inherit; padding: 1.1mm 3mm; border: .3mm solid #555; background: #fff; cursor: pointer; }
+.bar button[aria-pressed="true"] { background: #111; color: #fff; border-color: #111; }
+.bar .hint { color: #444; }
+.warn { position: absolute; top: 1mm; left: 1mm; z-index: 5; background: #fff; color: #B3261E; padding: .5mm 1.5mm;
+        font: 700 9pt "Liberation Sans", sans-serif; }
+
+/* ——— листы ——— */
+.pages { padding: 8mm 0; display: flex; flex-direction: column; align-items: center; gap: 8mm; }
+.sheet { position: relative; background: #fff; overflow: hidden; box-shadow: 0 3mm 10mm rgba(0,0,0,.35);
+         break-after: page; page-break-after: always; }
+.sheet:last-child { break-after: auto; page-break-after: auto; }
+body.size .sheet { width: calc(var(--w) + .5mm); height: calc(var(--h) + .5mm); }
+body.a4 .sheet { width: 210mm; height: 297mm; }
+
+/* ——— карта ——— */
+.bleed { position: absolute;
+  background:
+    radial-gradient(70% 45% at 0% 0%,    rgba(37,164,238,.20) 0%, rgba(37,164,238,0) 72%),
+    radial-gradient(65% 40% at 100% 100%, rgba(17,197,255,.14) 0%, rgba(17,197,255,0) 70%),
+    var(--bg);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.bleed.neutral {
+  background:
+    radial-gradient(70% 45% at 0% 0%,    rgba(238,104,140,.13) 0%, rgba(238,104,140,0) 72%),
+    radial-gradient(65% 40% at 100% 100%, rgba(17,197,255,.10) 0%, rgba(17,197,255,0) 70%),
+    var(--bg); }
+.card { position: absolute; width: var(--w); height: var(--h); padding: var(--pad); color: var(--ink);
+        display: flex; flex-direction: column; }
+
+/* шапка */
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: 2mm; margin-bottom: 1.2mm; }
+.head .t { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; font-size: 13pt; letter-spacing: .04em;
+           text-transform: uppercase; line-height: 1; }
+.head .tag { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; font-size: 8.5pt; letter-spacing: .04em;
+             text-transform: uppercase; line-height: 1; white-space: nowrap; color: var(--cyan); }
+.neutral .head .tag { color: var(--pink); }
+/* диод рядом с меткой стороны: тот же цвет, что метка, светлая сердцевина и ореол — «горит» */
+.head .tag { display: inline-flex; align-items: center; gap: 1.3mm; }
+.head .tag .led { width: 1.9mm; height: 1.9mm; border-radius: 50%; flex: 0 0 auto; position: relative; top: -.1mm;
+  background: currentColor;
+  box-shadow: 0 0 .7mm .2mm currentColor, 0 0 2mm .45mm color-mix(in srgb, currentColor 45%, transparent);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.head .tag .led::after { content: ""; position: absolute; left: .45mm; top: .4mm; width: .6mm; height: .6mm; border-radius: 50%;
+  background: rgba(255,255,255,.85); -webkit-print-color-adjust: exact; print-color-adjust: exact; }   /* блик */
+.rule0 { border-top: .3mm solid var(--rule); margin: .2mm 0 1.3mm; }
+.rule0.over-table { margin-bottom: 1.1mm; }         /* сторона Б: та же линия под шапкой, таблица ниже */
+
+/* таблица отряда — как на планшете (Faction-Card-A/Шаблон.html, .units-table) */
+.units-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 0 0 1.2mm; }
+.units-table th { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-size: var(--fs); font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--blue); text-align: center; padding: 0 0 .7mm; border-bottom: .3mm solid var(--rule); }
+.units-table td { padding: .7mm 0 .3mm; vertical-align: middle; }
+.units-table td.u-icon { text-align: center; }
+.units-table td.u-icon img { height: 9mm; width: 100%; object-fit: contain; display: block; }
+.unit-cap { font-size: var(--fs); line-height: 1.05; color: var(--cyan); text-align: center; margin-top: .4mm; }
+.ustat { font-family: "Rationale", "Liberation Sans", sans-serif; font-size: 17.5pt; font-weight: 700; word-spacing: -.31pt;
+         text-align: center; color: #FFFFFF; line-height: 1; }
+.ustat.count { color: var(--blue); }
+.ustat.power { color: var(--pink); }
+.ustat .ast { font-size: .55em; vertical-align: .55em; margin-left: .2mm; line-height: 0; }
+.group-label { writing-mode: vertical-rl; text-orientation: mixed; font-size: calc(var(--fs) * .8); line-height: 1; color: var(--blue);
+               text-align: center; white-space: nowrap; }
+.units-table tr.cmt td { font-size: var(--fs); line-height: 1.2; font-style: italic; padding: .5mm 0 0; text-align: center; white-space: nowrap; }
+
+/* текст */
+.body { font-size: var(--fs); line-height: var(--lh); flex: 1 1 auto; display: flex; flex-direction: column; justify-content: space-between; }
+/* Свободное место карты делится поровну: над первым разделом, между разделами и под последним (решение Alek:
+   блоки не должны стоять вплотную, пока внизу пусто). Пустые ::before и ::after — крайние «промежутки»;
+   space-between, а не space-evenly: при переборе он прижимает текст к верху, а не центрирует. Браузеры
+   набирают по-разному, поэтому воздух считает раскладка, а не заданные миллиметры. */
+.body::before, .body::after { content: ""; display: block; flex: 0 0 0; }
+.body h3 { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; color: var(--cyan);
+           font-size: calc(var(--fs) * 1.2); letter-spacing: .03em; text-transform: uppercase; line-height: 1; margin: 0 0 1mm; }
+.body .sep { flex: 0 0 auto; height: .3mm; margin: calc(var(--gap) / 2) 0;   /* разделитель — отдельный элемент, */
+  background: linear-gradient(to right, rgba(238,104,140,0), var(--pink), rgba(238,104,140,0));  /* чтобы воздух */
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }                              /* ложился по обе его стороны */
+.body p { margin: 0 0 .5mm; }
+.body b { font-weight: 700; }
+.body .nw { white-space: nowrap; }
+.body .pw { color: var(--pink); }
+.body .para { display: block; margin-top: .5mm; }
+.body .dots { list-style: none; margin: 0; padding: 0; }
+.body .dots li { position: relative; padding-left: 2.6mm; margin: 0 0 .35mm; }
+.body .dots li::before { content: ""; position: absolute; left: .2mm; top: .5em; width: 1mm; height: 1mm; background: var(--num);
+                         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.body .steps { counter-reset: st; list-style: none; margin: 0; padding: 0; }
+.body .steps li { counter-increment: st; position: relative; padding-left: 3.4mm; margin: 0 0 .35mm; }
+.body .steps li::before { content: counter(st) "."; position: absolute; left: 0; font-weight: 700; color: var(--num); }
+
+/* ——— метки реза (оборот раскладки A4) ——— */
+.marks { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+@media print {
+  html, body { background: #fff; }
+  .bar, .warn { display: none !important; }
+  .pages { padding: 0; gap: 0; display: block; }
+  .sheet { box-shadow: none; }
+}
+</style>
+<style id="page-rule">@page { size: 2.76in 4.73in; margin: 0; }</style>
+</head>
+<body class="size">
+
+<div class="bar">
+  <div class="grp" role="group" aria-label="Вид печати">
+    <b>Печать:</b>
+    <button type="button" data-mode="size" aria-pressed="true">В размер, 70 × 120</button>
+    <button type="button" data-mode="a4" aria-pressed="false">A4 с метками реза</button>
+  </div>
+  <span class="hint" id="hint"></span>
+</div>
+
+<div class="pages" id="pages"></div>
+
+<script type="application/json" id="card-data">
+{
+  "компонент": "COMP-V-08, карта “Контроль сети”",
+  "формат": "Tarot 70 × 120 мм, двусторонняя",
+  "кегль": "8pt",
+  "стороны": [
+    {
+      "класс": "neutral",
+      "метка": "Без контроля",
+      "таблица": false,
+      "html": "<section><h3>Контроль над сетью</h3><p>Пока сеть без контроля, карта лежит в центре стола этой стороной вверх.</p><p>Игрок, который взял под контроль фабрику в Узле управления, сразу получает эту карту и контроль над всеми Роями в игре. Переверните карту.</p><ul class=\"dots\"><li>Если в регионе с Узлом управления есть обычная фабрика под контролем и отряд, считающийся фабрикой (например, “Шрёдингер”), карту получает тот, кто контролирует обычную фабрику.</li><li>Фабрика, убранная с поля, контроля над Узлом не даёт.</li></ul></section><section><h3>Рой без контроля</h3><p>Все Рои нейтральны: не относятся ни к какой фракции. Для всех эффектов и свойств каждый Рой считается боевой машиной <span class=\"nw\">с силой <b class=\"pw\">2</b></span>.</p><ul class=\"dots\"><li><b>Битва.</b> Рою без контроля можно объявить битву, другие фракции это не затрагивает. Результаты Рою назначают по обычным правилам.<span class=\"para\">За Рой кубики бросает игрок слева от атакующего.</span></li><li><b>Отступление.</b> Регион выбирает тот, кто вызвал отступление: в битве атакующий, вне битвы игрок, применивший способность.</li></ul></section>"
+    },
+    {
+      "класс": "",
+      "метка": "Под контролем",
+      "таблица": true,
+      "html": "<section><p>Все Рои в игре считаются вашими боевыми машинами для битвы, способностей и эффектов и относятся к вашей фракции.</p></section><section><h3>Развёртывание роя</h3><p><b>В качестве действия:</b> поставьте одну фигурку Роя в любой регион, помеченный жетоном Зоны сети.</p></section><section><h3>Ограничения Роя</h3><ol class=\"steps\"><li>Создаётся только “Развёртыванием роя”.</li><li>Выводится на поле только в Зоны сети, дальше перемещается как любой другой отряд.</li><li>Рой нельзя переместить в Узел управления. Попасть туда может отступлением после битвы или способностью.</li></ol></section><section><h3>Потеря контроля над сетью</h3><p>Если вы потеряли контроль над фабрикой в Узле, переверните карту и верните в центр стола.</p></section>"
+    }
+  ]
+}
+</script>
+
+<script>
+const DATA = JSON.parse(document.getElementById('card-data').textContent);
+const MM = 96 / 25.4;
+const SWARM = encodeURI('../acrylic/09. Рой дронов - стенд - 6шт - ↔️35мм.png');
+const HINT = {                                // подробности печати — print/ПЕЧАТЬ.md
+  size: 'Две страницы 70 × 120 мм: 1 — сторона “Без контроля”, 2 — “Под контролем”. Масштаб 100 %, поля — нет, фон — включить.',
+  a4: 'A4 книжный, карта с выпуском 6 мм; страница 1 — сторона “Без контроля”, страница 2 — “Под контролем” с метками реза. Подробно — print/ПЕЧАТЬ.md.',
+};
+function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
+function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
+
+function table() {                             // таблица отряда — как .units-table планшета
+  return `<table class="units-table"><colgroup><col style="width:24mm"><col style="width:6mm"><col><col><col></colgroup>
+    <thead><tr><th>Отряд</th><th></th><th>Кол-во</th><th>Стоим.</th><th>Сила</th></tr></thead>
+    <tbody><tr><td class="u-icon"><img src="${SWARM}" alt=""><div class="unit-cap">Рой боевых дронов</div></td><td class="group-label">Боевая<br>машина</td>
+      <td class="ustat count">6</td><td class="ustat">1<sup class="ast">*</sup></td><td class="ustat power">2</td></tr>
+    <tr class="cmt"><td colspan="5">* Стоимость 0, если в игре нет ни одного Роя.</td></tr></tbody></table>`;
+}
+function card(side) {                          // одна сторона карты
+  const s = DATA['стороны'][side];
+  const c = div('card' + (s['класс'] ? ' ' + s['класс'] : ''));
+  c.innerHTML = `<div class="head"><span class="t">Контроль сети</span><span class="tag">${s['метка']}<span class="led"></span></span></div>
+    ${s['таблица'] ? '<div class="rule0 over-table"></div>' + table() : '<div class="rule0"></div>'}
+    <div class="body">${s.html}</div>`;
+  c.querySelectorAll('.body > section + section').forEach(x => x.before(div('sep')));
+  return c;
+}
+function bleed(side) { return div('bleed' + (DATA['стороны'][side]['класс'] ? ' neutral' : '')); }
+function marks(segs, dark, SW, SH) {        // метки реза: отрезок делится на части над тёмным фоном и над белым полем
+  const inDark = (x, y) => dark.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
+  let light = '', ink = '';
+  for (const [x1, y1, x2, y2] of segs) {
+    const ts = [0, 1], vert = x1 === x2;
+    for (const [a, b, c, d] of dark) for (const v of (vert ? [b, d] : [a, c])) {
+      const t = vert ? (v - y1) / (y2 - y1) : (v - x1) / (x2 - x1);
+      if (t > 0 && t < 1) ts.push(t);
+    }
+    ts.sort((p, q) => p - q);
+    const P = t => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+    for (let k = 0; k + 1 < ts.length; k++) {
+      if (ts[k + 1] - ts[k] < 1e-6) continue;
+      const [ax, ay] = P(ts[k]), [bx, by] = P(ts[k + 1]), [mx, my] = P((ts[k] + ts[k + 1]) / 2);
+      const d = `M${ax.toFixed(3)},${ay.toFixed(3)} L${bx.toFixed(3)},${by.toFixed(3)} `;
+      if (inDark(mx, my)) light += d; else ink += d;
+    }
+  }
+  const box = document.createElement('div');
+  box.innerHTML = `<svg class="marks" viewBox="0 0 ${SW} ${SH}" style="width:${SW}mm;height:${SH}mm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`
+    + `<path d="${ink}" stroke="#1A1A1A" stroke-width=".1" fill="none"/><path d="${light}" stroke="#FFFFFF" stroke-width=".1" fill="none"/></svg>`;
+  return box.firstChild;
+}
+
+function build(mode) {
+  document.body.className = mode;
+  document.getElementById('page-rule').textContent = mode === 'size'
+    // 2,76 × 4,73 дюйма = 70,1 × 120,1 мм: Chrome округляет страницу вверх до сотых дюйма и не закрашивает остаток,
+    // поэтому просим округлённый размер сразу; карта стоит в левом верхнем углу, фон — с запасом 0,5 мм
+    ? '@page { size: 2.76in 4.73in; margin: 0; }'
+    : '@page { size: A4; margin: 0; }';
+  document.querySelectorAll('.bar button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+  document.getElementById('hint').textContent = HINT[mode];
+  const pages = document.getElementById('pages'); pages.innerHTML = '';
+  const W = 70, H = 120, B = 6;
+  for (const side of [0, 1]) {
+    const sh = div('sheet'); pages.appendChild(sh);
+    if (mode === 'size') {
+      sh.appendChild(place(bleed(side), 0, 0, W + .5, H + .5));
+      sh.appendChild(place(card(side), 0, 0, W, H));
+      continue;
+    }
+    // A4 книжный: карта по центру листа, выпуск 6 мм; раскладка симметрична — при двусторонней печати ничего не зеркалится
+    const x = (210 - W) / 2, y = (297 - H) / 2;
+    sh.appendChild(place(bleed(side), x - B, y - B, W + 2 * B, H + 2 * B));
+    sh.appendChild(place(card(side), x, y, W, H));
+    if (side === 1) {                                                   // метки реза — только на обороте
+      // крестик в каждом углу: обе линии идут через угол наружу на 10 мм и внутрь вдоль кромки на 4 мм
+      const OUT = 10, IN = 4, segs = [];
+      for (const [cx, dx] of [[x, 1], [x + W, -1]]) for (const [cy, dy] of [[y, 1], [y + H, -1]]) {
+        segs.push([cx - dx * OUT, cy, cx + dx * IN, cy]);
+        segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);
+      }
+      sh.appendChild(marks(segs, [[x - B, y - B, x + W + B, y + H + B]], 210, 297));
+    }
+  }
+  // проверка: текст не должен вылезать за поле. Шрифты @font-face грузятся, только когда их впервые использует
+  // текст на странице, поэтому мерить — после повторного document.fonts.ready, иначе меряется запасной шрифт
+  document.fonts.ready.then(() => requestAnimationFrame(() => document.querySelectorAll('div.card').forEach(c => {
+    const b = c.querySelector('.body'), last = b.lastElementChild;
+    const over = (last.getBoundingClientRect().bottom - (c.getBoundingClientRect().bottom - parseFloat(getComputedStyle(c).paddingBottom))) / MM;
+    if (over > 0.2) { const w = div('warn'); w.textContent = `перебор ${over.toFixed(1)} мм`; c.closest('.sheet').appendChild(w); }
+  })));
+}
+
+document.querySelectorAll('.bar button').forEach(b => b.addEventListener('click', () => { history.replaceState(null, '', '#' + b.dataset.mode); build(b.dataset.mode); }));
+Promise.all([document.fonts.ready, new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = SWARM; })])
+  .then(() => build(location.hash === '#a4' ? 'a4' : 'size'));
+</script>
+</body>
+</html>
