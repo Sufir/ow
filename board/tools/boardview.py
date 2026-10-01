@@ -170,13 +170,15 @@ def svg(R, spec, title, decor=()):
     W, H = bc.CANVAS
     dec = ''.join(f'<path class="ld" fill="{COLOUR[rid]}" d="{path_d(g)}"/>' for rid, g in decor)
     import labels as lb
+    import symbols as sy
     names = lb.svg_layer(lb.place(R, spec, decor)[0])
+    syms = sy.svg_layer(R, spec, decor)[0]
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W:g}mm" height="{H:g}mm" viewBox="0 0 {W:g} {H:g}">\n'
             f'<title>{title}</title>\n<defs>{blend_defs(R, spec)}</defs>'
             f'<rect width="{W:g}" height="{H:g}" fill="#ece8df"/>'
-            f'<style>{lb.font_css()}</style>'
+            f'<style>{lb.font_css()}{sy.font_css()}</style>'
             f'<g stroke-linejoin="round"><style>.ld{{stroke:#2c2a26;stroke-width:.35}}</style>{svg_regions(R, spec)}{dec}</g>'
-            f'<g id="names">{names}</g>'
+            f'<g id="symbols">{syms}</g><g id="names">{names}</g>'
             f'<rect x="{X0:g}" y="{Y0:g}" width="{X1 - X0:g}" height="{Y1 - Y0:g}" fill="none" stroke="#2c2a26" stroke-width="0.4"/>'
             f'\n</svg>\n')
 
@@ -234,9 +236,13 @@ def html(R, C, spec, chk, log, *, nodes, decor, page_title, heading, generator, 
     rows = chk['rows']
     glayer = graph_layer(spec, chk, nodes)
     import labels as lb
+    import symbols as sy
     names, names_miss = lb.place(R, spec, decor)
+    syms, syms_miss = sy.svg_layer(R, spec, decor)
     if names_miss:
         log = list(log) + ['подписи не поместились: ' + ', '.join(names_miss)]
+    if syms_miss:
+        log = list(log) + ['символы не поместились: ' + ', '.join(syms_miss)]
     draft = urllib.parse.quote(DRAFT.relative_to(GEO.parent).as_posix())
     base = ''.join(f'<path d="{path_d(g)}"/>' for g in C.values())
     decor = ''.join(f'<path fill="{COLOUR[rid]}" d="{path_d(g)}"><title>остров-декор: '
@@ -268,7 +274,7 @@ def html(R, C, spec, chk, log, *, nodes, decor, page_title, heading, generator, 
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{page_title}</title>
 <style>
-{lb.font_css()}
+{lb.font_css()}{sy.font_css()}
 :root{{--bg:#f4f1ea;--fg:#23211d;--mut:#6b665c;--line:#d6d0c4;--ok:#2f7d4a;--warn:#a86a00;--bad:#b3261e}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme=light]){{--bg:#1d1c1a;--fg:#ece8df;--mut:#a39d91;--line:#3a3833;--ok:#7fc79a;--warn:#e6b35c;--bad:#f2867e}}}}
 body{{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,sans-serif}}
@@ -302,6 +308,7 @@ h2{{font-size:16px;margin:18px 0 8px}} .big{{font-size:17px;font-weight:600}}
 <p class="big {"bad" if nf else "ok"}">{"Отказов: " + str(nf) if nf else "Зелёное: отказов нет"} · предупреждений: {nw}</p>
 <div class="ctl">
 <label><input type="checkbox" id="c-names" checked> Подписи областей</label>
+<label><input type="checkbox" id="c-sym" checked> Символы регионов</label>
 <label><input type="checkbox" id="c-lab"> Метрики: id, A, U, N</label>
 <label><input type="checkbox" id="c-graph" checked> Граф: центры и рёбра</label>
 <label><input type="checkbox" id="c-base"> Контур основы</label>
@@ -321,6 +328,7 @@ h2{{font-size:16px;margin:18px 0 8px}} .big{{font-size:17px;font-weight:600}}
 <g id="decor">{decor}</g>
 <clipPath id="cmap"><rect id="cmaprect" x="{X0:g}" y="{Y0:g}" width="{X1 - X0:g}" height="{Y1 - Y0:g}"/></clipPath>
 <g id="graph" clip-path="url(#cmap)">{glayer}</g>
+<g id="symbols">{syms}</g>
 <g id="names">{lb.svg_layer(names)}</g>
 <g id="labels" style="display:none">{labels_layer(spec, rows, nodes)}</g>
 <rect x="{X0:g}" y="{Y0:g}" width="{X1 - X0:g}" height="{Y1 - Y0:g}" fill="none" stroke="#2c2a26" stroke-width="0.4"/>
@@ -338,6 +346,7 @@ const $=id=>document.getElementById(id);
 const show=(id,on)=>{{$(id).style.display=on?'':'none'}};
 $('c-lab').onchange=e=>show('labels',e.target.checked);
 $('c-names').onchange=e=>show('names',e.target.checked);
+$('c-sym').onchange=e=>show('symbols',e.target.checked);
 $('c-graph').onchange=e=>show('graph',e.target.checked);
 $('c-base').onchange=e=>show('base',e.target.checked);
 $('c-decor').onchange=e=>show('decor',e.target.checked);

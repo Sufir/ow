@@ -246,3 +246,10 @@ python3 board/tools/boardcheck.py all --board board/geo/board-MC-3P.geojson   # 
 - Океаны, разрезанные краем, подписаны у каждого края на плашке-стрелке.
 - Проверка: `python3 board/tools/labels.py check` — что не поместилось и где кегль мельче.
 
+## Символы регионов
+
+Капля `Q`, пламя `W`, вагонетка `E` — шрифт `print/Fonts/Oil Wars.ttf` (`D-102`). Какой символ
+у области — `board/derived/<раскладка>.json` → `region_symbols`. Расстановка —
+`board/tools/symbols.py` (`SIZE`, `POS`, `FILL` в начале файла), рисует `boardview.py`
+под подписями. Тестовая страница вариантов — `python3 board/tools/symbols.py test`.
+
