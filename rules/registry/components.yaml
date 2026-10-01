@@ -192,29 +192,41 @@ common:
     spec:
       material: баннер или неопрен, цельное полотно
       canvas_mm: 900 × 550
-      projection: южно-полярная азимутальная
+      projection: классическая (D-096)
       layouts: [3P, 4P-A, 4P-B, 5P]
       seam: нет
       cut: нет
       edge_wrap: нет
+      print: >
+        два вывода на полотно, растр 300 dpi, sRGB с профилем:
+        trim 910 × 560 мм — поле плюс 5 мм на обрез, под заказ «в размер»;
+        canvas 1000 × 700 мм — онлайн-холст баннера, поле с вылетом по центру
+        и уголками реза снаружи вылета
     files:
+      - board/geo/board-MC-3P.geojson
+      - board/geo/board-MC-4P-A.geojson
+      - board/geo/board-MC-4P-B.geojson
+      - board/geo/board-MC-5P.geojson
+      - board/geo/board-MC-*.svg
+      - board/print/поле-MC-*.pdf
       - board/regions.yaml
       - board/edges.yaml
-      - board/geo/world-game.geojson
-      - board/derived/
-    generator: board/tools/map.py all, board/tools/worldgeom.py all
-    master: null
+    generator: board/tools/boardcheck.py (приёмка), board/tools/master.py (мастера печати)
+    master: board/print/поле-MC-*.pdf
     truth: board/SPEC-BOARD.md
     state:
-      content: TODO
-      design: NONE
+      content: VERIFIED
+      design: APPROVED
       production: NONE
     evidence: >
-      Alek 2026-09-22: «считай ещё не начато, есть только очень сырые
-      черновые наброски и расчёт/реестр». Топология, области, смежности
-      и четыре раскладки собраны и проверяются map.py check — но это
-      содержимое board/, а не компонента: на полотне ещё ничего нет,
-      символы регионов не нанесены (MF-011).
+      Пройдено тремя этапами, D-096…D-105. Этап 1: нарезка MC-5P зелёная
+      по boardcheck.py, граф держится, 21 область из 21 (D-097). Этап 2:
+      три остальных полотна склейкой из MC-5P, все четыре зелёные (D-098).
+      Этап 3: цвета регионов, подписи, символы регионов, декор, фон
+      под фигурами (D-099…D-105). Мастера печати собраны 2026-10-01:
+      восемь PDF 300 dpi, по два на полотно. В Git не идут — ~8 МБ каждый,
+      пересобираются board/tools/master.py. production остаётся NONE:
+      не напечатано.
     refs: [D-040, D-044, D-047, MISS-023, MF-011, MF-016, MF-017]
     blocks_print: false
     findings: [COMP-I-002]

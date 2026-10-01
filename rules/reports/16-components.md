@@ -1,14 +1,14 @@
 # 16 — Реестр компонентов
 
-Собрано `rules/tools/components.py` 2026-09-30. Руками не правится — источник `rules/registry/components.yaml`.
+Собрано `rules/tools/components.py` 2026-10-01. Руками не правится — источник `rules/registry/components.yaml`.
 
 ## Готовность
 
 | Состояние | Записей |
 |---|---|
 | ГОТОВО | 23 |
-| в работе | 9 |
-| не начато | 2 |
+| в работе | 10 |
+| не начато | 1 |
 | не подтверждено | 1 |
 | **Всего рабочих записей** | 35 |
 | Из оригинала не берём | 11 |
@@ -29,7 +29,7 @@
 |---|---|---|---|---|---|---|---|
 | COMP-C-01 | Книга правил | 1 | BOOK | VERIFIED | NONE | NONE | в работе |
 | COMP-C-02 | Памятки игрока | 5 | CARD | VERIFIED | APPROVED | NONE | в работе |
-| COMP-C-03 | Игровое поле | 4 | BANNER | TODO | NONE | NONE | не начато |
+| COMP-C-03 | Игровое поле | 4 | BANNER | VERIFIED | APPROVED | NONE | в работе |
 | COMP-C-04 | Треки Судного дня | 2 | SHEET | VERIFIED | APPROVED | DONE | ГОТОВО |
 | COMP-C-05 | Маркер Судного дня | 1 | ACRYLIC | VERIFIED | APPROVED | DONE | ГОТОВО |
 | COMP-C-06 | Трек влияния (победных очков) | 1 | SHEET | VERIFIED | APPROVED | DONE | ГОТОВО |
