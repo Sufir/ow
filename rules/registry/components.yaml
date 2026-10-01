@@ -117,7 +117,7 @@ common:
     files:
       - rules/RULEBOOK.md
       - source/gdocs/pdf/Нефтяные войны (правила).pdf
-    generator: rules/tools/build_rulebook.py
+    generator: null
     master: null
     truth: rules/RULEBOOK.md
     state:

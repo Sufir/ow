@@ -108,6 +108,7 @@ def build():
     merged, touched = rewrap_long(merged)
 
     text = "\n".join(merged).rstrip("\n") + "\n"
+    guard(text)
     DST.write_text(text, encoding="utf-8")
 
     print(f"RULEBOOK.md собран: {len(merged)} строк, {len(text)} символов")
@@ -116,6 +117,43 @@ def build():
     print(f"  переверстано длинных строк: {len(touched)} "
           f"{[f'исх.{n} ({ln} симв.)' for n, ln in touched]}")
     return text
+
+
+def guard(text):
+    """Предохранитель: не затирать RULEBOOK.md, если он ушёл вперёд черновика.
+
+    D-107, 2026-10-01. Этот скрипт собирал чистовик из черновика в фазе P0–P12,
+    и тогда направление было верным. С тех пор книгу правят напрямую: каждый
+    компонентный чат вносит в RULEBOOK.md свои строки, а черновик обновляют
+    не всегда. Пересборка в таком состоянии молча откатывает всё, что
+    в черновик не попало, — так уже терялись правки D-084, D-094 и D-095.
+
+    Поэтому перед записью сверяем: если в текущем RULEBOOK.md есть строки,
+    которых нет в собранном тексте, запись отменяется.
+    """
+    if "--force" in sys.argv:
+        print("  предохранитель снят ключом --force")
+        return
+    if not DST.exists():
+        return
+    cur = set(l.strip() for l in DST.read_text(encoding="utf-8").split("\n") if l.strip())
+    new = set(l.strip() for l in text.split("\n") if l.strip())
+    lost = cur - new
+    if not lost:
+        return
+    print()
+    print("ОТМЕНЕНО: пересборка стёрла бы строки, которых нет в черновике.")
+    print(f"  потерялось бы строк: {len(lost)}")
+    for l in sorted(lost)[:8]:
+        print(f"    · {l[:96]}")
+    if len(lost) > 8:
+        print(f"    … и ещё {len(lost) - 8}")
+    print()
+    print("  Книгу правят напрямую, черновик отстаёт (D-107). Варианты:")
+    print("    1. ничего не пересобирать — так и задумано, RULEBOOK.md источник;")
+    print("    2. перенести недостающее в reports/rulebook-draft.md и запустить снова;")
+    print("    3. --force, если вы точно знаете, что делаете.")
+    sys.exit(2)
 
 
 def verify(text):
