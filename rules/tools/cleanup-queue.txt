@@ -21,3 +21,4 @@
 удалить: board/geo/labels-test.html
 удалить: board/geo/palette-test.html
 удалить: board/geo/symbols-test.html
+удалить: print/наёмники-дизайн-*.html

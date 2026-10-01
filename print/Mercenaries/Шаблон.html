@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Наёмники — шаблон</title>
+<!--
+  Карты лояльности наёмных боевых роботов — COMP-V-10. Шаблон этапа 2, принят Alek 01.10.2026 (решение — в rules/DECISIONS.md).
+  Tarot 70 × 120 мм, двусторонняя, вариант «Чертёж на мониторе». Стороны — по состоянию технологии (переворот):
+    сторона 1 «Задача» — лежит в общем резерве и у владельца, пока задача не выполнена:
+      штамп (имя, фракция, стоимость, сила, расшифровка n), чертёж, создание, способность, задача;
+    сторона 2 «Технология» — карту переворачивают, когда задача выполнена:
+      штамп, чертёж, способность, технология (на месте задачи).
+
+  Как устроено:
+    • содержимое — только в JSON слота «данные» (<script id="card-data">); его пишет Сборка.py из rules/registry/mercenaries.yaml;
+      в самом шаблоне — демо: “C.R.A.B.” (самая лёгкая карта) и “Шрёдингер” (самая плотная);
+    • оформление — только в CSS этого файла; карты строит скрипт ниже, по любому числу записей «карты»;
+    • чертёж робота — силуэт с его планшета (контур готовит Сборка.py), рисуется скриптом по фактическому размеру поля:
+      поле забирает свободное место стороны, от 12 до 32 мм; размер одинаковый на обеих сторонах карты (по меньшей);
+      декор — линейки по краям поля, размерные линии без чисел (справа — вся высота, слева — до выступающей детали
+      или до середины), оси штрихпунктиром, штриховка; толщины и шаг штриховки не зависят от размера;
+    • место: 1) чертёж сжимается до 12 мм; 2) текст не входит и так — чертёж на этой карте убирается (синяя плашка);
+      3) не входит и без чертежа — красная плашка «перебор»: это вопрос к составу текста, кегль не уменьшается;
+    • имя — одна строка, 12,5 pt; если новое имя не входит, кегль этой карты уменьшается до 10 pt (жёлтая плашка);
+    • два вида печати: «В размер» — страницы 70 × 120, у каждой карты сторона 1 и сторона 2 подряд;
+      «A4 с метками реза» — по четыре карты на лист с выпуском 6 мм, сторона 2 зеркальна по столбцам
+      (двусторонняя печать с переворотом по длинному краю), метки реза — крестики на стороне 2.
+  Шрифты: AlienEncounters — имя, OpenGostTypeB — заголовки и подписи (D-091), Liberation Sans — текст (D-091),
+  Rationale — числа (D-093), Oil Wars — значки {R} {Q} {W} {E} {T} (ICON-001). Кавычки — только “ ” (D-075).
+  Схема данных и что где крутить — README — шаблон наёмника.md.
+-->
+<style>
+@font-face { font-family: "AlienEncounters"; src: url("../Fonts/AlienEncounters.ttf") format("truetype"); }
+@font-face { font-family: "OpenGostTypeB";   src: url("../Fonts/OpenGostTypeB.ttf") format("truetype"); }
+@font-face { font-family: "Rationale";       src: url("../Fonts/Rationale-Regular.ttf") format("truetype"); }
+@font-face { font-family: "OilWars";         src: url("../Fonts/Oil Wars.ttf") format("truetype"); }
+@font-face { font-family: "Liberation Sans"; src: url("../Fonts/LiberationSans-Regular.ttf")    format("truetype"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Liberation Sans"; src: url("../Fonts/LiberationSans-Bold.ttf")       format("truetype"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Liberation Sans"; src: url("../Fonts/LiberationSans-Italic.ttf")     format("truetype"); font-weight: 400; font-style: italic; }
+@font-face { font-family: "Liberation Sans"; src: url("../Fonts/LiberationSans-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; }
+
+:root {
+  --w: 70mm; --h: 120mm;      /* Tarot, по линии реза */
+  --bezel: 2.4mm;             /* рамка “монитора” от линии реза до экрана */
+  --pad: 2mm;                 /* поле экрана */
+  --fs: 8pt;                  /* кегль текста */
+  --lh: 1.2;
+  --ink:   #FFFFFF;
+  --cyan:  #11C5FF;           /* заголовки блоков */
+  --blue:  #25A4EE;           /* фазы, рамка технологии */
+  --line:  #9FE8FF;           /* линии чертежа и штампа, номера шагов */
+  --line2: #7FD6FF;           /* вторичные линии, подписи */
+  --frame: rgba(159,232,255,.85);
+  --pink:  #EE688C;           /* сила, рамка задачи */
+  --red:   #FC1A24;           /* текст задачи — как на карте задачи (D-080) */
+  --bg:    #0A2236;           /* экран */
+  --bezel-bg: #050D15;        /* рамка и выпуск */
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #7A8794; font-family: "Liberation Sans", sans-serif; }
+
+/* ——— панель (только на экране) ——— */
+.bar { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: .3mm solid #999;
+       padding: 3mm 8mm; display: flex; gap: 2mm 6mm; align-items: center; flex-wrap: wrap; font-size: 10.5pt; }
+.bar .grp { display: flex; gap: 1.5mm; align-items: center; }
+.bar button { font: inherit; padding: 1.1mm 3mm; border: .3mm solid #555; background: #fff; cursor: pointer; }
+.bar button[aria-pressed="true"] { background: #111; color: #fff; border-color: #111; }
+.bar .hint { color: #444; }
+.bar .stat { color: #111; font-weight: 700; }
+.tags { position: absolute; left: 1mm; top: 1mm; z-index: 5; display: flex; flex-direction: column; align-items: flex-start; gap: .6mm; }
+.tags div { background: #fff; padding: .5mm 1.5mm; font: 700 9pt "Liberation Sans", sans-serif; }
+.tags .warn { color: #B3261E; }       /* перебор, имя шире поля */
+.tags .info { color: #1F5FA8; }       /* чертёж убран */
+.tags .fit  { color: #8A5A00; }       /* имя ужато */
+
+/* ——— листы ——— */
+.pages { padding: 8mm 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8mm; }
+body.a4 .pages { flex-direction: column; align-items: center; flex-wrap: nowrap; }
+.sheet { position: relative; background: #fff; overflow: hidden; box-shadow: 0 3mm 10mm rgba(0,0,0,.35);
+         break-after: page; page-break-after: always; }
+.sheet:last-child { break-after: auto; page-break-after: auto; }
+body.size .sheet { width: calc(var(--w) + .5mm); height: calc(var(--h) + .5mm); }
+body.a4 .sheet { width: 210mm; height: 297mm; }
+.bleed { position: absolute; background: var(--bezel-bg); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+/* ——— карта ——— */
+.card { position: absolute; width: var(--w); height: var(--h); padding: var(--bezel); color: var(--ink);
+        font-size: var(--fs); line-height: var(--lh); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.card p { margin: 0 0 .5mm; }
+.sym { font-family: "OilWars", sans-serif; font-size: 1.22em; line-height: 0; vertical-align: -0.055em;
+       font-style: normal; font-weight: 400; font-synthesis: none; color: inherit; text-transform: none; letter-spacing: 0; }
+
+/* экран: сетка 1 и 5 мм, свечение по краю */
+.scr { position: relative; height: 100%; border-radius: 1.2mm; overflow: hidden; padding: var(--pad); display: flex; flex-direction: column;
+       background-color: var(--bg);
+       background-image:
+         linear-gradient(rgba(127,214,255,.15) .12mm, rgba(127,214,255,0) .12mm),
+         linear-gradient(90deg, rgba(127,214,255,.15) .12mm, rgba(127,214,255,0) .12mm),
+         linear-gradient(rgba(127,214,255,.06) .08mm, rgba(127,214,255,0) .08mm),
+         linear-gradient(90deg, rgba(127,214,255,.06) .08mm, rgba(127,214,255,0) .08mm);
+       background-size: 5mm 5mm, 5mm 5mm, 1mm 1mm, 1mm 1mm;
+       background-position: var(--pad) var(--pad), var(--pad) var(--pad), var(--pad) var(--pad), var(--pad) var(--pad);
+       box-shadow: inset 0 0 0 .25mm rgba(127,214,255,.55), inset 0 0 4mm rgba(17,197,255,.16); }
+
+/* штамп: имя и фракция | стоимость | сила; расшифровка n — строкой штампа, без границы с ячейкой силы */
+.tb { display: grid; grid-template-columns: minmax(0, 1fr) 9.6mm 9.6mm; border: .25mm solid var(--frame); background: rgba(5,16,26,.6); flex: 0 0 auto; }
+.tb .nm { padding: .9mm 1.4mm .7mm; min-width: 0; }
+.tb .name { font-family: "AlienEncounters", sans-serif; font-size: 12.5pt; line-height: 1; text-transform: uppercase; white-space: nowrap; overflow: hidden; }
+.tb .fac { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-size: 7pt; line-height: 1; letter-spacing: .05em;
+           text-transform: uppercase; color: var(--line2); margin-top: .9mm; white-space: nowrap; }
+.tb .st { display: flex; flex-direction: column; border-left: .25mm solid var(--frame); }
+.tb .st .lbl { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-size: 6.4pt; line-height: 1; letter-spacing: .04em; white-space: nowrap;
+               text-transform: uppercase; color: var(--line); text-align: center; padding: .75mm 0 .55mm; border-bottom: .25mm solid var(--frame); }
+.tb .st .num { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; padding: .5mm 0 .4mm;
+               font-family: "Rationale", "Liberation Sans", sans-serif; font-size: 16pt; line-height: 1; font-weight: 700; white-space: nowrap; }
+.tb .st.pw .lbl, .tb .st.pw .num { color: var(--pink); }
+.tb.has-note .nm, .tb.has-note .st:not(.pw) { border-bottom: .25mm solid var(--frame); }
+.tb .note { grid-column: 1 / -1; padding: .8mm 1.6mm .9mm; color: var(--pink); font-style: italic; font-size: 7.5pt; line-height: 1.2;
+            text-align: center; text-wrap: balance; }
+
+/* чертёж: поле забирает свободное место, 12–32 мм; рисует скрипт */
+.draw { position: relative; width: 100%; flex: 1000 1 0; min-height: 12mm; max-height: 32mm; margin: .6mm 0 0; }
+.draw.off { display: none; }
+.draw svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+
+/* текст */
+.body { flex: 1 1 auto; display: flex; flex-direction: column; gap: 1.3mm; padding-top: .8mm; }
+.body h3 { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; font-size: 9pt; letter-spacing: .04em;
+           text-transform: uppercase; color: var(--cyan); line-height: 1; margin: 0 0 1mm; display: flex; align-items: baseline; gap: 1.4mm; }
+.body h3 .hn { flex: 0 1 auto; min-width: 0; line-height: 1.05; }
+.body h3::after { content: ""; flex: 1 1 4mm; min-width: 4mm; align-self: flex-start; margin-top: .5em; border-top: .2mm solid rgba(127,214,255,.45); }
+.body h3 .kind { order: 3; flex: 0 0 auto; font-size: 6.4pt; font-weight: 400; letter-spacing: .08em; color: var(--line2); }
+.phase { font-weight: 700; color: var(--blue); }
+.steps { counter-reset: st; list-style: none; margin: 0; padding: 0; }
+.steps li { counter-increment: st; position: relative; padding-left: 3.4mm; margin: 0 0 .35mm; }
+.steps li::before { content: counter(st) "."; position: absolute; left: 0; font-weight: 700; color: var(--line); }
+.body > .pre { margin-bottom: 1.6mm; }          /* подпись плашки выходит над рамкой — запас перед плашкой */
+
+/* плашки задачи и технологии: прижаты к низу, подпись по центру верхней кромки */
+.slot { margin-top: auto; position: relative; padding: 2.1mm 1.8mm 1.2mm; background: rgba(5,16,26,.55); }
+.slot .lab { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 1mm;
+             padding: 0 1.3mm; background: var(--bg); line-height: 1; white-space: nowrap;
+             font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; font-size: 8pt; letter-spacing: .08em; text-transform: uppercase; }
+/* задача — как карта задачи (D-080, D-089): розовая рамка пунктиром, гекс «!», красный текст по центру */
+.slot.task { border: .3mm dashed var(--pink); text-align: center; }
+.slot.task .lab { color: var(--pink); }
+.slot .hex { width: 3.4mm; height: 3.85mm; display: block; fill: var(--pink); fill-rule: evenodd; filter: drop-shadow(0 0 .7mm rgba(238,104,140,.75)); }
+.ttext { color: var(--red); text-shadow: 0 0 1.6mm rgba(255,92,92,.5); }
+.ttext > div { text-wrap: balance; }
+.ttext b { font-weight: 700; }
+/* технология — синяя сплошная рамка; название и фаза как на карте технологии (D-079) */
+.slot.tech { border: .3mm solid var(--blue); }
+.slot.tech .lab { color: var(--blue); font-size: 7pt; letter-spacing: .14em; }
+.slot.tech .tn { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; font-size: 9pt; letter-spacing: .04em;
+                 text-transform: uppercase; color: var(--ink); line-height: 1.05; margin: 0 0 .5mm; }
+
+/* ——— метки реза (сторона 2 раскладки A4) ——— */
+.marks { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+@media print {
+  html, body { background: #fff; }
+  .bar, .tags { display: none !important; }
+  .pages { padding: 0; gap: 0; display: block; }
+  .sheet { box-shadow: none; }
+}
+</style>
+<style id="page-rule">@page { size: 2.76in 4.73in; margin: 0; }</style>
+</head>
+<body class="size">
+
+<div class="bar">
+  <div class="grp" role="group" aria-label="Вид печати">
+    <b>Печать:</b>
+    <button type="button" data-mode="size" aria-pressed="true">В размер, 70 × 120</button>
+    <button type="button" data-mode="a4" aria-pressed="false">A4 с метками реза</button>
+  </div>
+  <span class="stat" id="stat"></span>
+  <span class="hint" id="hint"></span>
+</div>
+
+<div class="pages" id="pages"></div>
+
+<!--#данные-->
+<script type="application/json" id="card-data">
+{
+ "компонент": "COMP-V-10, карты лояльности наёмных боевых роботов",
+ "формат": "Tarot 70 × 120 мм, двусторонняя: сторона 1 — задача, сторона 2 — технология (переворот)",
+ "источник": "rules/registry/mercenaries.yaml",
+ "карты": [
+  {
+   "id": "MRC-R-01",
+   "имя": "“C.R.A.B.”",
+   "фракция": "Островная Империя",
+   "стоимость": "6",
+   "сила": "3",
+   "сноска": null,
+   "создание": [
+    "Ваш боевой робот находится в регионе с контролируемой вами фабрикой.",
+    "Заплатите 6{R}.",
+    "“C.R.A.B.” появляется в регионе с этой фабрикой.",
+    "Получите карту скрытого влияния."
+   ],
+   "способности": [
+    {
+     "название": "Контроль над морем",
+     "фаза": "Фаза влияния",
+     "текст": "Если вы контролируете фабрику в регионе Юг Тихого океана, получите карту скрытого влияния."
+    }
+   ],
+   "задача": "Вы контролируете не менее 3 фабрик в океанских регионах. ИЛИ В океанских регионах не менее 4 любых фабрик.",
+   "технология": {
+    "название": "Диверсия",
+    "фаза": "Битва. Тактическая подготовка",
+    "текст": "Если “C.R.A.B.” участвует в битве, противник, на свой выбор, уничтожает одну из своих боевых машин или одного из своих пехотинцев в этой битве."
+   },
+   "силуэт_файл": "print/Units/ОстровнаяИмперия/Краб.png",
+   "силуэт": {
+    "W": 432,
+    "H": 312,
+    "d": "M194.9,0.0 L195.0,-1.0 L201.0,-1.0 L200.9,5.0 L187.0,14.5 L174.3,21.0 L171.0,26.0 L176.7,24.0 L187.0,17.3 L194.0,15.4 L217.0,0.6 L220.0,2.3 L220.3,6.0 L207.0,15.3 L194.0,21.6 L190.0,25.9 L183.0,28.6 L168.1,38.0 L168.6,45.0 L153.9,55.0 L152.9,61.0 L155.0,69.3 L179.0,60.2 L203.0,43.1 L212.0,40.5 L224.0,41.8 L263.0,55.7 L274.0,61.2 L281.0,66.4 L311.0,76.7 L319.0,83.0 L353.8,101.0 L373.6,117.0 L375.7,123.0 L375.4,157.0 L370.0,164.6 L361.0,166.5 L359.1,168.0 L356.5,172.0 L360.4,176.0 L371.0,178.9 L405.0,175.5 L410.1,178.0 L431.0,180.1 L432.0,185.0 L427.0,187.3 L422.0,193.2 L405.0,194.9 L399.0,199.6 L369.0,202.0 L362.0,203.0 L355.0,206.6 L328.0,209.0 L326.7,211.0 L329.3,221.0 L328.0,224.2 L325.0,225.7 L322.3,225.0 L319.5,222.0 L307.5,201.0 L301.0,194.6 L298.1,187.0 L295.0,184.2 L287.0,189.5 L276.8,194.0 L270.0,201.5 L242.0,201.8 L235.0,199.8 L229.7,201.0 L228.5,204.0 L238.4,233.0 L238.1,241.0 L244.6,260.0 L252.6,298.0 L253.6,305.0 L252.0,312.0 L239.0,312.0 L223.3,263.0 L223.0,255.0 L219.1,243.0 L214.0,239.3 L210.0,247.1 L205.0,247.9 L199.4,238.0 L191.4,234.0 L190.0,228.3 L182.0,224.7 L176.8,219.0 L177.2,215.0 L182.4,210.0 L178.3,190.0 L177.8,171.0 L176.0,169.0 L164.0,168.9 L157.8,172.0 L158.0,177.0 L154.3,190.0 L155.6,196.0 L154.8,214.0 L151.0,218.2 L144.7,217.0 L140.7,204.0 L131.0,201.6 L126.2,195.0 L123.7,188.0 L122.0,187.4 L121.0,188.8 L117.0,207.0 L116.3,218.0 L118.8,235.0 L119.8,269.0 L118.8,272.0 L116.0,274.2 L112.0,274.3 L108.4,271.0 L96.7,215.0 L89.0,211.2 L81.8,205.0 L73.0,192.5 L70.0,190.7 L57.0,189.3 L49.1,192.0 L44.2,200.0 L42.4,212.0 L31.6,221.0 L29.1,230.0 L23.6,235.0 L22.1,242.0 L16.7,246.0 L15.0,254.4 L8.0,260.3 L2.9,260.0 L-1.0,257.0 L-1.0,254.0 L2.0,248.7 L16.4,205.0 L21.2,198.0 L29.4,190.0 L35.4,177.0 L34.8,170.0 L40.4,165.0 L52.0,143.6 L53.5,135.0 L60.0,131.6 L70.0,117.3 L78.0,115.5 L82.0,117.0 L86.2,122.0 L95.4,150.0 L97.0,150.5 L106.8,143.0 L109.0,130.7 L99.0,126.2 L95.5,122.0 L98.3,115.0 L97.4,108.0 L100.4,94.0 L103.3,90.0 L103.5,87.0 L101.0,84.2 L94.0,82.8 L90.0,80.1 L86.3,73.0 L95.0,48.0 L103.5,34.0 L110.0,28.5 L123.0,22.4 L137.0,24.5 L142.0,23.6 L146.4,27.0 L150.0,26.8 L166.0,17.1 L174.0,14.3 Z M251.7,73.0 L256.0,73.1 L258.6,75.0 L263.5,88.0 L262.4,91.0 L257.0,92.1 L254.0,90.3 L251.0,75.0 Z M273.1,77.0 L277.0,76.6 L288.0,81.7 L289.9,84.0 L289.0,86.8 L283.0,89.1 L276.6,86.0 L273.2,80.0 Z M122.8,101.0 L125.0,100.5 L127.6,102.0 L127.0,105.3 L123.0,108.2 L117.0,109.6 L112.0,114.9 L109.0,114.5 L110.0,108.0 L117.0,106.8 Z M72.3,154.0 L74.2,154.0 L78.6,174.0 L86.4,185.0 L90.1,188.0 L90.0,190.7 L79.1,181.0 L72.9,170.0 L68.5,165.0 L68.5,162.0 Z",
+    "ext": {
+     "left": 255.5,
+     "right": 183.0,
+     "top": 198.0,
+     "bottom": 245.5,
+     "midleft": 45.0
+    }
+   }
+  },
+  {
+   "id": "MRC-R-06",
+   "имя": "“Шрёдингер”",
+   "фракция": "Сайнтифик Солюшн",
+   "стоимость": "6",
+   "сила": "n",
+   "сноска": "n — число вражеских боевых роботов в игре. Наёмные боевые роботы не считаются.",
+   "создание": [
+    "Ваш боевой робот находится в регионе с контролируемой вами фабрикой.",
+    "Заплатите 6{R}.",
+    "“Шрёдингер” появляется в регионе с этой фабрикой."
+   ],
+   "способности": [
+    {
+     "название": "Квантовый скачок",
+     "фаза": "Действие. Стоимость: 1{R}",
+     "текст": "Если “Шрёдингер” находится в регионе, где есть фабрика и нет вражеских боевых роботов (в том числе наёмных), переместите “Шрёдингера” и эту фабрику (вместе с контролирующим её отрядом) в любой регион поля, где нет фабрик."
+    }
+   ],
+   "задача": "“Шрёдингер” находится в одном регионе с вражеским боевым роботом, в том числе наёмным.",
+   "технология": {
+    "название": "Мобильная военная фабрика",
+    "фаза": "Постоянная",
+    "текст": [
+     "“Шрёдингер” считается фабрикой для любых целей, кроме способности “Квантовый скачок”.",
+     "Пехотинцы не берут его под контроль и не встают на него, незанятым он не бывает: {R} и влияние он приносит вам как фабрика под вашим контролем.",
+     "Может находиться в регионе с другой фабрикой."
+    ]
+   },
+   "силуэт_файл": "print/Units/Сайнтифик Солюшн/Шрёдингер.png",
+   "силуэт": {
+    "W": 539,
+    "H": 379,
+    "d": "M58.6,0.0 L63.0,-1.0 L66.6,4.0 L65.8,21.0 L72.8,95.0 L74.0,100.2 L76.0,101.4 L93.0,98.0 L103.0,93.6 L128.0,89.5 L136.5,69.0 L140.0,65.5 L189.0,58.0 L226.0,50.6 L248.0,50.4 L252.5,54.0 L256.0,62.7 L272.0,65.4 L278.0,69.0 L283.0,69.2 L334.0,60.7 L337.0,59.8 L340.0,55.9 L343.0,54.4 L347.0,54.8 L352.0,59.0 L358.0,59.1 L399.0,52.1 L401.0,50.9 L403.0,46.7 L406.0,45.3 L409.0,45.8 L414.0,49.3 L421.0,45.0 L430.0,46.0 L450.0,43.0 L458.0,38.4 L464.0,40.5 L467.6,45.0 L469.5,52.0 L467.7,60.0 L462.0,64.6 L453.0,63.8 L442.3,66.0 L439.4,75.0 L435.0,79.3 L425.0,78.9 L411.0,81.0 L405.0,83.6 L398.0,83.0 L393.0,87.7 L384.0,83.8 L353.0,89.0 L349.0,91.0 L345.0,95.5 L335.0,93.7 L295.0,100.2 L291.0,102.3 L285.9,108.0 L295.7,120.0 L315.0,133.3 L321.0,139.0 L321.7,148.0 L317.9,155.0 L319.0,159.0 L336.0,165.5 L344.0,174.0 L349.0,176.8 L376.0,177.2 L384.0,176.1 L386.0,175.0 L388.4,168.0 L394.0,165.5 L447.0,163.2 L458.0,163.4 L469.0,167.0 L480.0,167.4 L499.6,175.0 L502.4,180.0 L499.5,185.0 L489.0,189.4 L478.0,190.1 L476.4,192.0 L478.0,194.1 L503.0,204.5 L512.0,213.1 L524.0,219.3 L529.5,228.0 L537.1,245.0 L536.0,255.0 L539.0,260.0 L539.0,265.0 L533.8,272.0 L530.7,281.0 L534.5,291.0 L532.8,297.0 L530.0,299.6 L523.0,301.6 L514.7,307.0 L513.4,315.0 L510.0,319.5 L490.0,324.3 L487.4,332.0 L484.0,334.4 L465.0,338.5 L462.5,346.0 L459.0,349.2 L441.0,352.6 L437.0,362.3 L417.0,367.3 L413.8,375.0 L409.0,379.0 L402.0,379.0 L397.0,375.4 L388.0,373.4 L380.0,379.0 L374.0,379.0 L368.0,375.1 L359.0,373.2 L354.0,376.9 L348.0,379.0 L331.0,372.6 L325.0,377.0 L321.0,377.8 L316.0,377.4 L302.0,372.3 L297.0,376.5 L292.0,377.8 L288.0,377.5 L274.0,372.2 L268.0,376.6 L263.0,377.8 L246.0,371.8 L240.0,376.3 L235.0,377.7 L217.0,371.5 L212.0,376.0 L208.0,376.8 L202.0,376.4 L189.0,371.4 L184.0,375.6 L179.0,376.8 L161.0,371.2 L156.0,375.3 L151.0,376.7 L134.0,371.1 L128.0,375.0 L124.0,375.8 L119.0,375.4 L113.0,372.0 L106.0,370.4 L100.0,374.9 L96.0,375.8 L79.0,370.4 L71.0,374.7 L65.0,374.5 L59.0,371.2 L52.0,370.3 L44.0,374.5 L36.0,373.7 L31.7,369.0 L26.0,356.3 L17.0,356.6 L12.0,353.6 L9.5,348.0 L10.6,342.0 L9.2,333.0 L-1.0,326.0 L-1.0,318.0 L4.5,312.0 L7.5,304.0 L5.4,298.0 L5.7,292.0 L18.3,278.0 L17.0,270.0 L13.4,263.0 L14.6,258.0 L50.0,185.0 L55.0,178.1 L66.0,173.5 L111.4,162.0 L96.0,161.0 L75.8,141.0 L74.0,140.4 L69.0,143.4 L66.0,143.6 L61.2,141.0 L58.7,137.0 L54.3,112.0 L54.4,106.0 L58.0,101.7 L65.5,101.0 L66.2,96.0 L59.2,19.0 L56.3,6.0 L56.8,2.0 Z M115.9,160.0 L120.0,159.5 L121.1,161.0 L115.0,161.8 L113.3,161.0 Z",
+    "ext": {
+     "left": 322.0,
+     "right": 262.5,
+     "top": 61.0,
+     "bottom": 387.1,
+     "midleft": 49.0
+    }
+   }
+  }
+ ]
+}
+</script>
+<!--/#данные-->
+
+<script>
+const DATA = JSON.parse(document.getElementById('card-data').textContent);
+const CARDS = DATA['карты'];
+const MM = 96 / 25.4;
+const W = 70, H = 120, B = 6;                                    // карта и выпуск, мм
+const NAME_PT = 12.5, NAME_MIN = 10;                             // кегль имени и нижний предел для длинных имён
+const D = { maxW: 52, ruler: 1.9, top: 1.3, dz: 3.6 };           // чертёж: ширина силуэта, линейка, поля, зона размеров
+const HINT = {
+  size: 'Страницы 70 × 120 мм: у каждой карты сторона 1 и сторона 2 подряд. Масштаб 100 %, поля — нет, фон — включить, двусторонняя.',
+  a4: 'A4 книжный, по четыре карты с выпуском 6 мм; сторона 2 зеркальна по столбцам — двусторонняя с переворотом по длинному краю. Метки реза на стороне 2. Подробно — print/ПЕЧАТЬ.md.',
+};
+
+// ——— текст ———
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function txt(s) { return esc(s).replace(/\{([A-Z])\}/g, '<span class="sym">$1</span>'); }   // {R} — нефть и другие значки Oil Wars
+function paras(v) { return (Array.isArray(v) ? v : [v]).map(p => `<p>${txt(p)}</p>`).join(''); }
+const HEX = '<svg class="hex" viewBox="0 0 30 34" aria-hidden="true"><path d="M15 1.6 27.4 8.8v14.4L15 30.4 2.6 23.2V8.8ZM13.6 9.4h2.8v9h-2.8zM13.6 20.6h2.8v2.8h-2.8z"/></svg>';
+function taskText(s) {                         // как на картах задач: “ИЛИ” отдельной строкой, “В качестве действия:” полужирным
+  return '<div class="ttext">' + String(s).split(' ИЛИ ')
+    .map(p => `<div>${txt(p).replace('В качестве действия:', '<b>В качестве действия:</b>')}</div>`).join('<div>ИЛИ</div>') + '</div>';
+}
+function head(name, kind) { return `<h3><span class="hn">${txt(name)}</span>${kind ? `<span class="kind">${kind}</span>` : ''}</h3>`; }
+
+// ——— карта ———
+function stamp(c) {
+  const note = c['сноска'];
+  return `<div class="tb${note ? ' has-note' : ''}"><div class="nm"><div class="name">${txt(c['имя'])}</div>`
+    + (c['фракция'] ? `<div class="fac">${txt(c['фракция'])}</div>` : '') + '</div>'
+    + `<div class="st"><span class="lbl">Стоим.</span><span class="num">${txt(c['стоимость'])}</span></div>`
+    + `<div class="st pw"><span class="lbl">Сила</span><span class="num">${txt(c['сила'])}</span></div>`
+    + (note ? `<div class="note">${txt(note)}</div>` : '') + '</div>';
+}
+function card(c, i, side) {
+  const el = document.createElement('div');
+  el.className = 'card'; el.dataset.card = i; el.dataset.uid = `k${i}s${side}`;
+  const ab = (c['способности'] || []).map(a => `<section>${head(a['название'], 'Способность')}<p class="phase">${txt(a['фаза'])}</p>${paras(a['текст'])}</section>`).join('');
+  let body;
+  if (side === 1) {
+    body = `<section>${head('Создание')}<ol class="steps">${c['создание'].map(s => `<li>${txt(s)}</li>`).join('')}</ol></section>` + ab
+      + `<section class="slot task"><div class="lab">${HEX}<span>Задача</span></div>${taskText(c['задача'])}</section>`;
+  } else {
+    const t = c['технология'];
+    body = ab + `<section class="slot tech"><div class="lab"><span>Технология</span></div><div class="tn">${txt(t['название'])}</div>`
+      + `<p class="phase">${txt(t['фаза'])}</p>${paras(t['текст'])}</section>`;
+  }
+  el.innerHTML = `<div class="scr">${stamp(c)}<div class="draw"></div><div class="body">${body}</div></div>`;
+  const slot = el.querySelector('.slot');
+  if (slot.previousElementSibling) slot.previousElementSibling.classList.add('pre');
+  return el;
+}
+
+// ——— чертёж ———
+function f(v) { return v.toFixed(3); }
+function arrow(x, y, up) {
+  const L = 1.1, w = .3, p = up ? [[x, y], [x - w, y + L], [x + w, y + L]] : [[x, y], [x - w, y - L], [x + w, y - L]];
+  return `<path d="M${p.map(q => f(q[0]) + ',' + f(q[1])).join(' L')} Z" fill="#9FE8FF"/>`;
+}
+function drawing(s, w, h, uid) {
+  // линейки по краям поля; силуэт по центру; размерные линии без чисел: справа — вся высота силуэта,
+  // слева — от низа до выступающей детали (крайней левой точки), а если она вне 25–75 % высоты — до середины
+  const e = s.ext, edge = D.ruler + 1.2, C = '#9FE8FF', CA = '#7FD6FF';
+  const k = Math.min((h - 2 * D.top) / s.H, Math.min(D.maxW, w - 2 * edge - 2 * D.dz) / s.W);
+  const sw = s.W * k, sh = s.H * k, x = (w - sw) / 2, y = (h - sh) / 2, cx = x + sw / 2, cy = y + sh / 2;
+  const tr = `translate(${f(x)},${f(y)}) scale(${k.toFixed(5)})`, dash = 'stroke-dasharray="2.6 0.7 0.35 0.7"';
+  const ln = (x1, y1, x2, y2, st) => `<line x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}" ${st}/>`;
+  const ext = 'stroke="#9FE8FF" stroke-opacity="0.85" stroke-width="0.12"', dim = 'stroke="#9FE8FF" stroke-opacity="0.85" stroke-width="0.14"';
+  const L = [`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(w)} ${f(h)}" aria-hidden="true">`,
+    `<defs><pattern id="p${uid}" patternUnits="userSpaceOnUse" width="1.1" height="1.1" patternTransform="rotate(45)">`,
+    `<line x1="0" y1="0" x2="0" y2="1.1" stroke="${CA}" stroke-width="0.12" stroke-opacity="0.55"/></pattern>`,
+    `<clipPath id="c${uid}"><path transform="${tr}" clip-rule="evenodd" d="${s.d}"/></clipPath></defs>`];
+  for (const side of [0, 1]) for (let t = 0; t <= h + 1e-6; t += 1) {                       // линейки: метки через 1, 5 и 10 мм
+    const len = t % 10 === 0 ? 1.5 : t % 5 === 0 ? 0.95 : 0.5, x0 = side ? w - .2 : .2;
+    L.push(ln(x0, t, side ? x0 - len : x0 + len, t, `stroke="${CA}" stroke-opacity="0.6" stroke-width="0.1"`));
+  }
+  L.push(ln(x - 2.5, cy, x + sw + 2.5, cy, `stroke="${CA}" stroke-opacity="0.55" stroke-width="0.14" ${dash}`),
+         ln(cx, Math.max(y - 1.2, .2), cx, Math.min(y + sh + 1.2, h - .2), `stroke="${CA}" stroke-opacity="0.55" stroke-width="0.14" ${dash}`),
+         `<rect x="0" y="0" width="${f(w)}" height="${f(h)}" fill="url(#p${uid})" clip-path="url(#c${uid})"/>`,
+         `<path transform="${tr}" d="${s.d}" fill="none" fill-rule="evenodd" stroke="${C}" stroke-width="${(0.3 / k).toFixed(4)}" stroke-linejoin="round"/>`);
+  const xr = x + sw + 2.4;                                                                    // справа: вся высота
+  L.push(ln(x + e.top * k + .6, y, xr + 1, y, ext), ln(x + e.bottom * k + .6, y + sh, xr + 1, y + sh, ext),
+         ln(xr, y, xr, y + sh, dim), arrow(xr, y, true), arrow(xr, y + sh, false));
+  const fr = e.left / s.H, det = fr >= .25 && fr <= .75;                                       // слева: до детали или до середины
+  const yf = det ? y + e.left * k : cy, xf = det ? x : x + e.midleft * k, xl = x - 2.4;
+  L.push(ln(xf - .6, yf, xl - 1, yf, ext), ln(x + e.bottom * k - .6, y + sh, xl - 1, y + sh, ext),
+         ln(xl, yf, xl, y + sh, dim), arrow(xl, yf, true), arrow(xl, y + sh, false), '</svg>');
+  return L.join('');
+}
+
+// ——— раскладка: имя, чертёж, проверка места ———
+function over(c) {                       // на сколько мм текст выходит за поле экрана (минус — запас)
+  const lim = c.querySelector('.scr'), cs = getComputedStyle(lim), lr = lim.getBoundingClientRect();
+  const bottom = lr.bottom - parseFloat(cs.paddingBottom);
+  let mx = -1e9; c.querySelectorAll('p, li, h3, .slot, .tb').forEach(e => { mx = Math.max(mx, e.getBoundingClientRect().bottom); });
+  return (mx - bottom) / MM;
+}
+function layout() {
+  const cards = [...document.querySelectorAll('.card')];
+  const st = { over: 0, nodraw: 0, fit: 0, wide: 0 };
+  document.querySelectorAll('.tags').forEach(e => e.remove());
+  cards.forEach(c => {                                                      // имя — одна строка; длинное ужимается до 10 pt
+    const n = c.querySelector('.name'); let pt = NAME_PT;
+    while (n.scrollWidth > n.clientWidth + .5 && pt > NAME_MIN) { pt -= .25; n.style.fontSize = pt + 'pt'; }
+    if (pt < NAME_PT) c.dataset.fit = pt;
+    if (n.scrollWidth > n.clientWidth + .5) c.dataset.wide = '1';
+    const fac = c.querySelector('.fac'); if (fac && fac.scrollWidth > fac.clientWidth + .5) c.dataset.wide = '1';
+  });
+  cards.forEach(c => { if (over(c) > 0.2) { c.querySelector('.draw').classList.add('off'); c.dataset.nodraw = '1'; } });
+  const by = {}; cards.forEach(c => (by[c.dataset.card] = by[c.dataset.card] || []).push(c));
+  Object.values(by).forEach(g => {                                          // чертёж одного размера на обеих сторонах
+    if (g.some(c => c.dataset.nodraw)) { g.forEach(c => { c.querySelector('.draw').classList.add('off'); c.dataset.nodraw = '1'; }); return; }
+    const h = Math.min(...g.map(c => c.querySelector('.draw').getBoundingClientRect().height / MM));
+    g.forEach(c => { const d = c.querySelector('.draw'); d.style.flex = 'none'; d.style.height = h.toFixed(2) + 'mm'; });
+  });
+  cards.forEach(c => {
+    const d = c.querySelector('.draw'), s = CARDS[+c.dataset.card]['силуэт'];
+    if (!d.classList.contains('off') && s) { const r = d.getBoundingClientRect(); d.innerHTML = drawing(s, r.width / MM, r.height / MM, c.dataset.uid); }
+    const o = over(c); c.dataset.over = o.toFixed(2);
+    let box = null;
+    const tag = (cls, t) => { if (!box) { box = div('tags'); c.appendChild(box); } const w = div(cls); w.textContent = t; box.appendChild(w); };
+    if (o > 0.2) { tag('warn', `перебор ${o.toFixed(1)} мм`); st.over++; }
+    if (c.dataset.nodraw) { tag('info', 'чертёж убран: не хватило места'); st.nodraw++; }
+    if (c.dataset.fit) { tag('fit', `имя ужато до ${c.dataset.fit} pt`); st.fit++; }
+    if (c.dataset.wide) { tag('warn', 'имя или фракция шире поля'); st.wide++; }
+  });
+  document.getElementById('stat').textContent = `Карт: ${CARDS.length} · переборов: ${st.over} · без чертежа: ${st.nodraw} · ужатых имён: ${st.fit}`
+    + (st.wide ? ` · шире поля: ${st.wide}` : '');
+}
+
+// ——— метки реза: отрезок делится на части над тёмным фоном (светлые) и над белым полем (тёмные) ———
+function marks(segs, dark, SW, SH) {
+  const inDark = (x, y) => dark.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
+  let light = '', ink = '';
+  for (const [x1, y1, x2, y2] of segs) {
+    const ts = [0, 1], vert = x1 === x2;
+    for (const [a, b, c, d] of dark) for (const v of (vert ? [b, d] : [a, c])) {
+      const t = vert ? (v - y1) / (y2 - y1) : (v - x1) / (x2 - x1);
+      if (t > 0 && t < 1) ts.push(t);
+    }
+    ts.sort((p, q) => p - q);
+    const P = t => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+    for (let k = 0; k + 1 < ts.length; k++) {
+      if (ts[k + 1] - ts[k] < 1e-6) continue;
+      const [ax, ay] = P(ts[k]), [bx, by] = P(ts[k + 1]), [mx, my] = P((ts[k] + ts[k + 1]) / 2);
+      const d = `M${ax.toFixed(3)},${ay.toFixed(3)} L${bx.toFixed(3)},${by.toFixed(3)} `;
+      if (inDark(mx, my)) light += d; else ink += d;
+    }
+  }
+  const box = document.createElement('div');
+  box.innerHTML = `<svg class="marks" viewBox="0 0 ${SW} ${SH}" style="width:${SW}mm;height:${SH}mm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`
+    + `<path d="${ink}" stroke="#1A1A1A" stroke-width=".1" fill="none"/><path d="${light}" stroke="#FFFFFF" stroke-width=".1" fill="none"/></svg>`;
+  return box.firstChild;
+}
+
+// ——— сборка листов ———
+function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
+function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
+function build(mode) {
+  document.body.className = mode;
+  document.getElementById('page-rule').textContent = mode === 'size'
+    // 2,76 × 4,73 дюйма = 70,1 × 120,1 мм: Chrome округляет страницу вверх до сотых дюйма и не закрашивает остаток,
+    // поэтому просим округлённый размер сразу; карта стоит в левом верхнем углу, фон — с запасом 0,5 мм
+    ? '@page { size: 2.76in 4.73in; margin: 0; }'
+    : '@page { size: A4; margin: 0; }';
+  document.querySelectorAll('.bar button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+  document.getElementById('hint').textContent = HINT[mode];
+  const pages = document.getElementById('pages'); pages.innerHTML = '';
+  if (mode === 'size') {
+    CARDS.forEach((c, i) => { for (const side of [1, 2]) {
+      const sh = div('sheet'); pages.appendChild(sh);
+      sh.appendChild(place(div('bleed'), 0, 0, W + .5, H + .5));
+      sh.appendChild(place(card(c, i, side), 0, 0, W, H));
+    } });
+  } else {
+    // A4 книжный: 2 × 2 карты, выпуски встык, блок по центру листа. На стороне 2 столбцы меняются местами:
+    // при перевороте по длинному краю левый столбец стороны 1 ложится на правый столбец стороны 2.
+    const cw = W + 2 * B, ch = H + 2 * B, x0 = (210 - 2 * cw) / 2, y0 = (297 - 2 * ch) / 2;
+    for (let g = 0; g < CARDS.length; g += 4) for (const side of [1, 2]) {
+      const sh = div('sheet'); pages.appendChild(sh);
+      const segs = [], dark = [];
+      for (let k = 0; k < 4 && g + k < CARDS.length; k++) {
+        const col = side === 1 ? k % 2 : 1 - k % 2, row = Math.floor(k / 2);
+        const x = x0 + col * cw + B, y = y0 + row * ch + B;
+        sh.appendChild(place(div('bleed'), x - B, y - B, cw, ch));
+        sh.appendChild(place(card(CARDS[g + k], g + k, side), x, y, W, H));
+        dark.push([x - B, y - B, x + W + B, y + H + B]);
+        // крестик в каждом углу: обе линии идут через угол наружу на 10 мм и внутрь вдоль кромки на 4 мм
+        const OUT = 10, IN = 4;
+        for (const [cx, dx] of [[x, 1], [x + W, -1]]) for (const [cy, dy] of [[y, 1], [y + H, -1]]) {
+          segs.push([cx - dx * OUT, cy, cx + dx * IN, cy]);
+          segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);
+        }
+      }
+      if (side === 2) sh.appendChild(marks(segs, dark, 210, 297));           // метки реза — на стороне 2
+    }
+  }
+  // мерить после загрузки шрифтов @font-face, иначе меряется запасной шрифт
+  document.fonts.ready.then(() => requestAnimationFrame(layout));
+}
+
+document.querySelectorAll('.bar button').forEach(b => b.addEventListener('click', () => { history.replaceState(null, '', '#' + b.dataset.mode); build(b.dataset.mode); }));
+// шрифты @font-face грузятся, только когда их впервые использует текст: загрузить все заранее, потом строить и мерить
+Promise.all(['12.5pt AlienEncounters', '700 9pt OpenGostTypeB', '700 16pt Rationale', '8pt OilWars', '8pt "Liberation Sans"',
+             '700 8pt "Liberation Sans"', 'italic 8pt "Liberation Sans"', 'italic 700 8pt "Liberation Sans"']
+  .map(f => document.fonts.load(f, 'Аа1R').catch(() => null)))
+  .then(() => build(location.hash === '#a4' ? 'a4' : 'size'));
+</script>
+</body>
+</html>

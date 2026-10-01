@@ -150,7 +150,7 @@
 | COMP-V-07 | Зоны сети | 4 | ACRYLIC | VERIFIED | APPROVED | DONE | ГОТОВО |
 | COMP-V-08 | Карта «Контроль сети» | 1 | CARD | VERIFIED | APPROVED | NONE | в работе |
 | COMP-V-09 | Рой боевых дронов | 6 | ACRYLIC | VERIFIED | APPROVED | DONE | ГОТОВО |
-| COMP-V-10 | Наёмники — карты лояльности наёмных боевых роботов | 7 | CARD | IN-REVIEW | APPROVED | NONE | в работе |
+| COMP-V-10 | Наёмники — карты лояльности наёмных боевых роботов | 7 | CARD | VERIFIED | APPROVED | NONE | в работе |
 | COMP-V-11 | Баланс сил | 0 | NONE | VERIFIED | N/A | N/A | ГОТОВО |
 | COMP-V-12 | Игра на двоих и эпическая игра | 0 | NONE | VERIFIED | N/A | N/A | ГОТОВО |
 | COMP-V-13 | Карты энграмм | 8 | CARD | VERIFIED | APPROVED | NONE | в работе |
