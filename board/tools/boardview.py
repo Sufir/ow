@@ -171,14 +171,16 @@ def svg(R, spec, title, decor=()):
     dec = ''.join(f'<path class="ld" fill="{COLOUR[rid]}" d="{path_d(g)}"/>' for rid, g in decor)
     import labels as lb
     import symbols as sy
+    import decor as dc
     names = lb.svg_layer(lb.place(R, spec, decor)[0])
     syms = sy.svg_layer(R, spec, decor)[0]
+    deco = dc.svg_layer(R, spec, decor)
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W:g}mm" height="{H:g}mm" viewBox="0 0 {W:g} {H:g}">\n'
             f'<title>{title}</title>\n<defs>{blend_defs(R, spec)}</defs>'
             f'<rect width="{W:g}" height="{H:g}" fill="#ece8df"/>'
             f'<style>{lb.font_css()}{sy.font_css()}</style>'
             f'<g stroke-linejoin="round"><style>.ld{{stroke:#2c2a26;stroke-width:.35}}</style>{svg_regions(R, spec)}{dec}</g>'
-            f'<g id="symbols">{syms}</g><g id="names">{names}</g>'
+            f'<g id="deco">{deco}</g><g id="symbols">{syms}</g><g id="names">{names}</g>'
             f'<rect x="{X0:g}" y="{Y0:g}" width="{X1 - X0:g}" height="{Y1 - Y0:g}" fill="none" stroke="#2c2a26" stroke-width="0.4"/>'
             f'\n</svg>\n')
 
@@ -239,6 +241,8 @@ def html(R, C, spec, chk, log, *, nodes, decor, page_title, heading, generator, 
     import symbols as sy
     names, names_miss = lb.place(R, spec, decor)
     syms, syms_miss = sy.svg_layer(R, spec, decor)
+    import decor as dc
+    deco = dc.svg_layer(R, spec, decor)
     if names_miss:
         log = list(log) + ['подписи не поместились: ' + ', '.join(names_miss)]
     if syms_miss:
@@ -309,6 +313,7 @@ h2{{font-size:16px;margin:18px 0 8px}} .big{{font-size:17px;font-weight:600}}
 <div class="ctl">
 <label><input type="checkbox" id="c-names" checked> Подписи областей</label>
 <label><input type="checkbox" id="c-sym" checked> Символы регионов</label>
+<label><input type="checkbox" id="c-deco" checked> Декор: береговые линии, шкала</label>
 <label><input type="checkbox" id="c-lab"> Метрики: id, A, U, N</label>
 <label><input type="checkbox" id="c-graph" checked> Граф: центры и рёбра</label>
 <label><input type="checkbox" id="c-base"> Контур основы</label>
@@ -328,6 +333,7 @@ h2{{font-size:16px;margin:18px 0 8px}} .big{{font-size:17px;font-weight:600}}
 <g id="decor">{decor}</g>
 <clipPath id="cmap"><rect id="cmaprect" x="{X0:g}" y="{Y0:g}" width="{X1 - X0:g}" height="{Y1 - Y0:g}"/></clipPath>
 <g id="graph" clip-path="url(#cmap)">{glayer}</g>
+<g id="deco">{deco}</g>
 <g id="symbols">{syms}</g>
 <g id="names">{lb.svg_layer(names)}</g>
 <g id="labels" style="display:none">{labels_layer(spec, rows, nodes)}</g>
@@ -347,6 +353,7 @@ const show=(id,on)=>{{$(id).style.display=on?'':'none'}};
 $('c-lab').onchange=e=>show('labels',e.target.checked);
 $('c-names').onchange=e=>show('names',e.target.checked);
 $('c-sym').onchange=e=>show('symbols',e.target.checked);
+$('c-deco').onchange=e=>show('deco',e.target.checked);
 $('c-graph').onchange=e=>show('graph',e.target.checked);
 $('c-base').onchange=e=>show('base',e.target.checked);
 $('c-decor').onchange=e=>show('decor',e.target.checked);

@@ -13,3 +13,4 @@
 удалить: board/geo/australia-test.html
 удалить: board/geo/labels-test.html
 удалить: board/geo/symbols-test.html
+удалить: board/geo/decor-test.html

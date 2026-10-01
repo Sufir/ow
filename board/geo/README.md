@@ -253,3 +253,9 @@ python3 board/tools/boardcheck.py all --board board/geo/board-MC-3P.geojson   # 
 `board/tools/symbols.py` (`SIZE`, `POS`, `FILL` в начале файла), рисует `boardview.py`
 под подписями. Тестовая страница вариантов — `python3 board/tools/symbols.py test`.
 
+## Декор
+
+Береговые линии на воде и рамка со шкалой (`D-104`) — `board/tools/decor.py` (`WATER` — отступы,
+толщины, непрозрачность), рисует `boardview.py` под символами и подписями. Центр области
+декор не трогает (SPEC §9). Тестовая страница вариантов — `python3 board/tools/decor.py test`.
+
