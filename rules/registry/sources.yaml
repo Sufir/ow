@@ -512,3 +512,24 @@ sources:
       Официальная позиция издателя, снимает двусмысленность фразы рулбука
       в подготовке Bubastis (FAC-020). Та же мысль в обзоре фракций издателя:
       https://petersengames.com/blogs/news/cthulhu-wars-expansion-factions-complete-guide
+
+  - id: SRC-WEB-LOYALTY
+    side: ORIGINAL
+    priority: 3
+    kind: DB
+    title: "Карты лояльности нейтральных юнитов Cthulhu Wars — сводка веб-сбора"
+    edition: null
+    url: https://necronomicon.app/neutral-expansions/rulebook-extras
+    local_path: ../source/web/SRC-WEB-LOYALTY__cw-loyalty-cards__2026-10-01.md
+    retrieved: 2026-10-01
+    status: PARTIAL
+    need: >
+      Сверка по вики Cthulhu Wars (fandom закрыт, 402) — адреса в
+      rules/tools/fetch-queue.txt; только для карт, выбранных в COMP-V-10.
+    notes: >
+      Собрано для COMP-V-10 (mercenaries.yaml). Тексты всех карт лояльности
+      Neutral Monster (20), Terror (11 + 14 кроссоверных), Independent GOO, включая
+      10 карт Сэнди «Faction Great Old Ones as Independents». Основной источник —
+      транскрипции necronomicon.app; сверено с HRF, официальным FAQ, блогами и
+      магазином Petersen Games, апдейтами Kickstarter, 10 тредами BGG через API.
+      У каждого факта — URL. Не скан карт: мелкие искажения возможны.

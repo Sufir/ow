@@ -1,0 +1,1431 @@
+# mercenaries.yaml — реестр наёмников «Нефтяных войн» (компонент COMP-V-10)
+#
+# Заведён 2026-10-01, этап 1 из трёх: данные. Этапы 2 (дизайн) и 3 (вёрстка) —
+# отдельными чатами, промпты rules/tasks/ПРОМПТ-наёмники-2-дизайн.md и -3-вёрстка.md.
+# Схема — SCHEMA.md, раздел «mercenaries.yaml».
+#
+# ЧТО ЗДЕСЬ. Три класса наёмников — боевые машины, мехи, боевые роботы. По каждому
+# кандидату: что известно, чем он был в оригинале, откуда каждое число, как он
+# соотносится с уже принятыми компонентами, и — где источник есть — черновой текст
+# карты. Оформления и вёрстки здесь нет.
+#
+# СОСТОЯНИЕ НА 2026-10-01 — ЭТАП 1 ЗАКРЫТ, D-106. В комплект идут только семь
+# наёмных боевых роботов наших восьми фракций (MRC-R-01…07), у них есть черновой
+# текст карты (text_draft). Всё остальное — машины, мехи, прочие независимые GOO,
+# роботы нереализованных фракций — сейчас не делаем; данные хранятся здесь на случай,
+# если их реализуют позже, и тогда решается, всех или некоторых.
+#
+# ВАЛИДАТОР. rules/tools/registry.py знает семь файлов (sources … icons), этот
+# не проверяет и в registry.db не собирает — как и factions.yaml, components.yaml.
+#
+# ИСТОЧНИКИ (пути от корня проекта):
+#   SRC-APP-MERC    — source/gdocs/SRC-APP-MERC__mercenaries__2026-09-10.md (черновик приложения, 9 роботов)
+#   SRC-DRAFT       — source/gdocs/SRC-DRAFT__rules-draft__2026-09-10.md (черновик правил, строки 602–630)
+#   SRC-RB-OLD      — source/cthulhu-wars/SRC-RB-OLD__…md (с. 109–129: Neutral Monsters, Terrors,
+#                     Independent GOO, «Faction Great Old Ones as Independents», с. 125–129 — тексты карт)
+#   SRC-RB-NEW      — source/cthulhu-wars/SRC-RB-NEW__…md (с. 99–119, те же разделы, новая вёрстка)
+#   SRC-NECRO       — source/cthulhu-wars/SRC-NECRO__rulebook__2026-09-10.json (общие правила NM/Terror/IGOO)
+#   SRC-ERRATA-PACK — source/cthulhu-wars/SRC-ERRATA-PACK__cards-text__2026-09-10.md (Ultimate Errata Pack:
+#                     Bokrug, Ghatanothoa, Dark Demon, Shadow Pharaoh, Eidolon, общий текст Terror)
+#   SRC-FAQ         — source/cthulhu-wars/SRC-FAQ__cw-rules-faq__2026-09-10.md
+#   SRC-WEB-LOYALTY — source/web/SRC-WEB-LOYALTY__cw-loyalty-cards__2026-10-01.md (транскрипции всех карт
+#                     лояльности: necronomicon.app, HRF, блоги Petersen, BGG; у каждого факта — URL)
+#   PL-<фракция>    — print/Faction-Card-A/Данные/<фракция>.json (принятые планшеты, D-078)
+#   CARDS           — print/Saved/Cards - Технологии и задачи.json (принятые карты задач и технологий, D-088)
+#   FAC-DOC         — source/gdocs/Нефтяные войны (фракции v.2.0).zip (док фракций)
+#
+# В текстах карт: {R} — значок нефти (ICON-001), кавычки на компонентах только “ ” (D-075).
+
+meta:
+  updated: 2026-10-01
+  created: 2026-10-01
+  component: COMP-V-10
+  stage: "1 из 3 — данные"
+  status: STAGE-1-CLOSED
+  decision_ref: D-106
+  task_ref: rules/tasks/ПРОМПТ-наёмники-1-реестр.md
+  validator: null
+
+  # Что решает Alek. Пока вопрос открыт, соответствующие поля decision пусты.
+  decisions_pending:
+    - id: Q-1
+      question: Сколько видов наёмных боевых машин и мехов делаем
+      decision: >
+        Сейчас ни одного. Делаем только наёмных боевых роботов, принадлежащих
+        восьми реализованным фракциям. Машины, мехи и прочие независимые GOO
+        исключены; возможно, реализуются позже — тогда и решим, всех или
+        некоторых и как (Alek 2026-10-01, D-106).
+      decided: 2026-10-01
+      blocks: [COMP-I-018]
+      facts: >
+        Источника в проекте нет ни одного (MRC-I-013). В оригинале 20 карт Neutral
+        Monster и 11 карт Terror плюс 14 кроссоверных (machines, mechs). Базовые
+        наборы: CW-U1 и CW-U2 — по 3 вида и по 9 фигурок, Cosmic Terrors CW-U5 —
+        3 Terror по одной фигурке. Отсюда ориентир «8–12 машин и 3 меха».
+        Официальной нормы на партию нет; сообщество BGG берёт «видов на одного
+        больше, чем игроков» (SRC-WEB-LOYALTY, D).
+      options_seen:
+        - "3 вида БМ + 3 меха — один набор оригинала и Cosmic Terrors; 12 фигурок"
+        - "6 видов БМ + 3 меха — CW-U1 и CW-U2; 21 фигурка"
+        - "без машин и мехов — §6.6 и §11.4.1–11.4.2 книги останутся без карт"
+    - id: Q-2
+      question: Чем представить наёмные машины и мехи на поле
+      decision: "Снят вместе с Q-1: машин и мехов в комплекте нет (D-106). Вернуться при их реализации."
+      decided: 2026-10-01
+      blocks: [COMP-I-018]
+      facts: >
+        Фигурок под них в проекте нет. Варианты — купить миниатюры или резать
+        акриловые стенды, как Рой дронов (COMP-V-07). Размеры подставок оригинала:
+        кольца CW-U26 — 25/40/50/60/80 мм; какой фигурке какая — не найдено (вики закрыта).
+    - id: Q-3
+      question: Делаем ли карты “Халифа” и “Имама”
+      decision: >
+        Нет. Alek 2026-10-01: Windwalker у нас не реализован, заготовка черновая
+        и может быть переделана целиком; на неё не смотрим и не ориентируемся.
+        Работаем только с восемью фракциями.
+      decided: 2026-10-01
+      facts: >
+        Оба есть в черновике приложения. Оригинал — Ithaqua и Rhan-Tegoth фракции
+        Windwalker; среди восьми наших фракций пары нет (Alek 2026-10-01). Фигурок
+        нет, задачи обоих завязаны на стартовые области Windwalker (MRC-I-012).
+
+  # Соответствие терминов, по которому переведены тексты карт оригинала.
+  # Источник — terms.yaml; здесь только то, что встречается на картах лояльности.
+  term_map:
+    Doom: влияние
+    Power: нефть ({R})
+    Elder Sign: карта скрытого влияния
+    Ritual of Annihilation: оказание давления
+    Doom Phase: фаза влияния
+    Gather Power Phase: фаза получения ресурсов
+    Action Phase: фаза действий
+    Gate / Controlled Gate: фабрика / фабрика под вашим контролем
+    Cultist / Acolyte: пехотинец / рекрут
+    Monster: боевая машина
+    Terror: мех (D-011)
+    Great Old One: боевой робот
+    Independent Great Old One: наёмный боевой робот
+    Neutral Monster: наёмная боевая машина
+    Spellbook: технология
+    Spellbook requirement: задача
+    Faction Card: планшет фракции
+    Kill / Pain / Eliminate: смерть / подавление / уничтожение (D-019)
+    Summon / Recruit / Awaken: произвести / завербовать / создать
+    Start Area / Faction Glyph: стартовый регион (глифов на поле нет, MF-009)
+    Pre-Battle / Post-Battle: Битва. Тактическая подготовка / Битва. Финал
+
+  counts:
+    robots:
+      draft_cards: 9               # SRC-APP-MERC
+      sourced_and_paired: 7        # есть карта Сэнди и наша фракция — MRC-R-01…07
+      excluded: 2                  # “Халиф”, “Имам” — Q-3 решён: не делаем
+      no_source: 1                 # “Зардоз” — карты в оригинале нет
+      decided: 7                   # D-106
+    machines:
+      project_source: 0
+      original_cards: 20           # 18 официальных + 2 кроссовера Planet Apocalypse
+      decided: 0                   # D-106: не делаем сейчас
+    mechs:
+      project_source: 0
+      original_cards: 11           # без 14 кроссоверных Fourth Circle
+      decided: 0                   # D-106: не делаем сейчас
+
+  figures:
+    robots: >
+      Фигурка наёмного робота — та же, что у фракционного (COMP-F-05, закуплены
+      и покрашены). Оригинал так же берёт фигурку фракционного GOO и не советует
+      брать робота фракции, которая есть в партии (SRC-RB-NEW, с. 113; §11.4.3 книги).
+      Покупать ничего не нужно.
+    machines_and_mechs: >
+      Сейчас не нужны (D-106). Фигурок под них нет; если будут, вопрос Q-2. Владельца в оригинале показывает карта лояльности; кольца
+      CW-U26 — необязательный аксессуар. У нас на тип одна карта, все фигурки типа
+      принадлежат её владельцу, поэтому маркер владельца не нужен (MRC-I-015).
+
+# ─────────────────────────────────────────────────────────────────────────────
+# КЛАССЫ — как наёмник приобретается. Механика — RULEBOOK §6.6 и §11.4, книга закрыта.
+# Цена живёт только на карте (D-035 A2, D-040): книга говорит «оплатите стоимость,
+# указанную на карте лояльности».
+# ─────────────────────────────────────────────────────────────────────────────
+
+classes:
+  - id: MRC-C-1
+    name: Наёмная боевая машина
+    original: Neutral Monster
+    rulebook: "§6.6, §11.4.1"
+    acquire: в свою очередь оказания давления в фазу влияния; не больше одной карты лояльности за фазу (вместе с мехами)
+    price_original: "2 Doom"
+    price_original_src: >
+      SRC-RB-OLD с. 109 «you may lower your Doom by 2 points»; SRC-RB-NEW с. 99;
+      SRC-NECRO «pay 2 Doom»; все 20 карт «Pay 2 Doom to obtain this Loyalty Card»
+      (SRC-WEB-LOYALTY, A.1)
+    price_draft: "2 влияния"
+    price_draft_src: "SRC-DRAFT:605 «обычно это 2 влияния»"
+    price_card: "2 влияния"
+    match: PASS
+    exceptions_original: >
+      Servitor of the Outer Gods — 2 Doom, но карта отдаётся другому игроку;
+      Wamp — фигурки ставит противник. Цены, отличной от 2 Doom, нет ни у одной карты.
+    free_unit: «как правило, одну машину ставят бесплатно сразу» — способ напечатан на карте
+    numbers_ref: NUM-108
+  - id: MRC-C-2
+    name: Наёмный мех
+    original: Terror (D-011)
+    rulebook: "§6.6, §11.4.2"
+    acquire: в свою очередь оказания давления в фазу влияния; та же одна карта за фазу
+    price_original: "2 Doom + 2 Power"
+    price_original_src: >
+      SRC-RB-OLD с. 104 «spend 2 Doom and 2 Power»; SRC-RB-NEW с. 103;
+      SRC-NECRO; SRC-ERRATA-PACK с. 12 (общий текст Terror)
+    price_draft: "2 нефти + 2 влияния"
+    price_draft_src: "SRC-DRAFT:614 «обычно это 2 нефти и 2 влияния»"
+    price_card: "2 влияния и 2{R}"
+    match: PASS
+    exceptions_original: >
+      The Shadow Pharaoh для Crawling Chaos — только 2 Power, остальные получают
+      по Elder Sign; Fourth Circle (кроссовер) — плюс −1 Power в каждую фазу ресурсов.
+    numbers_ref: NUM-109
+  - id: MRC-C-3
+    name: Наёмный боевой робот
+    original: Independent Great Old One; наши — «Faction Great Old Ones as Independents» (дизайн Сэнди Петерсена)
+    rulebook: "§11.4.3"
+    acquire: действием в фазу действий, по условиям на карте; карта в фазу влияния не покупается
+    price_original: "Power при пробуждении, число на карте"
+    price_original_src: "SRC-RB-OLD с. 120, 125–129; SRC-WEB-LOYALTY, C («To get an independent GOO, you only have to pay power»)"
+    price_draft: "нефть при создании, число на карте"
+    price_draft_src: SRC-APP-MERC
+    match: PASS
+    first_game: >
+      «Для первой партии — на одного робота меньше, чем игроков». Есть в оригинале:
+      SRC-RB-NEW с. 109 «we recommend using one fewer Independent than the number
+      of players» — NUM-111 записан с original: null ошибочно (MRC-I-002).
+    numbers_ref: NUM-110, NUM-111, NUM-112
+
+# ─────────────────────────────────────────────────────────────────────────────
+# БОЕВЫЕ РОБОТЫ
+#
+# status:
+#   SOURCED   — есть карта оригинала и наша фракция; текст карты черновой, вычитка — этап 3
+#   EXCLUDED  — в черновике есть, решено не делать (Q-3)
+#   NO-SOURCE — карты в оригинале нет
+#
+# Числа наёмника берутся с КАРТЫ ОРИГИНАЛА, а не с планшета: у Сэнди цена и сила
+# наёмного GOO другие, чем у фракционного (MRC-I-004). Планшет даёт имена,
+# термины и формулировки там, где механика та же. faction_numbers — только
+# для сравнения, на карте наёмника не действуют.
+#
+# Шаги создания у всех семи одни и те же (оригинал, SRC-RB-OLD с. 125–129):
+#   1) Your Controlled Gate is in an Area with your Great Old One.
+#   2) Pay N Power, and place <GOO> in the Area containing the Gate.
+#   3) Gain 1 Elder Sign — только Cthulhu и Hastur.
+# «Ваш боевой робот» — и фракционный, и наёмный (SRC-RB-OLD с. 120: «You may use one
+# Independent to help Awaken another»; §11.4.3). «В регионе с этой фабрикой» — дословно
+# по оригиналу; так формулировка работает и для Братства, у которого робота нет
+# (MRC-I-010).
+# ─────────────────────────────────────────────────────────────────────────────
+
+robots:
+
+  - id: MRC-R-01
+    name: “C.R.A.B.”
+    name_draft: “Краб”
+    status: SOURCED
+    decision: "делаем — D-106"
+    faction: OW-F-01
+    faction_name: Островная Империя
+    original: {name_en: Cthulhu, faction: CW-F-01 Great Cthulhu, card: Cthulhu Loyalty & Spellbook Cards, src: "SRC-RB-OLD с. 126"}
+    figure: {carrier: MINIATURE, have: true, ref: COMP-F-05}
+    cost: 6
+    cost_src: "SRC-RB-OLD с. 126 «How to Awaken Cthulhu (Cost 6)»; SRC-APP-MERC с. 3 — 6"
+    combat: 3
+    combat_note: null
+    combat_src: "SRC-RB-OLD с. 126 «Combat: 3»; SRC-APP-MERC с. 3 — 3"
+    faction_numbers: {cost: "10/4", combat: 6, src: PL-Островная Империя}
+    creation:
+      original_en: "1) Your Controlled Gate is in an Area with your Great Old One. 2) Pay 6 Power, and place Cthulhu in the Area containing the Gate. 3) Gain 1 Elder Sign."
+      draft: "1. Ваш боевой робот находится в регионе с контролируемой вами фабрикой. 2. Заплатите 6 нефти и поместите “Краба” в регион с контролируемой вами фабрикой. 3. Получите 1 жетон скрытого влияния."
+      text_draft:
+        - "Ваш боевой робот находится в регионе с контролируемой вами фабрикой."
+        - "Заплатите 6{R}."
+        - "“C.R.A.B.” появляется в регионе с этой фабрикой."
+        - "Получите карту скрытого влияния."
+    ability:
+      name: Контроль над морем
+      name_src: "SRC-APP-MERC (наше имя); в оригинале The Stars are Right"
+      phase: Фаза влияния
+      original_en: "The Stars are Right (Doom Phase): Gain 1 Elder Sign in each Doom Phase in which you Control a Gate in the Area with Cthulhu's Glyph."
+      draft: "Получите 1 скрытое влияние в фазе влияния, если вы контролируете фабрику в регионе с логотипом Островной Империи."
+      text_draft: "Если вы контролируете фабрику в регионе Юг Тихого океана, получите карту скрытого влияния."
+      basis: >
+        Оригинал. Глиф Cthulhu — Юг Тихого океана (board/glyphs.yaml MG-001,
+        стартовый регион на планшете). Логотипов на поле нет (MF-009) — регион словами.
+    task:
+      original_en: "EITHER Control 3 Gates in ocean/sea Areas, OR 4 Gates exist in ocean/sea Areas."
+      draft: "Контролировать три фабрики в океанических регионах ИЛИ в океанических регионах есть не менее четырех фабрик."
+      text_draft: "Вы контролируете не менее 3 фабрик в океанских регионах. ИЛИ В океанских регионах не менее 4 любых фабрик."
+      basis: "CARDS, задача Островной Империи № 4 — то же требование оригинала, текст принят (D-086, D-087)"
+    technology:
+      name: Диверсия
+      phase: Битва. Тактическая подготовка
+      original_en: "Devour (Pre-Battle): Your enemy chooses and eliminates one of his own Monsters or Cultists from the Battle Area."
+      draft: "Битва, фаза: тактическая подготовка. [далее дословно повторён текст задачи]"
+      text_draft: "Противник, на свой выбор, уничтожает одну из своих боевых машин или одного из своих пехотинцев в этой битве."
+      basis: "PL-Островная Империя, свойство “Диверсия” — та же Devour оригинала"
+    discrepancies:
+      - {type: NAME, draft: “Краб”, canon: “C.R.A.B.”, ref: D-059}
+      - {type: DEFECT, draft: "текст технологии «Диверсия» — копия текста задачи", canon: "Devour, текст планшета"}
+      - {type: TERM, draft: "жетон скрытого влияния; 1 скрытое влияние", canon: "карта скрытого влияния"}
+      - {type: TERM, draft: "регион с логотипом Островной Империи", canon: "регион Юг Тихого океана"}
+    notes: >
+      Создание наёмного “C.R.A.B.” приносит Островной Империи ещё одну карту
+      скрытого влияния через “Эффективное производство” («любого боевого робота») —
+      как в оригинале: Great Cthulhu получает Elder Sign за пробуждение любого GOO
+      (SRC-RB-NEW с. 109). Но Островная Империя в партии — значит “C.R.A.B.”
+      наёмником не берут; это касается других наёмных роботов.
+
+  - id: MRC-R-02
+    name: “Спрут”
+    name_draft: “Спрут”
+    status: SOURCED
+    decision: "делаем — D-106"
+    faction: OW-F-02
+    faction_name: Эйркрафт Корпорейшн
+    original: {name_en: Nyarlathotep, faction: CW-F-03 Crawling Chaos, card: Nyarlathotep Loyalty & Spellbook Cards, src: "SRC-RB-OLD с. 127"}
+    figure: {carrier: MINIATURE, have: true, ref: COMP-F-05}
+    cost: 6
+    cost_src: "SRC-RB-OLD с. 127 «Cost 6»; SRC-APP-MERC с. 7 — 6"
+    combat: null
+    combat_note: "n — число технологий противника в этой битве: фракционных и любых других, в том числе наёмных роботов"
+    combat_src: "SRC-RB-OLD с. 127 «total number of Spellbooks held by your enemy (Faction Spellbooks, as well as any others)»; SRC-APP-MERC с. 7"
+    faction_numbers: {cost: 10, combat: "n — ваши технологии плюс технологии противника; технологии наёмных роботов не считаются", src: PL-Эйркрафт Корпорейшн}
+    creation:
+      original_en: "1) Your Controlled Gate is in an Area with your Great Old One. 2) Pay 6 Power, and place Nyarlathotep in the Area containing the Gate."
+      draft: "1. Ваш боевой робот находится в регионе с контролируемой вами фабрикой. 2. Заплатите 6 нефти и поместите “Спрута” в регион с контролируемой вами фабрикой."
+      text_draft:
+        - "Ваш боевой робот находится в регионе с контролируемой вами фабрикой."
+        - "Заплатите 6{R}."
+        - "“Спрут” появляется в регионе с этой фабрикой."
+    ability:
+      name: Авиация
+      name_src: "SRC-APP-MERC; в оригинале Chaos (у фракционного — Flight). Совпадение имени — MRC-I-009"
+      phase: Постоянная
+      original_en: "Chaos (Ongoing): Nyarlathotep can Move 2 Areas on a Move Action. He can fly over Areas containing enemy Units."
+      draft: "“Спрут”, при перемещении, может перемещаться до двух регионов. Можно пересекать регионы, в которых присутствуют отряды противников."
+      text_draft: "При перемещении “Спрут” может пройти до двух регионов. Цена прежняя — 1{R}. Проходить можно и через регион с вражескими отрядами."
+      basis: "оригинал; строй фраз — PL-Эйркрафт Корпорейшн, “Авиация” (у фракции она на все отряды)"
+    task:
+      original_en: "Capture an enemy Cultist."
+      draft: "Захватить вражеского пехотинца."
+      text_draft: "Захватить вражеского пехотинца."
+      basis: "CARDS, задача Эйркрафт Корпорейшн № 5 — то же требование"
+    technology:
+      name: Военные трофеи
+      phase: Битва. Финал
+      original_en: "The Harbinger (Post-Battle): If Nyarlathotep is in a Battle in which one or more enemy Great Old Ones are Killed or Pained, receive Power equal to half of the cost of Awakening those Great Old Ones. For each enemy Great Old One so affected, you may choose to receive 2 Elder Signs instead of Power."
+      draft: "Если “Спрут” участвует в битве, в которой убит или получил ранение хотя бы один боевой робот противника, то вы получаете нефть, в количестве равном половине стоимости создания каждого из вражеских б/р получивших повреждения (округление вниз). Вместо нефти за каждого вражеского б/р вы можете взять 2 жетона скрытого влияния. Получите военные трофеи, даже если “Спрут” и сам убит или ранен в битве."
+      text_draft: "Если “Спрут” участвует в битве, за каждого вражеского боевого робота (в том числе наёмного), которому назначена смерть или подавление, получите на выбор: {R} — половину стоимости, за которую этого робота можно создать сейчас, с округлением вниз; или 2 карты скрытого влияния. Трофеи вы получаете, даже если “Спрут” в этой битве сам убит или подавлен."
+      basis: "PL-Эйркрафт Корпорейшн, “Военные трофеи” по FAQ (D-077) — та же Harbinger"
+    discrepancies:
+      - {type: TERM, draft: "ранение; б/р; жетоны скрытого влияния", canon: "подавление; боевой робот; карты скрытого влияния"}
+      - {type: RULE, draft: "«половине стоимости создания»", canon: "текущая стоимость создания — FAQ, D-077"}
+    notes: >
+      Сила считает и технологии наёмных роботов противника — у фракционного
+      “Спрута” наоборот (сноска планшета). Так в оригинале: «as well as any others».
+
+  - id: MRC-R-03
+    name: “Шепард”
+    name_draft: Промышленный робот “Пастух”
+    status: SOURCED
+    decision: "делаем — D-106"
+    faction: OW-F-03
+    faction_name: Глобал Петролеум
+    original: {name_en: The King in Yellow, faction: CW-F-02 Yellow Sign, card: King in Yellow Loyalty & Spellbook Cards, src: "SRC-RB-OLD с. 125"}
+    figure: {carrier: MINIATURE, have: true, ref: COMP-F-05}
+    cost: 2
+    cost_src: "SRC-RB-OLD с. 125 «Cost 2»; SRC-APP-MERC с. 5 — 2"
+    combat: 0
+    combat_note: null
+    combat_src: "SRC-RB-OLD с. 125 «Combat: 0»; SRC-APP-MERC с. 5 — 0"
+    faction_numbers: {cost: 4, combat: 0, src: PL-Глобал Петролеум}
+    tokens: >
+      Жетоны “Нефтяная вышка” Глобал Петролеум (акрил, `acrylic/01. Вышки`, 12 шт.).
+      Глобал Петролеум в партии нет — жетоны свободны. В оригинале так же: «Add its
+      Spellbook and any associated tokens to your Pool» (SRC-RB-OLD с. 120).
+    creation:
+      original_en: "1) Your Controlled Gate is in an Area with your Great Old One. 2) Pay 2 Power, and place The King in Yellow in the Area containing the Gate."
+      draft: "1. Ваш боевой робот находится в регионе с контролируемой вами фабрикой. 2. Заплатите 2 нефти и поместите “Пастуха” в регион с контролируемой вами фабрикой."
+      text_draft:
+        - "Ваш боевой робот находится в регионе с контролируемой вами фабрикой."
+        - "Заплатите 2{R}."
+        - "“Шепард” появляется в регионе с этой фабрикой."
+    ability:
+      name: Бурение
+      phase: "Действие. Стоимость: 2{R}"
+      original_en: "Defilement (Action: Cost 2): If the King in Yellow is in an Area with no Desecration token, roll a die. On a roll equal to or less than the number of your Units in the Area (including the King), place a Desecration token into that Area. Whatever the result, place a Monster or Cultist with a cost of 2 or less into the Area."
+      draft: "Действие. Стоимость: 2. Если “Пастух” находится в регионе без “Нефтяной вышки”, бросьте кубик. Если значение на кубике равно или меньше чем количество ваших отрядов в регионе (включая “Пастуха”), поместите в нее “Нефтяную вышку”. Можете поместить пехотинца или боевую машину стоимостью 2 или меньше в этот регион, независимо от результата броска."
+      text_draft: "Если “Шепард” находится в регионе без “Нефтяной вышки”: бросьте D6. Если значение на кубике равно или меньше, чем количество ваших отрядов в регионе (включая “Шепарда”), поместите в этот регион “Нефтяную вышку”; независимо от результата броска поместите в этот регион пехотинца или боевую машину стоимостью 2 или меньше, если у вас в резерве есть такой отряд."
+      basis: "PL-Глобал Петролеум, “Бурение” (D-066, D-071) — Defilement наёмного = Desecrate фракционного"
+    task:
+      original_en: "Place a Desecration token in an Area containing a enemy-Controlled Gate."
+      draft: "Разместить “Нефтяную вышку” в регионе, где есть вражеская фабрика."
+      text_draft: "Разместить “Нефтяную вышку” в регионе с фабрикой под контролем противника."
+      basis: "оригинал; форма задачи — D-087 (инфинитив: событие вашей фракции)"
+    technology:
+      name: Нефтедобыча
+      name_src: "SRC-APP-MERC; в оригинале Feast — как у фракционной способности (наша “Добыча”). MRC-I-009"
+      phase: Фаза получения ресурсов
+      original_en: "Feast (Gather Power Phase): Gain 1 Power for each Area that contains a Desecration token."
+      draft: "В фазу получения нефти получите по 1 единице нефти за каждый регион, в котором есть жетон “Нефтяной вышки”."
+      text_draft: "Получите по 1{R} за каждый регион, в котором есть “Нефтяная вышка”."
+      basis: >
+        Оригинал. У фракционной “Добычи” (PL-Глобал Петролеум) есть условие
+        «и присутствует хотя бы один ваш отряд», у наёмной — нет: так у Сэнди.
+    discrepancies:
+      - {type: NAME, draft: “Пастух”, canon: “Шепард”, ref: D-066}
+      - {type: CLASS, draft: "«Промышленный робот»", canon: "боевой робот", ref: "D-065, COMP-I-011"}
+      - {type: TERM, draft: "«вражеская фабрика»", canon: "«фабрика под контролем противника» — enemy-Controlled Gate"}
+      - {type: TERM, draft: "«поместите в нее»; «единице нефти»", canon: "«в этот регион»; {R}"}
+    notes: >
+      Вышка наёмного “Шепарда” засчитывается только его владельцу (D-081, D-087 п. 1).
+
+  - id: MRC-R-04
+    name: “Чёрный вихрь”
+    name_draft: “Чёрный вихрь” / “Черный вихрь”
+    status: SOURCED
+    decision: "делаем — D-106"
+    faction: OW-F-03
+    faction_name: Глобал Петролеум
+    original: {name_en: Hastur, faction: CW-F-02 Yellow Sign, card: Hastur Loyalty & Spellbook Cards, src: "SRC-RB-OLD с. 125"}
+    figure: {carrier: MINIATURE, have: true, ref: COMP-F-05}
+    cost: 6
+    cost_src: "SRC-RB-OLD с. 125 «How to Awaken Hastur (Cost 6)»; SRC-APP-MERC с. 4 — 6"
+    combat: null
+    combat_note: "n — половина текущей стоимости оказания давления на треке Судного дня, с округлением вниз"
+    combat_src: "SRC-RB-OLD с. 125 «Equal to half of the current cost of a Ritual of Annihilation (round down)»; SRC-APP-MERC с. 4"
+    faction_numbers: {cost: 10, combat: "n — текущая стоимость оказания давления (целиком)", src: PL-Глобал Петролеум}
+    creation:
+      original_en: "1) Your Controlled Gate is in an Area with your Great Old One. 2) Pay 6 Power, and place Hastur in the Area containing the Gate. 3) Gain 1 Elder Sign."
+      draft: "1. Ваш боевой робот находится в регионе с контролируемой вами фабрикой. 2. Заплатите 6 нефти и поместите “Черный вихрь” в регион с контролируемой вами фабрикой. 3. Получите 1 жетон скрытого влияния."
+      text_draft:
+        - "Ваш боевой робот находится в регионе с контролируемой вами фабрикой."
+        - "Заплатите 6{R}."
+        - "“Чёрный вихрь” появляется в регионе с этой фабрикой."
+        - "Получите карту скрытого влияния."
+    ability:
+      name: Нефть должна течь
+      name_src: "SRC-APP-MERC (наше имя); в оригинале The Stars are Wrong"
+      phase: Фаза влияния
+      original_en: "The Stars are Wrong (Doom Phase): Gain 1 Elder Sign during each Doom Phase in which you Control a Gate in the Area containing Yellow Sign's Faction Glyph (NOT one of the King in Yellow's 3 Spellbook Glyphs, but the Yellow Sign, itself)."
+      draft: "Получите 1 скрытое влияние в фазе влияния, если вы контролируете фабрику в регионе с логотипом Глобал Петролеум."
+      text_draft: "Если вы контролируете фабрику в регионе Европа, получите карту скрытого влияния."
+      basis: >
+        Оригинал. Глиф Yellow Sign — Европа (board/glyphs.yaml MG-002; стартовый
+        регион на планшете). Метки Глобал Петролеум на поле нет (D-102) — регион словами.
+        Символы Q W E здесь ни при чём — оригинал оговаривает это прямо.
+    task:
+      original_en: "As an Action, select another player to gain 3 Doom points."
+      draft: "В качестве действия: выберите другого игрока, этот игрок получает три очка влияния."
+      text_draft: "В качестве действия: выберите противника — он получает 3 влияния."
+      basis: "CARDS, задача Глобал Петролеум № 6 — то же требование"
+    technology:
+      name: Эффективность
+      phase: Битва. Финал
+      original_en: "Vengeance (Post-Battle): If Hastur is involved in a Battle, you choose which Combat results are applied to which enemy Units."
+      draft: "Битва, фаза: финал. Если “Черный вихрь” участвует в битве, то вы сами выбираете, какие результаты боя будут применены к какому из вражеских отрядов."
+      text_draft: "Если “Чёрный вихрь” участвует в битве, то вы, а не владелец, назначаете результаты боя вражеским отрядам."
+      basis: "PL-Глобал Петролеум, “Эффективность” (D-092) — та же Vengeance"
+    discrepancies:
+      - {type: NAME, draft: “Черный вихрь”, canon: “Чёрный вихрь”, ref: D-065}
+      - {type: TERM, draft: "«текущей стоимости оказания влияния на треке влияния»", canon: "«текущей стоимости оказания давления на треке Судного дня»", ref: D-065}
+      - {type: TERM, draft: "жетон скрытого влияния; 1 скрытое влияние", canon: "карта скрытого влияния"}
+      - {type: TERM, draft: "регион с логотипом Глобал Петролеум", canon: "регион Европа", ref: D-102}
+    notes: >
+      Наёмного “Чёрного вихря” создаёт любой ваш робот; фракционному нужен “Шепард”.
+
+  - id: MRC-R-05
+    name: “Жнец”
+    name_draft: “Жнец”
+    status: SOURCED
+    decision: "делаем — D-106"
+    faction: OW-F-05
+    faction_name: Клонэйд Ресёрч
+    original: {name_en: Shub-Niggurath, faction: CW-F-04 Black Goat, card: Shub-Niggurath Loyalty & Spellbook Cards, src: "SRC-RB-OLD с. 126"}
+    figure: {carrier: MINIATURE, have: true, ref: COMP-F-05}
+    cost: 4
+    cost_src: "SRC-RB-OLD с. 126 «Cost 4»; SRC-APP-MERC с. 9 — 4"
+    combat: null
+    combat_note: "n — число фабрик под вашим контролем"
+    combat_src: "SRC-RB-OLD с. 126 «Equal to the total number of Gates you Control»; SRC-APP-MERC с. 9"
+    faction_numbers: {cost: 8, combat: "n — ваши пехотинцы в игре плюс фабрики под вашим контролем", src: PL-Клонэйд Ресёрч}
+    creation:
+      original_en: "1) Your Controlled Gate is in an Area with your Great Old One. 2) Pay 4 Power, and place Shub-Niggurath in the Area containing the Gate."
+      draft: "1. Ваш боевой робот находится в регионе с контролируемой вами фабрикой. 2. Заплатите 4 нефти и поместите “Жнеца” в регион с контролируемой вами фабрикой."
+      text_draft:
+        - "Ваш боевой робот находится в регионе с контролируемой вами фабрикой."
+        - "Заплатите 4{R}."
+        - "“Жнец” появляется в регионе с этой фабрикой."
+    ability:
+      name: Клонирование
+      name_src: "SRC-APP-MERC; в оригинале Fertile. Имя совпадает с уникальной способностью Клонэйд, механика другая — MRC-I-009"
+      phase: Постоянная
+      original_en: "Fertile (Ongoing): When you Recruit a Cultist, you may Recruit more than one as a single Action, into one or more Areas. You may still only Summon a single Monster per Summon Action."
+      draft: "Постоянная. Когда вы вербуете пехотинца, вы можете завербовать сразу нескольких (в одном или разных регионах) одним действием, выплатив за каждого необходимую стоимость."
+      text_draft: "Вербуя пехотинцев, вы можете за одно действие завербовать нескольких — в один или в разные регионы, оплатив каждого. Производите вы по-прежнему одну боевую машину за действие."
+      basis: "оригинал; вторая фраза — по оригиналу, в черновике её нет"
+    task:
+      original_en: "Share Areas with all enemy Factions (i.e., both you and the enemy have Units there)."
+      draft: "Ваши отряды присутствуют в регионах с каждым из противников."
+      text_draft: "Ваши отряды есть в регионах с отрядами каждого из противников. Это может быть один регион или разные."
+      basis: "CARDS, задача Клонэйд Ресёрч № 5 — то же требование"
+    technology:
+      name: Аватар
+      phase: "Действие. Стоимость: 1{R}"
+      original_en: "Avatar (Action: Cost 1): Choose an Area and a Faction. Swap the location of Shub-Niggurath with that of a Monster or Cultist in the chosen Area, chosen by the Faction owner."
+      draft: "Действие. Стоимость: 1. Выберите регион и фракцию. Поменяйте местами пехотинца или боевую машину выбранную владельцем указанной фракции и “Жнеца”."
+      text_draft: "Выберите регион и фракцию (в том числе свою): в этом регионе у неё должен быть хотя бы один пехотинец или боевая машина. Поменяйте местами “Жнеца” и один из этих отрядов — какой именно, выбирает владелец выбранной фракции. Обмен местами не считается перемещением."
+      basis: "PL-Клонэйд Ресёрч, “Аватар” (D-074) — та же Avatar"
+    discrepancies:
+      - {type: NAME-COLLISION, draft: "«Клонирование» — вербовка", canon: "«Клонирование» Клонэйд — производство", ref: MRC-I-009}
+    notes: null
+
+  - id: MRC-R-06
+    name: “Шрёдингер”
+    name_draft: “Шредингер”
+    status: SOURCED
+    decision: "делаем — D-106"
+    faction: OW-F-07
+    faction_name: Сайнтифик Солюшн
+    original: {name_en: Yog-Sothoth, faction: CW-F-08 Opener of the Way, card: Yog-Sothoth Loyalty & Spellbook Cards, src: "SRC-RB-OLD с. 127"}
+    figure: {carrier: MINIATURE, have: true, ref: COMP-F-05}
+    cost: 6
+    cost_src: "SRC-RB-OLD с. 127 «Cost 6»; SRC-APP-MERC с. 11 — 6"
+    combat: null
+    combat_note: "n — число вражеских боевых роботов в игре; наёмные не считаются"
+    combat_src: >
+      SRC-RB-OLD с. 127 «Equal to the number of enemy Faction Great Old Ones (not
+      counting any Independent Great Old Ones)»; necronomicon.app — то же.
+      Удвоения, как у фракционного, у наёмного нет: два независимых источника (MRC-I-017)
+    faction_numbers: {cost: 6, combat: "n — удвоенное число вражеских боевых роботов, наёмные не считаются", src: PL-Сайнтифик Солюшн}
+    creation:
+      original_en: "1) Your Controlled Gate is in an Area with your Great Old One. 2) Pay 6 Power, and place Yog-Sothoth in the Area containing the Gate."
+      draft: "3. Ваш боевой робот находится в регионе с контролируемой вами фабрикой. 4. Заплатите 6 нефти и поместите “Шредингер” в регион с контролируемой вами фабрикой."
+      text_draft:
+        - "Ваш боевой робот находится в регионе с контролируемой вами фабрикой."
+        - "Заплатите 6{R}."
+        - "“Шрёдингер” появляется в регионе с этой фабрикой."
+    ability:
+      name: Пространственный сдвиг
+      phase: "Действие. Стоимость: 1{R}"
+      original_en: "The Beyond-One (Action: Cost 1): Yog-Sothoth must be in an Area containing a Gate, but no enemy Great Old One. Move Yog-Sothoth to any Area on the Map lacking a Gate. In doing so, he takes the Gate with him, along with any Controlling Unit."
+      draft: "Действие. Стоимость: 1. В регионе где находится “Шредингер” и любая фабрика, но нет вражеских боевых роботов. Переместите “Шредингер” и фабрику (вместе с контролирующим ее отрядом) в любой регион на карте, где еще нет фабрик."
+      text_draft: "Если “Шрёдингер” находится в регионе с фабрикой и без вражеских боевых роботов (в том числе наёмных), переместите “Шрёдингера” и эту фабрику (вместе с контролирующим её отрядом) в любой регион поля, где нет фабрик."
+      basis: >
+        Оригинал (только сам Yog-Sothoth). Фракционный “Пространственный сдвиг”
+        на планшете — новая редакция Opener: любой ваш отряд стоимостью 3{R} или
+        более. У наёмного — старая, как у Сэнди. «В том числе наёмных» — FAQ:
+        Beyond-One отменяют и независимые GOO противника.
+    task:
+      original_en: "Yog-Sothoth shares an Area with an enemy Great Old One."
+      draft: "Ваш боевой робот находится в одном регионе с вражеским боевым роботом."
+      text_draft: "“Шрёдингер” находится в одном регионе с вражеским боевым роботом. Наёмные боевые роботы тоже подходят."
+      basis: "оригинал (сам Yog-Sothoth, а не любой ваш робот); вторая фраза — как в CARDS, задача Сайнтифик Солюшн № 5"
+    technology:
+      name: Мобильная военная фабрика
+      phase: Постоянная
+      original_en: "The Key and the Gate (Ongoing): Yog-Sothoth counts as a Gate for every purpose, except that he is not Controlled by a Cultist and can exist in the same Area as another Gate."
+      draft: "Постоянная. “Шредингер” считается фабрикой для всех целей, кроме способности Пространственный сдвиг. Не контролируется пехотинцами и может находиться в регионах с другими фабриками."
+      text_draft: "“Шрёдингер” считается фабрикой для любых целей, кроме способности “Пространственный сдвиг”. Пехотинцы не берут его под контроль и не встают на него, незанятым он не бывает: {R} и влияние он приносит вам как фабрика под вашим контролем. Может находиться в регионе с другой фабрикой."
+      basis: "PL-Сайнтифик Солюшн, “Мобильная военная фабрика” (D-073) — та же Key and Gate"
+    discrepancies:
+      - {type: NAME, draft: “Шредингер”, canon: “Шрёдингер”, ref: D-073}
+      - {type: DEFECT, draft: "шаги создания пронумерованы 3 и 4", canon: "1 и 2"}
+      - {type: RULE, draft: "задача: «ваш боевой робот»", canon: "«“Шрёдингер”» — Yog-Sothoth оригинала"}
+    notes: >
+      FAQ: Yog-Sothoth сам по себе не «контролируемые врата» для условия пробуждения
+      независимого GOO. Значит, один “Шрёдингер” без настоящей фабрики в регионе
+      наёмного робота создать не даёт (SRC-FAQ, «To Awaken an Independent Great Old
+      One, you need a Controlled Gate and your own Great Old One… No»).
+
+  - id: MRC-R-07
+    name: “Биг Текс”
+    name_draft: “Тексан”
+    status: SOURCED
+    decision: "делаем — D-106"
+    faction: OW-F-08
+    faction_name: Североамериканский Альянс
+    original: {name_en: Tsathoggua, faction: CW-F-09 Sleeper, card: Tsathoggua Loyalty & Spellbook Cards, src: "SRC-RB-OLD с. 128"}
+    figure: {carrier: MINIATURE, have: true, ref: COMP-F-05}
+    cost: 4
+    cost_src: "SRC-RB-OLD с. 128 «Cost 4»; SRC-APP-MERC с. 10 — 4"
+    combat: null
+    combat_note: "n — число вражеских боевых роботов в игре; наёмные не считаются"
+    combat_src: "SRC-RB-OLD с. 128 «Equal to the number of enemy Faction Great Old Ones (not counting any Independent Great Old Ones)»; SRC-APP-MERC с. 10"
+    faction_numbers: {cost: 8, combat: "n — текущий запас {R} противника в этой битве, не меньше 2", src: PL-Североамериканский Альянс}
+    creation:
+      original_en: "1) Your Controlled Gate is in an Area with your Great Old One. 2) Pay 4 Power, and place Tsathoggua in the Area containing the Gate."
+      draft: "1. Ваш боевой робот находится в регионе с контролируемой вами фабрикой. 2. Заплатите 4 нефти и поместите “Тексан” в регион с контролируемой вами фабрикой."
+      text_draft:
+        - "Ваш боевой робот находится в регионе с контролируемой вами фабрикой."
+        - "Заплатите 4{R}."
+        - "“Биг Текс” появляется в регионе с этой фабрикой."
+    ability:
+      name: Реквизиция
+      phase: Фаза влияния
+      original_en: "Death from Below (Doom Phase): Place the lowest-cost Monster currently in your Pool into any Area containing at least one of your Units. In the event of a tie for lowest cost, you may choose which of those Units to put into play."
+      draft: "Фаза влияния. В фазе влияния поместите боевую машину с наименьшей стоимостью из своего запаса в регион, в котором присутствуют ваши отряды."
+      text_draft: "В фазе влияния поместите боевую машину (в том числе наёмную) с наименьшей стоимостью из своего резерва в любой регион, где есть хотя бы один ваш отряд. Если таких машин несколько, выберите любую."
+      basis: "PL-Североамериканский Альянс, “Реквизиция” (D-076) — та же Death from Below"
+    task:
+      original_en: "As an Action, spend 3 Power and choose an enemy player to gain 3 Power."
+      draft: "В качестве действия: заплатите 3 нефти. Выберите противника, он получает 3 нефти."
+      text_draft: "В качестве действия: заплатите 3{R}. Выберите противника, он получает 3{R}."
+      basis: "CARDS, задача Североамериканского Альянса № 1 — то же требование"
+    technology:
+      name: Оперативная пауза
+      phase: "Действие. Стоимость: 0{R}"
+      original_en: "Lethargy (Action: Cost 0): If Tsathoggua is in play and at least one enemy player has more Power than you, do nothing. This counts as an Action."
+      draft: "Действие. Стоимость: 0. Если “Тексан” в игре и хотя бы у одного из противников больше нефти чем у вас, ничего не делайте. Это считается действием."
+      text_draft: "Если “Биг Текс” в игре и хотя бы у одного противника {R} больше, чем у вас, ничего не делайте. Это считается действием."
+      basis: >
+        Оригинал. Условие другое, чем у фракционной “Оперативной паузы”
+        (PL: «пока {R} есть хотя бы у одного противника», D-076 по FAQ) — так у Сэнди.
+    discrepancies:
+      - {type: NAME, draft: “Тексан”, canon: “Биг Текс”, ref: D-076}
+      - {type: TERM, draft: "«из своего запаса»", canon: "«из своего резерва»", ref: D-024}
+    notes: null
+
+  - id: MRC-R-08
+    name: null                      # имя черновика — “Халиф”; вопрос Q-3
+    name_draft: “Халиф”
+    status: EXCLUDED
+    decision: "не делаем — фракция вне восьми, на неё не ориентируемся (Alek 2026-10-01, Q-3)"
+    faction: null
+    faction_name: null
+    faction_draft: >
+      В черновике связан с «Всемирным Халифатом» (задача про его логотипы).
+      Среди восьми фракций пары нет — Alek 2026-10-01.
+    original: {name_en: Ithaqua, faction: CW-F-11 Windwalker, card: Ithaqua Loyalty & Spellbook Cards, src: "SRC-RB-OLD с. 129"}
+    figure: {carrier: null, have: false, ref: null}
+    cost: 4
+    cost_src: "SRC-RB-OLD с. 129 «Cost 4»; SRC-APP-MERC с. 6 — 4"
+    combat: 5
+    combat_note: null
+    combat_src: "SRC-RB-OLD с. 129 «Combat: 5»; SRC-APP-MERC с. 6 — 5"
+    faction_numbers: null
+    creation:
+      original_en: "1) Your Controlled Gate is in an Area with your Great Old One. 2) Pay 4 Power, and place Ithaqua in the Area containing the Gate."
+      draft: "1. Ваш боевой робот находится в регионе с контролируемой вами фабрикой. 2. Заплатите 4 нефти и поместите “Халифа” в регион с контролируемой вами фабрикой."
+      text_draft: null
+    ability:
+      name: Консервация
+      phase: "Действие. Стоимость: 0"
+      original_en: "Hibernate (Action: Cost 0): You can perform no more Actions during the rest of this Action Phase (as if you were at 0 Power). Add your current Power to your total in the next Gather Power Phase."
+      draft: "Действие. Стоимость: 0. Вы больше не можете выполнять никаких действий до конца текущей фазы. В начале следующей фазы получения нефти не обнуляйте свой запас, а прибавьте полученную нефть."
+      text_draft: null
+    task:
+      original_en: "Gates exist in both Areas containing a Windwalker Glyph."
+      draft: "В обоих регионах отмеченных логотипом Всемирного Халифата есть фабрики."
+      text_draft: null
+      region_note: >
+        Глифы Windwalker в оригинале — Северный Ледовитый океан и Антарктида
+        (board/glyphs.yaml MG-006, MG-007, confidence MEDIUM). У нас этих меток нет,
+        и фракции, которой они принадлежали бы, тоже.
+    technology:
+      name: Бесстрашие
+      phase: Постоянная
+      original_en: "Ferox (Ongoing): Your Cultists cannot be Captured by enemy Monsters or Terrors. They are still vulnerable to enemy Great Old Ones."
+      draft: "Постоянная. Пока “Халиф” в игре, ваши пехотинцы не могут быть захвачены вражескими боевыми машинами или мехами. Они уязвимы только для вражеских боевых роботов."
+      text_draft: null
+    discrepancies:
+      - {type: SOURCE, draft: "логотип «Всемирного Халифата»", canon: "такой фракции нет; метки на поле нет"}
+    notes: >
+      Числа черновика совпадают с оригиналом. Если карту делать — нужна фигурка
+      (покупка) и решение по двум регионам задачи. Q-3.
+
+  - id: MRC-R-09
+    name: null                      # имя черновика — “Имам”; вопрос Q-3
+    name_draft: “Имам”
+    status: EXCLUDED
+    decision: "не делаем — фракция вне восьми, на неё не ориентируемся (Alek 2026-10-01, Q-3)"
+    faction: null
+    faction_name: null
+    faction_draft: >
+      В черновике связан с «Всемирным Халифатом» (задача про его логотип).
+      Среди восьми фракций пары нет — Alek 2026-10-01.
+    original: {name_en: Rhan-Tegoth, faction: CW-F-11 Windwalker, card: Rhan Tegoth Loyalty & Spellbook Cards, src: "SRC-RB-OLD с. 129"}
+    figure: {carrier: null, have: false, ref: null}
+    cost: 4
+    cost_src: "SRC-RB-OLD с. 129 «Cost 4»; SRC-APP-MERC с. 8 — 4"
+    combat: 2
+    combat_note: null
+    combat_src: "SRC-RB-OLD с. 129 «Combat: 2»; SRC-APP-MERC с. 8 — 2"
+    faction_numbers: null
+    creation:
+      original_en: "1) Your Controlled Gate is in an Area with your Great Old One. 2) Pay 4 Power, and place Rhan-Tegoth in the Area containing the Gate."
+      draft: "1. Ваш боевой робот находится в регионе с контролируемой вами фабрикой. 2. Заплатите 4 нефти и поместите “Имама” в регион с контролируемой вами фабрикой."
+      text_draft: null
+    ability:
+      name: Угроза теракта
+      phase: Фаза влияния
+      original_en: "Herald (Doom Phase): You never pay more than 5 Power to perform a Ritual of Annihilation, regardless of its actual cost."
+      draft: "Платите 5 нефти за оказание давления, независимо от числа, указанного на Треке Судного дня."
+      text_draft: null
+      note: "Черновик равносилен оригиналу: стоимость давления на треке от 5 до 10, «не больше 5» = «ровно 5»."
+    task:
+      original_en: "Control a Gate in an Area with a Windwalker Glyph."
+      draft: "Контролировать фабрику в регионе отмеченном логотипом Всемирного Халифата."
+      text_draft: null
+      region_note: "см. MRC-R-08"
+    technology:
+      name: Силовая броня
+      phase: Битва. Финал
+      original_en: "Eternal (Post-Battle): If Rhan-Tegoth receives a Kill result in Battle, you may pay 1 Power to turn it into a Pain."
+      draft: "Битва, фаза: финал. Если ему назначена смерть, вы можете заплатить 1 нефть, чтобы изменить его на ранение."
+      text_draft: null
+    discrepancies:
+      - {type: SOURCE, draft: "логотип «Всемирного Халифата»", canon: "такой фракции нет; метки на поле нет"}
+      - {type: TERM, draft: "ранение", canon: "подавление", ref: D-019}
+    notes: "Числа черновика совпадают с оригиналом. Фигурки нет. Q-3."
+
+  - id: MRC-R-10
+    name: “Зардоз”
+    name_draft: null
+    status: NO-SOURCE
+    decision: "не делаем — карты в оригинале нет (D-106)"
+    faction: OW-F-06
+    faction_name: Moon Systems
+    original: {name_en: Bastet, faction: CW-F-06 Bubastis, card: null, src: "SRC-WEB-LOYALTY, C.12"}
+    figure: {carrier: MINIATURE, have: true, ref: COMP-F-05}
+    notes: >
+      Карты независимого для Bastet (Elder God) нет ни в одном источнике: в наборе
+      Сэнди 10 карт, Bastet среди них нет; нет её и в Glow GOOs. В черновике
+      приложения “Зардоза” тоже нет. По принципу 1:1 карту не делаем; сам
+      “Зардоз” создавать наёмных роботов может — MRC-I-011.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ПРОЧИЕ НЕЗАВИСИМЫЕ GOO ОРИГИНАЛА — справочно. Сейчас не делаем (D-106).
+#
+# Кандидаты в наёмные роботы только при новой фигурке и новом дизайне: в черновике
+# их нет, нашей фракции у них нет. Полные тексты — SRC-WEB-LOYALTY, разделы C, F.
+# cost — Power при пробуждении; combat — число или формула.
+# ─────────────────────────────────────────────────────────────────────────────
+
+robots_original_pool:
+  - {id: MRC-G-01, name_en: Ubbo-Sathla, product: "Glow GOOs CW-GLO2 (карта Сэнди)", faction_en: Tcho-Tcho, figures: 1, cost: 4, combat: "позиция счётчика Growth", note: "из набора Сэнди; нашей пары у Tcho-Tcho нет"}
+  - {id: MRC-G-02, name_en: Abhoth, product: CW-GOO1, figures: 1, cost: 4, combat: "число жетонов Filth (0–12)", tokens: "Filth ×12"}
+  - {id: MRC-G-03, name_en: Chaugnar Faugn, product: CW-GOO1, figures: 1, cost: 4, combat: 3}
+  - {id: MRC-G-04, name_en: Cthugha, product: CW-GOO1, figures: 1, cost: "6 минус цена вашего GOO", combat: "бой выбранного вражеского GOO", note: "карта правилась, в Ultimate Errata Pack не вошла; что изменено — не найдено"}
+  - {id: MRC-G-05, name_en: Mother Hydra, product: CW-GOO1, figures: 1, cost: 4, combat: "6 минус вражеские отряды в области, не меньше 1"}
+  - {id: MRC-G-06, name_en: Yig, product: CW-GOO1, figures: 1, cost: 4, combat: 2}
+  - {id: MRC-G-07, name_en: Father Dagon, product: CW-GOO2, figures: 1, cost: 4, combat: "2 на суше, 6 в океане"}
+  - {id: MRC-G-08, name_en: Bokrug, product: CW-GOO2, figures: 1, cost: 4, combat: 1, note: "Cost 4 подтверждён Ultimate Errata Pack (SRC-ERRATA-PACK с. 7)"}
+  - {id: MRC-G-09, name_en: Ghatanothoa, product: CW-GOO2, figures: 1, cost: 4, combat: "число культистов противника на поле", note: "требование Spellbook изменено эррата-паком (SRC-ERRATA-PACK с. 8)"}
+  - {id: MRC-G-10, name_en: Atlach-Nacha, product: CW-GOO2, figures: 1, cost: 6, combat: 4, tokens: "Web, число не найдено"}
+  - {id: MRC-G-11, name_en: Gobogeg, product: CW-GOO3, figures: 1, cost: 0, combat: "0 кубиков; при смерти или подавлении — подавление всем в области", note: "условие: у кого-то 6 фракционных технологий"}
+  - {id: MRC-G-12, name_en: Byatis, product: CW-GOO4, figures: 1, cost: 4, combat: 4}
+  - {id: MRC-G-13, name_en: Nyogtha, product: CW-GOO4, figures: 2, cost: 6, combat: "4, если битву объявил владелец, иначе 1"}
+  - {id: MRC-G-14, name_en: Tulzscha, product: CW-GOO4, figures: 1, cost: 4, combat: 1}
+  - {id: MRC-G-15, name_en: Eihort, product: CW-RC1, figures: 1, cost: 4, combat: 0, tokens: "Brood, число не найдено"}
+  - {id: MRC-G-16, name_en: Gla'aki, product: CW-RC1, figures: 1, cost: "4 (+1 Elder Sign)", combat: "рекруты в вашем резерве"}
+  - {id: MRC-G-17, name_en: Y'Golonac, product: CW-RC2, figures: 1, cost: 2, combat: 1, note: "Spellbook не найден"}
+  - {id: MRC-G-18, name_en: Daoloth, product: CW-RC2, figures: 1, cost: 6, combat: 0}
+  - {id: MRC-G-19, name_en: The Bloated Woman, product: CW-U10, figures: 1, cost: "4; Crawling Chaos — 3", combat: 1}
+  - {id: MRC-G-20, name_en: The Haunter of the Dark, product: CW-U10, figures: 1, cost: "6; Crawling Chaos — 5", combat: "технологии противника, включая технологии наёмных"}
+  - {id: MRC-G-21, name_en: Nodens, product: CW-U28, figures: 1, cost: 6, combat: "Elder God: +1 смерть и +2 подавления вместо кубиков"}
+  - {id: MRC-G-22, name_en: Hagarg Ryonis, product: CW-U33, figures: 1, cost: 4, combat: "Elder God: +3 подавления вместо кубиков"}
+  - {id: MRC-G-23, name_en: Dire Cthulhu, product: CW-U13, figures: 1, cost: "6 (+1 Elder Sign)", combat: 3}
+  - {id: MRC-G-24, name_en: Dire Azathoth, product: CW-U27, figures: 1, cost: 10, combat: D6, note: "своего GOO не требует: фабрика в стартовом регионе врага"}
+  - {id: MRC-G-25, name_en: Azathoth, product: CW-F4, figures: 1, cost: "0, особое пробуждение", combat: "позиция глифа Azathoth на треке"}
+  # Кроссоверы (Planet Apocalypse — 16, The Gods War — 6, Dunwich — Dire Yog-Sothoth):
+  # только списком в SRC-WEB-LOYALTY, F.10.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# НАЁМНЫЕ БОЕВЫЕ МАШИНЫ — кандидаты из оригинала (Neutral Monster)
+# СЕЙЧАС НЕ ДЕЛАЕМ (D-106). Данные — на случай, если класс реализуют позже.
+#
+# В проекте источника нет (MRC-I-013). Имён, лора и текстов на наш лад нет —
+# это работа после решения Q-1. Здесь — оригинал и суть в наших терминах.
+# Цена карты у всех — 2 влияния (MRC-C-1). cost — цена производства одной машины,
+# combat — сила, figures — фигурок в наборе.
+#
+# fit:
+#   OK       — ложится на наши правила без допущений
+#   ADAPT    — опирается на то, что у нас устроено иначе; нужна формулировка
+#   CONFLICT — без другого дополнения оригинала не работает
+# ─────────────────────────────────────────────────────────────────────────────
+
+machines:
+  - id: MRC-M-01
+    name_en: Gnorri
+    product: CW-U1 Dreamlands Surface
+    figures: 3
+    cost: 3
+    combat: 2
+    on_buy_en: "place 1 Gnorri at your Controlled Gates"
+    ability_en: "Grottos (Doom Phase): During the Doom Phase, if you have 2 Gnorri in play, you earn 1 extra Doom point. If you have 3 Gnorri in play, you earn 2 extra Doom points."
+    gist: "Фаза влияния: 2 такие машины в игре — +1 влияние, 3 — +2."
+    fit: OK
+    decision: null
+  - id: MRC-M-02
+    name_en: Moonbeast
+    product: CW-U1 Dreamlands Surface
+    figures: 4
+    cost: 2
+    combat: 0
+    on_buy_en: "place 1 Moonbeast on an enemy Faction Spellbook"
+    ability_en: "Blasphemous Obeisance (Ongoing): When a Moonbeast is Summoned, place it on a Spellbook on an enemy's Faction Card. While the Moonbeast is on that Spellbook, that Spellbook cannot be used (it still counts for other purposes such as Unlimited Battle, and winning the game). In the next Doom Phase, remove all Moonbeasts from enemy Spellbooks and place them into any Areas on the Map containing a Controlled Gate(s). A Moonbeast may be prematurely returned to the Map if its victim spends 1 Doom point (at any time; this does not count as an Action)."
+    gist: "Произведённая машина встаёт на технологию противника и выключает её до следующей фазы влияния, потом выходит к вашей фабрике; жертва может снять её досрочно за 1 влияние."
+    fit: ADAPT
+    fit_note: "технологии у нас — отдельные карты; «лежит на технологии» — проверить с раскладкой карт у планшета"
+    faq: "Yellow Sign при Desecration ставит Moonbeast в осквернённую область (SRC-FAQ)"
+    decision: null
+  - id: MRC-M-03
+    name_en: Shantak
+    product: CW-U1 Dreamlands Surface
+    figures: 2
+    cost: 2
+    combat: 2
+    on_buy_en: "place 1 Shantak at your Controlled Gates"
+    ability_en: "Horror Steed (Ongoing): When Moving a Shantak, it can reach any Area on the Map. In addition, the Shantak may carry one of your Cultists with it for free."
+    gist: "Перемещается в любой регион поля и может бесплатно взять с собой одного вашего пехотинца."
+    fit: OK
+    decision: null
+  - id: MRC-M-04
+    name_en: Ghast
+    product: CW-U2 Dreamlands Underworld
+    figures: 4
+    cost: 2
+    combat: 0
+    on_buy_en: "place all 4 Ghasts at your Controlled Gate(s)"
+    ability_en: "Hordeling (Ongoing): When you spend 2 Power to Summon Ghasts, all Ghasts in your Pool are Immediately placed on the Map at any Gate(s) you Control."
+    gist: "Одно производство за 2{R} выводит из резерва сразу все такие машины — на любые ваши фабрики. При покупке карты на поле сразу все четыре."
+    fit: OK
+    faq: "«Shriveling» считает Ghast за 2 (SRC-FAQ)"
+    decision: null
+  - id: MRC-M-05
+    name_en: Gug
+    product: CW-U2 Dreamlands Underworld
+    figures: 2
+    cost: 1
+    combat: 3
+    on_buy_en: "place 1 Gug at your Controlled Gates"
+    ability_en: "Clumsy (Ongoing): A Gug cannot Capture a Cultist."
+    gist: "Не может захватывать пехотинцев."
+    fit: OK
+    decision: null
+  - id: MRC-M-06
+    name_en: Leng Spider
+    product: CW-U2 Dreamlands Underworld
+    figures: 3
+    cost: 2
+    combat: 1
+    on_buy_en: "place 1 Leng Spider at your Controlled Gates"
+    ability_en: "Bloodthirst (Ongoing): If a Leng Spider is involved in a Battle, you may exchange two Pain results for a Kill before results are assigned. You may do this once for each Leng Spider in the Battle. Each use of this ability may be applied to your results OR your opponent's."
+    gist: "За каждую такую машину в битве можно обменять 2 подавления на 1 смерть — в своём результате или в результате противника."
+    fit: ADAPT
+    fit_note: "FAQ о сочетании с Demand Sacrifice (у нас — “Санкции” Альянса): обменянные смерти снова становятся одиночными подавлениями"
+    decision: null
+  - id: MRC-M-07
+    name_en: Dimensional Shambler
+    product: CW-F4 Azathoth
+    figures: 3
+    cost: 2
+    combat: 2
+    on_buy_en: "place 1 Dimensional Shambler onto your Faction Card"
+    ability_en: "Walk Between Worlds (Ongoing): When Summoning a Dimensional Shambler, place it onto your Faction Card. After any Action (by any player), you may place one or more Dimensional Shamblers from your Faction Card into any Area. Once placed, Dimensional Shamblers remain on the Map (until Killed or otherwise Eliminated)."
+    gist: "Произведённая машина ждёт на планшете; после любого действия любого игрока её можно выставить в любой регион."
+    fit: OK
+    decision: null
+  - id: MRC-M-08
+    name_en: Elder Thing
+    product: CW-F4 Azathoth
+    figures: 3
+    cost: 2
+    combat: 2
+    on_buy_en: "place 1 Elder Thing at one of your Controlled Gates"
+    ability_en: "Mind Control (Ongoing): If an Elder Thing shares an Area with an enemy Great Old One, the latter may not use its Special Ability."
+    gist: "Вражеский боевой робот в одном регионе с этой машиной не может пользоваться своей особой способностью (не технологиями)."
+    fit: ADAPT
+    fit_note: "нужно определить «особую способность робота» на наших планшетах — свойства, привязанные к роботу линией; FAQ оригинала длинный"
+    decision: null
+  - id: MRC-M-09
+    name_en: Servitor of the Outer Gods
+    product: CW-F4 Azathoth
+    figures: 3
+    cost: 1
+    combat: -1
+    on_buy_en: "Pay 2 Doom points to give this Loyalty Card to another player. That player now keeps this Card for the rest of the game. Do not place a Servitor."
+    ability_en: "Adulation (Ongoing): You may not Summon any Monsters except for Servitors if any Servitors remain in your Pool. (You may still place other Monsters on the Map via abilities or means other than the Summon Action.)"
+    gist: "Карту покупают, чтобы отдать противнику: пока такие машины у него в резерве, другие боевые машины он не производит. Сила −1."
+    fit: OK
+    faq: "избавиться от карты нельзя; бой ниже нуля = 0; с Fertility Cult — можно, если в резерве не осталось (SRC-FAQ)"
+    decision: null
+  - id: MRC-M-10
+    name_en: Star Vampire
+    product: CW-F4 Azathoth
+    figures: 3
+    cost: 2
+    combat: 1
+    on_buy_en: "place 1 Star Vampire at one of your Controlled Gates"
+    ability_en: "Vampirism: Roll each Star Vampire's combat dice separately. Each Pain they roll drains 1 Power from the enemy Faction. Each Kill they roll drains 1 Doom point from the enemy Faction. The drained point(s) are transferred to you immediately. If the enemy Faction lacks Power or Doom points, you get nothing. The Pains and Kills rolled still count towards your Battle results."
+    gist: "Кубики этих машин бросаются отдельно: каждое их подавление забирает у противника 1{R}, каждая смерть — 1 влияние."
+    fit: OK
+    versions: "фаза Ongoing (necronomicon) или Battle (HRF) — сверить по карте"
+    decision: null
+  - id: MRC-M-11
+    name_en: Wamp
+    product: CW-U11 Beyond Time and Space
+    figures: 4
+    cost: 1
+    combat: 0
+    on_buy_en: "choose an enemy to place all 4 Wamps in any Area without a Gate"
+    ability_en: "Crypt Dweller (Doom Phase): Choose an enemy to place all Wamps from your Pool into any Area or Areas without a Gate. (You may still summon Wamps normally.)"
+    gist: "В фазу влияния противник по вашему выбору ставит все такие машины из вашего резерва в регионы без фабрик."
+    fit: OK
+    decision: null
+  - id: MRC-M-12
+    name_en: Voonith
+    product: CW-U11 Beyond Time and Space
+    figures: 2
+    cost: 3
+    combat: 1
+    on_buy_en: "place 1 Voonith at one of your Controlled Gates"
+    ability_en: "Vicious (Post-Battle): For each Kill you score fewer than the number of Vooniths involved in the Battle, add 1 Kill."
+    gist: "Смертей в вашем результате не меньше, чем таких машин в битве."
+    fit: OK
+    versions: "ранний текст — «+1 смерть, если не выброшено ни одной»; HRF PR#11 — «Battle», добавочные смерти не для захвата"
+    decision: null
+  - id: MRC-M-13
+    name_en: Insects from Shaggai
+    product: CW-RC1 Ramsey Campbell Horrors 1
+    figures: 3
+    cost: 2
+    combat: 0
+    on_buy_en: "place an Insect from Shaggai into any Area"
+    ability_en: "Mind Parasite (Ongoing): All Acolyte Cultists who are not on a Gate, and who share an Area with an Insect from Shaggai, are Controlled by you during the Action Phase: only you can Move them; they fight on your side in any Battle; they do not benefit from any Faction's Spellbooks; they can only be Captured by you if their true Faction permits it; they cannot be Captured by their true Faction. They are not Controlled by you during the Gather Power or Doom Phases."
+    gist: "Чужие рекруты не на фабриках в регионе с этой машиной в фазу действий подчиняются вам: вы их перемещаете, они сражаются за вас."
+    fit: ADAPT
+    fit_note: "сложный контроль чужих отрядов; андроиды Moon Systems считаются рекрутами для эффектов — уточнять"
+    decision: null
+  - id: MRC-M-14
+    name_en: Satyr
+    product: CW-RC2 Ramsey Campbell Horrors 2
+    figures: 3
+    cost: 2
+    combat: 1
+    on_buy_en: "place a Satyr and an Acolyte Cultist at your Controlled Gate"
+    ability_en: "Fecund (Ongoing): Each time you Summon a Satyr, also place an Acolyte Cultist from your Pool into the Same Area."
+    gist: "Каждое производство такой машины ставит туда же и вашего рекрута из резерва."
+    fit: ADAPT
+    fit_note: "у Moon Systems рекрутов нет"
+    decision: null
+  - id: MRC-M-15
+    name_en: Asteroid Cat
+    product: CW-U33 Something About Cats
+    figures: 2
+    cost: 1
+    combat: 1
+    on_buy_en: "place an Asteroid Cat at your Controlled Gate"
+    ability_en: "Abandoned to Lusts (Action: Cost 0): If an Asteroid Cat shares an Area with a Unit from another Faction that has 5 or fewer Faction Spellbooks, remove the Cat from the Map and place it on one of that enemy's empty Spellbook slots. When that enemy earns that Spellbook, return the Asteroid Cat to your Controlled Gate, and you get to choose immediately which of his available Spellbooks he must take in that slot."
+    gist: "Машина «садится» на пустое место технологии противника; когда он её получит, технологию выбираете вы."
+    fit: ADAPT
+    fit_note: "«пустой слот технологии» у нас — не место на планшете (карты рядом); набор кошек — пара Bubastis"
+    decision: null
+  - id: MRC-M-16
+    name_en: Cat from Mercury
+    product: CW-U33 Something About Cats
+    figures: 2
+    cost: 1
+    combat: 1
+    on_buy_en: "place a Cat from Mercury at your Controlled Gate"
+    ability_en: "Needs Affection (Pre-Battle): If a Cat from Mercury is in a Battle, you can choose one or more of your Monsters present at that Battle; and immediately replace them with your Acolyte Cultists from your pool."
+    gist: "Перед битвой можно заменить свои боевые машины в ней на рекрутов из резерва."
+    fit: OK
+    decision: null
+  - id: MRC-M-17
+    name_en: Cat from Venus
+    product: CW-U33 Something About Cats
+    figures: 2
+    cost: 1
+    combat: 1
+    on_buy_en: "place a Cat from Venus at your Controlled Gate"
+    ability_en: "Honeymoon (Ongoing): When a Cat from Venus Captures a Cultist, gain 1 Power and immediately return the Cultist to the owner's Pool."
+    gist: "Захватив пехотинца, сразу получите 1{R}, а пехотинец возвращается в резерв владельца."
+    fit: OK
+    decision: null
+  - id: MRC-M-18
+    name_en: Giant Blind Albino Penguins
+    product: CW-U32
+    figures: 2
+    cost: 1
+    combat: -2
+    on_buy_en: "place a Penguin at your Controlled Gate"
+    ability_en: "Laughingstock (Pre-Battle): Move one or more Penguins to the Battle area, even if you are not part of the battle. If you are part of the Battle, the penguin fights on your side. Otherwise, you choose which side the Penguin is on, and it belongs to that player until the battle's end."
+    gist: "Перед любой битвой можно перенести их туда; если вы не участвуете — отдаёте их любой стороне. Сила −2."
+    fit: OK
+    decision: null
+  - id: MRC-M-19
+    name_en: Fiend
+    product: "Planet Apocalypse crossover (код не найден)"
+    figures: 4
+    cost: 3
+    combat: 2
+    on_buy_en: "place 1 Fiend at your Controlled Gate"
+    ability_en: "Torment (Ongoing): Fiends are able to Capture their owner's own Cultists. This Capture cannot be prevented by enemy Units. Such a Captured Cultist, when Sacrificed in Gather Power Phase, can either give the owner 1 Power, or permit him to place a free Fiend on the Map at one of his Controlled Gates."
+    gist: "Может захватывать собственных пехотинцев; за такого пленного в фазу ресурсов — 1{R} или бесплатная такая машина."
+    fit: ADAPT
+    fit_note: "кроссовер; захват своих — новое для наших правил"
+    decision: null
+  - id: MRC-M-20
+    name_en: Gryllus
+    product: "Planet Apocalypse crossover (код не найден)"
+    figures: 6
+    cost: 2
+    combat: 1
+    on_buy_en: "place 1 Gryllus at your Controlled Gate"
+    ability_en: "The Gates of Hell (Ongoing): Each time any player drops to 0 Power, he immediately takes 1 Gryllus from the owner's Pool, and places it on the Map as he pleases."
+    gist: "Каждый, у кого кончилась {R}, берёт такую машину из вашего резерва и ставит куда хочет."
+    fit: OK
+    fit_note: кроссовер
+    decision: null
+
+# ─────────────────────────────────────────────────────────────────────────────
+# НАЁМНЫЕ МЕХИ — кандидаты из оригинала (Terror)
+# СЕЙЧАС НЕ ДЕЛАЕМ (D-106). Данные — на случай, если класс реализуют позже.
+#
+# Цена карты у всех — 2 влияния и 2{R} (MRC-C-2), исключения отмечены.
+# Фигурка — одна на карту, кроме Worms of Ghroth.
+# ─────────────────────────────────────────────────────────────────────────────
+
+mechs:
+  - id: MRC-T-01
+    name_en: Dhole
+    product: CW-U5 Cosmic Terrors
+    figures: 1
+    cost: 4
+    combat: 5
+    on_buy_en: "place the Dhole at one of your Controlled Gates"
+    ability_en: "Planetary Destruction (Post-Battle): If the Dhole is Killed or Eliminated in a Battle, earn 2 Elder signs. Additionally, your opponent gains your choice of 2 Doom or 2 Power."
+    gist: "Если мех убит или уничтожен в битве: вы получаете 2 карты скрытого влияния, противник — на ваш выбор 2 влияния или 2{R}."
+    fit: OK
+    decision: null
+  - id: MRC-T-02
+    name_en: Great Race of Yith
+    product: CW-U5 Cosmic Terrors
+    figures: 1
+    cost: 4
+    combat: 3
+    on_buy_en: "place the Great Race of Yith at one of your Controlled Gates"
+    ability_en: "Possession (Ongoing and Gather Power Phase): If the Great Race of Yith is in an Area with an enemy Cultist, you may Capture that Cultist regardless of the presence of any enemy Units or Great Old Ones (or whether Windwalker's Ferox ability is in effect). In addition, if the Great Race of Yith is in play during the Gather Power Phase, earn 1 Power per Captured Cultist in addition to the normal reward of 1 Power per Cultist."
+    gist: "Захватывает вражеского пехотинца в своём регионе, кто бы его ни прикрывал; в фазу ресурсов +1{R} за каждого пленного."
+    fit: OK
+    decision: null
+  - id: MRC-T-03
+    name_en: Quachil Uttaus
+    product: CW-U5 Cosmic Terrors
+    figures: 1
+    cost: 4
+    combat: 1
+    on_buy_en: "place Quachil Uttaus at one of your Controlled Gates"
+    ability_en: "Dust to Dust (Post-Battle): If an enemy Unit is Killed or Eliminated in a Battle involving Quachil Uttaus, that Unit's owner must choose one of the following options: 1) Select one of his lost units to be permanently removed from the game OR 2) You receive an Elder Sign."
+    gist: "Если в битве с этим мехом убит или уничтожен вражеский отряд, противник выбирает: один из потерянных отрядов выходит из игры навсегда — или вы получаете карту скрытого влияния."
+    fit: OK
+    decision: null
+  - id: MRC-T-04
+    name_en: Hound of Tindalos
+    product: CW-U11 Beyond Time and Space
+    figures: 1
+    cost: 4
+    combat: 4
+    on_buy_en: "place the Hound of Tindalos at any Gate (even one you don't Control)"
+    ability_en: "Cronophage (Ongoing): The Hound cannot perform the Move Action by itself. The Hound Moves for free whenever you Move any other Unit, teleporting directly from an Area with a Gate to another Area with a Gate. Angles of Time (Ongoing): The Hound cannot be assigned a Kill in Battle. If a Hound is ever in an Area without a Gate, it is Eliminated."
+    gist: "Сам не ходит; при любом вашем перемещении бесплатно прыгает между регионами с фабриками. Смерть ему назначить нельзя; оказавшись без фабрики — уничтожен."
+    fit: ADAPT
+    fit_note: "ставится и на чужую фабрику — исключение из §11.4.2; «Шрёдингер» как фабрика"
+    decision: null
+  - id: MRC-T-05
+    name_en: Brown Jenkin
+    product: CW-U29
+    figures: 1
+    cost: 2
+    combat: 0
+    on_buy_en: "place Brown Jenkin at your Controlled Gate"
+    ability_en: "Loathsome Titter (Gather Power Phase): If Brown Jenkin shares an area with an enemy-controlled Gate during the Gather Power Phase, gain 2 Power, plus 1 more power for each enemy Cultist in the area. Familiar (Ongoing): If Brown Jenkin is killed or eliminated, if (or as soon as) you have at least 2 Power, pay 2 Power and place Brown Jenkin at your Controlled Gate. This does not count as an Action. This is not Optional."
+    gist: "В фазу ресурсов в регионе с чужой фабрикой: +2{R} и +1{R} за каждого вражеского пехотинца там. Убитый возвращается к вашей фабрике за 2{R} — обязательно."
+    fit: OK
+    versions: "ранний текст (TheGameSteward) отличается обеими способностями"
+    decision: null
+  - id: MRC-T-06
+    name_en: The Elder Shoggoth
+    product: CW-U31
+    figures: 1
+    cost: 4
+    combat: 2
+    on_buy_en: "place the Elder Shoggoth at your Controlled Gate"
+    ability_en: "Prime Cause (Post-Battle): In a Battle involving the Elder Shoggoth, choose any of your Units (including this one) and replace it with any other Unit from your Pool. You can gain a Faction Great Old One that was previously Awakened, but still must fulfill other requirements. If you replace the Elder Shoggoth itself, pay nothing. Otherwise pay half the new Unit's Power cost (round down); if the new Unit is a Terror, the enemy gains 1 Doom; if a Great Old One, the enemy gains 1 Elder Sign."
+    gist: "В битве с ним можно заменить любой свой отряд на другой из резерва за половину цены; за меха противник получает 1 влияние, за робота — карту скрытого влияния."
+    fit: ADAPT
+    fit_note: "замена на фракционного робота с выполнением его условий создания — у наших роботов условия свои"
+    versions: "фаза Post-Battle (necronomicon) или «before rolling dice» (TheGameSteward)"
+    decision: null
+  - id: MRC-T-07
+    name_en: Cacodemon
+    product: "CW-U30 (кроссовер Planet Apocalypse)"
+    figures: 1
+    cost: 4
+    combat: 3
+    on_buy_en: "place the Cacodemon in an Area with your Controlled Gate"
+    ability_en: "Cosmic Terror (Ongoing): Enemy Units may not Move or be Pained into the Area with the Cacodemon unless they are Great Old Ones or if they are accompanied by a Great Old One."
+    gist: "Вражеские отряды не могут войти или отступить в его регион, если они не боевые роботы и не идут вместе с роботом."
+    fit: OK
+    versions: "Сэнди, апдейт 52 Onslaught 3: «no faction may move or retreat»; производить и вербовать туда можно"
+    decision: null
+  - id: MRC-T-08
+    name_en: Cat from Neptune
+    product: CW-U33 Something About Cats
+    figures: 1
+    cost: 1
+    combat: 1
+    on_buy_en: "place the Cat from Neptune at your Controlled Gate"
+    ability_en: "The Final Ritual (Post-Battle): If the Cat from Neptune is Killed in a Battle, you may immediately perform a Ritual of Annihilation. If this causes the marker to move to Instant Death, the game ends after this action."
+    gist: "Если мех убит в битве, вы можете сразу оказать давление; если трек дойдёт до Ядерной катастрофы — игра кончается после этого действия."
+    fit: OK
+    decision: null
+  - id: MRC-T-09
+    name_en: The Shadow Pharaoh
+    product: CW-U10 Masks of Nyarlathotep
+    figures: 1
+    cost: 4
+    combat: 2
+    cost_note: "Ultimate Errata Pack: Cost 4, Combat 2 (SRC-ERRATA-PACK с. 11); necronomicon.app — 2/0, устарело"
+    on_buy_en: "pay 2 Doom and 2 Power, then place the Shadow Pharaoh at your Controlled Gate. Crawling Chaos: pay only 2 Power; each other Faction gains 1 Elder Sign."
+    ability_en: "Hebephrenia (Ongoing): Gates may not be Controlled by any Faction in the Shadow Pharaoh's Area. When the Shadow Pharaoh enters an Area, any occupying Unit immediately Abandons the Gate. (Yog-Sothoth is unaffected.)"
+    gist: "Фабрики в его регионе никто не контролирует; войдя, он сгоняет с фабрики отряд. Эйркрафт Корпорейшн покупает карту за 2{R}, остальные получают по карте скрытого влияния."
+    fit: ADAPT
+    fit_note: "фракционная цена — пара Crawling Chaos у нас Эйркрафт Корпорейшн; “Шрёдингер” не затрагивается"
+    decision: null
+  - id: MRC-T-10
+    name_en: Worms of Ghroth
+    product: "фигурки — CW-M11 Shaggai Map; карта — отдельный PDF"
+    figures: 6
+    cost: null
+    combat: 0
+    cost_note: "Cost: N/A — не производятся; при смерти бросок, при удаче +2 фигурки"
+    on_buy_en: "place one Worm of Ghroth at your Controlled Gate"
+    ability_en: "Whenever a Worm of Ghroth is Killed or Eliminated, roll a die. If the result is higher than the number of Worms in play, you may place up to two Worms into any available, unoccupied areas. Eradication (Gather Power Phase): Roll a die. If the result is equal to or less than the number of Worms of Ghroth in play, gain 1 Elder Sign and lose Power equal to the number shown on the die."
+    gist: "Не производятся, а размножаются при гибели; в фазу ресурсов — шанс на карту скрытого влияния ценой {R}."
+    fit: ADAPT
+    fit_note: "шесть фигурок; правило «не на поле Shaggai» к нам не относится"
+    decision: null
+  - id: MRC-T-11
+    name_en: Junior Whateley
+    product: "The Dunwich Horror (код не найден)"
+    figures: 1
+    cost: 4
+    combat: 4
+    on_buy_en: "правило Clan: «pay that Whateley's cost»"
+    ability_en: "Growth (Doom Phase) + Transmogrification (Action: Cost 0) — SRC-WEB-LOYALTY, B.2"
+    gist: "Член клана Уэйтли, перекупается каждую фазу влияния; без правил клана не работает."
+    fit: CONFLICT
+    fit_note: "нужны правила Dunwich Horror и другие Уэйтли"
+    decision: null
+  - id: MRC-T-12
+    name_en: "Fourth Circle Terrors ×14"
+    product: "Planet Apocalypse crossover (код не найден)"
+    figures: 14
+    cost: 2
+    combat: "2–6"
+    on_buy_en: "pay 2 Doom and 2 Power, then place at your Controlled Gate; −1 Power в каждую фазу ресурсов за каждую такую карту"
+    ability_en: "по карте на каждого — SRC-WEB-LOYALTY, B.2"
+    gist: "Кроссоверная группа: дешёвый мех с постоянным налогом в {R}."
+    fit: ADAPT
+    decision: null
+
+# ─────────────────────────────────────────────────────────────────────────────
+# НАХОДКИ — MRC-I-###
+# type: REGISTRY-ERROR | DRAFT-NAME | DRAFT-TERM | DRAFT-DEFECT | NAME-COLLISION |
+#       SOURCE-GAP | RULE-NOTE | VERSIONS | INFO
+# status: OPEN | AUTHOR-DECISION-REQUIRED | DECIDED | CLOSED | NOTED
+#   NOTED — факт записан, действий не требует; decision у таких пуст
+# ─────────────────────────────────────────────────────────────────────────────
+
+findings:
+
+  - id: MRC-I-001
+    type: REGISTRY-ERROR
+    title: "DEV-014 — ложная тревога: цены карт лояльности в оригинале разные по классам"
+    severity: ERROR
+    status: CLOSED
+    subject: [DEV-014, NUM-108, NUM-109, BL-MODULE-008]
+    detail: >
+      BL-MODULE-008 записал «правило покупки общее для карт лояльности Neutral
+      Monster и Terror», отсюда DEV-014 («единая цена 2 Doom + 2 Power») и поле
+      original у NUM-108. На деле Neutral Monster стоит 2 Doom (SRC-RB-OLD с. 109,
+      SRC-RB-NEW с. 99, SRC-NECRO, все 20 карт), Terror — 2 Doom + 2 Power.
+      Черновик (2 влияния; 2 нефти + 2 влияния) совпадает с оригиналом 1:1.
+    proposal: >
+      NUM-108: original «2 влияния», match PASS; NUM-109: match PASS;
+      BL-MODULE-008: строку interactions переписать; DEV-014 — примечание
+      «основание ложное, см. MRC-I-001». Книга не меняется: цена живёт на карте.
+      Править вместе с записью решения по этапу.
+    decision: "Исправлено D-106: NUM-108 и NUM-109 — PASS, BL-MODULE-008 и BL-MODULE-011 поправлены, у DEV-014 записано, что основание ложное."
+    decided: 2026-10-01
+
+  - id: MRC-I-002
+    type: REGISTRY-ERROR
+    title: "NUM-111 — у рекомендации «на одного робота меньше» есть пара в оригинале"
+    severity: WARNING
+    status: CLOSED
+    subject: NUM-111
+    detail: >
+      NUM-111 записан с original: null. Оригинал: «For your first game with
+      Independents, we recommend using one fewer Independent than the number of
+      players» (SRC-RB-NEW с. 109, SRC-RB-OLD с. 120). Книга §11.4.3 говорит то же.
+    proposal: "original «на 1 меньше числа игроков», match PASS."
+    decision: "Исправлено D-106: NUM-111 — original по рулбуку, PASS."
+    decided: 2026-10-01
+
+  - id: MRC-I-003
+    type: REGISTRY-ERROR
+    title: "NUM-112 — характеристики независимых GOO в оригинале есть, все 9 совпали"
+    severity: INFO
+    status: CLOSED
+    subject: NUM-112
+    detail: >
+      NUM-112 утверждает, что оригинал характеристик конкретных независимых GOO
+      не содержит. Содержит: SRC-RB-OLD с. 125–129 (10 карт Сэнди). Все девять
+      роботов черновика совпали по силе, стоимости, ценам способностей и числам задач.
+    proposal: "original — «по картам Сэнди, SRC-RB-OLD с. 125–129», match PASS."
+    decision: "Исправлено D-106: NUM-112 — original по картам Сэнди, PASS."
+    decided: 2026-10-01
+
+  - id: MRC-I-004
+    type: RULE-NOTE
+    title: Числа наёмного робота не равны числам планшета — так задумано в оригинале
+    severity: INFO
+    status: NOTED
+    subject: [MRC-R-01, MRC-R-02, MRC-R-03, MRC-R-04, MRC-R-05, MRC-R-06, MRC-R-07]
+    detail: >
+      У Сэнди цена и сила наёмного GOO свои: Cthulhu 6/3 против 10/6, Hastur
+      6 и половина цены ритуала против 10 и цены целиком, Yog-Sothoth — число
+      вражеских GOO против удвоенного, и т. д. Черновик держится оригинала.
+      Числа на карту — с карты оригинала; с планшета — имена, термины и формулировки,
+      где механика та же. Поле faction_numbers — только для сравнения.
+    proposal: null
+    decision: null
+    decided: null
+
+  - id: MRC-I-005
+    type: DRAFT-NAME
+    title: Имена в черновике старше принятых
+    severity: WARNING
+    status: CLOSED
+    subject: SRC-APP-MERC
+    detail: >
+      “Краб” → “C.R.A.B.” (D-059); Промышленный робот “Пастух” → “Шепард”,
+      боевой робот (D-065, D-066); “Тексан” → “Биг Текс” (D-076);
+      “Шредингер” → “Шрёдингер” (D-073); “Черный вихрь” → “Чёрный вихрь” (D-065).
+    proposal: "В text_draft уже исправлено. Источник SRC-APP-MERC не правится."
+    decision: "В text_draft исправлено; вычитка на картах — этап 3."
+    decided: 2026-10-01
+
+  - id: MRC-I-006
+    type: DRAFT-TERM
+    title: Термины черновика старше принятых
+    severity: WARNING
+    status: CLOSED
+    subject: SRC-APP-MERC
+    detail: >
+      «жетон скрытого влияния», «1 скрытое влияние» → карта скрытого влияния;
+      «трек влияния», «оказание влияния» → трек Судного дня, оказание давления;
+      «ранение» → подавление (D-019); «запас» отрядов → резерв (D-024);
+      «б/р» → боевой робот; «нефть» и «единица нефти» → значок {R} (ICON-001);
+      «Битва, фаза: финал» → «Битва. Финал»; «Действие. Стоимость: 2» → «2{R}».
+    proposal: "В text_draft уже исправлено."
+    decision: "В text_draft исправлено; вычитка на картах — этап 3."
+    decided: 2026-10-01
+
+  - id: MRC-I-007
+    type: DRAFT-DEFECT
+    title: Дефекты черновика
+    severity: ERROR
+    status: CLOSED
+    subject: [MRC-R-01, MRC-R-03, MRC-R-06]
+    detail: >
+      1. “Краб”: текст технологии «Диверсия» — дословная копия текста задачи.
+         В оригинале Devour; взят текст свойства “Диверсия” с планшета.
+      2. “Шрёдингер”: шаги создания пронумерованы 3 и 4; задача «ваш боевой робот»
+         вместо самого “Шрёдингера” (оригинал — «Yog-Sothoth shares an Area…»).
+      3. “Пастух”: задача «где есть вражеская фабрика» — в оригинале «enemy-Controlled
+         Gate», то есть фабрика под контролем противника, а не любая чужая.
+      4. “Жнец”: в черновике нет второй фразы оригинала — производство по-прежнему
+         по одной машине за действие.
+    proposal: "В text_draft уже исправлено по оригиналу. Вычитка — этап 3."
+    decision: "В text_draft исправлено по оригиналу; вычитка на картах — этап 3."
+    decided: 2026-10-01
+
+  - id: MRC-I-008
+    type: RULE-NOTE
+    title: "«Регион с логотипом фракции» — логотипов на поле нет"
+    severity: WARNING
+    status: CLOSED
+    subject: [MRC-R-01, MRC-R-04, MRC-R-08, MRC-R-09]
+    detail: >
+      Способности “Краба” и “Чёрного вихря” и задачи “Халифа” и “Имама” ссылаются
+      на «регион с логотипом» фракции. Логотипов и глифов на поле нет (MF-009),
+      метка Глобал Петролеум отменена (D-102). Оригинальные глифы: Cthulhu — Юг
+      Тихого океана (MG-001), Yellow Sign — Европа (MG-002), Windwalker —
+      Северный Ледовитый океан и Антарктида (MG-006, MG-007).
+    proposal: >
+      На картах писать регион словами: «в регионе Юг Тихого океана», «в регионе
+      Европа». Европа есть на всех четырёх полотнах как область «Европа»
+      (на стороне «5» Скандинавия отдельно, глиф оригинала остаётся в Европе).
+    decision: "Регион пишется словами: Юг Тихого океана, Европа — в text_draft."
+    decided: 2026-10-01
+
+  - id: MRC-I-009
+    type: NAME-COLLISION
+    title: Имя совпадает с принятым, механика другая
+    severity: WARNING
+    status: OPEN
+    subject: [MRC-R-02, MRC-R-03, MRC-R-05, MRC-R-06, MRC-R-07]
+    detail: >
+      1. «Клонирование»: у наёмного “Жнеца” — вербовка нескольких пехотинцев
+         (Fertile), у Клонэйд Ресёрч — производство нескольких машин (Fertility Cult).
+         В оригинале имена разные.
+      2. «Нефтедобыча» наёмного “Шепарда” и «Добыча» Глобал Петролеум — в оригинале
+         одно имя Feast, условия разные (у наёмного нет «вашего отряда в регионе»).
+      3. «Авиация»: у наёмного “Спрута” — только сам робот (Chaos), у Эйркрафт —
+         все отряды (Flight). В оригинале имена разные.
+      4. «Пространственный сдвиг» и «Оперативная пауза»: имена те же, что на
+         планшетах, тексты разные — так у Сэнди (старая редакция Beyond-One;
+         условие Lethargy «у противника больше Power»).
+    proposal: "Решить на этапе 3, когда карты будут рядом с планшетами."
+    decision: null
+    decided: null
+
+  - id: MRC-I-010
+    type: RULE-NOTE
+    title: Братство Сингулярности создаёт наёмных роботов при четырёх общинах
+    severity: INFO
+    status: NOTED
+    subject: [OW-F-04, COMP-I-027]
+    detail: >
+      Правило есть на планшете — сноска под таблицей отрядов: «для создания
+      наёмного робота вам не требуется собственный боевой робот, однако на поле
+      должны находиться все четыре ваши общины» (PL-Братство Сингулярности;
+      FAC-DOC — то же). Оригинал: Cathedral «If all 4 Cathedrals are in play, you
+      may Awaken an Independent Great Old One without your own Great Old One»
+      (necronomicon.app/factions/the-ancients; HRF FactionAN.scala:61).
+      Вопрос COMP-I-027 п. 6 — где появляется робот — снимается формулировкой
+      создания «появляется в регионе с этой фабрикой» (оригинал: «in the Area
+      containing the Gate»): у Братства это фабрика под его контролем.
+    proposal: null
+    decision: null
+    decided: null
+
+  - id: MRC-I-011
+    type: RULE-NOTE
+    title: "Moon Systems: создание наёмника работает через Луну; карты для “Зардоза” нет"
+    severity: INFO
+    status: NOTED
+    subject: [OW-F-06, MRC-R-10]
+    detail: >
+      Планшет: «Луна считается сухопутным регионом с фабрикой под вашим контролем
+      для любых целей и условий». “Зардоз” на Луне создаёт наёмника там же —
+      как у Bubastis: Bastet считается GOO, единственные врата фракции — Луна
+      (SRC-WEB-LOYALTY, E.2). Карты независимого для Bastet нет ни в одном
+      источнике — по 1:1 карту “Зардоза” не делаем.
+    proposal: null
+    decision: null
+    decided: null
+
+  - id: MRC-I-012
+    type: SOURCE-GAP
+    title: "“Халиф” и “Имам” — оригинал есть, нашей фракции и фигурок нет"
+    severity: WARNING
+    status: DECIDED
+    subject: [MRC-R-08, MRC-R-09]
+    detail: >
+      Оба — переводы карт Сэнди для Windwalker (Ithaqua, Rhan-Tegoth), числа совпали.
+      Среди восьми фракций пары нет (Alek 2026-10-01). Задачи завязаны на два
+      стартовых глифа Windwalker; у нас этих меток нет.
+    proposal: >
+      Вариант А — не делать: состав наёмных роботов = семь роботов наших фракций.
+      Вариант Б — делать: купить 2 фигурки, переписать задачи на регионы словами
+      (Северный Ледовитый океан, Антарктида), заново дать имена — «Халиф» и «Имам»
+      тянут несуществующую фракцию.
+    decision: "Вариант А — не делать. Windwalker не реализован, работаем с восемью фракциями."
+    decided: 2026-10-01
+
+  - id: MRC-I-013
+    type: SOURCE-GAP
+    title: Наёмных машин и мехов в проекте нет ни одного
+    severity: ERROR
+    status: DECIDED
+    subject: [COMP-I-018, MRC-C-1, MRC-C-2]
+    detail: >
+      Ни приложение, ни док фракций, ни черновик правил не называют ни одной
+      наёмной машины или меха — только механику покупки. В оригинале собраны
+      все карты: 20 Neutral Monster и 11 Terror (+14 кроссоверных), раздел
+      machines и mechs. Фигурок нет.
+    proposal: "Q-1 и Q-2 в meta.decisions_pending."
+    decision: "Машины и мехи сейчас не делаем; данные хранятся в machines и mechs (D-106)."
+    decided: 2026-10-01
+
+  - id: MRC-I-014
+    type: SOURCE-GAP
+    title: Вики Cthulhu Wars закрыта — первоисточник текстов не сверен
+    severity: WARNING
+    status: DECIDED
+    subject: SRC-WEB-LOYALTY
+    detail: >
+      Тексты машин и мехов сняты с necronomicon.app (транскрипция) и сверены с HRF,
+      FAQ и Ultimate Errata Pack. Вики (fandom) отдаёт 402 — 15 адресов в
+      rules/tools/fetch-queue.txt. Официальный PDF «Faction GOO LCs» (апдейт 86
+      Onslaught 3) прямой ссылкой не найден; тексты карт Сэнди есть в рулбуке
+      (SRC-RB-OLD с. 125–129), этого достаточно.
+    proposal: "Alek запускает python rules/tools/fetch.py; сверка — по выбранным картам после Q-1."
+    decision: "Сверка по вики нужна только при реализации машин и мехов; тексты карт Сэнди — по рулбуку. Адреса в fetch-queue остаются (D-106)."
+    decided: 2026-10-01
+
+  - id: MRC-I-015
+    type: INFO
+    title: Маркер владельца наёмных фигурок не нужен
+    severity: INFO
+    status: NOTED
+    subject: [COMP-V-10]
+    detail: >
+      В оригинале владельца показывает карта лояльности; кольца CW-U26 (144 шт.,
+      9 цветов, 25/40/50/60/80 мм) — отдельный необязательный продукт. У нас на тип
+      одна карта, все фигурки типа принадлежат её владельцу; наёмный робот один.
+    proposal: null
+    decision: null
+    decided: null
+
+  - id: MRC-I-016
+    type: VERSIONS
+    title: У части кандидатов тексты расходятся между версиями
+    severity: WARNING
+    status: DECIDED
+    subject: [MRC-M-10, MRC-M-12, MRC-T-05, MRC-T-06, MRC-T-07, MRC-T-09]
+    detail: >
+      Star Vampire (фаза), Voonith (ранний и нынешний текст), Brown Jenkin (ранний
+      текст), Elder Shoggoth (до или после бросков), Cacodemon (Сэнди: «move or
+      retreat», «no faction»), Shadow Pharaoh (эррата: Cost 4, Combat 2).
+    proposal: "Разрешать только у выбранных после Q-1 — по вики или по фото карты."
+    decision: "Разрешать при реализации машин и мехов, только у выбранных карт (D-106)."
+    decided: 2026-10-01
+
+  - id: MRC-I-017
+    type: INFO
+    title: "Сила наёмного “Шрёдингера” — без удвоения, подтверждено двумя источниками"
+    severity: INFO
+    status: NOTED
+    subject: MRC-R-06
+    detail: >
+      Веб-сбор заподозрил ошибку копирования на necronomicon.app (у фракционного
+      Yog-Sothoth сила удвоенная). Рулбук SRC-RB-OLD с. 127 даёт ту же формулу
+      без удвоения, черновик — тоже. Ошибки нет.
+    proposal: null
+    decision: null
+    decided: null

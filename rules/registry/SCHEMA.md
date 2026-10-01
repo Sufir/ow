@@ -483,3 +483,111 @@ findings:
     decision: null                # обязателен при DECIDED, DEFERRED, CLOSED
     decided: null                 # дата; правило то же, что у issues.yaml
 ```
+
+---
+
+## mercenaries.yaml — реестр наёмников
+
+**Вне валидатора.** `rules/tools/registry.py` знает семь файлов (`sources` … `icons`)
+и этот, как `factions.yaml` и `components.yaml`, не проверяет и в `registry.db`
+не собирает. Отдельного валидатора нет и не планируется: проверка — парсинг
+PyYAML и уникальность ID. Заведён 2026-10-01, компонент `COMP-V-10`, этап 1.
+
+Источник истины по вопросу «какие наёмники есть, откуда каждое число и каким
+будет текст карты». Механика наёмников — `RULEBOOK.md` §6.6 и §11.4; физическое
+состояние компонента — `components.yaml` → `COMP-V-10`. Здесь чисел правил нет,
+только числа карт.
+
+Семь разделов верхнего уровня:
+
+- `meta` — состояние этапа, открытые вопросы к Alek (`decisions_pending`, `Q-#`),
+  соответствие терминов оригинала и наших (`term_map`), счётчики, фигурки.
+- `classes` — три класса, `MRC-C-#`: как приобретается, цена в оригинале
+  и у нас, вердикт `match`.
+- `robots` — наёмные боевые роботы, `MRC-R-##`, полная запись (ниже).
+- `robots_original_pool` — прочие независимые GOO оригинала, `MRC-G-##`, справочно,
+  одной строкой.
+- `machines` — кандидаты в наёмные боевые машины (Neutral Monster), `MRC-M-##`.
+- `mechs` — кандидаты в наёмные мехи (Terror), `MRC-T-##`.
+- `findings` — находки, `MRC-I-###`. Отдельно от `issues.yaml` и `components.yaml`.
+
+**Главное правило.** Числа наёмника берутся с карты оригинала, а не с планшета
+фракции: у Сэнди цена и сила наёмного GOO свои. С планшета и с принятых карт
+задач и технологий берутся имена, термины и формулировки — там, где механика та же.
+Поле `basis` у каждого черновика говорит, что откуда.
+
+### Боевой робот
+
+```yaml
+robots:
+  - id: MRC-R-01                  # MRC-R-##
+    name: “C.R.A.B.”              # эталонное имя (CLAUDE.md §2, D-###); null — не решено
+    name_draft: “Краб”            # как в SRC-APP-MERC
+    status: SOURCED               # SOURCED — есть карта оригинала и наша фракция
+                                  # PENDING — решение за Alek (Q-#)
+                                  # EXCLUDED — решено не делать (Q-#)
+                                  # NO-SOURCE — карты в оригинале нет
+    decision: null                # что решил Alek
+    faction: OW-F-01              # null — нашей фракции нет
+    faction_name: Островная Империя
+    original: {name_en: Cthulhu, faction: CW-F-01 Great Cthulhu, card: "…", src: "SRC-RB-OLD с. 126"}
+    figure: {carrier: MINIATURE, have: true, ref: COMP-F-05}
+    cost: 6                       # нефть при создании — с карты оригинала
+    cost_src: "…"                 # откуда число: оригинал и черновик
+    combat: 3                     # число ИЛИ null, тогда combat_note — формула
+    combat_note: null
+    combat_src: "…"
+    faction_numbers: {cost: "10/4", combat: 6, src: PL-…}   # только для сравнения
+    creation:                     # блоки creation / ability / task / technology
+      original_en: "…"            #   original_en — дословно с карты оригинала
+      draft: "…"                  #   draft — дословно из SRC-APP-MERC
+      text_draft: [ "…" ]         #   text_draft — черновой текст карты; вычитка — этап 3
+    ability:                      #   у ability и technology ещё name, phase, basis
+      name: Контроль над морем
+      phase: Фаза влияния
+      basis: "…"                  #   откуда текст: оригинал, планшет (PL-…), карты (CARDS)
+    task: {}
+    technology: {}
+    discrepancies:                # расхождения черновика с принятым
+      - {type: NAME, draft: “Краб”, canon: “C.R.A.B.”, ref: D-059}
+                                  # NAME | TERM | DEFECT | RULE | CLASS | SOURCE | NAME-COLLISION
+    notes: null
+```
+
+### Кандидат — машина или мех
+
+```yaml
+machines:                         # mechs — те же поля, ID MRC-T-##
+  - id: MRC-M-01
+    name_en: Gnorri               # нашего имени нет, пока не решён Q-1
+    product: CW-U1 Dreamlands Surface
+    figures: 3                    # фигурок в наборе оригинала
+    cost: 3                       # цена производства одной; null + cost_note, если особая
+    combat: 2
+    on_buy_en: "…"                # что ставится при покупке карты
+    ability_en: "…"               # дословно
+    gist: "…"                     # суть в наших терминах, одна-две строки
+    fit: OK                       # OK | ADAPT | CONFLICT — ложится ли на наши правила
+    fit_note: null                # обязателен при ADAPT и CONFLICT
+    faq: null                     # FAQ оригинала, если есть
+    versions: null                # расхождения версий текста, если есть
+    decision: null
+```
+
+### Находка
+
+```yaml
+findings:
+  - id: MRC-I-001                 # MRC-I-###
+    type: REGISTRY-ERROR          # REGISTRY-ERROR | DRAFT-NAME | DRAFT-TERM | DRAFT-DEFECT |
+                                  # NAME-COLLISION | SOURCE-GAP | RULE-NOTE | VERSIONS | INFO
+    title: Краткая суть
+    severity: ERROR               # CRITICAL | ERROR | WARNING | INFO
+    status: OPEN                  # OPEN | AUTHOR-DECISION-REQUIRED | DECIDED | CLOSED | NOTED
+                                  # NOTED — факт записан, действий не требует
+    subject: [DEV-014, NUM-108]   # ID записи или список
+    detail: >
+    proposal: >
+    decision: null                # обязателен при DECIDED и CLOSED
+    decided: null
+```

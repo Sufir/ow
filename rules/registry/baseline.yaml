@@ -2948,8 +2948,10 @@ baseline:
     interactions:
       - Призыв самого Terror — отдельное действие Summon Terror (BL-UNIT-005)
       - >
-        Тем же способом приобретается право призывать нейтрального Monster:
-        правило покупки общее для карт лояльности Neutral Monster и Terror.
+        Тем же моментом приобретается карта лояльности нейтрального Monster,
+        и лимит «одна карта за фазу Doom» у них общий. Цена — разная: Monster
+        стоит 2 Doom без Power (BL-MODULE-011). Прежняя строка «правило покупки
+        общее» была ошибкой и породила ложный DEV-014 (D-106).
     sources:
       - {ref: SRC-RB-NEW, loc: "с. 103, строки 2691–2713 в .md", note: null}
     errata_applied: []
@@ -2969,12 +2971,14 @@ baseline:
       не принадлежат никакой фракции с начала игры и у них есть собственные
       врождённые способности вместо опоры на книги заклинаний. Их можно
       использовать в любом сочетании с другими дополнениями, на любой карте
-      и с любыми фракциями.
-    numbers: {}
+      и с любыми фракциями. Карту лояльности нейтрального монстра покупают
+      в свою очередь Ритуала Уничтожения за 2 Doom (без Power), не больше одной
+      карты лояльности за фазу Doom; обычно сразу бесплатно ставится одна фигурка.
+    numbers: {doom_cost: 2, power_cost: 0, loyalty_cards_per_doom_phase: 1}
     timing: null
     prerequisites: []
     targets: null
-    cost: null
+    cost: "2 Doom"
     limits: []
     exceptions:
       - Не принадлежат фракции изначально
@@ -2984,6 +2988,8 @@ baseline:
       - Slime Mold — частный случай нейтрального монстра (BL-UNIT-009)
     sources:
       - {ref: SRC-RB-NEW, loc: "с. 99, строки 2655–2663 в .md", note: null}
+      - {ref: SRC-RB-OLD, loc: "с. 109", note: "«you may lower your Doom by 2 points» — цена добавлена по D-106"}
+      - {ref: SRC-NECRO, loc: "variants → Neutral Monsters", note: "«pay 2 Doom»"}
     errata_applied: []
     faq_applied: []
     confidence: HIGH

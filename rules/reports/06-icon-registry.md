@@ -2,7 +2,7 @@
 
 | ID | Плейсхолдер | Значение | Оригинал | Статус |
 |---|---|---|---|---|
-| ICON-001 | {OIL} | Нефть | Power | MISSING |
+| ICON-001 | {OIL} | Нефть | Power | OK |
 | ICON-002 | {INFLUENCE} | Влияние (победные очки) | Doom | MISSING |
 | ICON-003 | {HIDDEN_INFLUENCE} | Карта скрытого влияния | Elder Sign | MISSING |
 | ICON-004 | {DOOMSDAY} | Трек Судного дня | Ritual of Annihilation Track | MISSING |
@@ -44,5 +44,6 @@
 | ICON-040 | {FACTION_BROTHERHOOD} | Логотип фракции «Братство Сингулярности» | — | OK |
 | ICON-041 | {FACTION_ALLIANCE} | Логотип фракции «Североамериканский Альянс» | — | OK |
 | ICON-042 | {FACTION_SCIENTIFIC} | Логотип фракции «Сайнтифик Солюшн» | — | OK |
+| ICON-045 | {OIL_BARREL} | Бочка нефти — изображение, не ресурс | — | UNMAPPED |
 | ICON-043 | {NET_MARK} | Принадлежность компонента к сети Роя | — | EMOJI-SUBSTITUTE |
 | ICON-044 | {FACTORY_SPECIAL_MARK} | Различители десяти особых фабрик | Colour Gate colours | OK |
