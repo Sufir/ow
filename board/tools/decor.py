@@ -1,6 +1,8 @@
 """
 decor.py — декор игрового поля (этап 3 COMP-C-03, шаг 4, D-104).
 
+Фон под фигурами (шаг 5, D-105) — bg_layer(): тень к краю суши и светлая вода у берега.
+
 Выбор Alek 01.10.2026: береговые линии на воде (три тонкие белые линии вдоль берега,
 1,6 / 3,6 / 6,4 мм, бледнее к морю) и рамка со шкалой (риски каждые 10 мм, каждые 50 — длиннее).
 Отвергнуты: рельеф у берега, техническая сетка, гексы. Рисует boardview.py — svg_layer().
@@ -113,6 +115,31 @@ def svg_layer(R, spec, decor=()):
             f'<path d="{lines_d(MultiLineString(ticks))}" fill="none" stroke="#2c2a26" stroke-width="0.35"/>')
 
 
+SHADE_W, SHADE_BLUR, SHADE_OP = 7.0, 3.0, 0.32   # тень к краю суши: ширина штриха, размытие, сила (D-105)
+GLOW_BLUR, GLOW_OP = 7.0, 0.22                     # светлая вода у берега: размытие, сила
+
+
+def bg_layer(R, spec):
+    """фон (SPEC §9, D-105): тень к краю суши — у берега и у границ областей, центр ровный;
+    вода у берега светлее. Возвращает (defs, слой)"""
+    import boardview as bv
+    W, H = bc.CANVAS
+    X0, Y0, X1, Y1 = bc.RECT
+    land = [R[r] for r in spec['areas'] if spec['type'][r] != 'OCEAN']
+    mask = bv.path_d(unary_union(land))
+    borders = ''.join(bv.path_d(g) for g in land)
+    defs = (f'<filter id="bgshade" filterUnits="userSpaceOnUse" x="-50" y="-50" width="{W + 100:g}" height="{H + 100:g}">'
+            f'<feGaussianBlur stdDeviation="{SHADE_BLUR:g}"/></filter>'
+            f'<filter id="bgglow" filterUnits="userSpaceOnUse" x="-50" y="-50" width="{W + 100:g}" height="{H + 100:g}">'
+            f'<feGaussianBlur stdDeviation="{GLOW_BLUR:g}"/></filter>'
+            f'<clipPath id="bglm"><path d="{mask}"/></clipPath>'
+            f'<clipPath id="bgom"><path d="M{X0:g},{Y0:g}H{X1:g}V{Y1:g}H{X0:g}Z{mask}" clip-rule="evenodd"/></clipPath>')
+    layer = (f'<g clip-path="url(#bgom)"><g filter="url(#bgglow)"><path d="{mask}" fill="#ffffff" fill-opacity="{GLOW_OP:g}"/></g></g>'
+             f'<g clip-path="url(#bglm)"><g filter="url(#bgshade)"><path d="{borders}" fill="none" stroke="#000000" '
+             f'stroke-width="{SHADE_W:g}" stroke-opacity="{SHADE_OP:g}"/></g></g>')
+    return defs, layer
+
+
 def build_test(out):
     D = geometry()
     W, H = bc.CANVAS
@@ -187,7 +214,94 @@ draw();
     return out
 
 
+def build_bg_test(out):
+    """фон под фигурами (SPEC §9): варианты обработки заливки — центр спокойный, всё к краям"""
+    import boardview as bv
+    W, H = bc.CANVAS
+    X0, Y0, X1, Y1 = bc.RECT
+    boards = []
+    for lay in LAYOUTS:
+        fc = json.loads((GEO / f'board-{lay}.geojson').read_text(encoding='utf-8'))
+        R = {f['properties']['id']: shape(f['geometry']) for f in fc['features']}
+        land = {r: g for r, g in R.items() if '-OC-' not in r}
+        lu = unary_union(list(land.values()))
+        borders = ''.join(bv.path_d(g) for g in land.values())
+        mask = bv.path_d(lu)
+        svg = (GEO / f'board-{lay}.svg').read_text(encoding='utf-8')
+        inner = re.sub(r'^.*?<svg[^>]*>', '', svg, flags=re.S).rsplit('</svg>', 1)[0]
+        inner = re.sub(r'<title>.*?</title>', '', inner, count=1, flags=re.S)
+        inner = inner.replace('id="blend"', f'id="blend-{lay}"').replace('url(#blend)', f'url(#blend-{lay})') \
+                     .replace('id="ocmask"', f'id="ocmask-{lay}"').replace('url(#ocmask)', f'url(#ocmask-{lay})')
+        L = lay
+        fx = (f'<clipPath id="lm-{L}"><path d="{mask}"/></clipPath>'
+              f'<clipPath id="om-{L}"><path d="M{X0},{Y0}H{X1}V{Y1}H{X0}Z{mask}" clip-rule="evenodd"/></clipPath>'
+              f'<g class="bg bg-shade" style="display:none" clip-path="url(#lm-{L})"><g filter="url(#b3)">'
+              f'<path d="{borders}" fill="none" stroke="#000" stroke-width="7" stroke-opacity="0.32"/></g></g>'
+              f'<g class="bg bg-rim" style="display:none" clip-path="url(#lm-{L})"><g filter="url(#b3)">'
+              f'<path d="{borders}" fill="none" stroke="#fff" stroke-width="6" stroke-opacity="0.35"/></g></g>'
+              f'<g class="bg bg-grain" style="display:none" clip-path="url(#lm-{L})">'
+              f'<rect x="{X0}" y="{Y0}" width="{X1 - X0}" height="{Y1 - Y0}" filter="url(#grain)"/></g>'
+              f'<g class="bg bg-glow" style="display:none" clip-path="url(#om-{L})"><g filter="url(#b8)">'
+              f'<path d="{mask}" fill="#fff" fill-opacity="0.22"/></g></g>')
+        inner = inner.replace('<g id="deco">', fx + '<g id="deco">', 1)
+        boards.append(f'<g class="board" data-lay="{lay}">{inner}</g>')
+    defs = (f'<defs><filter id="b3" filterUnits="userSpaceOnUse" x="-50" y="-50" width="{W + 100}" height="{H + 100}"><feGaussianBlur stdDeviation="3"/></filter>'
+            f'<filter id="b8" filterUnits="userSpaceOnUse" x="-50" y="-50" width="{W + 100}" height="{H + 100}"><feGaussianBlur stdDeviation="7"/></filter>'
+            f'<filter id="grain" filterUnits="userSpaceOnUse" x="0" y="0" width="{W}" height="{H}">'
+            f'<feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="7"/>'
+            f'<feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.45 -0.19"/></filter></defs>')
+    radios = ''.join(f'<label><input type="radio" name="lay" value="{l}"{" checked" if l == "MC-5P" else ""}> {l}</label>' for l in LAYOUTS)
+    opts = [('shade', 'тень к краю: суша темнеет у границ и берега на 6–8 мм, центр области ровный'),
+            ('rim', 'светлая кромка: суша светлеет у границ и берега, центр ровный'),
+            ('grain', 'зерно: крупное мягкое зерно по суше, как бетон или бумага — контраст очень низкий'),
+            ('glow', 'вода у берега светлее: мягкое свечение до 15 мм от суши')]
+    checks = ''.join(f'<label><input type="checkbox" id="c-{k}"> {t}</label>' for k, t in opts)
+    html = f'''<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Фон под фигурами</title>
+<style>
+:root{{--bg:#f4f1ea;--fg:#23211d;--mut:#6b665c;--line:#d6d0c4;--card:#fbf9f4}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme=light]){{--bg:#1d1c1a;--fg:#ece8df;--mut:#a39d91;--line:#3a3833;--card:#252421}}}}
+body{{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,sans-serif}}
+main{{max-width:1700px;margin:0 auto;padding:16px}}
+h1{{font-size:20px;margin:0 0 4px}} p.sub{{margin:0 0 12px;color:var(--mut)}}
+.ctl{{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;align-items:baseline;margin:0 0 10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card)}}
+.ctl .k{{color:var(--mut);font-weight:600}} .ctl .row{{display:flex;flex-wrap:wrap;gap:4px 18px}} .ctl .col{{display:flex;flex-direction:column;gap:4px}}
+.ctl label{{display:inline-flex;gap:6px;align-items:center;cursor:pointer}}
+@media (max-width:900px){{.ctl{{grid-template-columns:1fr}}}}
+svg#map{{width:100%;height:auto;display:block;border-radius:6px}}
+</style></head><body><main>
+<h1>Фон под фигурами — варианты</h1>
+<p class="sub">Этап 3 COMP-C-03, шаг 5. Страница собрана <code>board/tools/decor.py test-bg</code> поверх принятых полотен. SPEC §9: под фигурами — ровная подложка без мелкого рисунка, светлота 25–55 %, детали уходят к краям. Сейчас заливка плоская — это уже соответствует §9; варианты ниже добавляют глубину только у краёв. Без галочек — как сейчас.</p>
+<div class="ctl">
+<span class="k">Полотно</span><div class="row">{radios}</div>
+<span class="k">Фон</span><div class="col">{checks}</div>
+<span class="k">Крупно</span><div class="row"><label><input type="checkbox" id="c-zoom"> фрагмент: Африка и Аравия</label></div>
+</div>
+<svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W:g} {H:g}">{defs}{''.join(boards)}</svg>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const val=n=>document.querySelector(`input[name=${{n}}]:checked`).value;
+const K={json.dumps([k for k, _ in opts])};
+function draw(){{
+  const lay=val('lay');
+  document.querySelectorAll('.board').forEach(b=>b.style.display=b.dataset.lay===lay?'':'none');
+  for(const k of K)document.querySelectorAll('.bg-'+k).forEach(e=>e.style.display=$('c-'+k).checked?'':'none');
+  $('map').setAttribute('viewBox',$('c-zoom').checked?'500 180 300 220':'0 0 {W:g} {H:g}');
+}}
+document.querySelectorAll('input').forEach(e=>e.onchange=draw);
+draw();
+</script></body></html>
+'''
+    Path(out).write_text(html, encoding='utf-8')
+    return out
+
+
 def main(argv):
+    if len(argv) >= 2 and argv[1] == 'test-bg':
+        print(build_bg_test(GEO / 'background-test.html'))
+        return 0
     if len(argv) >= 2 and argv[1] == 'test':
         print(build_test(GEO / 'decor-test.html'))
         return 0
