@@ -12,3 +12,4 @@
 | SRC-EOG | MODULE | Esoteric Order of Gamers — сводка правил Cthulhu Wars v2 | REQUESTED | Брать при необходимости. Полезен только как быстрая проверка «не потеряно ли правило»; после появления SRC-RB-NEW ценность невысока. |
 | SRC-BGG | FORUM | BoardGameGeek — форум и файлы Cthulhu Wars | REQUESTED | Точечно по ходу P2, если официальные источники чего-то не закрывают. |
 | SRC-WEB-LOYALTY | DB | Карты лояльности нейтральных юнитов Cthulhu Wars — сводка веб-сбора | PARTIAL | Сверка по вики Cthulhu Wars (fandom закрыт, 402) — адреса в rules/tools/fetch-queue.txt; только для карт, выбранных в COMP-V-10. |
+| SRC-WEB-ELDERGODS | DB | Elder Gods в Cthulhu Wars — сводка веб-сбора | PARTIAL | Сверка по вики Cthulhu Wars (fandom закрыт, 402); официальных ответов нет по Proteus с технологией, дающей силу, и по Mind Control против Elder God. |

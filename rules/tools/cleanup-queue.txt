@@ -16,3 +16,4 @@
 удалить: board/geo/decor-test.html
 удалить: board/geo/background-test.html
 удалить: print/наёмники-дизайн-*.html
+удалить: print/иконки-сравнение-3.html
