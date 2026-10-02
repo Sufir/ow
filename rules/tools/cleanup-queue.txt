@@ -2,10 +2,10 @@
 #   архив: путь     — может пригодиться → archive/уборка-ДАТА/<тот же путь>
 #   удалить: путь   — точно мусор → удаляется насовсем (только новые файлы)
 # Выполненные строки стираются; то, что сделать отказались, остаётся.
-удалить: print/brotherhood-cards-preview.html
-удалить: print/petroleum-cards-preview.html
-удалить: print/clonaid-cards-preview.html
-удалить: print/Faction-Card-A/значок-способности-варианты-1.html
+архив: print/brotherhood-cards-preview.html
+архив: print/petroleum-cards-preview.html
+архив: print/clonaid-cards-preview.html
+архив: print/Faction-Card-A/значок-способности-варианты-1.html
 удалить: print/энграммы-preview-*.html
 архив: rules/tasks/ПРОМПТ-поле-1-геометрия.md
 архив: board/tools/partition.py
@@ -15,10 +15,4 @@
 удалить: board/geo/symbols-test.html
 удалить: board/geo/decor-test.html
 удалить: board/geo/background-test.html
-удалить: board/geo/australia-test.html
-удалить: board/geo/background-test.html
-удалить: board/geo/decor-test.html
-удалить: board/geo/labels-test.html
-удалить: board/geo/palette-test.html
-удалить: board/geo/symbols-test.html
 удалить: print/наёмники-дизайн-*.html
