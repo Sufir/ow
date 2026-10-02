@@ -389,7 +389,7 @@ common:
       - print/Saved/Dices Print Sheet.pdf
       - print/Dices.html
       - print/dices/kill.png
-      - print/dices/retreat.png
+      - print/dices/suppress.png
     generator: print/Dices.html, print/generate_dices.py
     master: print/Saved/Dices Print Sheet.pdf
     truth: rules/RULEBOOK.md §8.4
@@ -405,13 +405,13 @@ common:
     blocks_print: false
     findings: [COMP-I-005, COMP-I-022, COMP-I-023]
     notes: >
-      Остался один хвост, на компонент не влияющий: файл print/dices/retreat.png
-      несёт терминологию до D-019 — у нас этот результат называется
-      подавлением (COMP-I-023). Иконки книги {KILL} и {SUPPRESS} обязаны
-      рисоваться из этого же арта, иначе одно значение получит два
-      изображения.
+      Файлы подавления переименованы 2026-10-02 по D-019: retreat*.png →
+      suppress*.png, ссылки в generate_dices.py и памятке битвы поправлены
+      (COMP-I-023). Иконки книги {KILL} и {SUPPRESS} нарисованы из этого же
+      арта — глифы K и S шрифта Oil Wars 1.4, трассировка -simple.png
+      (print/icons/book-icons.py), одно значение — одно изображение.
       Уточнено 2026-09-29 (D-092): в мастере Dices Print Sheet.pdf стоят
-      варианты kill-simple.png и retreat-simple.png (40 и 75 наклеек), а не
+      варианты kill-simple.png и suppress-simple.png (40 и 75 наклеек), а не
       файлы из списка выше; generate_dices.py ссылается на старые. Памятка
       битвы (COMP-C-13) берёт -simple с вырезанным фоном.
 
@@ -568,7 +568,7 @@ common:
       - print/Saved/Памятка — битва — A4.pdf
       - print/Saved/Памятка — битва — A4 ×4.pdf
       - print/dices/kill-simple-cut.png
-      - print/dices/retreat-simple-cut.png
+      - print/dices/suppress-simple-cut.png
     generator: print/Памятка — битва.html
     master: print/Saved/Памятка — битва — A4.pdf
     truth: rules/RULEBOOK.md
@@ -587,7 +587,7 @@ common:
     notes: >
       В оригинале аналога нет: карта-памятка Ultimate Errata Pack битву не содержит.
       Две штуки — по одной каждому участнику битвы. Пиктограммы смерти и подавления —
-      арт наклеек кубиков (kill-simple.png, retreat-simple.png) с вырезанным фоном,
+      арт наклеек кубиков (kill-simple.png, suppress-simple.png) с вырезанным фоном,
       как требует заметка COMP-C-08.
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2361,7 +2361,7 @@ findings:
     subject: COMP-C-08
     title: Файл print/dices/retreat.png несёт терминологию до D-019
     severity: INFO
-    status: OPEN
+    status: CLOSED
     detail: >
       У нас этот результат броска называется подавлением, а не отступлением.
       На физический комплект имя файла не влияет — кубики готовы; влияет
@@ -2371,8 +2371,14 @@ findings:
       Переименовать retreat.png и retreat-simple.png по D-019. Переименование
       требует согласования (CLAUDE.md §9) и правки print/Dices.html,
       который на них ссылается.
-    decision: null
-    decided: null
+    decision: >
+      Alek 2026-10-02, этап 1 иконок книги: переименовать. Три файла —
+      retreat.png, retreat-simple.png, retreat-simple-cut.png → suppress*.png
+      (git mv). print/Dices.html на арт не ссылался — в нём только цифровые
+      грани; ссылки были в generate_dices.py и «Памятка — битва.html»,
+      обе поправлены. Мастера PDF не меняются. Описания старой задачи
+      print/docs/specs/print-dice-stickers/ оставлены как история.
+    decided: 2026-10-02
 
   - id: COMP-I-024
     type: NAMING

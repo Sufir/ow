@@ -16,7 +16,7 @@ for i in range(20):
 
 html += "\n  <!-- RETREAT START -->\n"
 for i in range(40):
-    html += '  <div class="cell"><img src="./dices/retreat.png" alt="retreat"></div>\n'
+    html += '  <div class="cell"><img src="./dices/suppress.png" alt="suppress"></div>\n'
 
 html += "\n  <!-- NUMBERS START -->\n"
 html += "  <!-- 1 -->\n"

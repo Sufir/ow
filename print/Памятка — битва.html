@@ -11,8 +11,8 @@
 
   Как устроено:
     • текст — только в JSON ниже (<script id="pamyatka-data">), {R} — нефть,
-      {KILL} и {SUPPRESS} — пиктограммы смерти и подавления: print/dices/kill-simple-cut.png, retreat-simple-cut.png —
-      арт наклеек кубиков (kill-simple.png, retreat-simple.png, они же в мастере Dices Print Sheet.pdf) с вырезанным фоном;
+      {KILL} и {SUPPRESS} — пиктограммы смерти и подавления: print/dices/kill-simple-cut.png, suppress-simple-cut.png —
+      арт наклеек кубиков (kill-simple.png, suppress-simple.png, они же в мастере Dices Print Sheet.pdf) с вырезанным фоном;
     • оформление — только в CSS этого файла;
     • три вида печати: «В размер» — две страницы 105 × 148; «A4 ×2 с метками реза» — A4 альбомный, две памятки,
       выпуск 6 мм, метки на обороте; «A4 ×4 без полей» — A4 книжный, четыре памятки встык.
@@ -237,7 +237,7 @@ const HINT = {                                // подробности печа
   a4x4: 'A4 книжный, четыре памятки без полей — только для печати без полей; страница 1 — лицо, страница 2 — оборот с метками реза. Подробно — print/ПЕЧАТЬ.md.',
 };
 
-const PIC = { KILL: ['dices/kill-simple-cut.png', 'смерть', 351], SUPPRESS: ['dices/retreat-simple-cut.png', 'подавление', 315] };
+const PIC = { KILL: ['dices/kill-simple-cut.png', 'смерть', 351], SUPPRESS: ['dices/suppress-simple-cut.png', 'подавление', 315] };
 function sym(html) {                       // {R} → значок нефти, {Q} {W} {E} → символы регионов, {KILL} {SUPPRESS} → пиктограммы
   return html.replace(/\{([RQWE])\}/g, (m, L) => `<span class="sym${L === 'R' ? ' R' : ''}">${L}</span>`)
              .replace(/\{(KILL|SUPPRESS)\}/g, (m, k) => `<img class="pic" src="${PIC[k][0]}" width="${PIC[k][2]}" height="360" alt="${PIC[k][1]}">`);
