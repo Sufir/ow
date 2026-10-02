@@ -159,9 +159,9 @@ baseline:
       - Никогда не бросает боевые кубики
     interactions:
       - >
-        Способность Harbinger (Nyarlathotep) в применении к Elder God даёт
-        2 Elder Signs либо половинную стоимость по сравнению с обычным
-        Great Old One.
+        Способность Harbinger (Nyarlathotep) в применении к Elder God работает
+        так же, как с любым Great Old One: 2 Elder Signs либо половина стоимости
+        пробуждения (для Bastet — 3 Power).
     sources:
       - {ref: SRC-RB-NEW, loc: "с. 70, строки 1959–1969 в .md", note: "определение дано в разделе фракции Bubastis, на примере Bastet"}
     errata_applied: []

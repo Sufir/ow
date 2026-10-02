@@ -533,3 +533,22 @@ sources:
       транскрипции necronomicon.app; сверено с HRF, официальным FAQ, блогами и
       магазином Petersen Games, апдейтами Kickstarter, 10 тредами BGG через API.
       У каждого факта — URL. Не скан карт: мелкие искажения возможны.
+  - id: SRC-WEB-ELDERGODS
+    side: ORIGINAL
+    priority: 3
+    kind: DB
+    title: "Elder Gods в Cthulhu Wars — сводка веб-сбора"
+    edition: null
+    url: https://necronomicon.app/rulebook/expansion-products
+    local_path: ../source/web/SRC-WEB-ELDERGODS__cw-elder-gods__2026-10-01.md
+    retrieved: 2026-10-01
+    status: PARTIAL
+    need: >
+      Сверка по вики Cthulhu Wars (fandom закрыт, 402); официальных ответов нет
+      по Proteus с технологией, дающей силу, и по Mind Control против Elder God.
+    notes: >
+      Собрано для FAC-013, исследование rules/tasks/ИССЛЕДОВАНИЕ-Elder-God.md.
+      Все шесть Elder God оригинала (Bastet, Nodens, Hagarg Ryonis, Hellmother,
+      Sun God, Thunder King), апдейты Kickstarter CATaclysm 3 и 50, FAQ, HRF,
+      6 тредов BGG через API. Основной источник текстов — транскрипции
+      necronomicon.app через WebFetch; у каждого факта — URL. Не скан карт.

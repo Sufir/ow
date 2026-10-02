@@ -20,7 +20,7 @@
 #   TECH-JSON    — print/Saved/Cards - Технологии и задачи.json
 
 meta:
-  updated: 2026-09-24
+  updated: 2026-10-02
   original_factions: 12
   redesign_factions_canon: 8
   redesign_factions_out_of_scope: 3
@@ -53,11 +53,11 @@ meta:
   # позже неё, тем же днём, и живут своим статусом.
   findings_frozen: 2026-09-11
   findings_total: 20
-  findings_deferred: 5          # FAC-001, FAC-007, FAC-009, FAC-011, FAC-013
+  findings_deferred: 4          # FAC-001, FAC-007, FAC-009, FAC-011
   findings_open: 0
   findings_decided: 2           # FAC-012 (The Invasion), FAC-017 (эталон — актуальное издание)
   findings_author_decision: 0   # вопросов, ждущих Alek, в реестре нет
-  findings_closed: 13           # FAC-002…FAC-006, FAC-008, FAC-010, FAC-014…FAC-016, FAC-018…FAC-020
+  findings_closed: 14           # FAC-002…FAC-006, FAC-008, FAC-010, FAC-013…FAC-016, FAC-018…FAC-020
 
   # ВТОРОЕ ПОПОЛНЕНИЕ 2026-09-11 — нашлись сами компоненты.
   # В корне проекта лежал Plan_Card.pdf: русское издание карт заклинаний
@@ -566,12 +566,11 @@ original:
         Requires Attention (Doom Phase): если Bastet в регионе с вражеским
         Cultist, фракция может провести Ritual of Annihilation.
       category_note: >
-        В источниках Bastet числится как Elder God, а не Great Old One. Считается
-        ли она Great Old One для правил (пробуждение Independents, Harbinger
-        Nyarlathotep, подсчёт GOO у The Invasion) — не сверено. Подтверждено
-        2026-09-11: «ELDER GOD» напечатано на самой faction card, это не ошибка
-        фанатских источников. Решение Alek 2026-09-11: пока только пометка,
-        разбор переносится на финальную сверку. См. FAC-013.
+        На faction card Bastet напечатана как ELDER GOD, но по правилам считается
+        Great Old One для всех целей, кроме двух: не даёт Elder Sign за ритуал
+        и не бросает боевых кубиков (SRC-RB-NEW с. 70). Сверено 2026-10-02, D-110:
+        «Зардоз» — обычный боевой робот, обе особенности на планшете Moon Systems.
+        См. FAC-013.
     secondary_goo: null
     unique_ability:
       name_en: Lunacy
@@ -2050,16 +2049,23 @@ findings:
     area: FACTION
     title: Bastet числится Elder God, а не Great Old One
     severity: WARNING
-    status: DEFERRED
+    status: CLOSED
     decision: >
-      Решение Alek 2026-09-11: сейчас только пометка. Разница уже расписана
+      Решение Alek 2026-10-02, D-110 — вопрос закрыт, не поднимать. Отдельного
+      типа нет и не вводится: «Зардоз» — обычный боевой робот, обе особенности
+      Elder God (нет карты скрытого влияния за давление, нет кубиков) напечатаны
+      на планшете Moon Systems. Оригинал считает Elder God Great Old One для всех
+      целей, кроме этих двух, — поэтому под пробуждение независимых, Harbinger
+      и подсчёт GOO у The Invasion Bastet попадает как GOO. Сверка и пять
+      триггеров пересмотра — rules/tasks/ИССЛЕДОВАНИЕ-Elder-God.md.
+      Прежнее решение Alek 2026-09-11: сейчас только пометка. Разница уже расписана
       на нашем планшете Moon Systems, и пока этого достаточно. При финальной
       сверке разобрать, создаёт ли категория Elder God проблемы в правилах,
       и тогда решить, что с ней делать.
       Уточнение того же дня: категория подтверждена официальным компонентом —
       «ELDER GOD» напечатано на самой faction card Bubastis. То есть разбирать
       придётся настоящую особенность правил, а не ошибку фанатского источника.
-    decided: 2026-09-11
+    decided: 2026-10-02
     subject: CW-F-06
     detail: >
       И SRC-NECRO-FAC, и SRC-WIKI дают Bastet тип «Elder God», тогда как у всех
