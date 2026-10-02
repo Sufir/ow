@@ -56,7 +56,7 @@ ENUMS = {
                      "CLOSED", "WONTFIX"},
     "term_status": {"PROVISIONAL", "CANONICAL", "CONFLICT", "UNMAPPED"},
     "num_match": {"PASS", "FAIL", "UNKNOWN"},
-    "icon_status": {"OK", "MISSING", "DUPLICATE", "UNMAPPED", "EMOJI-SUBSTITUTE"},
+    "icon_status": {"OK", "MISSING", "DUPLICATE", "UNMAPPED", "EMOJI-SUBSTITUTE", "WONTFIX"},
     "source_status": {"AVAILABLE", "REQUESTED", "UNREACHABLE", "PARTIAL"},
 }
 

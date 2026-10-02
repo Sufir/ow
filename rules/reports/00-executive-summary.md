@@ -36,7 +36,6 @@
 | Статус | Кол-во |
 |---|---|
 | APPLIED | 53 |
-| CLOSED | 21 |
+| CLOSED | 22 |
 | DECIDED | 62 |
-| OPEN | 1 |
 | WONTFIX | 10 |

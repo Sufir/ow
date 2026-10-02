@@ -1116,7 +1116,7 @@ faction:
     spec:
       format: Mini USA
       total: 48
-      fit: карта обязана физически ложиться на слот планшета
+      fit: карта ложится поверх карты задачи — тот же формат Mini USA; слотов на планшете нет (D-114)
       back: print/Goals-Tachs/tech-back2.png
     files:
       - print/Saved/Технологии и задачи.pdf

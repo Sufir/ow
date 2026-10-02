@@ -401,15 +401,19 @@ def check_icons():
     known = {i["placeholder"] for i in ICONS if i.get("placeholder")}
     used = Counter(re.findall(r"\{[A-Z][A-Z0-9_]*\}", BOOK.text))
     unknown = sorted(set(used) - known)
+    # D-113: в книге не остаётся плейсхолдера без нарисованного знака
+    status = {i["placeholder"]: i.get("status") for i in ICONS if i.get("placeholder")}
+    undrawn = sorted(u for u in set(used) & known if status[u] != "OK")
     emoji = []
     for n, line in enumerate(BOOK.lines, 1):
         for ch in line:
             if unicodedata.category(ch) == "So" or ord(ch) > 0x1F000:
                 emoji.append(f"строка {n}: {ch!r} ({unicodedata.name(ch, '?')})")
-    bad = [f"плейсхолдера нет в icons.yaml: {u}" for u in unknown] + emoji
+    bad = ([f"плейсхолдера нет в icons.yaml: {u}" for u in unknown]
+           + [f"знак не нарисован ({status[u]}): {u}" for u in undrawn] + emoji)
     report(8, "icons", not bad,
            f"плейсхолдеров в книге {sum(used.values())} вхождений, "
-           f"{len(used)} разных — все есть в icons.yaml ({len(known)} записей); emoji {len(emoji)}",
+           f"{len(used)} разных — все есть в icons.yaml ({len(known)} записей) и нарисованы; emoji {len(emoji)}",
            bad, "поиск {PLACEHOLDER} по чистовику против icons.yaml + посимвольный поиск emoji")
 
 

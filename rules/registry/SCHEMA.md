@@ -188,7 +188,8 @@
   original_concept: Power
   redesign_term: Нефть
   term_ref: TERM-001
-  status: UNMAPPED                # OK | MISSING | DUPLICATE | UNMAPPED | EMOJI-SUBSTITUTE
+  status: UNMAPPED                # OK | MISSING | DUPLICATE | UNMAPPED | EMOJI-SUBSTITUTE | WONTFIX
+                                  # WONTFIX — знак в книге не нужен, плейсхолдер снят; запись хранит разбор (D-113)
   used_in: []                     # где встречается
   notes: null
 ```
