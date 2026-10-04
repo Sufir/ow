@@ -38,7 +38,7 @@
 #   SRC-WEB-LOYALTY — source/web/SRC-WEB-LOYALTY__cw-loyalty-cards__2026-10-01.md (транскрипции всех карт
 #                     лояльности: necronomicon.app, HRF, блоги Petersen, BGG; у каждого факта — URL)
 #   PL-<фракция>    — print/Faction-Card-A/Данные/<фракция>.json (принятые планшеты, D-078)
-#   CARDS           — print/Saved/Cards - Технологии и задачи.json (принятые карты задач и технологий, D-088)
+#   CARDS           — print/mini-cards/Cards - Технологии и задачи.json (принятые карты задач и технологий, D-088)
 #   FAC-DOC         — source/gdocs/Нефтяные войны (фракции v.2.0).zip (док фракций)
 #
 # В текстах карт: {R} — значок нефти (ICON-001), кавычки на компонентах только “ ” (D-075).

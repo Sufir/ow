@@ -489,14 +489,14 @@ common:
     count_status: FIXED
     carrier: TOKEN-CARDBOARD
     spec:
-      sheet: print/Saved/Factory Tokens v2.pdf, стр. 1 (24 шт.) + 6 шт. на стр. 2
+      sheet: print/Saved/Factory Tokens.pdf, стр. 1 (24 шт.) + 6 шт. на стр. 2
       spare: 6 (предположительно запас под брак резки)
     files:
-      - print/Saved/Factory Tokens v2.pdf
+      - print/Saved/Factory Tokens.pdf
       - print/Factory.html
       - print/Factory/factory.css
     generator: print/Factory.html
-    master: print/Saved/Factory Tokens v2.pdf
+    master: print/Saved/Factory Tokens.pdf
     truth: rules/RULEBOOK.md
     state:
       content: VERIFIED
@@ -527,7 +527,7 @@ common:
       back: глаз в неоновом треугольнике
     files:
       - print/Saved/Карты скрытого влияния - (формат Mini USA).pdf
-      - print/Saved/Cards - Скрытое влияние.json
+      - print/mini-cards/Cards - Скрытое влияние.json
       - print/MiniAmericanCards.html
     generator: print/MiniAmericanCards.html
     master: print/Saved/Карты скрытого влияния - (формат Mini USA).pdf
@@ -985,7 +985,7 @@ faction:
       back: print/Goals-Tachs/goal-back.png
     files:
       - print/Saved/Технологии и задачи.pdf
-      - print/Saved/Cards - Технологии и задачи.json
+      - print/mini-cards/Cards - Технологии и задачи.json
       - print/MiniAmericanCardsLandscape.html
       - print/Goals-Tachs/
     generator: print/MiniAmericanCardsLandscape.html
@@ -1120,7 +1120,7 @@ faction:
       back: print/Goals-Tachs/tech-back2.png
     files:
       - print/Saved/Технологии и задачи.pdf
-      - print/Saved/Cards - Технологии и задачи.json
+      - print/mini-cards/Cards - Технологии и задачи.json
       - print/MiniAmericanCardsLandscape.html
     generator: print/MiniAmericanCardsLandscape.html
     master: print/Saved/Технологии и задачи.pdf
@@ -1294,10 +1294,10 @@ faction:
         name: Жетоны «Община»
         carrier: TOKEN-CARDBOARD
         spec:
-          sheet: print/Saved/Factory Tokens v2.pdf, стр. 2
+          sheet: print/Saved/Factory Tokens.pdf, стр. 2
           composition: жетоны двусторонние — плиток на листе вдвое больше, чем жетонов
         files:
-          - print/Saved/Factory Tokens v2.pdf
+          - print/Saved/Factory Tokens.pdf
           - print/Factory/community.png
         state: {content: VERIFIED, design: APPROVED, production: DONE}
         reason: >
@@ -1308,9 +1308,9 @@ faction:
         name: Тайл «Луна»
         carrier: TOKEN-CARDBOARD
         spec:
-          art: print/Saved/Moon.png, RGB 1254×1254
+          art: print/Units/MoonNet/Moon.png, RGB 1254×1254
         files:
-          - print/Saved/Moon.png
+          - print/Units/MoonNet/Moon.png
         state: {content: VERIFIED, design: APPROVED, production: NONE}
         reason: >
           Не печатался — Alek 2026-09-22; картинка сгенерирована и принята,
@@ -1338,17 +1338,17 @@ variant:
     count: 10
     count_original: 8
     count_source: FILE
-    count_ref: print/Saved/Factory Tokens v2.pdf
+    count_ref: print/Saved/Factory Tokens.pdf
     count_status: FIXED
     carrier: TOKEN-CARDBOARD
     spec:
       ids: S-01…S-10, у каждой свой символ
-      sheet: print/Saved/Factory Tokens v2.pdf, стр. 2
+      sheet: print/Saved/Factory Tokens.pdf, стр. 2
     files:
-      - print/Saved/Factory Tokens v2.pdf
+      - print/Saved/Factory Tokens.pdf
       - print/Factory/
     generator: print/Factory.html
-    master: print/Saved/Factory Tokens v2.pdf
+    master: print/Saved/Factory Tokens.pdf
     truth: rules/RULEBOOK.md
     state:
       content: VERIFIED
@@ -2398,7 +2398,7 @@ findings:
       вместо «задачу»; «Бонус: получите» на № 1 и «Бонус: Получите» на № 6.
       Числа всех двенадцати карт совпали с оригиналом редакции O3.
     proposal: >
-      Править print/Saved/Cards - Технологии и задачи.json, packs[0] и packs[1],
+      Править print/mini-cards/Cards - Технологии и задачи.json, packs[0] и packs[1],
       при перепечатке карт фракции. «Муштра» — эталон названия (карта и тело
       гуглдока), «Подготовка» живёт только в оглавлении гуглдока.
     decision: >
@@ -2455,7 +2455,7 @@ findings:
       месторождений»: «одно скрытое влияние» → «одну карту скрытого влияния».
       5. «Черный» → «Чёрный» на «Вторжении» и «Разведке месторождений».
     proposal: >
-      Править print/Saved/Cards - Технологии и задачи.json, packs[4] и packs[5],
+      Править print/mini-cards/Cards - Технологии и задачи.json, packs[4] и packs[5],
       и две копии mini-american-cards-…json при перепечатке карт фракции.
     decision: >
       D-081 (Alek 2026-09-28): пп. 1–5 внесены в JSON вместе с полной сверкой
@@ -2483,7 +2483,7 @@ findings:
       в регион вашего робота, у Братства его нет — место появления должны
       назвать карты лояльности (COMP-V-10).
     proposal: >
-      Править print/Saved/Cards - Технологии и задачи.json, packs[14] и packs[15],
+      Править print/mini-cards/Cards - Технологии и задачи.json, packs[14] и packs[15],
       при перепечатке карт фракции; п. 6 — при вёрстке карт лояльности наёмных БР.
     decision: >
       D-080 (Alek 2026-09-26): пп. 1–5 внесены в JSON вместе с полной сверкой
@@ -2513,7 +2513,7 @@ findings:
       на планшет, не идёт (FAQ, Cursed Slumber; RULEBOOK §3.4).
       Решение Alek 2026-09-25 (D-073): «сделать как в оригинале».
     proposal: >
-      Править print/Saved/Cards - Технологии и задачи.json, packs[12],
+      Править print/mini-cards/Cards - Технологии и задачи.json, packs[12],
       при перепечатке задач фракции.
     decision: >
       D-083 (Alek 2026-09-28): оба пункта внесены — «Создать боевого робота
@@ -2567,7 +2567,7 @@ findings:
       3. «Заражение»: «танки “Черной смертью”», «присутсвуют» (PLAY-035 п. 3).
       4. «Армия клонов»: «\"Черной смерти\"» — прямые кавычки, «Чёрной».
     proposal: >
-      Править print/Saved/Cards - Технологии и задачи.json, packs[8] и [9],
+      Править print/mini-cards/Cards - Технологии и задачи.json, packs[8] и [9],
       при перепечатке карт фракции.
     decision: >
       D-082 (Alek 2026-09-28): пп. 2–4 внесены, п. 1 — с началом «В качестве
@@ -2595,7 +2595,7 @@ findings:
       стоимость» против «даже если у вас 0 нефти»). 4. «Скрытое производство»:
       «фбрику», «Он… невосприимчива» — род не согласован.
     proposal: >
-      Править print/Saved/Cards - Технологии и задачи.json, packs[10] и [11],
+      Править print/mini-cards/Cards - Технологии и задачи.json, packs[10] и [11],
       при перепечатке карт фракции. Текст «Специальной операции» — на решение
       Alek при перепечатке.
     decision: >
@@ -2628,7 +2628,7 @@ findings:
       точка перед «ИЛИ»; оговорка «4 + 6 одним действием за 10» теперь
       на планшете (D-077).
     proposal: >
-      Править print/Saved/Cards - Технологии и задачи.json, packs[2] и [3],
+      Править print/mini-cards/Cards - Технологии и задачи.json, packs[2] и [3],
       при перепечатке карт фракции.
     decision: >
       D-085 (Alek 2026-09-28): пп. 1, 3, 4, 5 внесены вместе с полной
@@ -2656,7 +2656,7 @@ findings:
       («силу всех Т-800 на 4»). «Отступления» вместо «подавления» (D-019).
       Нефть словом вместо значка (ICON-001).
     proposal: >
-      Переписать packs[6] и [7] print/Saved/Cards - Технологии и задачи.json
+      Переписать packs[6] и [7] print/mini-cards/Cards - Технологии и задачи.json
       по D-079; значок в тексте и в подписи цены.
     decision: >
       Alek 2026-09-26: все пять вопросов сверки и формулировки приняты,

@@ -17,7 +17,7 @@
 #   SRC-APP-MERC — sources/gdocs/SRC-APP-MERC__mercenaries__2026-09-10.md
 #   FC-<фракция> — print/Saved/Faction Card — <фракция>.pdf  (эталон состава по CLAUDE.md §2)
 #   JSON-<фракция> — print/Saved/<фракция>.json (состояние планшета; МОЖЕТ БЫТЬ УСТАРЕВШИМ)
-#   TECH-JSON    — print/Saved/Cards - Технологии и задачи.json
+#   TECH-JSON    — print/mini-cards/Cards - Технологии и задачи.json
 
 meta:
   updated: 2026-10-02
