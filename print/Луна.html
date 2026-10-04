@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Тайл «Луна»</title>
+<!--
+  Тайл «Луна» Moon Systems — OW-F-06 в COMP-F-09. 04.10.2026.
+  Квадрат 150 × 150 мм, диск Луны ⌀ ~125 мм. Двусторонний, без текста: правила Луны — на планшете Moon Systems (D-052).
+    лицо   — print/Units/MoonNet/Moon.png, 1254 px на 150 мм (212 dpi), без осветления (решение Alek 04.10.2026);
+    оборот — как планшет Moon Systems: фон и подсветы .bleed планшета, логотип фракции по центру
+             подложкой (72 мм, непрозрачность 40 %), поверх — матричный декор фракции
+             (Faction-Card-A/decor/bg-moon*.png, непрозрачность 65 %, как на планшете). Решение Alek 04.10.2026.
+  Вид печати один — A4 книжный, тайл по центру листа, выпуск 6 мм:
+    страница 1 — лицо; выпуск — зеркальное продолжение краёв картинки, композиция внутри реза не сдвигается;
+    страница 2 — оборот с метками реза (крестики, как у памяток и карт).
+  Раскладка симметрична: при двусторонней печати ничего не зеркалится. Подробно — print/ПЕЧАТЬ.md.
+-->
+<style>
+:root {
+  --bg: #08182B;              /* фон планшета (Faction-Card-A/Шаблон.html) */
+  --space: #06142A;           /* космос в углах картинки лица — под выпуском, на случай волосяного зазора между копиями */
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #7A8794; font-family: sans-serif; }
+
+.bar { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: .3mm solid #999; padding: 3mm 8mm;
+       display: flex; gap: 2mm 6mm; align-items: center; flex-wrap: wrap; font-size: 10.5pt; color: #444; }
+
+.pages { padding: 8mm 0; display: flex; flex-direction: column; align-items: center; gap: 8mm; }
+.sheet { position: relative; width: 210mm; height: 297mm; background: #fff; overflow: hidden; box-shadow: 0 3mm 10mm rgba(0,0,0,.35);
+         break-after: page; page-break-after: always; }
+.sheet:last-child { break-after: auto; page-break-after: auto; }
+
+.bleed { position: absolute; overflow: hidden; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.bleed img { position: absolute; display: block; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.bleed.face { background: var(--space); }
+/* оборот — фон и подсветы как у .bleed планшета */
+.bleed.back {
+  background:
+    radial-gradient(62% 52% at 2% 0%,    rgba(37,164,238,.20) 0%, rgba(37,164,238,0) 72%),
+    radial-gradient(58% 48% at 100% 96%, rgba(17,197,255,.14) 0%, rgba(17,197,255,0) 70%),
+    var(--bg);
+}
+/* матричный декор: три полосы фракции друг под другом, стыки растушёваны */
+.matrix { position: absolute; inset: 0; opacity: .65; }
+.matrix img { left: 0; width: 100%; height: auto;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 8mm, #000 calc(100% - 8mm), transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 8mm, #000 calc(100% - 8mm), transparent 100%); }
+/* логотип — подложкой, как .logo-wm на планшете; матрица идёт поверх него */
+.logo { z-index: 1; }
+.matrix { z-index: 2; }
+.marks { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+@media print {
+  html, body { background: #fff; }
+  .bar { display: none !important; }
+  .pages { padding: 0; gap: 0; display: block; }
+  .sheet { box-shadow: none; }
+}
+@page { size: A4; margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span>A4 книжный, 2 страницы: 1 — лицо, 2 — оборот с метками реза. Масштаб 100 %, поля — нет, фон — включить. Подробно — print/ПЕЧАТЬ.md.</span>
+</div>
+<div class="pages" id="pages"></div>
+
+<script>
+const FACE = 'Units/MoonNet/Moon.png';
+const LOGO = encodeURI('../art/logos/Moon Systems.png');
+// полосы матрицы: файл и соотношение сторон (ширина / высота) — высота на ширине тайла с выпуском
+const MATRIX = [['Faction-Card-A/decor/bg-moon-4.png', 1578 / 672],
+                ['Faction-Card-A/decor/bg-moon-3.png', 1461 / 672],
+                ['Faction-Card-A/decor/bg-moon.png',   1920 / 834]];
+const T = 150, B = 6, S = T + 2 * B;                    // тайл по линии реза, выпуск, сторона с выпуском, мм
+const X = (210 - T) / 2, Y = (297 - T) / 2;             // левый верхний угол реза на листе
+const LOGO_MM = 72, LOGO_OP = 0.4;                      // сторона квадрата логотипа, мм (23 % площади тайла), и непрозрачность
+const OVERLAP = 8;                                      // нахлёст полос матрицы, мм — под растушёвку стыка
+
+function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
+function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
+function img(src) { const i = document.createElement('img'); i.src = src; i.alt = ''; return i; }
+
+function face() {                                       // лицо: картинка в рез, выпуск — её зеркальные копии со всех сторон
+  const box = place(div('bleed face'), X - B, Y - B, S, S);
+  for (const j of [-1, 0, 1]) for (const i of [-1, 0, 1]) {
+    if (!i && !j) continue;
+    const c = place(img(FACE), B + i * T, B + j * T, T, T);
+    c.style.transform = `scale(${i ? -1 : 1}, ${j ? -1 : 1})`;
+    box.appendChild(c);
+  }
+  box.appendChild(place(img(FACE), B, B, T, T));        // оригинал последним, поверх копий
+  return box;
+}
+function back() {                                       // оборот: фон планшета, логотип подложкой по центру, матрица поверх
+  const box = place(div('bleed back'), X - B, Y - B, S, S);
+  const m = div('matrix');
+  let y = -OVERLAP / 2;
+  for (const [src, ratio] of MATRIX) {
+    const h = S / ratio;
+    m.appendChild(place(img(src), 0, y, S, h));
+    y += h - OVERLAP;
+  }
+  box.appendChild(m);
+  const c = (S - LOGO_MM) / 2;
+  const l = place(img(LOGO), c, c, LOGO_MM, LOGO_MM); l.classList.add('logo'); l.style.opacity = LOGO_OP;
+  box.appendChild(l);
+  return box;
+}
+function marks(segs, dark, SW, SH) {        // метки реза — как в Контроль сети.html: над тёмным выпуском светлые, над белым полем тёмные
+  const inDark = (x, y) => dark.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
+  let light = '', ink = '';
+  for (const [x1, y1, x2, y2] of segs) {
+    const ts = [0, 1], vert = x1 === x2;
+    for (const [a, b, c, d] of dark) for (const v of (vert ? [b, d] : [a, c])) {
+      const t = vert ? (v - y1) / (y2 - y1) : (v - x1) / (x2 - x1);
+      if (t > 0 && t < 1) ts.push(t);
+    }
+    ts.sort((p, q) => p - q);
+    const P = t => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+    for (let k = 0; k + 1 < ts.length; k++) {
+      if (ts[k + 1] - ts[k] < 1e-6) continue;
+      const [ax, ay] = P(ts[k]), [bx, by] = P(ts[k + 1]), [mx, my] = P((ts[k] + ts[k + 1]) / 2);
+      const d = `M${ax.toFixed(3)},${ay.toFixed(3)} L${bx.toFixed(3)},${by.toFixed(3)} `;
+      if (inDark(mx, my)) light += d; else ink += d;
+    }
+  }
+  const box = document.createElement('div');
+  box.innerHTML = `<svg class="marks" viewBox="0 0 ${SW} ${SH}" style="width:${SW}mm;height:${SH}mm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`
+    + `<path d="${ink}" stroke="#1A1A1A" stroke-width=".1" fill="none"/><path d="${light}" stroke="#FFFFFF" stroke-width=".1" fill="none"/></svg>`;
+  return box.firstChild;
+}
+
+function build() {
+  const pages = document.getElementById('pages'); pages.innerHTML = '';
+  const s1 = div('sheet'); s1.appendChild(face()); pages.appendChild(s1);
+  const s2 = div('sheet'); s2.appendChild(back()); pages.appendChild(s2);
+  // крестик в каждом углу: обе линии идут через угол наружу на 10 мм и внутрь вдоль кромки на 4 мм
+  const OUT = 10, IN = 4, segs = [];
+  for (const [cx, dx] of [[X, 1], [X + T, -1]]) for (const [cy, dy] of [[Y, 1], [Y + T, -1]]) {
+    segs.push([cx - dx * OUT, cy, cx + dx * IN, cy]);
+    segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);
+  }
+  s2.appendChild(marks(segs, [[X - B, Y - B, X + T + B, Y + T + B]], 210, 297));
+}
+build();
+</script>
+</body>
+</html>

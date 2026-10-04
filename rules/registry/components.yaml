@@ -1308,16 +1308,22 @@ faction:
         name: Тайл «Луна»
         carrier: TOKEN-CARDBOARD
         spec:
-          art: print/Units/MoonNet/Moon.png, RGB 1254×1254
+          size: 150 × 150 мм, выпуск 6 мм, двусторонний
+          art: print/Units/MoonNet/Moon.png, RGB 1254×1254 (212 dpi на 150 мм), без осветления
+          back: логотип Moon Systems подложкой 72 мм, 40 %, поверх матричный декор планшета
+          sheet: print/Saved/Луна — A4.pdf, A4 книжный, 2 страницы, крестики на обороте
         files:
+          - print/Луна.html
           - print/Units/MoonNet/Moon.png
+          - print/Saved/Луна — A4.pdf
         state: {content: VERIFIED, design: APPROVED, production: NONE}
         reason: >
           Не печатался — Alek 2026-09-22; картинка сгенерирована и принята,
           задача «перегенерировать в большем разрешении» снята. Правила
-          Луны напечатаны на планшете Moon Systems 2026-09-24 (D-052) —
-          блокер снят, тайл можно печатать вместе с планшетом.
-        refs: [D-049, D-052, RED-006]
+          Луны напечатаны на планшете Moon Systems 2026-09-24 (D-052).
+          Свёрстан и принят Alek 2026-10-04 (D-117): мастер собран, осталось
+          напечатать на фотобумаге и заламинировать.
+        refs: [D-049, D-052, D-117, RED-006]
     refs: [COMP-I-008]
     blocks_print: false
     findings: [COMP-I-015, COMP-I-021]
