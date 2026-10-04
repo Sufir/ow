@@ -7366,7 +7366,8 @@ HTML пересобраны; PNG до и после — изменились т�
 
 - **Файлы:** `print/FactoryEvents/retooling.jpg`, `restructuring.jpg`, `glitch.jpg`;
   прежние `1.png`, `2.png`, `3.png`, `1.webp` — в `archive/уборка-2026-10-04/`.
-  Страница сравнения — `print/FactoryEvents-preview.html`, кандидаты — `print/FactoryEvents/preview/`.
+  Страница сравнения и все кандидаты с исходниками генераторов — после сборки
+  в `archive/уборка-2026-10-04/print/` (`FactoryEvents-preview.html`, `FactoryEvents/preview/`).
 ### Сборка (Alek: «Т3, сбой от ChatGPT. Собирай вёрстку»)
 
 1. **Рубашка — `T3`:** ChatGPT, светлота по L* гаммой 1,25 и насыщенность −20 %:
