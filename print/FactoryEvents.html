@@ -1,213 +1,248 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Factory Events</title>
-    <link rel="stylesheet" href="FactoryEvents/FactoryEvents.css" />
-  </head>
-  <body>
-    <div class="page front page-1">
-      <div class="sheet">
-        <div class="bleed-wrap">
-          <div class="cards-grid">
-            <div class="card pos-tl">
-              <div class="card-inner">
-                <div class="card-header">ПРОФИЦИТ</div>
-                <div class="card-title">Игрок, контролирующий фабрику:</div>
-                <div class="card-text">
-                  <p>▣ 01: получает 1<span class="sym">R</span>.</p>
-                  <p>▲ 02: получает дополнительную карту скрытого влияния, если оказывает давление в этой фазе.</p>
-                  <p>◆ 03: получает 1<span class="sym">R</span>.</p>
-                  <p>★ 04: получает 1 влияние.</p>
-                  <p>✚ 05: должен уничтожить в регионе с фабрикой боевую машину или пехотинца противника с самой низкой стоимостью, если это возможно.</p>
-                  <p>⬟ 06: получает дополнительную карту скрытого влияния, если оказывает давление в этой фазе.</p>
-                  <p>⬢ 07: должен уничтожить в регионе с фабрикой боевую машину или пехотинца противника с самой низкой стоимостью, если это возможно.</p>
-                  <p>◎︎ 08: получает 1 влияние.</p>
-                  <p>✖ 09: выбирает две особые фабрики на поле и меняет их местами. <strong>Этот эффект должен применяться первым.</strong></p>
-                  <p>✦ 10: должен применить к этой фабрике любой другой эффект этого события по своему выбору.</p>
-                </div>
-              </div>
-            </div>
-            <div class="card pos-tr">
-              <div class="card-inner">
-                <div class="card-header">ВОЛАТИЛЬНОСТЬ РЫНКОВ</div>
-                <div class="card-title">Игрок, контролирующий фабрику:</div>
-                <div class="card-text">
-                  <p>▣ 01: теряет 1<span class="sym">R</span>.</p>
-                  <p>▲ 02: получает дополнительную карту скрытого влияния, если оказывает давление в этой фазе.</p>
-                  <p>◆ 03: получает 1<span class="sym">R</span>.</p>
-                  <p>★ 04: теряет 1 влияние.</p>
-                  <p>✚ 05: должен уничтожить свой отряд в регионе с фабрикой.</p>
-                  <p>⬟ 06: не может оказывать давление в этой фазе.</p>
-                  <p>⬢ 07: должен уничтожить свой отряд в регионе с фабрикой.</p>
-                  <p>◎︎ 08: получает 1 влияние.</p>
-                  <p>✖ 09: выбирает две особые фабрики на поле и меняет их местами. <strong>Этот эффект должен применяться первым.</strong></p>
-                  <p>✦ 10: должен применить к этой фабрике любой другой эффект этого события по своему выбору.</p>
-                </div>
-              </div>
-            </div>
-            <div class="card pos-bl">
-              <div class="card-inner">
-                <div class="card-header">ДЕСТАБИЛИЗАЦИЯ БИРЖИ</div>
-                <div class="card-title">Игрок, контролирующий фабрику:</div>
-                <div class="card-text">
-                  <p>▣ 01: получает 1<span class="sym">R</span>.</p>
-                  <p>▲ 02: не может оказывать давление в этой фазе.</p>
-                  <p>◆ 03: теряет 1<span class="sym">R</span>.</p>
-                  <p>★ 04: получает 1 влияние.</p>
-                  <p>✚ 05: должен уничтожить в регионе с фабрикой боевую машину или пехотинца противника с самой низкой стоимостью, если это возможно.</p>
-                  <p>⬟ 06: получает дополнительную карту скрытого влияния, если оказывает давление в этой фазе.</p>
-                  <p>⬢ 07: должен уничтожить в регионе с фабрикой боевую машину или пехотинца противника с самой низкой стоимостью, если это возможно.</p>
-                  <p>◎︎ 08: теряет 1 влияние.</p>
-                  <p>✖ 09: должен заменить одну особую фабрику под своим контролем на обычную. <strong>Этот эффект должен применяться последним.</strong></p>
-                  <p>✦ 10: должен применить к этой фабрике любой другой эффект этого события по своему выбору.</p>
-                </div>
-              </div>
-            </div>
-            <div class="card pos-br">
-              <div class="card-inner">
-                <div class="card-header">СБОЙ ПОСТАВОК</div>
-                <div class="card-title">Игрок, контролирующий фабрику:</div>
-                <div class="card-text">
-                  <p>▣ 01: теряет 1<span class="sym">R</span>.</p>
-                  <p>▲ 02: не может оказывать давление в этой фазе.</p>
-                  <p>◆ 03: теряет 1<span class="sym">R</span>.</p>
-                  <p>★ 04: теряет 1 влияние.</p>
-                  <p>✚ 05: должен уничтожить свой отряд в регионе с фабрикой.</p>
-                  <p>⬟ 06: не может оказывать давление в этой фазе.</p>
-                  <p>⬢ 07: должен уничтожить свой отряд в регионе с фабрикой.</p>
-                  <p>◎︎ 08: теряет 1 влияние.</p>
-                  <p>✖ 09: должен заменить одну особую фабрику под своим контролем на обычную. <strong>Этот эффект должен применяться последним.</strong></p>
-                  <p>✦ 10: должен применить к этой фабрике любой другой эффект этого события по своему выбору.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tech">Factory Events · Front · 1/3</div>
-      </div>
-    </div>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factory Events</title>
+<!--
+  Карты событий фабрик — COMP-V-02. 80 × 120 мм, восемь карт: шесть событий и два необязательных «Сбоя».
+  Тексты — D-115, экраны и рубашка — D-118.
 
-    <div class="page front page-2">
-      <div class="sheet">
-        <div class="bleed-wrap">
-          <div class="cards-grid">
-            <div class="card pos-tl">
-              <div class="card-inner">
-                <div class="card-header">ПЕРЕПРОФИЛИРОВАНИЕ</div>
-                <div class="screen">
-                  <svg viewBox="0 0 68 38.8" preserveAspectRatio="none" aria-hidden="true">
-                    <defs><clipPath id="scr1"><polygon points="3.6,1.2 64.4,1.2 66.8,3.6 66.8,35.2 64.4,37.6 3.6,37.6 1.2,35.2 1.2,3.6"/></clipPath></defs>
-                    <polygon points="3.25,0.25 64.75,0.25 67.75,3.25 67.75,35.55 64.75,38.55 3.25,38.55 0.25,35.55 0.25,3.25" fill="#050D15"/>
-                    <rect width="68" height="38.8" fill="#0A2236" clip-path="url(#scr1)"/>
-                    <image href="FactoryEvents/retooling.jpg" x="1.2" y="1.2" width="65.6" height="36.4" preserveAspectRatio="xMidYMid slice" clip-path="url(#scr1)"/>
-                    <polygon points="3.6,1.2 64.4,1.2 66.8,3.6 66.8,35.2 64.4,37.6 3.6,37.6 1.2,35.2 1.2,3.6" fill="none" stroke="rgba(127,214,255,.55)" stroke-width=".2"/>
-                    <polygon points="3.25,0.25 64.75,0.25 67.75,3.25 67.75,35.55 64.75,38.55 3.25,38.55 0.25,35.55 0.25,3.25" fill="none" stroke="#25A4EE" stroke-width=".5"/>
-                    <rect x="9" y="0" width="14" height="0.9" fill="#25A4EE"/><rect x="45" y="0" width="14" height="0.9" fill="#25A4EE"/><rect x="9" y="37.9" width="14" height="0.9" fill="#25A4EE"/><rect x="45" y="37.9" width="14" height="0.9" fill="#25A4EE"/><rect x="0" y="15.4" width="0.9" height="8" fill="#25A4EE"/><rect x="67.1" y="15.4" width="0.9" height="8" fill="#25A4EE"/>
-                  </svg>
-                </div>
-                <div class="card-copy">
-                  <p>Начиная с первого игрока, по порядку хода найдите ближайшего, у кого под контролем нет ни одной особой фабрики. Он должен взять любую особую фабрику из общего резерва, если они там остались, и заменить ею одну из обычных фабрик под своим контролем.</p>
-                  <br/>
-                  <p>Больше этого не делает никто, даже если он не смог.</p>
-                </div>
-              </div>
-            </div>
-            <div class="card pos-tr">
-              <div class="card-inner">
-                <div class="card-header">РЕСТРУКТУРИЗАЦИЯ</div>
-                <div class="screen">
-                  <svg viewBox="0 0 68 38.8" preserveAspectRatio="none" aria-hidden="true">
-                    <defs><clipPath id="scr2"><polygon points="3.6,1.2 64.4,1.2 66.8,3.6 66.8,35.2 64.4,37.6 3.6,37.6 1.2,35.2 1.2,3.6"/></clipPath></defs>
-                    <polygon points="3.25,0.25 64.75,0.25 67.75,3.25 67.75,35.55 64.75,38.55 3.25,38.55 0.25,35.55 0.25,3.25" fill="#050D15"/>
-                    <rect width="68" height="38.8" fill="#0A2236" clip-path="url(#scr2)"/>
-                    <image href="FactoryEvents/restructuring.jpg" x="1.2" y="1.2" width="65.6" height="36.4" preserveAspectRatio="xMidYMid slice" clip-path="url(#scr2)"/>
-                    <polygon points="3.6,1.2 64.4,1.2 66.8,3.6 66.8,35.2 64.4,37.6 3.6,37.6 1.2,35.2 1.2,3.6" fill="none" stroke="rgba(127,214,255,.55)" stroke-width=".2"/>
-                    <polygon points="3.25,0.25 64.75,0.25 67.75,3.25 67.75,35.55 64.75,38.55 3.25,38.55 0.25,35.55 0.25,3.25" fill="none" stroke="#25A4EE" stroke-width=".5"/>
-                    <rect x="9" y="0" width="14" height="0.9" fill="#25A4EE"/><rect x="45" y="0" width="14" height="0.9" fill="#25A4EE"/><rect x="9" y="37.9" width="14" height="0.9" fill="#25A4EE"/><rect x="45" y="37.9" width="14" height="0.9" fill="#25A4EE"/><rect x="0" y="15.4" width="0.9" height="8" fill="#25A4EE"/><rect x="67.1" y="15.4" width="0.9" height="8" fill="#25A4EE"/>
-                  </svg>
-                </div>
-                <div class="card-copy">
-                  <p>Игрок с наименьшим влиянием на треке может выбрать одну особую фабрику на поле и заменить её обычной.</p>
-                  <p>Если таких игроков несколько, все они делают это по очереди в порядке хода.</p>
-                  <br/>
-                  <p>Затем замешайте эту карту в колоду событий, вытяните и разыграйте ещё одну карту события. Если снова вытянута эта карта, больше ничего не происходит.</p>
-                </div>
-              </div>
-            </div>
-            <div class="card pos-bl">
-              <div class="card-inner">
-                <div class="card-header">СБОЙ</div>
-                <div class="screen">
-                  <svg viewBox="0 0 68 38.8" preserveAspectRatio="none" aria-hidden="true">
-                    <defs><clipPath id="scr3"><polygon points="3.6,1.2 64.4,1.2 66.8,3.6 66.8,35.2 64.4,37.6 3.6,37.6 1.2,35.2 1.2,3.6"/></clipPath></defs>
-                    <polygon points="3.25,0.25 64.75,0.25 67.75,3.25 67.75,35.55 64.75,38.55 3.25,38.55 0.25,35.55 0.25,3.25" fill="#050D15"/>
-                    <rect width="68" height="38.8" fill="#0A2236" clip-path="url(#scr3)"/>
-                    <image href="FactoryEvents/glitch.jpg" x="1.2" y="1.2" width="65.6" height="36.4" preserveAspectRatio="xMidYMid slice" clip-path="url(#scr3)"/>
-                    <polygon points="3.6,1.2 64.4,1.2 66.8,3.6 66.8,35.2 64.4,37.6 3.6,37.6 1.2,35.2 1.2,3.6" fill="none" stroke="rgba(127,214,255,.55)" stroke-width=".2"/>
-                    <polygon points="3.25,0.25 64.75,0.25 67.75,3.25 67.75,35.55 64.75,38.55 3.25,38.55 0.25,35.55 0.25,3.25" fill="none" stroke="#25A4EE" stroke-width=".5"/>
-                    <rect x="9" y="0" width="14" height="0.9" fill="#25A4EE"/><rect x="45" y="0" width="14" height="0.9" fill="#25A4EE"/><rect x="9" y="37.9" width="14" height="0.9" fill="#25A4EE"/><rect x="45" y="37.9" width="14" height="0.9" fill="#25A4EE"/><rect x="0" y="15.4" width="0.9" height="8" fill="#25A4EE"/><rect x="67.1" y="15.4" width="0.9" height="8" fill="#25A4EE"/>
-                  </svg>
-                </div>
-                <div class="card-copy">
-                  <p>Раскройте и разыграйте следующую карту события.</p>
-                </div>
-              </div>
-            </div>
-            <div class="card pos-br">
-              <div class="card-inner">
-                <div class="card-header">СБОЙ</div>
-                <div class="screen">
-                  <svg viewBox="0 0 68 38.8" preserveAspectRatio="none" aria-hidden="true">
-                    <defs><clipPath id="scr4"><polygon points="3.6,1.2 64.4,1.2 66.8,3.6 66.8,35.2 64.4,37.6 3.6,37.6 1.2,35.2 1.2,3.6"/></clipPath></defs>
-                    <polygon points="3.25,0.25 64.75,0.25 67.75,3.25 67.75,35.55 64.75,38.55 3.25,38.55 0.25,35.55 0.25,3.25" fill="#050D15"/>
-                    <rect width="68" height="38.8" fill="#0A2236" clip-path="url(#scr4)"/>
-                    <image href="FactoryEvents/glitch.jpg" x="1.2" y="1.2" width="65.6" height="36.4" preserveAspectRatio="xMidYMid slice" clip-path="url(#scr4)"/>
-                    <polygon points="3.6,1.2 64.4,1.2 66.8,3.6 66.8,35.2 64.4,37.6 3.6,37.6 1.2,35.2 1.2,3.6" fill="none" stroke="rgba(127,214,255,.55)" stroke-width=".2"/>
-                    <polygon points="3.25,0.25 64.75,0.25 67.75,3.25 67.75,35.55 64.75,38.55 3.25,38.55 0.25,35.55 0.25,3.25" fill="none" stroke="#25A4EE" stroke-width=".5"/>
-                    <rect x="9" y="0" width="14" height="0.9" fill="#25A4EE"/><rect x="45" y="0" width="14" height="0.9" fill="#25A4EE"/><rect x="9" y="37.9" width="14" height="0.9" fill="#25A4EE"/><rect x="45" y="37.9" width="14" height="0.9" fill="#25A4EE"/><rect x="0" y="15.4" width="0.9" height="8" fill="#25A4EE"/><rect x="67.1" y="15.4" width="0.9" height="8" fill="#25A4EE"/>
-                  </svg>
-                </div>
-                <div class="card-copy">
-                  <p>Раскройте и разыграйте следующую карту события.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tech">Factory Events · Front · 2/3</div>
-      </div>
-    </div>
+  Как устроено:
+    • содержимое — только в JSON слота «данные» (<script id="card-data">): заголовки, строки, тексты, картинки;
+      {R} — значок нефти (ICON-001), кавычки — только “ ” (D-075), проверка: python3 print/check_quotes.py;
+    • оформление — в FactoryEvents/FactoryEvents.css; листы и метки строит скрипт ниже;
+    • печать — A4 книжный, 4 страницы: лицо, оборот, лицо, оборот; по четыре карты с выпуском 6 мм,
+      метки реза — крестики на лице: на ровном тёмном выпуске они видны лучше, чем на рубашке. Оборот зеркален по столбцам:
+      двусторонняя печать с переворотом по длинному краю. Подробно — print/ПЕЧАТЬ.md;
+    • рубашка FactoryEvents/back.jpg уже с выпуском 6 мм: 92 × 132 мм, выпуск — отражение краёв картинки;
+    • экран — скошенная рамка SVG 68 × 38,8 мм, картинка 1,8 : 1 обрезается по внутреннему контуру.
+-->
+<link rel="stylesheet" href="FactoryEvents/FactoryEvents.css">
+</head>
+<body>
+<div class="bar">A4 книжный, 4 страницы: лицо и оборот попеременно, по четыре карты с выпуском 6 мм. Масштаб 100 %, поля — нет, фон — включить,
+двусторонняя с переворотом по длинному краю. Метки реза — на лице, резать по лицевой стороне. Подробно — print/ПЕЧАТЬ.md.</div>
+<div class="pages" id="pages"></div>
 
-    <div class="page page-back back">
-      <div class="sheet">
-        <div class="bleed-wrap bleed-back">
-          <div class="cards-grid">
-            <div class="card card-back pos-tl">
-              <div class="card-inner">
-                <img src="FactoryEvents/back.png" alt="" />
-              </div>
-            </div>
-            <div class="card card-back pos-tr">
-              <div class="card-inner">
-                <img src="FactoryEvents/back.png" alt="" />
-              </div>
-            </div>
-            <div class="card card-back pos-bl">
-              <div class="card-inner">
-                <img src="FactoryEvents/back.png" alt="" />
-              </div>
-            </div>
-            <div class="card card-back pos-br">
-              <div class="card-inner">
-                <img src="FactoryEvents/back.png" alt="" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tech">Factory Events · Back · 3/3</div>
-      </div>
-    </div>
-  </body>
+<script type="application/json" id="card-data">
+{
+  "рубашка": "FactoryEvents/back.jpg",
+  "карты": [
+    {
+      "вид": "таблица",
+      "заголовок": "ПРОФИЦИТ",
+      "шапка": "Игрок, контролирующий фабрику:",
+      "строки": [
+        "▣ 01: получает 1{R}.",
+        "▲ 02: получает дополнительную карту скрытого влияния, если оказывает давление в этой фазе.",
+        "◆ 03: получает 1{R}.",
+        "★ 04: получает 1 влияние.",
+        "✚ 05: должен уничтожить в регионе с фабрикой боевую машину или пехотинца противника с самой низкой стоимостью, если это возможно.",
+        "⬟ 06: получает дополнительную карту скрытого влияния, если оказывает давление в этой фазе.",
+        "⬢ 07: должен уничтожить в регионе с фабрикой боевую машину или пехотинца противника с самой низкой стоимостью, если это возможно.",
+        "◎︎ 08: получает 1 влияние.",
+        "✖ 09: выбирает две особые фабрики на поле и меняет их местами. <strong>Этот эффект должен применяться первым.</strong>",
+        "✦ 10: должен применить к этой фабрике любой другой эффект этого события по своему выбору."
+      ]
+    },
+    {
+      "вид": "таблица",
+      "заголовок": "ВОЛАТИЛЬНОСТЬ РЫНКОВ",
+      "шапка": "Игрок, контролирующий фабрику:",
+      "строки": [
+        "▣ 01: теряет 1{R}.",
+        "▲ 02: получает дополнительную карту скрытого влияния, если оказывает давление в этой фазе.",
+        "◆ 03: получает 1{R}.",
+        "★ 04: теряет 1 влияние.",
+        "✚ 05: должен уничтожить свой отряд в регионе с фабрикой.",
+        "⬟ 06: не может оказывать давление в этой фазе.",
+        "⬢ 07: должен уничтожить свой отряд в регионе с фабрикой.",
+        "◎︎ 08: получает 1 влияние.",
+        "✖ 09: выбирает две особые фабрики на поле и меняет их местами. <strong>Этот эффект должен применяться первым.</strong>",
+        "✦ 10: должен применить к этой фабрике любой другой эффект этого события по своему выбору."
+      ]
+    },
+    {
+      "вид": "таблица",
+      "заголовок": "ДЕСТАБИЛИЗАЦИЯ БИРЖИ",
+      "шапка": "Игрок, контролирующий фабрику:",
+      "строки": [
+        "▣ 01: получает 1{R}.",
+        "▲ 02: не может оказывать давление в этой фазе.",
+        "◆ 03: теряет 1{R}.",
+        "★ 04: получает 1 влияние.",
+        "✚ 05: должен уничтожить в регионе с фабрикой боевую машину или пехотинца противника с самой низкой стоимостью, если это возможно.",
+        "⬟ 06: получает дополнительную карту скрытого влияния, если оказывает давление в этой фазе.",
+        "⬢ 07: должен уничтожить в регионе с фабрикой боевую машину или пехотинца противника с самой низкой стоимостью, если это возможно.",
+        "◎︎ 08: теряет 1 влияние.",
+        "✖ 09: должен заменить одну особую фабрику под своим контролем на обычную. <strong>Этот эффект должен применяться последним.</strong>",
+        "✦ 10: должен применить к этой фабрике любой другой эффект этого события по своему выбору."
+      ]
+    },
+    {
+      "вид": "таблица",
+      "заголовок": "СБОЙ ПОСТАВОК",
+      "шапка": "Игрок, контролирующий фабрику:",
+      "строки": [
+        "▣ 01: теряет 1{R}.",
+        "▲ 02: не может оказывать давление в этой фазе.",
+        "◆ 03: теряет 1{R}.",
+        "★ 04: теряет 1 влияние.",
+        "✚ 05: должен уничтожить свой отряд в регионе с фабрикой.",
+        "⬟ 06: не может оказывать давление в этой фазе.",
+        "⬢ 07: должен уничтожить свой отряд в регионе с фабрикой.",
+        "◎︎ 08: теряет 1 влияние.",
+        "✖ 09: должен заменить одну особую фабрику под своим контролем на обычную. <strong>Этот эффект должен применяться последним.</strong>",
+        "✦ 10: должен применить к этой фабрике любой другой эффект этого события по своему выбору."
+      ]
+    },
+    {
+      "вид": "экран",
+      "заголовок": "ПЕРЕПРОФИЛИРОВАНИЕ",
+      "картинка": "FactoryEvents/retooling.jpg",
+      "текст": [
+        "Начиная с первого игрока, по порядку хода найдите ближайшего, у кого под контролем нет ни одной особой фабрики. Он должен взять любую особую фабрику из общего резерва, если они там остались, и заменить ею одну из обычных фабрик под своим контролем.",
+        "",
+        "Больше этого не делает никто, даже если он не смог."
+      ]
+    },
+    {
+      "вид": "экран",
+      "заголовок": "РЕСТРУКТУРИЗАЦИЯ",
+      "картинка": "FactoryEvents/restructuring.jpg",
+      "текст": [
+        "Игрок с наименьшим влиянием на треке может выбрать одну особую фабрику на поле и заменить её обычной.",
+        "Если таких игроков несколько, все они делают это по очереди в порядке хода.",
+        "",
+        "Затем замешайте эту карту в колоду событий, вытяните и разыграйте ещё одну карту события. Если снова вытянута эта карта, больше ничего не происходит."
+      ]
+    },
+    {
+      "вид": "экран",
+      "заголовок": "СБОЙ",
+      "картинка": "FactoryEvents/glitch.jpg",
+      "текст": [
+        "Раскройте и разыграйте следующую карту события."
+      ]
+    },
+    {
+      "вид": "экран",
+      "заголовок": "СБОЙ",
+      "картинка": "FactoryEvents/glitch.jpg",
+      "текст": [
+        "Раскройте и разыграйте следующую карту события."
+      ]
+    }
+  ]
+}
+</script>
+
+<script>
+const DATA = JSON.parse(document.getElementById('card-data').textContent);
+const W = 80, H = 120, B = 6;                   // карта и выпуск, мм
+const NS = 'http://www.w3.org/2000/svg';
+
+function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
+function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
+function sym(html) { return html.replace(/\{R\}/g, '<span class="sym">R</span>'); }
+
+/* экран: скошенная рамка (вариант В, D-118) — срез углов 3 мм, картинка внутри с полем 1,2 мм, планки по сторонам */
+let clipN = 0;
+function screen(img) {
+  const w = div('screen');
+  const SW = 68, SH = 38.8, k = 3, i = 1.2, ki = 2.4, id = 'scr' + (++clipN), blue = '#25A4EE';
+  const poly = (x0, y0, x1, y1, c) => [[x0 + c, y0], [x1 - c, y0], [x1, y0 + c], [x1, y1 - c], [x1 - c, y1], [x0 + c, y1], [x0, y1 - c], [x0, y0 + c]]
+    .map(([x, y]) => `${+x.toFixed(2)},${+y.toFixed(2)}`).join(' ');
+  const outer = poly(.25, .25, SW - .25, SH - .25, k), inner = poly(i, i, SW - i, SH - i, ki);
+  const bar = (x, y, bw, bh) => `<rect x="${+x.toFixed(2)}" y="${+y.toFixed(2)}" width="${bw}" height="${bh}" fill="${blue}"/>`;
+  w.innerHTML = `<svg viewBox="0 0 ${SW} ${SH}" preserveAspectRatio="none" xmlns="${NS}" aria-hidden="true">
+    <defs><clipPath id="${id}"><polygon points="${inner}"/></clipPath></defs>
+    <polygon points="${outer}" fill="#050D15"/>
+    <rect width="${SW}" height="${SH}" fill="#0A2236" clip-path="url(#${id})"/>
+    <image href="${img}" x="${i}" y="${i}" width="${+(SW - 2 * i).toFixed(2)}" height="${+(SH - 2 * i).toFixed(2)}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>
+    <polygon points="${inner}" fill="none" stroke="rgba(127,214,255,.55)" stroke-width=".2"/>
+    <polygon points="${outer}" fill="none" stroke="${blue}" stroke-width=".5"/>
+    ${bar(9, 0, 14, .9)}${bar(SW - 23, 0, 14, .9)}${bar(9, SH - .9, 14, .9)}${bar(SW - 23, SH - .9, 14, .9)}
+    ${bar(0, SH / 2 - 4, .9, 8)}${bar(SW - .9, SH / 2 - 4, .9, 8)}</svg>`;
+  return w;
+}
+
+function face(d) {                               // лицо одной карты
+  const c = div('card ' + (d['вид'] === 'экран' ? 'screen-card' : 'table'));
+  const hd = div('card-header'); hd.textContent = d['заголовок']; c.appendChild(hd);
+  if (d['вид'] === 'экран') {
+    c.appendChild(screen(d['картинка']));
+    const cp = div('card-copy');
+    for (const t of d['текст']) {
+      if (t) { const p = document.createElement('p'); p.innerHTML = sym(t); cp.appendChild(p); }
+      else cp.appendChild(div('gap'));
+    }
+    c.appendChild(cp);
+  } else {
+    const tt = div('card-title'); tt.textContent = d['шапка']; c.appendChild(tt);
+    const tx = div('card-text');
+    for (const t of d['строки']) { const p = document.createElement('p'); p.innerHTML = sym(t); tx.appendChild(p); }
+    c.appendChild(tx);
+  }
+  return c;
+}
+
+function marks(segs, dark, SW, SH) {             // метки реза: части над тёмным фоном — светлые, над белым полем — тёмные
+  const inDark = (x, y) => dark.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
+  let light = '', ink = '';
+  for (const [x1, y1, x2, y2] of segs) {
+    const ts = [0, 1], vert = x1 === x2;
+    for (const [a, b, c, d] of dark) for (const v of (vert ? [b, d] : [a, c])) {
+      const t = vert ? (v - y1) / (y2 - y1) : (v - x1) / (x2 - x1);
+      if (t > 0 && t < 1) ts.push(t);
+    }
+    ts.sort((p, q) => p - q);
+    const P = t => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+    for (let k = 0; k + 1 < ts.length; k++) {
+      if (ts[k + 1] - ts[k] < 1e-6) continue;
+      const [ax, ay] = P(ts[k]), [bx, by] = P(ts[k + 1]), [mx, my] = P((ts[k] + ts[k + 1]) / 2);
+      const d = `M${ax.toFixed(3)},${ay.toFixed(3)} L${bx.toFixed(3)},${by.toFixed(3)} `;
+      if (inDark(mx, my)) light += d; else ink += d;
+    }
+  }
+  const box = document.createElement('div');
+  box.innerHTML = `<svg class="marks" viewBox="0 0 ${SW} ${SH}" style="width:${SW}mm;height:${SH}mm" xmlns="${NS}" aria-hidden="true">`
+    + `<path d="${ink}" stroke="#1A1A1A" stroke-width=".1" fill="none"/><path d="${light}" stroke="#FFFFFF" stroke-width=".1" fill="none"/></svg>`;
+  return box.firstChild;
+}
+
+function build() {
+  const pages = document.getElementById('pages'); pages.innerHTML = '';
+  // A4 книжный: 2 × 2 карты, выпуски встык, блок по центру листа. На обороте столбцы меняются местами:
+  // при перевороте по длинному краю левый столбец лица ложится на правый столбец оборота.
+  const cw = W + 2 * B, ch = H + 2 * B, x0 = (210 - 2 * cw) / 2, y0 = (297 - 2 * ch) / 2;
+  const cards = DATA['карты'];
+  for (let g = 0; g < cards.length; g += 4) for (const side of [0, 1]) {
+    const sh = div('sheet'); pages.appendChild(sh);
+    const segs = [], dark = [];
+    for (let k = 0; k < 4 && g + k < cards.length; k++) {
+      const col = side === 0 ? k % 2 : 1 - k % 2, row = Math.floor(k / 2);
+      const x = x0 + col * cw + B, y = y0 + row * ch + B;
+      const bl = place(div('bleed' + (side ? ' back' : '')), x - B, y - B, cw, ch);
+      if (side) bl.style.backgroundImage = `url("${DATA['рубашка']}")`;
+      sh.appendChild(bl);
+      if (!side) sh.appendChild(place(face(cards[g + k]), x, y, W, H));
+      dark.push([x - B, y - B, x + W + B, y + H + B]);
+      // крестик в каждом углу: обе линии идут через угол наружу на 10 мм и внутрь вдоль кромки на 4 мм
+      const OUT = 10, IN = 4;
+      for (const [cx, dx] of [[x, 1], [x + W, -1]]) for (const [cy, dy] of [[y, 1], [y + H, -1]]) {
+        segs.push([cx - dx * OUT, cy, cx + dx * IN, cy]);
+        segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);
+      }
+    }
+    // метки реза — на лице: его выпуск ровный тёмный, белая метка видна по всей длине;
+    // на рубашке светлое небо, белая метка на нём теряется
+    if (side === 0) sh.appendChild(marks(segs, dark, 210, 297));
+  }
+}
+
+document.fonts.ready.then(build);
+</script>
+</body>
 </html>

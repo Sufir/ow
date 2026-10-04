@@ -25,6 +25,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
     'Контроль сети.html',                     # карта Контроля сети, COMP-V-08: JSON в <script id="card-data">
     'Энграммы.html',                          # карты энграмм, COMP-V-13: JSON в <script id="card-data">
     'Mercenaries/Наёмники.html',              # карты наёмников, COMP-V-10: JSON в <script id="card-data">, тексты из mercenaries.yaml
+    'FactoryEvents.html',                     # карты событий фабрик, COMP-V-02: JSON в <script id="card-data">
 ]
 
 ЗАПРЕЩЕНО = {'«': 'ёлочка «', '»': 'ёлочка »', '„': 'лапка „', '"': 'прямая "'}

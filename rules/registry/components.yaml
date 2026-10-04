@@ -1384,25 +1384,25 @@ variant:
     spec:
       printed: 8 карт — шесть событий и два необязательных «Сбоя» (D-115)
       deck: 6
-      format: 80 × 120 мм, четыре на A4
+      format: 80 × 120 мм; A4 книжный, 2 × 2 с выпуском 6 мм, метки реза на лице, 4 страницы (D-118)
     files:
       - print/Saved/Factory Events.pdf
       - print/FactoryEvents.html
       - print/FactoryEvents/
     generator: print/FactoryEvents.html
     master: print/Saved/Factory Events.pdf
-    truth: rules/RULEBOOK.md
+    truth: print/FactoryEvents.html
     state:
       content: VERIFIED
       design: IN-REVIEW
       production: NONE
     evidence: >
       Alek 2026-10-04: карты ещё не напечатаны. Тексты сверены с таблицей
-      Colour Gates (SRC-RB-NEW с. 137–138) и исправлены — D-115. Рубашку
-      и иллюстрации экранов Alek назвал тёмными, разными по размеру
-      и рамке — design вернулся в IN-REVIEW. PDF-мастер апрельский,
-      до D-091 и D-115, не пересобран.
-    refs: [COMP-I-008, D-115]
+      Colour Gates (SRC-RB-NEW с. 137–138) и исправлены — D-115. Дизайн
+      переделан — D-118: экраны в скошенной рамке, новые иллюстрации,
+      рубашка ChatGPT приглушена (вариант Т3). Вёрстка собрана, мастер
+      PDF пересобран 2026-10-04; design — до приёмки мастера Alek.
+    refs: [COMP-I-008, D-115, D-118]
     blocks_print: false
     findings: [COMP-I-008]
     notes: Сверх оригинала целиком — официальных карт событий в оригинале нет.
