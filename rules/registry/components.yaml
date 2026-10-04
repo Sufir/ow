@@ -1376,8 +1376,9 @@ variant:
     count_status: FIXED
     carrier: CARD
     spec:
-      printed: 8 карт, две из них эксперимент и в рабочую колоду не входят
+      printed: 8 карт — шесть событий и два необязательных «Сбоя» (D-115)
       deck: 6
+      format: 80 × 120 мм, четыре на A4
     files:
       - print/Saved/Factory Events.pdf
       - print/FactoryEvents.html
@@ -1387,14 +1388,15 @@ variant:
     truth: rules/RULEBOOK.md
     state:
       content: VERIFIED
-      design: APPROVED
-      production: UNKNOWN
+      design: IN-REVIEW
+      production: NONE
     evidence: >
-      Alek 2026-09-22: «не помню, проверить позже». Старая инвентаризация
-      называет карты напечатанными (запись закрыта 2026-08-27), рабочая
-      колода 6, две лишние — эксперимент. Единственная запись, по которой
-      ответа нет ни за, ни против.
-    refs: [COMP-I-008]
+      Alek 2026-10-04: карты ещё не напечатаны. Тексты сверены с таблицей
+      Colour Gates (SRC-RB-NEW с. 137–138) и исправлены — D-115. Рубашку
+      и иллюстрации экранов Alek назвал тёмными, разными по размеру
+      и рамке — design вернулся в IN-REVIEW. PDF-мастер апрельский,
+      до D-091 и D-115, не пересобран.
+    refs: [COMP-I-008, D-115]
     blocks_print: false
     findings: [COMP-I-008]
     notes: Сверх оригинала целиком — официальных карт событий в оригинале нет.
@@ -2067,7 +2069,7 @@ findings:
     subject: COMP-V-02
     title: Карты событий фабрик — единственная запись без ответа
     severity: INFO
-    status: OPEN
+    status: CLOSED
     detail: >
       Четыре круга подтверждения 2026-09-22 закрыли всё, кроме одной
       записи. Напечатаны ли карты событий, Alek не помнит и обещал
@@ -2077,8 +2079,10 @@ findings:
       Посмотреть в коробке: рабочая колода из шести карт — ПРОФИЦИТ,
       ВОЛАТИЛЬНОСТЬ РЫНКОВ, ДЕСТАБИЛИЗАЦИЯ БИРЖИ, СБОЙ ПОСТАВОК,
       ПЕРЕПРОФИЛИРОВАНИЕ, РЕСТРУКТУРИЗАЦИЯ.
-    decision: null
-    decided: null
+    decision: >
+      Alek 2026-10-04: не напечатаны. production: NONE; тексты
+      сверены перед печатью (D-115).
+    decided: 2026-10-04
 
   - id: COMP-I-009
     type: STATE

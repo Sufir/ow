@@ -66,6 +66,23 @@ body {
   font-style: italic;
 }
 
+/* значок нефти (ICON-001): глиф R, вплотную к числу, цветом текста, строку не раздвигает */
+@font-face {
+  font-family: "OilWars";
+  src: url("../Fonts/Oil Wars.ttf") format("truetype");
+}
+
+.sym {
+  font-family: "OilWars", sans-serif;
+  font-size: 1.22em;
+  line-height: 0;
+  vertical-align: -0.055em;
+  font-style: normal;
+  font-weight: 400;
+  font-synthesis: none;
+  color: inherit;
+}
+
 @page {
   size: A4 portrait;
   margin: 0;
