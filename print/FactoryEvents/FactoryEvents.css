@@ -1,5 +1,5 @@
 /* Карты событий фабрик — COMP-V-02. Оформление; содержимое — JSON в FactoryEvents.html.
-   Карта Tarot 70 × 120 мм (D-122). Лист A4 книжный: 2 × 2 карты с выпуском 6 мм, три страницы — два листа лиц и одна рубашка;
+   Карта Tarot 70 × 120 мм (D-122). Лист A4 книжный: 2 × 2 карты встык, выпуск 6 мм по внешнему краю, три страницы — два листа лиц и одна рубашка;
    метки реза — крестики на лице
    (CLAUDE.md, «Метки реза и печать»; на светлой рубашке белая метка теряется). Решения: тексты D-115, экраны и рубашка D-118. */
 
@@ -34,7 +34,7 @@ body { background: #7A8794; font-family: "Liberation Sans", sans-serif; font-siz
          box-shadow: 0 3mm 10mm rgba(0,0,0,.35); break-after: page; page-break-after: always; }
 .sheet:last-child { break-after: auto; page-break-after: auto; }
 .bleed { position: absolute; background: var(--ink); }
-.bleed.back { background-size: 100% 100%; background-repeat: no-repeat; }   /* рубашка с выпуском 6 мм в самой картинке */
+.bleed.back { background-repeat: no-repeat; }   /* рубашка с выпуском 6 мм в самой картинке; размер и сдвиг задаёт скрипт */
 .marks { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible; }
 
 /* ——— карта ——— */

@@ -12,7 +12,8 @@
     • содержимое — только в JSON слота «данные» (<script id="card-data">): заголовки, строки, тексты, картинки;
       {R} — значок нефти (ICON-001), кавычки — только “ ” (D-075), проверка: python3 print/check_quotes.py;
     • оформление — в FactoryEvents/FactoryEvents.css; листы и метки строит скрипт ниже;
-    • печать — A4 книжный, 3 страницы: лицо 1, лицо 2, рубашка; по четыре карты с выпуском 6 мм.
+    • печать — A4 книжный, 3 страницы: лицо 1, лицо 2, рубашка; по четыре карты встык — между картами один рез,
+      выпуск 6 мм только по внешнему краю блока.
       Рубашка у всех одна, поэтому её страница одна: печатается на обороте обоих листов лиц.
       Метки реза — крестики на лице: на ровном тёмном выпуске они видны лучше, чем на рубашке.
       Подробно — print/ПЕЧАТЬ.md;
@@ -24,7 +25,7 @@
 <link rel="stylesheet" href="FactoryEvents/FactoryEvents.css">
 </head>
 <body>
-<div class="bar">A4 книжный, 3 страницы: лицо 1, лицо 2, рубашка (одна на все карты). Масштаб 100 %, поля — нет, фон — включить.
+<div class="bar">A4 книжный, 3 страницы: лицо 1, лицо 2, рубашка (одна на все карты); карты встык, между ними один рез. Масштаб 100 %, поля — нет, фон — включить.
 Страницы 1–2 — односторонне; затем листы обратно в лоток, страницу 3 — в двух копиях на обороте. Метки реза — на лице. Подробно — print/ПЕЧАТЬ.md.</div>
 <div class="pages" id="pages"></div>
 
@@ -219,34 +220,37 @@ function marks(segs, dark, SW, SH) {             // метки реза: час�
 
 function build() {
   const pages = document.getElementById('pages'); pages.innerHTML = '';
-  // A4 книжный: 2 × 2 карты, выпуски встык, блок по центру листа — при перевороте листа он ложится сам на себя.
+  // A4 книжный: 2 × 2 карты встык — между картами один рез; выпуск 6 мм только по внешнему краю блока.
+  // Блок по центру листа — при перевороте листа он ложится сам на себя.
   // Сначала листы лиц, в конце одна страница рубашки: рубашка у всех карт одна.
-  const cw = W + 2 * B, ch = H + 2 * B, x0 = (210 - 2 * cw) / 2, y0 = (297 - 2 * ch) / 2;
+  const x0 = (210 - 2 * W) / 2, y0 = (297 - 2 * H) / 2;
   const cards = DATA['карты'];
   const sheets = [];
   for (let g = 0; g < cards.length; g += 4) sheets.push([g, 0]);
   sheets.push([0, 1]);
   for (const [g, side] of sheets) {
     const sh = div('sheet'); pages.appendChild(sh);
-    const segs = [], dark = [];
+    if (!side) sh.appendChild(place(div('bleed'), x0 - B, y0 - B, 2 * W + 2 * B, 2 * H + 2 * B));  // лицо: общий фон блока
     for (let k = 0; k < 4 && g + k < cards.length; k++) {
       const col = side === 0 ? k % 2 : 1 - k % 2, row = Math.floor(k / 2);
-      const x = x0 + col * cw + B, y = y0 + row * ch + B;
-      const bl = place(div('bleed' + (side ? ' back' : '')), x - B, y - B, cw, ch);
-      if (side) bl.style.backgroundImage = `url("${DATA['рубашка']}")`;
-      sh.appendChild(bl);
-      if (!side) sh.appendChild(place(face(cards[g + k]), x, y, W, H));
-      dark.push([x - B, y - B, x + W + B, y + H + B]);
-      // крестик в каждом углу: обе линии идут через угол наружу на 10 мм и внутрь вдоль кромки на 4 мм
-      const OUT = 10, IN = 4;
-      for (const [cx, dx] of [[x, 1], [x + W, -1]]) for (const [cy, dy] of [[y, 1], [y + H, -1]]) {
-        segs.push([cx - dx * OUT, cy, cx + dx * IN, cy]);
-        segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);
-      }
+      const x = x0 + col * W, y = y0 + row * H;
+      if (side) {
+        // рубашка: картинка 82 × 132 мм с выпуском; по внешним краям блока — выпуск, по внутренним — встык
+        const l = col === 0 ? B : 0, r = col === 1 ? B : 0, t = row === 0 ? B : 0, b = row === 1 ? B : 0;
+        const bl = place(div('bleed back'), x - l, y - t, W + l + r, H + t + b);
+        Object.assign(bl.style, { backgroundImage: `url("${DATA['рубашка']}")`,
+          backgroundSize: `${W + 2 * B}mm ${H + 2 * B}mm`, backgroundPosition: `${l - B}mm ${t - B}mm` });
+        sh.appendChild(bl);
+      } else sh.appendChild(place(face(cards[g + k]), x, y, W, H));
     }
-    // метки реза — на лице: его выпуск ровный тёмный, белая метка видна по всей длине;
-    // на рубашке светлое небо, белая метка на нём теряется
-    if (side === 0) sh.appendChild(marks(segs, dark, 210, 297));
+    // метки реза — только на лице (print/ПЕЧАТЬ.md, п. 4): каждая линия реза помечена с обоих концов,
+    // от края блока 10 мм наружу и 4 мм внутрь вдоль линии; в углах блока это крестики
+    if (!side) {
+      const segs = [], xs = [x0, x0 + W, x0 + 2 * W], ys = [y0, y0 + H, y0 + 2 * H], OUT = 10, IN = 4;
+      for (const x of xs) { segs.push([x, y0 - OUT, x, y0 + IN]); segs.push([x, ys[2] - IN, x, ys[2] + OUT]); }
+      for (const y of ys) { segs.push([x0 - OUT, y, x0 + IN, y]); segs.push([xs[2] - IN, y, xs[2] + OUT, y]); }
+      sh.appendChild(marks(segs, [[x0 - B, y0 - B, xs[2] + B, ys[2] + B]], 210, 297));
+    }
   }
 }
 
