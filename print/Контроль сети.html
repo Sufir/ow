@@ -15,8 +15,10 @@
     • текст — только в JSON ниже (<script id="card-data">); оформление — только в CSS этого файла;
     • таблица отряда — как .units-table планшета (Faction-Card-A/Шаблон.html) в масштабе карты:
       шапка OpenGostTypeB прописными синим, числа Rationale (кол-во синим, стоимость белым, сила розовым);
-    • два вида печати: «В размер» — две страницы 70 × 120; «A4 с метками реза» — A4 книжный, карта с выпуском 6 мм,
-      страница 1 — сторона А, страница 2 — сторона Б с метками реза (крестики).
+    • вид печати «В размер» — две страницы 70 × 120. Своего листа A4 у карты нет (решение Alek 05.10.2026):
+      на A4 она печатается на свободном месте листа наёмников (print/Mercenaries/Наёмники.html, вид A4) —
+      тот встраивает эту страницу фреймом в виде вставки: #side=0 — сторона А, #side=1 — сторона Б,
+      одна сторона с выпуском 6 мм, без панели и полей.
   Шрифты: Liberation Sans — текст (D-091), Rationale — числа таблицы (D-093), OpenGostTypeB — заголовки.
   Кавычки на компоненте — только “ ” (D-075). Проверка: python3 print/check_quotes.py.
 -->
@@ -31,7 +33,7 @@
 :root {
   --w: 70mm;  --h: 120mm;     /* Tarot, по линии реза */
   --pad: 3.2mm;               /* поле от линии реза до текста */
-  --bleed: 6mm;               /* выпуск под обрез в раскладке A4, как у памяток */
+  --bleed: 6mm;               /* выпуск под обрез в раскладке A4 наёмников (вид вставки) */
   --fs: 8pt;                  /* кегль текста */
   --lh: 1.2;
   --gap: 1.2mm;               /* наименьший воздух между разделами; свободное место делится поровну (см. .body) */
@@ -63,7 +65,11 @@ body { background: #7A8794; font-family: "Liberation Sans", sans-serif; }
          break-after: page; page-break-after: always; }
 .sheet:last-child { break-after: auto; page-break-after: auto; }
 body.size .sheet { width: calc(var(--w) + .5mm); height: calc(var(--h) + .5mm); }
-body.a4 .sheet { width: 210mm; height: 297mm; }
+/* вид вставки: одна сторона с выпуском, без панели и полей — для листа A4 наёмников */
+body.embed { background: transparent; }
+body.embed .bar { display: none; }
+body.embed .pages { padding: 0; display: block; }
+.piece { position: relative; overflow: hidden; }
 
 /* ——— карта ——— */
 .bleed { position: absolute;
@@ -140,10 +146,6 @@ body.a4 .sheet { width: 210mm; height: 297mm; }
 .body .steps li { counter-increment: st; position: relative; padding-left: 3.4mm; margin: 0 0 .35mm; }
 .body .steps li::before { content: counter(st) "."; position: absolute; left: 0; font-weight: 700; color: var(--num); }
 
-/* ——— метки реза (оборот раскладки A4) ——— */
-.marks { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible;
-         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
 @media print {
   html, body { background: #fff; }
   .bar, .warn { display: none !important; }
@@ -159,7 +161,6 @@ body.a4 .sheet { width: 210mm; height: 297mm; }
   <div class="grp" role="group" aria-label="Вид печати">
     <b>Печать:</b>
     <button type="button" data-mode="size" aria-pressed="true">В размер, 70 × 120</button>
-    <button type="button" data-mode="a4" aria-pressed="false">A4 с метками реза</button>
   </div>
   <span class="hint" id="hint"></span>
 </div>
@@ -193,8 +194,7 @@ const DATA = JSON.parse(document.getElementById('card-data').textContent);
 const MM = 96 / 25.4;
 const SWARM = encodeURI('../acrylic/09. Рой дронов - стенд - 6шт - ↔️35мм.png');
 const HINT = {                                // подробности печати — print/ПЕЧАТЬ.md
-  size: 'Две страницы 70 × 120 мм: 1 — сторона “Без контроля”, 2 — “Под контролем”. Масштаб 100 %, поля — нет, фон — включить.',
-  a4: 'A4 книжный, карта с выпуском 6 мм; страница 1 — сторона “Без контроля”, страница 2 — “Под контролем” с метками реза. Подробно — print/ПЕЧАТЬ.md.',
+  size: 'Две страницы 70 × 120 мм: 1 — сторона “Без контроля”, 2 — “Под контролем”. Масштаб 100 %, поля — нет, фон — включить. На A4 — с листом наёмников.',
 };
 function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
 function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
@@ -216,60 +216,26 @@ function card(side) {                          // одна сторона кар
   return c;
 }
 function bleed(side) { return div('bleed' + (DATA['стороны'][side]['класс'] ? ' neutral' : '')); }
-function marks(segs, dark, SW, SH) {        // метки реза: отрезок делится на части над тёмным фоном и над белым полем
-  const inDark = (x, y) => dark.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
-  let light = '', ink = '';
-  for (const [x1, y1, x2, y2] of segs) {
-    const ts = [0, 1], vert = x1 === x2;
-    for (const [a, b, c, d] of dark) for (const v of (vert ? [b, d] : [a, c])) {
-      const t = vert ? (v - y1) / (y2 - y1) : (v - x1) / (x2 - x1);
-      if (t > 0 && t < 1) ts.push(t);
-    }
-    ts.sort((p, q) => p - q);
-    const P = t => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
-    for (let k = 0; k + 1 < ts.length; k++) {
-      if (ts[k + 1] - ts[k] < 1e-6) continue;
-      const [ax, ay] = P(ts[k]), [bx, by] = P(ts[k + 1]), [mx, my] = P((ts[k] + ts[k + 1]) / 2);
-      const d = `M${ax.toFixed(3)},${ay.toFixed(3)} L${bx.toFixed(3)},${by.toFixed(3)} `;
-      if (inDark(mx, my)) light += d; else ink += d;
-    }
-  }
-  const box = document.createElement('div');
-  box.innerHTML = `<svg class="marks" viewBox="0 0 ${SW} ${SH}" style="width:${SW}mm;height:${SH}mm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`
-    + `<path d="${ink}" stroke="#1A1A1A" stroke-width=".1" fill="none"/><path d="${light}" stroke="#FFFFFF" stroke-width=".1" fill="none"/></svg>`;
-  return box.firstChild;
-}
-
 function build(mode) {
-  document.body.className = mode;
-  document.getElementById('page-rule').textContent = mode === 'size'
+  const W = 70, H = 120, B = 6;
+  const pages = document.getElementById('pages'); pages.innerHTML = '';
+  const m = /^#side=([01])$/.exec(location.hash);
+  if (m) {                                       // вид вставки (лист A4 наёмников): одна сторона с выпуском, 82 × 132 мм
+    document.body.className = 'embed';
+    const side = +m[1], pc = place(div('piece'), 0, 0, W + 2 * B, H + 2 * B); pages.appendChild(pc);
+    pc.appendChild(place(bleed(side), 0, 0, W + 2 * B, H + 2 * B));
+    pc.appendChild(place(card(side), B, B, W, H));
+  } else {
+    document.body.className = mode;
     // 2,76 × 4,73 дюйма = 70,1 × 120,1 мм: Chrome округляет страницу вверх до сотых дюйма и не закрашивает остаток,
     // поэтому просим округлённый размер сразу; карта стоит в левом верхнем углу, фон — с запасом 0,5 мм
-    ? '@page { size: 2.76in 4.73in; margin: 0; }'
-    : '@page { size: A4; margin: 0; }';
-  document.querySelectorAll('.bar button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
-  document.getElementById('hint').textContent = HINT[mode];
-  const pages = document.getElementById('pages'); pages.innerHTML = '';
-  const W = 70, H = 120, B = 6;
-  for (const side of [0, 1]) {
-    const sh = div('sheet'); pages.appendChild(sh);
-    if (mode === 'size') {
+    document.getElementById('page-rule').textContent = '@page { size: 2.76in 4.73in; margin: 0; }';
+    document.querySelectorAll('.bar button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+    document.getElementById('hint').textContent = HINT[mode];
+    for (const side of [0, 1]) {
+      const sh = div('sheet'); pages.appendChild(sh);
       sh.appendChild(place(bleed(side), 0, 0, W + .5, H + .5));
       sh.appendChild(place(card(side), 0, 0, W, H));
-      continue;
-    }
-    // A4 книжный: карта по центру листа, выпуск 6 мм; раскладка симметрична — при двусторонней печати ничего не зеркалится
-    const x = (210 - W) / 2, y = (297 - H) / 2;
-    sh.appendChild(place(bleed(side), x - B, y - B, W + 2 * B, H + 2 * B));
-    sh.appendChild(place(card(side), x, y, W, H));
-    if (side === 1) {                                                   // метки реза — только на обороте
-      // крестик в каждом углу: обе линии идут через угол наружу на 10 мм и внутрь вдоль кромки на 4 мм
-      const OUT = 10, IN = 4, segs = [];
-      for (const [cx, dx] of [[x, 1], [x + W, -1]]) for (const [cy, dy] of [[y, 1], [y + H, -1]]) {
-        segs.push([cx - dx * OUT, cy, cx + dx * IN, cy]);
-        segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);
-      }
-      sh.appendChild(marks(segs, [[x - B, y - B, x + W + B, y + H + B]], 210, 297));
     }
   }
   // проверка: текст не должен вылезать за поле. Шрифты @font-face грузятся, только когда их впервые использует
@@ -277,13 +243,13 @@ function build(mode) {
   document.fonts.ready.then(() => requestAnimationFrame(() => document.querySelectorAll('div.card').forEach(c => {
     const b = c.querySelector('.body'), last = b.lastElementChild;
     const over = (last.getBoundingClientRect().bottom - (c.getBoundingClientRect().bottom - parseFloat(getComputedStyle(c).paddingBottom))) / MM;
-    if (over > 0.2) { const w = div('warn'); w.textContent = `перебор ${over.toFixed(1)} мм`; c.closest('.sheet').appendChild(w); }
+    if (over > 0.2) { const w = div('warn'); w.textContent = `перебор ${over.toFixed(1)} мм`; c.parentNode.appendChild(w); }
   })));
 }
 
 document.querySelectorAll('.bar button').forEach(b => b.addEventListener('click', () => { history.replaceState(null, '', '#' + b.dataset.mode); build(b.dataset.mode); }));
 Promise.all([document.fonts.ready, new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = SWARM; })])
-  .then(() => build(location.hash === '#a4' ? 'a4' : 'size'));
+  .then(() => build('size'));
 </script>
 </body>
 </html>

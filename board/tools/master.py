@@ -5,9 +5,12 @@
 
   trim    910 × 560 мм — поле + 5 мм на обрез со всех сторон (SPEC §2:
           «запас на обрез 5 мм сверх технологического поля»). Для заказа
-          «в размер» через менеджера.
+          «в размер» через менеджера. Файл поле-<id>-обрез-900x550.pdf.
   canvas  1000 × 700 мм — онлайн-холст баннера «100×70 см» в «Фотокопи»:
           поле с вылетом по центру, вокруг белое, уголки реза снаружи вылета.
+          Файл поле-<id>-холст-1000x700.pdf.
+
+В обоих PDF задан TrimBox (рез 900 × 550) и BleedBox (рез + 5 мм).
 
 Почему растр: размытия (переход между океанами, тень и свечение фона)
 в PDF всё равно растрируются, а конструктор типографии принимает
@@ -40,6 +43,7 @@ PAPER = '#ece8df'                 # фон листа в board-*.svg
 CANVAS = (1000.0, 700.0)          # онлайн-холст баннера 100×70
 MARK = dict(gap=2.0, len=10.0, w=0.25, colour='#000000')
 CAPTION_MM = 4.0
+NAMES = {'trim': 'обрез-900x550', 'canvas': 'холст-1000x700'}   # имя файла = что заказывать
 TILE = 1024                       # CSS px на плитку рендера
 PX_PER_MM = 96 / 25.4             # CSS px в мм
 
@@ -132,6 +136,25 @@ def save_pdf(img, lay, path):
     fun = img2pdf.get_layout_fun((mm(pw), mm(ph)), fit=img2pdf.FitMode.exact)
     with open(path, 'wb') as f:
         f.write(img2pdf.convert(buf.getvalue(), layout_fun=fun))
+    set_boxes(path, lay)
+
+
+def set_boxes(path, lay):
+    """TrimBox — линия реза 900 × 550, BleedBox — она же + вылет. По ним RIP
+    типографии сам видит формат обреза, не только по имени файла."""
+    import pikepdf
+    pw, ph = lay['page']
+    ox, oy = lay['origin']
+    tw, th = TRIM
+    pt = img2pdf.mm_to_pt
+    x0, y0 = ox, ph - oy - th                      # PDF считает y снизу
+    trim = [pt(x0), pt(y0), pt(x0 + tw), pt(y0 + th)]
+    bleed = [pt(x0 - BLEED), pt(y0 - BLEED), pt(x0 + tw + BLEED), pt(y0 + th + BLEED)]
+    with pikepdf.open(path, allow_overwriting_input=True) as pdf:
+        page = pdf.pages[0]
+        page.TrimBox = pikepdf.Array(trim)
+        page.BleedBox = pikepdf.Array(bleed)
+        pdf.save(path)
 
 
 def main():
@@ -150,7 +173,7 @@ def main():
                     f.write(page_html(bid, inner, lay))
                 img, _ = render(pg, html, lay)
                 os.remove(html)
-                pdf = os.path.join(out, f'поле-{bid}-{name}.pdf')
+                pdf = os.path.join(out, f'поле-{bid}-{NAMES[name]}.pdf')
                 save_pdf(img, lay, pdf)
                 img.resize((img.width // 10, img.height // 10), Image.LANCZOS).save(
                     os.path.join(out, f'_preview-{bid}-{name}.png'))

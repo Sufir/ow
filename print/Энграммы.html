@@ -19,8 +19,9 @@
     • энграмма — вырезка из общего листа acrylic/03 (SVG viewBox по «рамке» фракции), логотип — art/logos, как на планшете;
     • таблица отряда — как .units-table планшета и “Контроля сети”: шапка OpenGostTypeB, числа Rationale;
     • два вида печати: «В размер» — 16 страниц 70 × 120, лицо и оборот каждой фракции подряд;
-      «A4 с метками реза» — 4 страницы A4 книжных, по четыре карты с выпуском 6 мм; оборот зеркален по столбцам
-      под двустороннюю печать с переворотом по длинному краю, метки реза (крестики) — на обороте.
+      «A4 с метками реза» — 4 страницы A4 книжных, по четыре карты вплотную (2 × 2), между картами один общий рез,
+      выпуск 6 мм только по внешнему краю блока; оборот зеркален по столбцам под двустороннюю печать
+      с переворотом по длинному краю, метки реза (крестики) — на лице.
   Шрифты: Liberation Sans — текст (D-091), Rationale — числа таблицы (D-093), OpenGostTypeB — заголовки,
   Oil Wars — значок нефти {R} (ICON-001). Кавычки — только “ ” (D-075). Проверка: python3 print/check_quotes.py.
 -->
@@ -129,7 +130,7 @@ body.a4 .sheet { width: 210mm; height: 297mm; }
 .sym { font-family: "OilWars", sans-serif; font-size: 1.22em; line-height: 0; vertical-align: -0.055em;
        font-style: normal; font-weight: 400; font-synthesis: none; color: inherit; }
 
-/* ——— метки реза (оборот раскладки A4) ——— */
+/* ——— метки реза (лицо раскладки A4) ——— */
 .marks { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible;
          -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
@@ -193,7 +194,7 @@ const SHEET = encodeURI(DATA['лист энграмм']);
 const FR = DATA['фракции'];
 const HINT = {                                // подробности печати — print/ПЕЧАТЬ.md
   size: '16 страниц 70 × 120 мм: лицо и оборот каждой фракции подряд. Масштаб 100 %, поля — нет, фон — включить, двусторонняя.',
-  a4: 'A4 книжный, 4 страницы: по четыре карты с выпуском 6 мм; оборот зеркален по столбцам — двусторонняя с переворотом по длинному краю. Метки реза на обороте. Подробно — print/ПЕЧАТЬ.md.',
+  a4: 'A4 книжный, 4 страницы: по четыре карты вплотную, между картами один рез, выпуск 6 мм по внешнему краю; оборот зеркален по столбцам — двусторонняя с переворотом по длинному краю. Метки реза на лице. Подробно — print/ПЕЧАТЬ.md.',
 };
 function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
 function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
@@ -261,26 +262,36 @@ function build(mode) {
       sh.appendChild(place(card(f, side), 0, 0, W, H));
     } });
   } else {
-    // A4 книжный: 2 × 2 карты, выпуски встык, блок по центру листа. На обороте столбцы меняются местами:
+    // A4 книжный: 2 × 2 карты вплотную, между картами один общий рез; выпуск 6 мм — только по внешнему краю блока
+    // (как на листе “Полковники и Луна”): выпуск соседа поверх карты дал бы полосу чужого свечения.
+    // Фон каждой карты — прежний блок с выпуском со всех сторон, обрезанный clip-path по линии реза на внутренних краях,
+    // поэтому свечение у всех карт одинаковое. На обороте столбцы меняются местами:
     // при перевороте по длинному краю левый столбец лица ложится на правый столбец оборота.
-    const cw = W + 2 * B, ch = H + 2 * B, x0 = (210 - 2 * cw) / 2, y0 = (297 - 2 * ch) / 2;
-    for (let g = 0; g < FR.length; g += 4) for (const side of [0, 1]) {
+    const NC = 2, NR = 2, cw = W + 2 * B, ch = H + 2 * B, x0 = (210 - NC * W) / 2, y0 = (297 - NR * H) / 2;
+    const OUT = 10, IN = 4;                       // крестик: от угла 10 мм наружу и 4 мм внутрь вдоль кромки
+    for (let g = 0; g < FR.length; g += NC * NR) for (const side of [0, 1]) {
       const sh = div('sheet'); pages.appendChild(sh);
       const segs = [], dark = [];
-      for (let k = 0; k < 4 && g + k < FR.length; k++) {
-        const col = side === 0 ? k % 2 : 1 - k % 2, row = Math.floor(k / 2);
-        const x = x0 + col * cw + B, y = y0 + row * ch + B;
-        sh.appendChild(place(div('bleed'), x - B, y - B, cw, ch));
+      for (let k = 0; k < NC * NR && g + k < FR.length; k++) {
+        const col = side === 0 ? k % NC : NC - 1 - k % NC, row = Math.floor(k / NC);
+        const x = x0 + col * W, y = y0 + row * H;
+        const l = col === 0 ? 0 : B, r = col === NC - 1 ? 0 : B, t = row === 0 ? 0 : B, b = row === NR - 1 ? 0 : B;
+        const bl = place(div('bleed'), x - B, y - B, cw, ch);
+        bl.style.clipPath = `inset(${t}mm ${r}mm ${b}mm ${l}mm)`;
+        sh.appendChild(bl);
         sh.appendChild(place(card(g + k, side), x, y, W, H));
-        dark.push([x - B, y - B, x + W + B, y + H + B]);
-        // крестик в каждом углу: обе линии идут через угол наружу на 10 мм и внутрь вдоль кромки на 4 мм
-        const OUT = 10, IN = 4;
-        for (const [cx, dx] of [[x, 1], [x + W, -1]]) for (const [cy, dy] of [[y, 1], [y + H, -1]]) {
-          segs.push([cx - dx * OUT, cy, cx + dx * IN, cy]);
-          segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);
-        }
       }
-      if (side === 1) sh.appendChild(marks(segs, dark, 210, 297));         // метки реза — только на обороте
+      // метки: линии сетки реза выходят за край блока на 10 мм и заходят внутрь на 4 мм; в узлах внутри блока — крестик 4 мм,
+      // чтобы после первого реза у каждого куска оставались метки на обоих концах следующей линии
+      const X1 = x0 + NC * W, Y1 = y0 + NR * H;
+      dark.push([x0 - B, y0 - B, X1 + B, Y1 + B]);   // тёмный блок целиком: метки на швах внутри него — светлые
+      for (let i = 0; i <= NC; i++) { const xi = x0 + i * W;
+        segs.push([xi, y0 - OUT, xi, y0 + IN], [xi, Y1 - IN, xi, Y1 + OUT]); }
+      for (let j = 0; j <= NR; j++) { const yj = y0 + j * H;
+        segs.push([x0 - OUT, yj, x0 + IN, yj], [X1 - IN, yj, X1 + OUT, yj]); }
+      for (let i = 1; i < NC; i++) for (let j = 1; j < NR; j++) { const xi = x0 + i * W, yj = y0 + j * H;
+        segs.push([xi - IN, yj, xi + IN, yj], [xi, yj - IN, xi, yj + IN]); }
+      if (side === 0) sh.appendChild(marks(segs, dark, 210, 297));         // метки реза — только на лице
     }
   }
   // проверка: текст не должен вылезать за поле; мерить после загрузки шрифтов @font-face

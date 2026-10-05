@@ -26,7 +26,10 @@
     • текст способностей и технологий — по ширине, с мягкими переносами; переносы ставит Сборка.py по словарю (D-111);
     • два вида печати: «В размер» — страницы 70 × 120, у каждой карты сторона 1 и сторона 2 подряд;
       «A4 с метками реза» — по четыре карты на лист с выпуском 6 мм, сторона 2 зеркальна по столбцам
-      (двусторонняя печать с переворотом по длинному краю), метки реза — крестики на стороне 2.
+      (двусторонняя печать с переворотом по длинному краю), метки реза — крестики на стороне 1 (лицо);
+      последней на листах A4 идёт карта “Контроль сети” того же формата (решение Alek 05.10.2026): сторона
+      «Без контроля» — на стороне 1, «Под контролем» — на стороне 2. Её рисует сама print/Контроль сети.html
+      во фрейме (вид вставки #side=0 / #side=1), текст и оформление живут только там.
   Шрифты: AlienEncounters — имя, OpenGostTypeB — заголовки и подписи (D-091), Liberation Sans — текст (D-091),
   Rationale — числа (D-093), Oil Wars — значки {R} {Q} {W} {E} {T} (ICON-001). Кавычки — только “ ” (D-075).
   Схема данных и что где крутить — README — шаблон наёмника.md.
@@ -159,7 +162,10 @@ body.a4 .sheet { width: 210mm; height: 297mm; }
 .slot.tech .tn { font-family: "OpenGostTypeB", "Liberation Sans", sans-serif; font-weight: 700; font-size: 9pt; letter-spacing: .04em;
                  text-transform: uppercase; color: var(--ink); line-height: 1.05; margin: 0 0 .5mm; }
 
-/* ——— метки реза (сторона 2 раскладки A4) ——— */
+/* ——— “Контроль сети” в раскладке A4: фрейм с print/Контроль сети.html, карта с выпуском 6 мм ——— */
+.net { position: absolute; border: 0; display: block; overflow: hidden; background: transparent; }
+
+/* ——— метки реза (сторона 1 раскладки A4) ——— */
 .marks { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible;
          -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
@@ -505,7 +511,7 @@ const D = { maxW: 52, ruler: 1.9, top: 1.3, dz: 3.6, ratio: 1.5 };   // черт
                                                                      // ratio — во сколько раз чертёж стороны может быть крупнее, чем на другой (D-111)
 const HINT = {
   size: 'Страницы 70 × 120 мм: у каждой карты сторона 1 и сторона 2 подряд. Масштаб 100 %, поля — нет, фон — включить, двусторонняя.',
-  a4: 'A4 книжный, по четыре карты с выпуском 6 мм; сторона 2 зеркальна по столбцам — двусторонняя с переворотом по длинному краю. Метки реза на стороне 2. Подробно — print/ПЕЧАТЬ.md.',
+  a4: 'A4 книжный, по четыре карты с выпуском 6 мм, последняя — “Контроль сети”; сторона 2 зеркальна по столбцам — двусторонняя с переворотом по длинному краю. Метки реза на стороне 1. Подробно — print/ПЕЧАТЬ.md.',
 };
 
 // ——— текст ———
@@ -652,6 +658,12 @@ function marks(segs, dark, SW, SH) {
 // ——— сборка листов ———
 function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
 function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
+const NET = encodeURI('../Контроль сети.html');
+function net(side) {                     // “Контроль сети” с выпуском: сторона 1 — «Без контроля», сторона 2 — «Под контролем»
+  const f = document.createElement('iframe');
+  f.className = 'net'; f.title = 'Контроль сети'; f.scrolling = 'no'; f.src = NET + '#side=' + (side - 1);
+  return f;
+}
 function build(mode) {
   document.body.className = mode;
   document.getElementById('page-rule').textContent = mode === 'size'
@@ -671,15 +683,19 @@ function build(mode) {
   } else {
     // A4 книжный: 2 × 2 карты, выпуски встык, блок по центру листа. На стороне 2 столбцы меняются местами:
     // при перевороте по длинному краю левый столбец стороны 1 ложится на правый столбец стороны 2.
-    const cw = W + 2 * B, ch = H + 2 * B, x0 = (210 - 2 * cw) / 2, y0 = (297 - 2 * ch) / 2;
-    for (let g = 0; g < CARDS.length; g += 4) for (const side of [1, 2]) {
+    // Последнее место — “Контроль сети” (место N = CARDS.length).
+    const cw = W + 2 * B, ch = H + 2 * B, x0 = (210 - 2 * cw) / 2, y0 = (297 - 2 * ch) / 2, N = CARDS.length + 1;
+    for (let g = 0; g < N; g += 4) for (const side of [1, 2]) {
       const sh = div('sheet'); pages.appendChild(sh);
       const segs = [], dark = [];
-      for (let k = 0; k < 4 && g + k < CARDS.length; k++) {
+      for (let k = 0; k < 4 && g + k < N; k++) {
         const col = side === 1 ? k % 2 : 1 - k % 2, row = Math.floor(k / 2);
         const x = x0 + col * cw + B, y = y0 + row * ch + B;
-        sh.appendChild(place(div('bleed'), x - B, y - B, cw, ch));
-        sh.appendChild(place(card(CARDS[g + k], g + k, side), x, y, W, H));
+        if (g + k === CARDS.length) sh.appendChild(place(net(side), x - B, y - B, cw, ch));
+        else {
+          sh.appendChild(place(div('bleed'), x - B, y - B, cw, ch));
+          sh.appendChild(place(card(CARDS[g + k], g + k, side), x, y, W, H));
+        }
         dark.push([x - B, y - B, x + W + B, y + H + B]);
         // крестик в каждом углу: обе линии идут через угол наружу на 10 мм и внутрь вдоль кромки на 4 мм
         const OUT = 10, IN = 4;
@@ -688,7 +704,7 @@ function build(mode) {
           segs.push([cx, cy - dy * OUT, cx, cy + dy * IN]);
         }
       }
-      if (side === 2) sh.appendChild(marks(segs, dark, 210, 297));           // метки реза — на стороне 2
+      if (side === 1) sh.appendChild(marks(segs, dark, 210, 297));           // метки реза — только на стороне 1 (лицо)
     }
   }
   // мерить после загрузки шрифтов @font-face, иначе меряется запасной шрифт
