@@ -1,5 +1,5 @@
 /* Карты событий фабрик — COMP-V-02. Оформление; содержимое — JSON в FactoryEvents.html.
-   Карта 80 × 120 мм. Лист A4 книжный: 2 × 2 карты с выпуском 6 мм, три страницы — два листа лиц и одна рубашка;
+   Карта Tarot 70 × 120 мм (D-122). Лист A4 книжный: 2 × 2 карты с выпуском 6 мм, три страницы — два листа лиц и одна рубашка;
    метки реза — крестики на лице
    (CLAUDE.md, «Метки реза и печать»; на светлой рубашке белая метка теряется). Решения: тексты D-115, экраны и рубашка D-118. */
 
@@ -11,7 +11,8 @@
 @font-face { font-family: "Liberation Sans"; src: url("../Fonts/LiberationSans-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; }
 
 :root {
-  --w: 80mm; --h: 120mm;
+  --w: 70mm; --h: 120mm;     /* Tarot, по линии реза */
+  --pad: 5mm;                /* поле карты: текст и рамка экрана не ближе 5 мм к линии реза */
   --ink: #191b1c;            /* фон лица и выпуск */
   --text: #ffffff;
   --head: #25a4ee;           /* заголовок карты */
@@ -38,7 +39,7 @@ body { background: #7A8794; font-family: "Liberation Sans", sans-serif; font-siz
 
 /* ——— карта ——— */
 .card { position: absolute; width: var(--w); height: var(--h); color: var(--text); overflow: hidden;
-        padding: 6mm; display: flex; flex-direction: column; }
+        padding: var(--pad); display: flex; flex-direction: column; }
 .card p { margin: 0; line-height: 1.15; hyphens: auto; }
 .card-header { font-family: "AlienEncounters", sans-serif; font-size: 12pt; text-align: center; color: var(--head); }
 
@@ -47,7 +48,7 @@ body { background: #7A8794; font-family: "Liberation Sans", sans-serif; font-siz
        font-style: normal; font-weight: 400; font-synthesis: none; color: inherit; }
 
 /* карта с таблицей эффектов: строка на особую фабрику, цвет строки — цвет фабрики */
-.table .card-header { margin-bottom: 10mm; }
+.table .card-header { margin-bottom: 5mm; }
 .card-title { font-weight: 700; color: #cccccc; margin-bottom: 2mm; }
 .card-text { display: flex; flex-direction: column; gap: 1.2mm; }
 .card-text p:nth-child(1)  { color: #4aa3ff; }
@@ -63,14 +64,17 @@ body { background: #7A8794; font-family: "Liberation Sans", sans-serif; font-siz
 
 /* карта с экраном: скошенная рамка (вариант В), картинка 1,8 : 1 по внутреннему контуру */
 .screen-card .card-header { margin-bottom: 5mm; }
-.screen { width: 68mm; height: 38.8mm; flex: 0 0 auto; }
+.screen { flex: 0 0 auto; }               /* размер задаёт скрипт: ширина поля карты, картинка 1,8 : 1 */
 .screen svg { display: block; width: 100%; height: 100%; }
 .card-copy { margin-top: 4mm; color: #cccccc; text-align: justify; }
 .card-copy .gap { height: 1.15em; }
 
+/* проверка: текст вылез за поле карты — плашка на экране, в печать не идёт */
+.warn { position: absolute; z-index: 5; background: #fff; color: #B3261E; padding: .5mm 1.5mm; font: 700 9pt "Liberation Sans", sans-serif; }
+
 @media print {
   html, body { background: #fff; }
-  .bar { display: none !important; }
+  .bar, .warn { display: none !important; }
   .pages { padding: 0; gap: 0; display: block; }
   .sheet { box-shadow: none; }
 }

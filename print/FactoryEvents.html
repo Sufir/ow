@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Factory Events</title>
 <!--
-  Карты событий фабрик — COMP-V-02. 80 × 120 мм, восемь карт: шесть событий и два необязательных «Сбоя».
+  Карты событий фабрик — COMP-V-02. Tarot 70 × 120 мм (D-122), восемь карт: шесть событий и два необязательных «Сбоя».
   Тексты — D-115, экраны и рубашка — D-118.
 
   Как устроено:
@@ -16,9 +16,10 @@
       Рубашка у всех одна, поэтому её страница одна: печатается на обороте обоих листов лиц.
       Метки реза — крестики на лице: на ровном тёмном выпуске они видны лучше, чем на рубашке.
       Подробно — print/ПЕЧАТЬ.md;
-    • рубашка FactoryEvents/back.jpg уже с выпуском 6 мм: 92 × 132 мм, выпуск — отражение краёв картинки;
+    • рубашка FactoryEvents/back.jpg уже с выпуском 6 мм: 82 × 132 мм, выпуск — отражение краёв картинки;
       за 12 мм до линии реза картинка плавно бледнеет до 35 % на цвете края #3f4d63 — сдвиг реза не виден (D-118);
-    • экран — скошенная рамка SVG 68 × 38,8 мм, картинка 1,8 : 1 обрезается по внутреннему контуру.
+    • экран — скошенная рамка SVG во всю ширину поля карты (60 мм), картинка 1,8 : 1 обрезается по внутреннему контуру;
+    • проверка: если текст вылез за поле карты, на экране над ней встаёт красная плашка «перебор»; в печать она не идёт.
 -->
 <link rel="stylesheet" href="FactoryEvents/FactoryEvents.css">
 </head>
@@ -142,7 +143,7 @@
 
 <script>
 const DATA = JSON.parse(document.getElementById('card-data').textContent);
-const W = 80, H = 120, B = 6;                   // карта и выпуск, мм
+const W = 70, H = 120, B = 6, PAD = 5;          // карта Tarot, выпуск и поле карты, мм (D-122)
 const NS = 'http://www.w3.org/2000/svg';
 
 function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
@@ -153,7 +154,9 @@ function sym(html) { return html.replace(/\{R\}/g, '<span class="sym">R</span>')
 let clipN = 0;
 function screen(img) {
   const w = div('screen');
-  const SW = 68, SH = 38.8, k = 3, i = 1.2, ki = 2.4, id = 'scr' + (++clipN), blue = '#25A4EE';
+  const i = 1.2, SW = W - 2 * PAD, SH = +((SW - 2 * i) / 1.8 + 2 * i).toFixed(2);   // 60 × 34,4 мм
+  const k = 3, ki = 2.4, id = 'scr' + (++clipN), blue = '#25A4EE';
+  Object.assign(w.style, { width: SW + 'mm', height: SH + 'mm' });
   const poly = (x0, y0, x1, y1, c) => [[x0 + c, y0], [x1 - c, y0], [x1, y0 + c], [x1, y1 - c], [x1 - c, y1], [x0 + c, y1], [x0, y1 - c], [x0, y0 + c]]
     .map(([x, y]) => `${+x.toFixed(2)},${+y.toFixed(2)}`).join(' ');
   const outer = poly(.25, .25, SW - .25, SH - .25, k), inner = poly(i, i, SW - i, SH - i, ki);
@@ -247,7 +250,19 @@ function build() {
   }
 }
 
-document.fonts.ready.then(build);
+function check() {                              // текст не должен вылезать за поле карты
+  const MM = 96 / 25.4;
+  document.querySelectorAll('.card').forEach(c => {
+    const last = c.lastElementChild, lb = last.lastElementChild || last;
+    const over = (lb.getBoundingClientRect().bottom - (c.getBoundingClientRect().bottom - PAD * MM)) / MM;
+    if (over > 0.2) {
+      const w = div('warn'); w.textContent = `перебор ${over.toFixed(1)} мм`;
+      w.style.left = c.style.left; w.style.top = c.style.top; c.parentNode.appendChild(w);
+    }
+  });
+}
+
+document.fonts.ready.then(() => { build(); requestAnimationFrame(check); });
 </script>
 </body>
 </html>
