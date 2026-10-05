@@ -26,6 +26,29 @@
   font-style: italic;
 }
 
+@font-face {
+  font-family: "OpenGostTypeB";
+  src: url("../Fonts/OpenGostTypeB.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "OilWars";
+  src: url("../Fonts/Oil Wars.ttf") format("truetype");
+}
+
+/* Значок нефти {R} (ICON-001): цвет текста, вплотную к числу, строку не раздвигает —
+   как .sym у наёмников (Mercenaries/Шаблон.html). */
+.sym {
+  font-family: "OilWars", sans-serif;
+  font-size: 1.22em;
+  line-height: 0;
+  vertical-align: -0.055em;
+  font-style: normal;
+  font-weight: 400;
+  font-synthesis: none;
+  color: inherit;
+}
+
 @page {
   size: A4;
   margin: 0;
@@ -87,13 +110,31 @@ body {
   z-index: 1;
 }
 
+/* Фон лица — как у планшета (Faction-Card-A/Шаблон.html, .bleed): #08182B и два голубых
+   пятна свечения, слева вверху и справа внизу. Выбор Alek 04.10.2026, вариант 3. */
 .front .bleed-bg {
-  background-color: #00011c;
+  background:
+    radial-gradient(62% 52% at 2% 0%,   rgba(37,164,238,.20) 0%, rgba(37,164,238,0) 72%),
+    radial-gradient(58% 48% at 100% 96%, rgba(17,197,255,.14) 0%, rgba(17,197,255,0) 70%),
+    var(--front-bg);
 }
 
 .back .bleed-bg {
-  background-color: #000009;
+  background-color: var(--back-fill);
 }
+
+/* Выпуск лица — только по внешним краям раскладки. Карты стоят вплотную, и выпуск
+   соседа (2 мм) иначе ложился бы поверх своей карты: с ровной заливкой это незаметно,
+   а со свечением на краю карты появлялась бы полоса чужого фона. Внутренние края —
+   встык, без выпуска: рез по общей линии, сдвиг показывает край соседа того же цвета.
+   Сетка 3 × 3; на неполном листе внешними считаются и края у пустых ячеек. */
+.front .bleed-bg { top: 0; right: 0; bottom: 0; left: 0; }
+.grid > .card.front:nth-child(3n+1) .bleed-bg { left: -2mm; }
+.grid > .card.front:nth-child(3n) .bleed-bg,
+.grid > .card.front:has(+ .card.empty) .bleed-bg { right: -2mm; }
+.grid > .card.front:nth-child(-n+3) .bleed-bg { top: -2mm; }
+.grid > .card.front:nth-child(n+7) .bleed-bg,
+.grid > .card.front:has(+ * + * + .card.empty) .bleed-bg { bottom: -2mm; }
 
 .safe-zone {
   position: absolute;
@@ -109,9 +150,12 @@ body {
 }
 
 .title {
-  font-family: "Liberation Sans", sans-serif;
-  font-size: 8.5pt;
-  font-weight: bold;
+  /* имя — OpenGostTypeB, как заголовки на планшете и картах наёмников; начертание у шрифта
+     одно, полужирное — синтетическое, как у заголовков свойств планшета (Alek 04.10.2026) */
+  font-family: "OpenGostTypeB", "Liberation Sans", sans-serif;
+  font-size: 10.5pt;
+  font-weight: 700;
+  letter-spacing: .03em;
   color: #ffffff;
   text-align: center;
   margin-bottom: 1mm;
@@ -159,6 +203,13 @@ body {
   width: 90%;
   aspect-ratio: 4 / 3;
   background-color: #111122;
+  /* Иллюстрация видна только внутри окна рамки. Раньше её углы прятал непрозрачный фон,
+     впечатанный в border-illustration.png; фон снят (на синем лице он давал тёмный
+     прямоугольник), и форму окна теперь задаёт обрезка по контуру окна рамки. Контур снят
+     с исходного PNG (окно = прозрачная область), упрощён до 68 точек и пересчитан
+     в координаты иллюстрации: рамка на 1/0,9 шире, центры совпадают. Маска картинкой
+     (mask-image) не годится: из file:// Chrome её не грузит, и иллюстрация пропадает. */
+  clip-path: polygon(4.42% 7.34%, 4.50% 11.43%, 4.11% 13.27%, 4.42% 57.88%, 4.19% 89.08%, 4.50% 90.62%, 9.71% 97.58%, 10.79% 97.58%, 11.86% 96.55%, 24.29% 96.86%, 25.60% 97.98%, 26.90% 100.13%, 28.44% 100.85%, 38.57% 100.75%, 39.72% 100.13%, 40.87% 98.60%, 60.82% 98.60%, 62.43% 100.75%, 73.40% 100.64%, 77.09% 96.65%, 79.31% 96.96%, 81.15% 96.45%, 89.21% 96.55%, 90.75% 97.68%, 91.90% 97.58%, 92.97% 96.76%, 94.51% 93.69%, 95.96% 92.05%, 96.73% 89.59%, 97.42% 89.59%, 97.81% 89.08%, 97.96% 71.08%, 96.96% 69.13%, 96.81% 63.40%, 98.04% 63.40%, 98.34% 19.20%, 97.81% 16.54%, 97.88% 7.23%, 97.27% 5.29%, 92.59% -1.67%, 83.84% -1.87%, 82.23% -1.46%, 81.54% -0.54%, 81.15% -1.87%, 66.65% -1.36%, 65.65% -1.97%, 64.58% -1.97%, 62.97% -0.13%, 62.66% -0.44%, 63.12% -1.57%, 62.89% -1.97%, 38.34% -2.08%, 37.80% -0.95%, 36.57% -1.57%, 35.88% -1.16%, 24.60% -1.26%, 23.53% -0.85%, 23.07% -2.08%, 20.07% -1.97%, 19.77% -1.46%, 21.92% -1.05%, 22.53% -1.36%, 22.91% -0.75%, 19.23% -0.34%, 11.48% -0.44%, 10.33% -0.85%, 9.33% -0.34%, 7.49% 3.04%);
 }
 
 .properties {
@@ -192,15 +243,39 @@ body {
 
 .prop-desc {
   margin-top: 1mm;
+  font-size: 7pt;   /* было 6 pt — мелко на печати (Alek 04.10.2026); +1 pt везде, где есть место */
 }
 
+/* Карта, где места на 7 pt нет (Генри Брут: две способности) — текст остаётся 6 pt. */
+.card.text-6pt .prop-desc {
+  font-size: 6pt;
+}
+
+/* Рубашка — досье на экране (решение 04.10.2026): картинка целиком, без обрезки, уменьшена до ширины
+   карты минус 3 мм с каждой стороны от линии реза; вокруг — заливка цвета её края
+   (--back-fill), поэтому неровный ручной рез приходится на ровный цвет. Край картинки
+   растушёван — шва между картинкой и заливкой не видно. */
+.back .safe-zone {
+  padding: 3mm;
+  justify-content: center;
+}
 .back-logo {
-  flex: 1;
-  background-image: url('images/back.png');
-  background-size: cover;
-  background-position: center;
+  flex: none;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background-image: url('images/Киберпанк-досье с цифровым силуэтом.png');
+  background-size: 100% 100%;
   background-repeat: no-repeat;
-  border-radius: 1mm; /* Добавим небольшое скругление, если нужно, или уберем */
+  /* растушёвка до первых деталей картинки: по бокам 2,3 % ширины (≈1,3 мм) — там начинаются
+     боковые панели, сверху и снизу 4,5 % высоты (≈3,5 мм) — там начинается рамка интерфейса;
+     кривая плавная (smoothstep), чтобы не было видно ступеньки */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, rgba(0,0,0,.16) .6%, rgba(0,0,0,.5) 1.15%, rgba(0,0,0,.84) 1.7%, #000 2.3%,
+                              #000 97.7%, rgba(0,0,0,.84) 98.3%, rgba(0,0,0,.5) 98.85%, rgba(0,0,0,.16) 99.4%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, rgba(0,0,0,.16) 1.1%, rgba(0,0,0,.5) 2.25%, rgba(0,0,0,.84) 3.4%, #000 4.5%,
+                               #000 95.5%, rgba(0,0,0,.84) 96.6%, rgba(0,0,0,.5) 97.75%, rgba(0,0,0,.16) 98.9%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
 
 /* Crop marks */
@@ -228,6 +303,8 @@ body {
 }
 
 :root {
+  --front-bg: #08182B;      /* фон лицевой стороны = фон планшета */
+  --back-fill: #0B2943;     /* заливка рубашки = цвет края картинки досье */
   --crop-len: 2mm;
   --crop-thick: 0.2mm;
 }

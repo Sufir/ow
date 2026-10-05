@@ -552,3 +552,21 @@ sources:
       Sun God, Thunder King), апдейты Kickstarter CATaclysm 3 и 50, FAQ, HRF,
       6 тредов BGG через API. Основной источник текстов — транскрипции
       necronomicon.app через WebFetch; у каждого факта — URL. Не скан карт.
+  - id: SRC-WEB-UHP
+    side: ORIGINAL
+    priority: 3
+    kind: FORUM
+    title: "Unique High Priests Cthulhu Wars и три фанатских — сводка веб-сбора"
+    edition: null
+    url: https://boardgamegeek.com/thread/3316625
+    local_path: ../source/web/SRC-WEB-UHP__cw-unique-high-priests__2026-10-04.md
+    retrieved: 2026-10-04
+    status: AVAILABLE
+    need: null
+    notes: >
+      Собрано для COMP-V-03, сверка rules/tasks/СВЕРКА-уникальные-полковники.md.
+      Тексты восьми официальных карт — из SRC-RB-OLD (с. 143–147), вики совпадает;
+      FAQ по Lavinia и Asenath; ответы Петерсенов по Asenath, Crawford, Curwen,
+      Pitpipo (BGG 1671563, пост 27245737); три фанатские карты Papa_Tom
+      (BGG 3316625, 2024) — оригиналы Ковача, Гарднера, Брута. Треды BGG — через
+      WebFetch к api.geekdo.com: fetch.py с компьютера Alek получил 403 от прокси.

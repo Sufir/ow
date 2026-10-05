@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Полковники и Луна</title>
+<!--
+  Лист экономии бумаги: тайл «Луна» и два последних уникальных полковника — Ной Гарднер и Генри Брут.
+  05.10.2026. Заменяет мастер Луны целиком и страницы 3–4 мастера полковников; оригиналы не менялись:
+    Луна       — print/Луна.html, print/Saved/Луна — A4.pdf (D-117);
+    полковники — print/UniqueColonel/index.html, print/Saved/Уникальные полковники.pdf (D-119).
+  Откуда что берётся:
+    • оформление карт — print/UniqueColonel/style.css, подключён как есть;
+    • разметка двух карт — копия из UniqueColonel/index.html (05.10.2026), пути к картинкам с префиксом UniqueColonel/.
+      Правят тексты Гарднера или Брута там — перенести сюда;
+    • Луна — face() и back() из Луна.html без изменений, кроме координат.
+  Геометрия, A4 книжный 210 × 297 мм:
+    • Луна 150 × 150, выпуск 6 мм (как в Луна.html); рез — x 30…180;
+    • карты 63,5 × 88,9 встык, выпуск 2 мм только по внешним краям (как на листе полковников); рез — x 41,5…168,5,
+      шов между картами — на оси листа x = 105;
+    • между резом Луны и резом карт — 16 мм: выпуски 6 + 2 и 8 мм белого; вертикальная линия метки карты
+      (10 мм наружу) кончается ровно на краю выпуска Луны;
+    • группа по линиям реза — по центру листа: сверху и снизу по 21,05 мм до реза.
+  Всё симметрично относительно вертикальной оси листа, поэтому при перевороте по ДЛИННОМУ краю каждая рубашка
+  ложится точно под своё лицо. Оборот строится зеркалом лица (mirror ниже); обе стороны сдвинуты на долю
+  пикселя под округление Chromium (SHIFT ниже); полоса вверху страницы проверяет, что сдвиг один для всех краёв.
+  Переворот по короткому краю не подходит: Луна и карты разной высоты, рубашка Луны ляжет на карты.
+  Метки реза — крестики (CLAUDE.md, «Метки реза и печать»), на обеих сторонах в одних и тех же местах:
+  резать можно по любой стороне, а на просвет метки лица и оборота должны совпасть. Подробно — print/ПЕЧАТЬ.md.
+-->
+<link rel="stylesheet" href="UniqueColonel/style.css">
+<style>
+:root {
+  --bg: #08182B;              /* фон планшета (Faction-Card-A/Шаблон.html) — оборот Луны */
+  --space: #06142A;           /* космос в углах картинки Луны — под выпуском */
+}
+html, body { margin: 0; padding: 0; }
+body { background: #7A8794; }
+
+.bar { position: sticky; top: 0; z-index: 20; background: #fff; border-bottom: .3mm solid #999; padding: 3mm 8mm;
+       display: flex; flex-direction: column; gap: 1mm; font-family: sans-serif; font-size: 10.5pt; color: #444; }
+.bar .ok { color: #1F7A3A; font-weight: 700; }
+.bar .err { color: #B00020; font-weight: 700; }
+
+.pages { padding: 8mm 0; display: flex; flex-direction: column; align-items: center; gap: 8mm; }
+.sheet { position: relative; width: 210mm; height: 297mm; background: #fff; overflow: hidden; box-shadow: 0 3mm 10mm rgba(0,0,0,.35);
+         break-after: page; page-break-after: always; }
+.sheet:last-child { break-after: auto; page-break-after: auto; }
+.sheet .card { position: absolute; }
+.shift { position: absolute; left: 0; top: 0; width: 210mm; height: 297mm; }
+
+/* Луна — как в Луна.html (классы face/back переименованы: у полковников свои .front/.back) */
+.bleed { position: absolute; overflow: hidden; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.bleed img { position: absolute; display: block; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.bleed.moon-face { background: var(--space); }
+.bleed.moon-back {
+  background:
+    radial-gradient(62% 52% at 2% 0%,    rgba(37,164,238,.20) 0%, rgba(37,164,238,0) 72%),
+    radial-gradient(58% 48% at 100% 96%, rgba(17,197,255,.14) 0%, rgba(17,197,255,0) 70%),
+    var(--bg);
+}
+.matrix { position: absolute; inset: 0; opacity: .65; }
+.matrix img { left: 0; width: 100%; height: auto;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 8mm, #000 calc(100% - 8mm), transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 8mm, #000 calc(100% - 8mm), transparent 100%); }
+.logo { z-index: 1; }
+.matrix { z-index: 2; }
+.marks { position: absolute; left: 0; top: 0; z-index: 30; pointer-events: none; overflow: visible;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+@media print {
+  html, body { background: #fff; }
+  .bar { display: none !important; }
+  .pages { padding: 0; gap: 0; display: block; }
+  .sheet { box-shadow: none; }
+}
+@page { size: A4; margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span>A4 книжный, 2 страницы: 1 — лицо, 2 — оборот. Двусторонняя печать с переворотом <b>по длинному краю</b>. Масштаб 100 %, поля — нет, фон — включить.</span>
+  <span>Метки реза — на обеих сторонах в одних местах: резать по любой, на просвет метки должны совпасть. Подробно — print/ПЕЧАТЬ.md.</span>
+  <span id="check">Совмещение: проверяется…</span>
+</div>
+<div class="pages" id="pages"></div>
+
+<!-- Лица двух карт — копия из UniqueColonel/index.html (05.10.2026). -->
+<template id="fronts">
+        <div class="card front">
+          <div class="bleed-bg"></div>
+          <div class="safe-zone">
+            <div class="illustration-wrapper">
+              <div class="illustration" style="background-image: url('UniqueColonel/images/Ной Гарднер.jpeg'); background-size: cover; background-position: center;"></div>
+            </div>
+            <div class="title">Ной Гарднер</div>
+            <div class="properties">
+              <div class="prop-name">Коррозия</div>
+              <div class="prop-cond">Действие. Стоимость: 1<span class="sym">R</span></div>
+              <div class="prop-desc">Уничтожьте Ноя и своих пехотинцев, боевые машины и мехов на поле общей стоимостью до 3<span class="sym">R</span>. Получите столько <span class="sym">R</span>, сколько стоят все уничтоженные, включая Ноя. Переменную стоимость считайте по текущей.</div>
+            <div class="flavor">Вы для него просто актив. Он не ведёт войну — он разлагает её изнутри, превращая ресурсы, людей и технику в чистую энергию.</div>
+          </div>
+          </div>
+        </div>
+        <div class="card front text-6pt">
+          <div class="bleed-bg"></div>
+          <div class="safe-zone">
+            <div class="illustration-wrapper">
+              <div class="illustration" style="background-image: url('UniqueColonel/images/Генри Брут.jpeg'); background-size: cover; background-position: center;"></div>
+            </div>
+            <div class="title">Генри Брут</div>
+            <div class="properties">
+              <div class="prop-name">Извлечение сознания</div>
+              <div class="prop-cond">Действие. Стоимость: 1<span class="sym">R</span></div>
+              <div class="prop-desc">Уничтожьте до 4 своих пехотинцев в игре (можно и Генри) и замените их таким же числом энграмм в тех же регионах. Энграмма, заменившая пехотинца на фабрике, сразу берёт её под контроль.</div>
+              <div class="prop-name" style="display: inline-block; margin-top: 1.5mm;">Нелояльный</div>
+              <div class="prop-cond">Постоянная</div>
+              <div class="prop-desc">Когда Генри уничтожен, его может завербовать любой игрок, у которого нет другой карты уникального полковника. Карта переходит к нему.</div>
+            <div class="flavor">Его союзники — лишь носители. Настоящие агенты Генри живут в герметичных контейнерах и легко меняют сторону, как и он сам.</div>
+          </div>
+          </div>
+        </div>
+</template>
+
+<script>
+const W = 210, H = 297;                                 // A4 книжный, мм
+const T = 150, MB = 6, MS = T + 2 * MB;                 // Луна: тайл по резу, выпуск, сторона с выпуском
+const CW = 63.5, CH = 88.9, CB = 2;                     // полковник: карта по резу, выпуск по внешним краям (UniqueColonel/style.css)
+const GAP = 16;                                         // от реза Луны до реза карт: выпуски 6 + 2 и 8 мм белого под метки
+const MX = (W - T) / 2;                                 // 30    — рез Луны слева
+const PX = (W - 2 * CW) / 2;                            // 41.5  — рез пары карт слева, шов — на оси листа
+const MY = (H - (T + GAP + CH)) / 2;                    // 21.05 — рез Луны сверху: группа по резам по центру листа
+const PY = MY + T + GAP;                                // 187.05 — рез карт сверху
+const OUT = 10, IN = 4;                                 // метка: наружу через угол и внутрь вдоль кромки, мм
+const mirror = (x, w) => W - x - w;                     // переворот по длинному краю: x → W − x − w, y тот же
+// Chromium при печати ставит края блоков на целый CSS px (0,2646 мм). Ось листа — 396,85 px, поэтому
+// края после округления симметричны не оси, а точке на 0,15 px правее. Обе стороны сдвигаются на эту долю px
+// (transform округлению не подлежит) — и рез оборота ложится ровно под рез лица. Метки — вектор, без округления.
+const PXMM = 96 / 25.4, snap = mm => Math.round(mm * PXMM);
+const EDGES = [[MX - MB, MX + T + MB], [PX, PX + 2 * CW], [W / 2, W / 2]];   // края, что должны совпасть: Луна с выпуском, пара карт, шов
+const SUMS = EDGES.map(([a, b]) => snap(a) + snap(b));
+const SHIFT = (W * PXMM - SUMS[0]) / 2;                 // сдвиг обеих сторон, px
+
+// Луна — из Луна.html
+const FACE = 'Units/MoonNet/Moon.png';
+const LOGO = encodeURI('../art/logos/Moon Systems.png');
+const MATRIX = [['Faction-Card-A/decor/bg-moon-4.png', 1578 / 672],
+                ['Faction-Card-A/decor/bg-moon-3.png', 1461 / 672],
+                ['Faction-Card-A/decor/bg-moon.png',   1920 / 834]];
+const LOGO_MM = 72, LOGO_OP = 0.4, OVERLAP = 8;
+
+function div(cls) { const e = document.createElement('div'); e.className = cls; return e; }
+function place(el, x, y, w, h) { Object.assign(el.style, { left: x + 'mm', top: y + 'mm', width: w + 'mm', height: h + 'mm' }); return el; }
+function img(src) { const i = document.createElement('img'); i.src = src; i.alt = ''; return i; }
+
+function moonFace(x, y) {                               // лицо: картинка в рез, выпуск — её зеркальные копии со всех сторон
+  const box = place(div('bleed moon-face'), x, y, MS, MS);
+  for (const j of [-1, 0, 1]) for (const i of [-1, 0, 1]) {
+    if (!i && !j) continue;
+    const c = place(img(FACE), MB + i * T, MB + j * T, T, T);
+    c.style.transform = `scale(${i ? -1 : 1}, ${j ? -1 : 1})`;
+    box.appendChild(c);
+  }
+  box.appendChild(place(img(FACE), MB, MB, T, T));
+  return box;
+}
+function moonBack(x, y) {                               // оборот: фон планшета, логотип подложкой по центру, матрица поверх
+  const box = place(div('bleed moon-back'), x, y, MS, MS);
+  const m = div('matrix');
+  let yy = -OVERLAP / 2;
+  for (const [src, ratio] of MATRIX) {
+    const h = MS / ratio;
+    m.appendChild(place(img(src), 0, yy, MS, h));
+    yy += h - OVERLAP;
+  }
+  box.appendChild(m);
+  const c = (MS - LOGO_MM) / 2;
+  const l = place(img(LOGO), c, c, LOGO_MM, LOGO_MM); l.classList.add('logo'); l.style.opacity = LOGO_OP;
+  box.appendChild(l);
+  return box;
+}
+function cardBack() {                                   // рубашка полковника — как на листе полковников
+  const c = div('card back');
+  c.innerHTML = '<div class="bleed-bg"></div><div class="safe-zone"><div class="back-logo"></div></div>';
+  return c;
+}
+function marks(segs, dark) {                            // как в Луна.html: над тёмным выпуском светлые, над белым полем тёмные
+  const inDark = (x, y) => dark.some(([a, b, c, d]) => x > a && x < c && y > b && y < d);
+  let light = '', ink = '';
+  for (const [x1, y1, x2, y2] of segs) {
+    const ts = [0, 1], vert = x1 === x2;
+    for (const [a, b, c, d] of dark) for (const v of (vert ? [b, d] : [a, c])) {
+      const t = vert ? (v - y1) / (y2 - y1) : (v - x1) / (x2 - x1);
+      if (t > 0 && t < 1) ts.push(t);
+    }
+    ts.sort((p, q) => p - q);
+    const P = t => [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+    for (let k = 0; k + 1 < ts.length; k++) {
+      if (ts[k + 1] - ts[k] < 1e-6) continue;
+      const [ax, ay] = P(ts[k]), [bx, by] = P(ts[k + 1]), [mx, my] = P((ts[k] + ts[k + 1]) / 2);
+      const d = `M${ax.toFixed(3)},${ay.toFixed(3)} L${bx.toFixed(3)},${by.toFixed(3)} `;
+      if (inDark(mx, my)) light += d; else ink += d;
+    }
+  }
+  const box = document.createElement('div');
+  box.innerHTML = `<svg class="marks" viewBox="0 0 ${W} ${H}" style="width:${W}mm;height:${H}mm" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`
+    + `<path d="${ink}" stroke="#1A1A1A" stroke-width=".1" fill="none"/><path d="${light}" stroke="#FFFFFF" stroke-width=".1" fill="none"/></svg>`;
+  return box.firstChild;
+}
+function crosses(x, y, w, h) {                          // крестик в каждом углу прямоугольника реза
+  const s = [];
+  for (const [cx, dx] of [[x, 1], [x + w, -1]]) for (const [cy, dy] of [[y, 1], [y + h, -1]]) {
+    s.push([cx - dx * OUT, cy, cx + dx * IN, cy]);
+    s.push([cx, cy - dy * OUT, cx, cy + dy * IN]);
+  }
+  return s;
+}
+
+function build() {
+  const pages = document.getElementById('pages'); pages.innerHTML = '';
+  const face = div('sheet'), back = div('sheet');
+  face.id = 'face'; back.id = 'back';
+
+  // лицо
+  const fl = div('shift'); fl.style.transform = `translateX(${SHIFT.toFixed(4)}px)`;
+  fl.appendChild(moonFace(MX - MB, MY - MB)).dataset.piece = 'moon';
+  const fronts = [...document.getElementById('fronts').content.querySelectorAll('.card')].map(n => n.cloneNode(true));
+  fronts.forEach((c, k) => {
+    place(c, PX + k * CW, PY, CW, CH); c.dataset.piece = 'card' + k;
+    const b = c.querySelector('.bleed-bg');             // выпуск только по внешним краям, шов встык (как на листе полковников)
+    Object.assign(b.style, { top: -CB + 'mm', bottom: -CB + 'mm', left: k ? '0' : -CB + 'mm', right: k ? -CB + 'mm' : '0' });
+    fl.appendChild(c);
+  });
+  face.appendChild(fl);
+
+  // оборот — зеркало лица по вертикальной оси листа, сдвиг тот же (см. SHIFT)
+  const layer = div('shift'); layer.style.transform = `translateX(${SHIFT.toFixed(4)}px)`;
+  layer.appendChild(moonBack(mirror(MX - MB, MS), MY - MB)).dataset.piece = 'moon';
+  fronts.forEach((_, k) => {
+    const c = place(cardBack(), mirror(PX + k * CW, CW), PY, CW, CH); c.dataset.piece = 'card' + k;
+    layer.appendChild(c);
+  });
+  back.appendChild(layer);
+
+  // метки — одни и те же на обеих сторонах (раскладка симметрична)
+  const segs = [...crosses(MX, MY, T, T), ...crosses(PX, PY, 2 * CW, CH),
+                [W / 2, PY - OUT, W / 2, PY + IN], [W / 2, PY + CH - IN, W / 2, PY + CH + OUT]];   // шов между картами
+  const dark = [[MX - MB, MY - MB, MX + T + MB, MY + T + MB], [PX - CB, PY - CB, PX + 2 * CW + CB, PY + CH + CB]];
+  face.appendChild(marks(segs, dark));
+  back.appendChild(marks(segs.map(([x1, y1, x2, y2]) => [W - x1, y1, W - x2, y2]), dark.map(([a, b, c, d]) => [W - c, b, W - a, d])));
+
+  pages.appendChild(face); pages.appendChild(back);
+}
+
+function check() {                                      // все совмещаемые края должны требовать одного и того же сдвига
+  const ok = SUMS.every(s => s === SUMS[0]);
+  document.getElementById('check').innerHTML = ok
+    ? `Совмещение лица и оборота при перевороте по длинному краю: <span class="ok">точное</span>.`
+    : `<span class="err">Совмещение нарушено: края после округления до px требуют разного сдвига (${SUMS.join(', ')}). Меняли размеры или положение по горизонтали — подберите их так, чтобы сдвиг совпал.</span>`;
+  document.body.dataset.sums = SUMS.join(',');
+}
+
+build();
+check();
+</script>
+</body>
+</html>

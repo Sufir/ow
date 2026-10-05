@@ -3,7 +3,7 @@
 - Записей в ORIGINAL BASELINE: **107**
 - Записей в REDESIGN BASELINE: **69**
 - Всего issue: **147**
-- Проверено чисел: **139** (FAIL: 5, UNKNOWN: 57)
+- Проверено чисел: **139** (FAIL: 5, UNKNOWN: 56)
 - Терминов в карте: **79**
 - Иконок в реестре: **45**
 
@@ -35,7 +35,7 @@
 
 | Статус | Кол-во |
 |---|---|
-| APPLIED | 53 |
-| CLOSED | 22 |
-| DECIDED | 62 |
+| APPLIED | 52 |
+| CLOSED | 24 |
+| DECIDED | 61 |
 | WONTFIX | 10 |

@@ -621,7 +621,7 @@ faction:
     state:
       content: VERIFIED
       design: APPROVED
-      production: NONE
+      production: DONE
     evidence: >
       Восемь сверок закрыты решениями D-052…D-077, по одной на фракцию: числа
       сведены с оригиналом, FAQ и эрратой, тексты переписаны, вёрстка принята.
@@ -633,11 +633,13 @@ faction:
       точечные правки текста у четырёх — «Диверсия» (Островная Империя) и
       «Киборг-убийца» (Moon Systems) только в битве со своим роботом, значок {R}
       в фазе «Пространственного сдвига» (Сайнтифик Солюшн) и «Оперативной паузы»
-      (Североамериканский Альянс); HTML пересобраны, PDF — перед печатью
-      (ПЛАН-КОМПОНЕНТЫ §7).
+      (Североамериканский Альянс); HTML пересобраны, восемь PDF пересобраны
+      2026-10-04 (ПЛАН-КОМПОНЕНТЫ §7). Напечатаны — Alek 2026-10-05, D-120,
+      «всё получилось хорошо». Печать шла с этих мастеров: все четыре правки
+      D-109 проверены в PDF.
     by_faction:
       OW-F-04:
-        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
         reason: >
           Сверка закрыта 2026-09-24 (D-072): числа совпали с The Ancients 1:1,
           «Очередь» по D-048 уже в данных. Блок «Общины» переписан без
@@ -650,7 +652,7 @@ faction:
         blocks_print: false
         refs: [D-048, D-072, PLAY-025, COMP-I-025, COMP-I-027]
       OW-F-06:
-        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
         reason: >
           Сверка закрыта 2026-09-24 (D-052): числа совпали с оригиналом и всеми
           источниками. На планшет внесены правила Луны (RED-006, D-049), старт
@@ -661,11 +663,11 @@ faction:
           из print/Faction-Card-A/Данные/Moon Systems.json, таблица 121,4 мм
           из 136. Обе стороны приняты Alek 2026-09-24 (D-058): лицевая —
           таблица, свойства, Луна, ³He; оборот — иллюстрация «Зардоза», лор,
-          «Как играть» и «Как играть против». Осталось напечатать.
+          «Как играть» и «Как играть против». Напечатан 2026-10-05 (D-120).
         refs: [D-048, D-049, D-052, RED-006, RED-009, FAC-002, FAC-010, FAC-019]
         blocks_print: false
       OW-F-01:
-        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
         reason: >
           Сверка закрыта 2026-09-24 (D-059), вёрстка и лор — D-060. Числа совпали во всех источниках
           и с Great Cthulhu: 6/1/4/2/2/1, стоимости 1/3/1/2/3/10-4, силы
@@ -678,13 +680,13 @@ faction:
           рулбука, добавлены «Как играть против» и иллюстрация CRAB2.png.
           Лор переписан (вариант Г, D-060, D-061). Морпех переименован
           в Моторизированного морпеха (D-062). Таблица 114,8 мм из 136.
-          Обе стороны приняты Alek 2026-09-24 (D-062). Осталось напечатать.
+          Обе стороны приняты Alek 2026-09-24 (D-062). Напечатан 2026-10-05 (D-120).
           Сноска «Задачи на убийство» переписана под новые тексты задач
           № 2–3 (D-086), планшет пересобран; PDF пересобрать из браузера.
         refs: [D-059, D-060, D-061, D-062, PLAY-023, COMP-I-012, COMP-I-025]
         blocks_print: false
       OW-F-07:
-        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
         reason: >
           Сверка закрыта 2026-09-25 (D-073): числа 1:1 с Opener of the Way,
           «Очередь» по D-048. Блок создания Альянса (FAC-001) заменён
@@ -697,7 +699,7 @@ faction:
         blocks_print: false
         refs: [D-048, D-073, FAC-001, COMP-I-012, COMP-I-028, COMP-I-029]
       OW-F-08:
-        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
         reason: >
           Сверка D-076 (2026-09-25) с картой Sleeper: числа 1:1, робот 8.
           Сила «Абрамса 2220» — формула n в таблице, блок «Разведывательная
@@ -705,12 +707,12 @@ faction:
           (COMP-I-012, FAC-011). «Оперативная пауза» — условие FAQ (RED-003),
           «Реквизиция» — наёмные и выбор при равной стоимости. Оборот по «Playing
           as» и «Thwarting», лор переработан, иллюстрация. Таблица 133,4 мм из 136.
-          Обе стороны приняты Alek 2026-09-25. Осталось напечатать; карты —
+          Обе стороны приняты Alek 2026-09-25. Напечатан 2026-10-05 (D-120); карты —
           COMP-I-031.
         refs: [PLAY-034, D-042, RED-003, FAC-011, COMP-I-012, COMP-I-025, D-076, COMP-I-031]
         blocks_print: false
       OW-F-05:
-        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
         reason: >
           Сверка D-074 (2026-09-25) с картой Black Goat O2: числа 1:1, «Жнец» 8
           (FAC-003 закрыт), сноска силы с «Универсализацией», создание в три шага
@@ -719,7 +721,7 @@ faction:
           design — до приёмки Alek.
         refs: [D-074, FAC-003, COMP-I-029, COMP-I-030]
       OW-F-02:
-        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
         reason: >
           Сверка D-077 (2026-09-25) с картой Crawling Chaos: числа 1:1,
           значения актуального издания (FAC-017). «Военные трофеи» по FAQ
@@ -731,7 +733,7 @@ faction:
           131,7 мм из 136. design — до приёмки Alek.
         refs: [D-077, FAC-017, COMP-I-025, COMP-I-032]
       OW-F-03:
-        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
         reason: >
           Сверка закрыта 2026-09-24 (D-065). Числа совпали с Yellow Sign,
           кроме количеств машин: «Саранча» и десантник 6 и 4 вместо 4 и 2
@@ -744,7 +746,7 @@ faction:
           Таблица 135,4 мм из 136. D-066: «Пастух» переименован в «Шепард»,
           «бросьте D6», линии-привязки без мелких заломов; лицевая принята
           Alek 2026-09-24. Лор — вариант Б с тремя правками Alek; обе стороны
-          приняты 2026-09-24 (D-066). Осталось напечатать.
+          приняты 2026-09-24 (D-066). Напечатан 2026-10-05 (D-120).
         refs: [D-065, D-066, PLAY-023, RED-001, FAC-004, COMP-I-011, COMP-I-012, COMP-I-025]
     refs: [D-048, D-049, D-021, FAC-001]
     blocks_print: false
@@ -1316,13 +1318,15 @@ faction:
           - print/Луна.html
           - print/Units/MoonNet/Moon.png
           - print/Saved/Луна — A4.pdf
-        state: {content: VERIFIED, design: APPROVED, production: NONE}
+        state: {content: VERIFIED, design: APPROVED, production: DONE}
         reason: >
           Не печатался — Alek 2026-09-22; картинка сгенерирована и принята,
           задача «перегенерировать в большем разрешении» снята. Правила
           Луны напечатаны на планшете Moon Systems 2026-09-24 (D-052).
-          Свёрстан и принят Alek 2026-10-04 (D-117): мастер собран, осталось
-          напечатать на фотобумаге и заламинировать.
+          Свёрстан и принят Alek 2026-10-04 (D-117). Напечатан — Alek
+          2026-10-05, D-120, «всё получилось хорошо». Печатался не из
+          «Луна — A4.pdf», а из общего листа «Полковники и Луна — A4.pdf»
+          (тайл плюс две последние карты полковников, print/ПЕЧАТЬ.md).
         refs: [D-049, D-052, D-117, RED-006]
     refs: [COMP-I-008]
     blocks_print: false
@@ -1410,10 +1414,10 @@ variant:
 
   - id: COMP-V-03
     name: Карты уникальных полковников
-    original: Investigators (8) + The Eidolon + The Prophetess
-    original_set: ONSLAUGHT-3
+    original: Unique High Priests (8) + три фанатских (Albert Shiny, Nahum Gardner, Henry Akeley)
+    original_set: ONSLAUGHT-2
     count: 11
-    count_original: 10
+    count_original: 8
     count_source: FILE
     count_ref: print/Saved/Уникальные полковники.pdf
     count_status: FIXED
@@ -1425,22 +1429,48 @@ variant:
       - print/UniqueColonel/
     generator: print/UniqueColonel/index.html
     master: print/Saved/Уникальные полковники.pdf
-    truth: print/UniqueColonel/uc.md
+    truth: print/UniqueColonel/index.html
     state:
       content: VERIFIED
       design: APPROVED
       production: DONE
     evidence: >
-      Напечатаны — подтверждено Alek 2026-09-22 вторым кругом.
-      В PDF подтверждены 11 карт.
-    refs: [D-014, D-021]
+      Пробная печать — подтверждено Alek 2026-09-22 вторым кругом, 11 карт.
+      Сверка 2026-10-04 (COMP-I-034): тексты D-116. Новая рубашка (досье на
+      экране) и фон лица (фон планшета) — выбор Alek 2026-10-04, D-119;
+      доработка того же дня (имя Gost, текст 7 pt, обрезка по окну рамки)
+      принята печатью.
+      PDF-мастер пересобран 2026-10-04 13:09, 4 страницы A4. Напечатаны
+      2026-10-05 (D-120, «всё получилось хорошо»), этим закрыты и design,
+      и production: девять карт со страниц 1–2 мастера, последние две
+      (Гарднер, Брут) — с общего листа «Полковники и Луна — A4.pdf».
+      Прежняя проба старой редакции со счёта снята.
+    refs: [D-014, D-021, D-045, D-116, D-119]
     blocks_print: false
-    findings: []
+    findings: [COMP-I-034]
     notes: >
-      Отличие от оригинала: там Investigators вручают противнику как
-      обременение, у нас карта берётся себе. Таблица уникальных полковников
-      живёт на компоненте, книга её не дублирует.
-      Карта «Генри Брут» использует энграммы (COMP-V-06).
+      Восемь карт — рескин официальных Unique High Priests (SRC-RB-OLD
+      с. 143–147; стретч-цель Onslaught 2, «not a physical product»),
+      три — фанатские Papa_Tom с BGG, 2024 (SRC-WEB-UHP). Поимённое
+      соответствие — в SRC-WEB-UHP §5. Прежняя запись «Investigators
+      + Eidolon + Prophetess» была ошибкой: это другие карты лояльности.
+      Источник текста — index.html: uc.md устарел (дубли, «Шталь»,
+      «Распутин-2»), генератор update_cards.py уже в archive/.
+      Таблица уникальных полковников живёт на компоненте, книга её
+      не дублирует. Карта «Генри Брут» использует энграммы (COMP-V-06).
+    cards:
+      # имя на карте — способность (фаза) — оригинал; источник текста — index.html
+      - {name: Герберт Морроу, ability: [«Перепрошивка ядра» — Постоянная], original: Asenath Waite}
+      - {name: Сигэру Исии, ability: [«Отряд 731» — Битва. Тактическая подготовка], original: Crawford Tillinghast}
+      - {name: Амелия Кейн, ability: [«Женевский актив» — Постоянная], original: Ermengarde Stubbs}
+      - {name: Кассия Рэйвен, ability: [«Теневой рейс» — Постоянная], original: Herbert West, note: "до 04.10.2026 — «Проект Чёрное окно»"}
+      - {name: Бато Распутин, ability: [«Чёрный резонанс» — Битва. Финал], original: Keziah Mason}
+      - {name: Эвелин Тайрелл, ability: [«Жертвенный протокол» — Постоянная], original: Lavinia Whateley}
+      - {name: Джон Крамер, ability: [«Самопожертвование» — Битва. Финал], original: Pitpipo}
+      - {name: Роберт Клоуз, ability: [«Эвакуация промышленности» — Постоянная], original: Joseph Curwen}
+      - {name: Виктор “Шайн” Ковач, ability: [«Боевая перегрузка» — Битва. Тактическая подготовка], original: Albert Shiny (фанатский)}
+      - {name: Ной Гарднер, ability: [«Коррозия» — Действие, 1 нефть], original: Nahum Gardner (фанатский)}
+      - {name: Генри Брут, ability: [«Извлечение сознания» — Действие, 1 нефть, «Нелояльный» — Постоянная], original: Henry Akeley (фанатский)}
 
   - id: COMP-V-04
     name: Лаборатория
@@ -2674,3 +2704,37 @@ findings:
       внесены в JSON; вёрстка — вариант В, раскладка В2, название
       OpenGostTypeB 13,9 px (D-079).
     decided: 2026-09-26
+
+  - id: COMP-I-034
+    type: SPEC
+    subject: COMP-V-03
+    title: Карты уникальных полковников — сверка с Unique High Priests и правки при перепечатке
+    severity: ERROR
+    status: CLOSED
+    detail: >
+      Сверка 2026-10-04, rules/tasks/СВЕРКА-уникальные-полковники.md,
+      источники — SRC-WEB-UHP. Числа совпали на всех одиннадцати.
+      Механика расходится на трёх картах: Кассия Рэйвен ставит любых
+      пехотинцев вместо рекрутов (Acolyte) — петля через саму Кассию;
+      Эвелин Тайрелл не возвращает нефть при стоимости ниже нуля (FAQ:
+      Lavinia + King in Yellow → refund 1; у нас наёмный “Шепард” 2◉);
+      Ной Гарднер берёт в жертву любых отрядов, включая роботов, и не
+      говорит, что стоимость Ноя тоже идёт в доход (пример автора: 5).
+      Термин до D-019 («отступление») — Распутин, Ковач. Не внесена
+      компонентная часть D-045 у Клоуза. Нефть словом (ICON-001), «запас»,
+      «ты/вы», опечатки — на всех.
+      Пять вопросов автору: фабрика при замене (Морроу), «отряд» или
+      «пехотинец» у Клоуза (D-045 против оригинала «Unit»), штраф Ковача
+      всегда или при оплате, имя «Извлечение сознания» у Брута (SRC-002,
+      TERM-024), «Нелояльный» — кто вербует и куда идёт карта.
+    proposal: >
+      Тексты по сверке — в index.html после ответов Alek; решение в
+      DECISIONS.md; перепечатка всех 11 вместе с новой рубашкой.
+    decision: >
+      D-116: все пять — вариант А (Морроу берёт фабрику; у Клоуза «отряд»;
+      Ковач принимает первую смерть всегда; имя «Извлечение сознания»
+      остаётся; «Нелояльный» — любой игрок без другой карты уникального
+      полковника, карта переходит к нему). Тексты внесены в index.html.
+      D-119: рубашка и фон лица, PDF-мастер пересобран. Осталась печать.
+    decided: 2026-10-04
+
