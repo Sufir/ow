@@ -151,6 +151,22 @@ def node_point(g, seed=None):
     return c[0], c[1]
 
 
+EDGE_OUT = 12.0     # мм: на сколько область, касающаяся края полотна, продолжается за край в картинке
+
+
+def past_edge(g):
+    """область для рисования: где касается края полотна — продолжена за край на EDGE_OUT. Внутри карты
+    ничего не меняется, а обводка и тень края уходят за рез (D-124: карта в край, края у карты нет)"""
+    from shapely.geometry import JOIN_STYLE, box
+    from shapely.ops import unary_union
+    inner = box(X0, Y0, X1, Y1)
+    if g.distance(inner.exterior) > 0.3:
+        return g
+    band = box(X0 - EDGE_OUT, Y0 - EDGE_OUT, X1 + EDGE_OUT, Y1 + EDGE_OUT).difference(inner)
+    grow = g.intersection(inner.exterior.buffer(0.3)).buffer(EDGE_OUT, join_style=JOIN_STYLE.mitre).intersection(band)
+    return unary_union([g, grow])
+
+
 def svg_regions(R, spec):
     """океаны — заливкой без линии и поверх неё слой с переходом BLEND_MM между океанами (обрезан по
     маске океанов); суша — поверх, со строгой линией: и по берегу, и между областями суши"""
@@ -159,7 +175,7 @@ def svg_regions(R, spec):
     for rid in spec['areas']:
         is_oc = spec['type'][rid] == 'OCEAN'
         (oc if is_oc else ld).append(
-            f'<path id="r-{rid}" class="{"oc" if is_oc else "ld"}" fill="{COLOUR[rid]}" d="{path_d(R[rid])}">'
+            f'<path id="r-{rid}" class="{"oc" if is_oc else "ld"}" fill="{COLOUR[rid]}" d="{path_d(past_edge(R[rid]))}">'
             f'<title>{spec["names"][rid]} ({rid})</title></path>')
     bl = ''.join(f'<path class="bl" fill="{COLOUR[rid]}" d="{path_d(g)}"/>' for rid, g in sorted(terr.items()))
     return (''.join(oc) + f'<g clip-path="url(#ocmask)"><g filter="url(#blend)">{bl}</g></g>' + ''.join(ld))
@@ -176,13 +192,14 @@ def svg(R, spec, title, decor=()):
     syms = sy.svg_layer(R, spec, decor)[0]
     deco = dc.svg_layer(R, spec, decor)
     bgdefs, bg = dc.bg_layer(R, spec)
+    import badge as bd
+    bdefs, blayer = bd.svg_layer(spec.get('layout'))
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W:g}mm" height="{H:g}mm" viewBox="0 0 {W:g} {H:g}">\n'
-            f'<title>{title}</title>\n<defs>{blend_defs(R, spec)}{bgdefs}</defs>'
+            f'<title>{title}</title>\n<defs>{blend_defs(R, spec)}{bgdefs}{bdefs}</defs>'
             f'<rect width="{W:g}" height="{H:g}" fill="#ece8df"/>'
-            f'<style>{lb.font_css()}{sy.font_css()}</style>'
+            f'<style>{lb.font_css()}{sy.font_css()}{bd.font_css()}</style>'
             f'<g stroke-linejoin="round"><style>.ld{{stroke:#2c2a26;stroke-width:.35}}</style>{svg_regions(R, spec)}<g id="bg">{bg}</g>{dec}</g>'
-            f'<g id="deco">{deco}</g><g id="symbols">{syms}</g><g id="names">{names}</g>'
-            f'<rect x="{X0:g}" y="{Y0:g}" width="{X1 - X0:g}" height="{Y1 - Y0:g}" fill="none" stroke="#2c2a26" stroke-width="0.4"/>'
+            f'<g id="deco">{deco}</g><g id="symbols">{syms}</g><g id="names">{names}</g><g id="badge">{blayer}</g>'
             f'\n</svg>\n')
 
 
@@ -245,6 +262,8 @@ def html(R, C, spec, chk, log, *, nodes, decor, page_title, heading, generator, 
     import decor as dc
     deco = dc.svg_layer(R, spec, decor)
     bgdefs, bg = dc.bg_layer(R, spec)
+    import badge as bd
+    bdefs, blayer = bd.svg_layer(spec.get('layout'))
     if names_miss:
         log = list(log) + ['подписи не поместились: ' + ', '.join(names_miss)]
     if syms_miss:
@@ -280,7 +299,7 @@ def html(R, C, spec, chk, log, *, nodes, decor, page_title, heading, generator, 
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{page_title}</title>
 <style>
-{lb.font_css()}{sy.font_css()}
+{lb.font_css()}{sy.font_css()}{bd.font_css()}
 :root{{--bg:#f4f1ea;--fg:#23211d;--mut:#6b665c;--line:#d6d0c4;--ok:#2f7d4a;--warn:#a86a00;--bad:#b3261e}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme=light]){{--bg:#1d1c1a;--fg:#ece8df;--mut:#a39d91;--line:#3a3833;--ok:#7fc79a;--warn:#e6b35c;--bad:#f2867e}}}}
 body{{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,sans-serif}}
@@ -327,7 +346,7 @@ h2{{font-size:16px;margin:18px 0 8px}} .big{{font-size:17px;font-weight:600}}
 </div>
 <p class="sub">Граф: зелёная линия — ребро с касанием ≥ 25 мм, оранжевый пунктир — 8–25 мм, красный пунктир — ребро не держится (&lt; 8 мм или нет), сплошной красный — лишнее касание или зазор несмежных &lt; 12 мм. Ребро через склейку рисуется двумя кусками у краёв. Острова-декор — не суша областей: рисуются поверх океана, цвет — регион, к которому относятся. Подписи: A и U в см², N — пехота/машины/роботы, ★ — стартовая.</p>{notep}
 <svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W:g} {H:g}">
-<defs>{blend_defs(R, spec)}{bgdefs}</defs>
+<defs>{blend_defs(R, spec)}{bgdefs}{bdefs}</defs>
 <rect x="-200" width="{W + 400:g}" height="{H:g}" fill="#ece8df"/>
 <g id="regions">{svg_regions(R, spec)}<g id="bg">{bg}</g></g>
 <g id="wrap" style="display:none">{wrap}</g>
@@ -339,6 +358,7 @@ h2{{font-size:16px;margin:18px 0 8px}} .big{{font-size:17px;font-weight:600}}
 <g id="deco">{deco}</g>
 <g id="symbols">{syms}</g>
 <g id="names">{lb.svg_layer(names)}</g>
+<g id="badge">{blayer}</g>
 <g id="labels" style="display:none">{labels_layer(spec, rows, nodes)}</g>
 <rect x="{X0:g}" y="{Y0:g}" width="{X1 - X0:g}" height="{Y1 - Y0:g}" fill="none" stroke="#2c2a26" stroke-width="0.4"/>
 </svg>

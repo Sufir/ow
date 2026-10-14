@@ -11,8 +11,8 @@ kill-simple.png`, `suppress-simple.png`). Иначе одно значение �
   SUPPRESS — чернила там, где на наклейке цвет (зелёный и пурпурный);
   белые шевроны, кружки и просветы выбиты.
 TASK (ICON-027, глиф G — goal) — вектор знака «Внимание» с карт задач
-(D-089, `print/mini-cards/cards-landscape-sixes.css`, `.goal-text::before`)
-один в один; контур знака развёрнут против гекса, чтобы он выбивался
+(D-089, `print/mini-cards/cards-landscape-sixes.css`, `.goal-text::before`);
+гекс тот же, «!» утолщён (D-131): тонкий в кегле книги не читался; контур знака развёрнут против гекса, чтобы он выбивался
 и по правилу ненулевого обхода, которым заливает шрифт.
 
 В шрифт: `print/Fonts/OilWars/add_glyph.py <шрифт> kill.svg K`.
@@ -75,10 +75,11 @@ def main():
           'ICON-019 {SUPPRESS}: трассировка print/dices/suppress-simple.png, цветное — чернила; book-icons.py')
 
     hexagon = 'M15 1.6L27.4 8.8V23.2L15 30.4L2.6 23.2V8.8Z'
-    bar = 'M13.6 9.4V18.4H16.4V9.4Z'          # обход обратный гексу
-    dot = 'M13.6 20.6V23.4H16.4V20.6Z'
+    # «!» толще, чем на картах (D-131): в тексте книги тонкий не читался
+    bar = 'M12.9 7.6V18.2H17.1V7.6Z'          # обход обратный гексу
+    dot = 'M12.9 20.2V24.4H17.1V20.2Z'
     write('task.svg', (2.6, 1.6, 24.8, 28.8), hexagon + bar + dot,
-          'ICON-027 {TASK}: знак «Внимание» карт задач, D-089, вектор из cards-landscape-sixes.css; book-icons.py')
+          'ICON-027 {TASK}: знак «Внимание» карт задач (D-089) с утолщённым «!» (D-131); book-icons.py')
 
 
 if __name__ == '__main__':

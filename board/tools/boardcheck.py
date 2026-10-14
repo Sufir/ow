@@ -49,9 +49,30 @@ BOARD = ROOT / 'board'
 # ---------------------------------------------------------------------------
 
 CANVAS = (900.0, 550.0)
-MARGIN = 10.0                                   # SPEC-BOARD §2: технологическое поле
-RECT = (MARGIN, MARGIN, CANVAS[0] - MARGIN, CANVAS[1] - MARGIN)
-WRAP = RECT[2] - RECT[0]                        # 880 мм: сдвиг склейки краёв
+RECT = (0.0, 0.0, CANVAS[0], CANVAS[1])         # карта в край полотна, технологического поля нет (D-124)
+WRAP = RECT[2] - RECT[0]                        # 900 мм: сдвиг склейки краёв
+SAFE = 5.0                                      # мм: подписи и знаки не ближе к резу — допуск обрезки (D-124)
+# Основа (classic.py) и разрезы (slice5.py) записаны в прежнем прямоугольнике карты 880 × 530
+# со сдвигом 10 мм. Готовая нарезка растягивается в RECT одним преобразованием to_canvas().
+DESIGN = (10.0, 10.0, 890.0, 540.0)
+
+
+def _affine():
+    sx = (RECT[2] - RECT[0]) / (DESIGN[2] - DESIGN[0])
+    sy = (RECT[3] - RECT[1]) / (DESIGN[3] - DESIGN[1])
+    return sx, sy, RECT[0] - DESIGN[0] * sx, RECT[1] - DESIGN[1] * sy
+
+
+def to_canvas(g):
+    """геометрия из координат основы (DESIGN) в мм полотна (RECT): x ×900/880, y ×550/530"""
+    from shapely import affinity
+    sx, sy, dx, dy = _affine()
+    return affinity.affine_transform(g, [sx, 0, 0, sy, dx, dy])
+
+
+def xy_to_canvas(x, y):
+    sx, sy, dx, dy = _affine()
+    return (x * sx + dx, y * sy + dy)
 
 CONTACT_FAIL = 8.0      # мм, SPEC §4.1: касание объявленного ребра короче — отказ
 CONTACT_WARN = 25.0     # мм, SPEC §4.1: 8–25 — NARROW
@@ -346,8 +367,8 @@ def check_continents(G, spec, base_path):
     if base_path is None:
         return out
     fc = json.loads(Path(base_path).read_text(encoding='utf-8'))
-    B = {f['properties']['id']: shape(f['geometry']) for f in fc['features']}
-    lakes = unary_union([shape(f['geometry']) for f in fc['features'] if f['properties'].get('type') == 'INLAND_WATER'])
+    B = {f['properties']['id']: to_canvas(shape(f['geometry'])) for f in fc['features']}        # основа — в DESIGN
+    lakes = unary_union([to_canvas(shape(f['geometry'])) for f in fc['features'] if f['properties'].get('type') == 'INLAND_WATER'])
     groups = {}
     for rid in G:
         if spec['type'][rid] != 'OCEAN':
@@ -695,7 +716,7 @@ def selftest():
     st = box(300, 200, 400, 260)
     case('стартовая: мало пехоты', 'стартовая: N_пех', {'P': P0.difference(st), 'R': st},
          lambda s: _add(s, 'R', edges=['P'], start=True))
-    top = box(300, 20, 400, 110)
+    top = box(300, y0 + TOP_LAND_MIN - 5, 400, 110)          # суша на 10 мм от верхнего края
     case('суша у верхнего края', 'от верхнего края', {'P': P0, 'T': base['T'].difference(top), 'R': top},
          lambda s: _add(s, 'R', edges=['P', 'T']))
     ok_all = True

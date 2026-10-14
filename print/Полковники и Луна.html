@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <title>Полковники и Луна</title>
 <!--
-  Лист экономии бумаги: тайл «Луна» и два последних уникальных полковника — Ной Гарднер и Генри Брут.
-  05.10.2026. Мастер A4 полковников всегда с Луной (Alek 05.10.2026): этот лист — страницы 3–4
+  Лист экономии бумаги: тайл «Луна» и два последних уникальных специалиста — Ной Гарднер и Генри Брут.
+  05.10.2026. Мастер A4 специалистов всегда с Луной (Alek 05.10.2026): этот лист — страницы 3–4
   print/Saved/Уникальные полковники.pdf, отдельного мастера Луны нет. Оригиналы не менялись:
     Луна       — print/Луна.html (D-117);
-    полковники — print/UniqueColonel/index.html, его лист с двумя картами в мастер не идёт (D-119).
+    специалисты — print/UniqueColonel/index.html, его лист с двумя картами в мастер не идёт (D-119).
   Откуда что берётся:
     • оформление карт — print/UniqueColonel/style.css, подключён как есть;
     • разметка двух карт — копия из UniqueColonel/index.html (05.10.2026), пути к картинкам с префиксом UniqueColonel/.
@@ -16,7 +16,7 @@
     • Луна — face() и back() из Луна.html без изменений, кроме координат.
   Геометрия, A4 книжный 210 × 297 мм:
     • Луна 150 × 150, выпуск 6 мм (как в Луна.html); рез — x 30…180;
-    • карты 63,5 × 88,9 встык, выпуск 2 мм только по внешним краям (как на листе полковников); рез — x 41,5…168,5,
+    • карты 63,5 × 88,9 встык, выпуск 2 мм только по внешним краям (как на листе специалистов); рез — x 41,5…168,5,
       шов между картами — на оси листа x = 105;
     • между резом Луны и резом карт — 16 мм: выпуски 6 + 2 и 8 мм белого; вертикальная линия метки карты
       (10 мм наружу) кончается ровно на краю выпуска Луны;
@@ -49,7 +49,7 @@ body { background: #7A8794; }
 .sheet .card { position: absolute; }
 .shift { position: absolute; left: 0; top: 0; width: 210mm; height: 297mm; }
 
-/* Луна — как в Луна.html (классы face/back переименованы: у полковников свои .front/.back) */
+/* Луна — как в Луна.html (классы face/back переименованы: у специалистов свои .front/.back) */
 .bleed { position: absolute; overflow: hidden; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .bleed img { position: absolute; display: block; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .bleed.moon-face { background: var(--space); }
@@ -116,7 +116,7 @@ body { background: #7A8794; }
               <div class="prop-desc">Уничтожьте до 4 своих пехотинцев в игре (можно и Генри) и замените их таким же числом энграмм в тех же регионах. Энграмма, заменившая пехотинца на фабрике, сразу берёт её под контроль.</div>
               <div class="prop-name" style="display: inline-block; margin-top: 1.5mm;">Нелояльный</div>
               <div class="prop-cond">Постоянная</div>
-              <div class="prop-desc">Когда Генри уничтожен, его может завербовать любой игрок, у которого нет другой карты уникального полковника. Карта переходит к нему.</div>
+              <div class="prop-desc">Когда Генри уничтожен, его может завербовать любой игрок, у которого нет другой карты уникального специалиста. Карта переходит к нему.</div>
             <div class="flavor">Его союзники — лишь носители. Настоящие агенты Генри живут в герметичных контейнерах и легко меняют сторону, как и он сам.</div>
           </div>
           </div>
@@ -126,7 +126,7 @@ body { background: #7A8794; }
 <script>
 const W = 210, H = 297;                                 // A4 книжный, мм
 const T = 150, MB = 6, MS = T + 2 * MB;                 // Луна: тайл по резу, выпуск, сторона с выпуском
-const CW = 63.5, CH = 88.9, CB = 2;                     // полковник: карта по резу, выпуск по внешним краям (UniqueColonel/style.css)
+const CW = 63.5, CH = 88.9, CB = 2;                     // специалист: карта по резу, выпуск по внешним краям (UniqueColonel/style.css)
 const GAP = 16;                                         // от реза Луны до реза карт: выпуски 6 + 2 и 8 мм белого под метки
 const MX = (W - T) / 2;                                 // 30    — рез Луны слева
 const PX = (W - 2 * CW) / 2;                            // 41.5  — рез пары карт слева, шов — на оси листа
@@ -180,7 +180,7 @@ function moonBack(x, y) {                               // оборот: фон 
   box.appendChild(l);
   return box;
 }
-function cardBack() {                                   // рубашка полковника — как на листе полковников
+function cardBack() {                                   // рубашка специалиста — как на листе специалистов
   const c = div('card back');
   c.innerHTML = '<div class="bleed-bg"></div><div class="safe-zone"><div class="back-logo"></div></div>';
   return c;
@@ -228,7 +228,7 @@ function build() {
   const fronts = [...document.getElementById('fronts').content.querySelectorAll('.card')].map(n => n.cloneNode(true));
   fronts.forEach((c, k) => {
     place(c, PX + k * CW, PY, CW, CH); c.dataset.piece = 'card' + k;
-    const b = c.querySelector('.bleed-bg');             // выпуск только по внешним краям, шов встык (как на листе полковников)
+    const b = c.querySelector('.bleed-bg');             // выпуск только по внешним краям, шов встык (как на листе специалистов)
     Object.assign(b.style, { top: -CB + 'mm', bottom: -CB + 'mm', left: k ? '0' : -CB + 'mm', right: k ? -CB + 'mm' : '0' });
     fl.appendChild(c);
   });

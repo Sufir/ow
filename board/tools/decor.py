@@ -97,22 +97,14 @@ WATER = ((1.6, 0.45, 0.55), (3.6, 0.35, 0.35), (6.4, 0.3, 0.2))   # мм от б
 
 
 def svg_layer(R, spec, decor=()):
-    """слой декора полотна: береговые линии на воде и рамка со шкалой"""
+    """слой декора полотна: береговые линии на воде. Рамки со шкалой нет — карта в край (D-124)"""
     X0, Y0, X1, Y1 = bc.RECT
     rect = box(X0, Y0, X1, Y1)
     land = unary_union([R[r] for r in spec['areas'] if spec['type'][r] != 'OCEAN'] + [g for _, g in decor])
     ocean = rect.difference(land)
     water = ''.join(f'<path d="{lines_d(land.buffer(d, quad_segs=6).boundary.intersection(ocean).simplify(0.15))}" '
                     f'stroke-width="{w}" stroke-opacity="{o}"/>' for d, w, o in WATER)
-    ticks = []
-    for x in np.arange(X0 + 10, X1, 10):
-        L = 4.0 if round(x - X0) % 50 == 0 else 2.0
-        ticks += [LineString([(x, Y0), (x, Y0 + L)]), LineString([(x, Y1), (x, Y1 - L)])]
-    for y in np.arange(Y0 + 10, Y1, 10):
-        L = 4.0 if round(y - Y0) % 50 == 0 else 2.0
-        ticks += [LineString([(X0, y), (X0 + L, y)]), LineString([(X1, y), (X1 - L, y)])]
-    return (f'<g fill="none" stroke="#ffffff" stroke-linecap="round">{water}</g>'
-            f'<path d="{lines_d(MultiLineString(ticks))}" fill="none" stroke="#2c2a26" stroke-width="0.35"/>')
+    return f'<g fill="none" stroke="#ffffff" stroke-linecap="round">{water}</g>'
 
 
 SHADE_W, SHADE_BLUR, SHADE_OP = 7.0, 3.0, 0.32   # тень к краю суши: ширина штриха, размытие, сила (D-105)
@@ -127,7 +119,7 @@ def bg_layer(R, spec):
     X0, Y0, X1, Y1 = bc.RECT
     land = [R[r] for r in spec['areas'] if spec['type'][r] != 'OCEAN']
     mask = bv.path_d(unary_union(land))
-    borders = ''.join(bv.path_d(g) for g in land)
+    borders = ''.join(bv.path_d(bv.past_edge(g)) for g in land)     # край полотна — не граница, тени у реза нет
     defs = (f'<filter id="bgshade" filterUnits="userSpaceOnUse" x="-50" y="-50" width="{W + 100:g}" height="{H + 100:g}">'
             f'<feGaussianBlur stdDeviation="{SHADE_BLUR:g}"/></filter>'
             f'<filter id="bgglow" filterUnits="userSpaceOnUse" x="-50" y="-50" width="{W + 100:g}" height="{H + 100:g}">'

@@ -440,11 +440,24 @@ body {
 }
 
 .back-center-icon {
-  width: 14mm;
-  height: 14mm;
+  /* Логотипы в imagePool выровнены print/mini-cards/align_backs.py:
+     центр логотипа = центр полотна, радиус = 0,44 стороны.
+     15 мм -> радиус логотипа 6,6 мм (вытянутые — до 7,4 мм). */
+  width: 15mm;
+  height: 15mm;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
+}
+
+/* Круг на фоне рубашки стоит не в центре карты: сдвиг замерен по кольцу
+   goal-back2.png / tech-back2.png при background-size: cover (63 × 41 мм). */
+.back-card.is-goal .back-center-icon {
+  transform: translate(0.12mm, -0.84mm);
+}
+
+.back-card.is-tech .back-center-icon {
+  transform: translate(0.16mm, -0.43mm);
 }
 
 .card.current-pack {

@@ -271,8 +271,8 @@ def resolve_faction_counts(item, factions):
         units = f.get("units") or []
         if "group = Пехотинцы и name = Рекрут" in ref:
             n = sum(u["stats"][0] for u in units if u.get("name") == "Рекрут")
-        elif "name = Полковник" in ref:
-            n = sum(u["stats"][0] for u in units if u.get("name") == "Полковник")
+        elif "name = Специалист" in ref:
+            n = sum(u["stats"][0] for u in units if u.get("name") == "Специалист")
         elif "Боевые машины или Боевой мех" in ref:
             n = sum(u["stats"][0] for u in units
                     if u.get("group") in ("Боевые машины", "Боевой мех"))

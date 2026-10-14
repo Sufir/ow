@@ -1,6 +1,6 @@
 # 16 — Реестр компонентов
 
-Собрано `rules/tools/components.py` 2026-10-05. Руками не правится — источник `rules/registry/components.yaml`.
+Собрано `rules/tools/components.py` 2026-10-11. Руками не правится — источник `rules/registry/components.yaml`.
 
 ## Готовность
 

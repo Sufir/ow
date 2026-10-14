@@ -55,8 +55,8 @@ BASE = GEO / 'classic-base.geojson'
 OUT = GEO / 'board-MC-5P'
 LAYOUT = 'MC-5P'
 
-X0, Y0, X1, Y1 = bc.RECT                    # прямоугольник карты в мм полотна
-RECT = box(X0, Y0, X1, Y1)
+X0, Y0, X1, Y1 = bc.DESIGN                  # прямоугольник карты в координатах основы: в них записаны разрезы и зёрна
+RECT = box(X0, Y0, X1, Y1)                  # готовая нарезка растягивается в мм полотна — bc.to_canvas (D-124)
 CRUMB = 100.0                               # мм²: кусок мельче — к соседу
 
 # высота разрезов на склейке краёв: одна и та же слева и справа (решение № 18)
@@ -213,7 +213,7 @@ def polys(g):
 def load_decor():
     """острова-декор основы: (материк, полигон) — не суша областей, рисуются поверх океана"""
     fc = json.loads(BASE.read_text(encoding='utf-8'))
-    return [(f['properties']['continent'], shape(f['geometry'])) for f in fc['features']
+    return [(f['properties']['continent'], bc.to_canvas(shape(f['geometry']))) for f in fc['features']
             if f['properties']['type'] == 'DECOR_ISLAND']
 
 
@@ -232,7 +232,18 @@ def decor_region(cont, g, R=None):
     if kids:
         return min(kids, key=lambda rid: R[rid].distance(g))
     c = g.representative_point()
-    return min(((rid, Point(xy).distance(c)) for rid in CHILDREN[cont] for xy in SEEDS[rid]), key=lambda t: t[1])[0]
+    return min(((rid, Point(bc.xy_to_canvas(*xy)).distance(c)) for rid in CHILDREN[cont] for xy in SEEDS[rid]),
+               key=lambda t: t[1])[0]
+
+
+def seed(rid):
+    """первое зерно области в мм полотна (точка графа)"""
+    return bc.xy_to_canvas(*SEEDS[rid][0]) if rid in SEEDS else None
+
+
+def base_canvas():
+    """материки основы в мм полотна — для картинки"""
+    return {k: bc.to_canvas(g) for k, g in load_base()[0].items()}
 
 
 def load_base():
@@ -396,7 +407,9 @@ def build():
         R[rid] = unary_union(lab[rid])
     merge_crumbs(R, OCEANS, log, 'океан')
     for rid in R:
-        R[rid] = clean(R[rid])
+        R[rid] = clean(bc.to_canvas(R[rid]))            # из координат основы — в мм полотна (D-124)
+    C = {k: bc.to_canvas(g) for k, g in C.items()}
+    lakes = {k: bc.to_canvas(g) for k, g in lakes.items()}
     return R, C, lakes, log, cuts
 
 
@@ -416,9 +429,12 @@ def geojson(R, spec, rows):
             'generator': 'board/tools/slice5.py', 'base': 'board/geo/classic-base.geojson',
             'graph': f'board/derived/{LAYOUT}.json',
             'coordinateSystem': {'units': 'mm', 'origin': 'левый верхний угол полотна', 'axis': 'x вправо, y вниз',
-                                 'canvas': list(bc.CANVAS), 'map_rect': list(bc.RECT)},
+                                 'canvas': list(bc.CANVAS), 'map_rect': list(bc.RECT),
+                                 'cuts_rect': list(bc.DESIGN),
+                                 'cuts_note': 'cuts_land и cuts_ocean — в координатах основы (cuts_rect); '
+                                              'в мм полотна их переводит растяжение cuts_rect → map_rect'},
             'wrap': 'левый и правый края склеены: Северный Ледовитый, Север Тихого и Индийский — по куску у каждого края, '
-                    f'границы на высоте {Y_ARC:g} и {Y_IND:g} мм на обоих краях',
+                    f'границы на высоте {bc.xy_to_canvas(0, Y_ARC)[1]:.1f} и {bc.xy_to_canvas(0, Y_IND)[1]:.1f} мм на обоих краях',
             'rings': 'RFC 7946 в координатах файла: внешнее кольцо — положительная площадь',
             'cuts_land': [{'between': a, 'points': p, 'reason': r} for a, p, r in CUTS_LAND],
             'cuts_ocean': [{'between': a, 'points': [[round(x, 2), round(y, 2)] for x, y in p], 'reason': r}
@@ -435,7 +451,7 @@ def geojson(R, spec, rows):
 
 def graph_nodes(R, spec):
     """точки графа: первое зерно области"""
-    return {rid: bv.node_point(R[rid], SEEDS[rid][0]) for rid in spec['areas']}
+    return {rid: bv.node_point(R[rid], seed(rid)) for rid in spec['areas']}
 
 
 def svg(R, spec):

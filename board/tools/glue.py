@@ -146,7 +146,7 @@ def build_one(layout, fc5, feats, spec5, with_pack):
         print(f'   {rid:12} A {r["A"]:6.1f}  U {r["U"]:6.1f}  U/A {r["UA_main"]:.3f}  N {r.get("N25", "-")}/{r.get("N40", "-")}/{r.get("N60", "-")}'
               f'  связн {r["share"] * 100:3.0f}%{"  ★" if r["start"] else ""}')
     fc = geojson(layout, R, spec, chk['rows'], kids_of, fc5)
-    nodes = {rid: bv.node_point(R[rid], s5.SEEDS[rid][0] if rid in s5.SEEDS else None) for rid in spec['areas']}
+    nodes = {rid: bv.node_point(R[rid], s5.seed(rid)) for rid in spec['areas']}
     decor = []
     for cont, g in s5.load_decor():
         r5 = s5.decor_region(cont, g)
@@ -155,7 +155,7 @@ def build_one(layout, fc5, feats, spec5, with_pack):
     out.with_suffix('.geojson').write_text(json.dumps(fc, ensure_ascii=False), encoding='utf-8')
     out.with_suffix('.svg').write_text(bv.svg(R, spec, f'Нефтяные войны — поле {who} ({layout}), склейка MC-5P', decor=decor), encoding='utf-8')
     out.with_suffix('.html').write_text(bv.html(
-        R, s5.load_base()[0], spec, chk, log, nodes=nodes, decor=decor,
+        R, s5.base_canvas(), spec, chk, log, nodes=nodes, decor=decor,
         page_title=f'Поле {layout} — склейка', heading=heading, generator='board/tools/glue.py',
         log_title='Лог склейки', note=NOTE), encoding='utf-8')
     print(f'Записано: {out.name}.geojson, .svg, .html')

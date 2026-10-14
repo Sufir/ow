@@ -5,7 +5,7 @@
 «что это за формат».
 
 Проект — фанатский редизайн настольной игры **Cthulhu Wars** в сеттинге
-индустриального киберпанка XXIV века. Механика оригинала сохраняется 1:1,
+индустриального киберпанка XXII века. Механика оригинала сохраняется 1:1,
 меняются тема, оформление и компоненты. Предметный контекст — `CLAUDE.md`.
 
 ---
@@ -95,6 +95,8 @@
 | `board/geo/board-MC-3P.*`, `board-MC-4P-A.*`, `board-MC-4P-B.*` — `.geojson`, `.svg`, `.html` | `board/tools/glue.py all`, после `slice5.py` (проверка — `board/tools/boardcheck.py`) | нет |
 | `board/sketch/` | `board/tools/sketch.py` | нет |
 | `rules/reports/16-components.md` | `rules/tools/components.py all` | нет |
+| `print/Rulebook/img/` — иллюстрации книги правил | `print/Rulebook/Иллюстрации.py` (в облачном контейнере Claude: нужны Playwright, Chromium, poppler) | нет |
+| `print/книга-preview-N.html` — превью книги: в браузере раскладывается на листы A4 с номерами страниц и колонтитулом «часть и пункты листа» (`D-132`, `D-133`); PDF — только с флагом `--pdf`, печать тех же листов (`D-129`, `D-133`) | `print/Rulebook/Книга.py` из `rules/RULEBOOK.md` (там же, в контейнере) | нет |
 
 ---
 

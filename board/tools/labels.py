@@ -39,7 +39,7 @@ TEXT_FILL, TEXT_LINE = '#ffffff', '#1c1a17'          # белый с тёмно�
 PLATE, PLATE_LINE = '#6E7F7A', '#4B5854'             # плашка океанов: серо-зелёная, матовая (Alek)
 PAD_LAND, PAD_PLATE = 1.5, 1.0                       # мм: поле от рамки подписи / плашки до границы
 CUT = tuple(sorted(bc.SEAM_REGIONS))                 # океаны, разрезанные краем
-GAP_EDGE = 2.5                                       # мм: остриё плашки не доходит до края
+GAP_EDGE = bc.SAFE                                   # мм: остриё плашки не доходит до реза (D-124)
 
 
 @lru_cache(None)
@@ -119,6 +119,11 @@ def arrow_spots(R):
 
 
 def _fits(g, dec, b, pad):
+    """рамка b с полем pad целиком в области и мимо декора; сама рамка — не ближе bc.SAFE к резу"""
+    X0, Y0, X1, Y1 = bc.RECT
+    e = bc.SAFE - 0.01
+    if b[0] < X0 + e or b[1] < Y0 + e or b[2] > X1 - e or b[3] > Y1 - e:
+        return False
     r = box(b[0] - pad, b[1] - pad, b[2] + pad, b[3] + pad)
     return g.contains(r) and (dec is None or r.disjoint(dec))
 

@@ -18,7 +18,7 @@
 | TERM-079 | Unit | отряд | Отряд | да | CANONICAL |
 | TERM-013 | Monster | Монстр | Боевая машина | да | CANONICAL |
 | TERM-014 | Great Old One | Древний | Боевой робот | да | CANONICAL |
-| TERM-015 | High Priest | Верховный жрец | Полковник | да | CANONICAL |
+| TERM-015 | High Priest | Верховный жрец | Специалист | да | CANONICAL |
 | TERM-016 | Brain Cylinder | Мозговой цилиндр | Энграмма | да | CANONICAL |
 | TERM-017 | Slime Mold | Слизевик | Рой боевых дронов | да | CANONICAL |
 | TERM-018 | Neutral Monster | Нейтральный монстр | Наёмная боевая машина | да | CANONICAL |
@@ -73,7 +73,7 @@
 | TERM-069 | Adjacent Area | смежная область | Смежный регион | да | CANONICAL |
 | TERM-070 | Turn / Round | ход / раунд | Ход / Раунд | да | CANONICAL |
 | TERM-071 | Player Hint Card | памятка игрока | Памятка | да | CANONICAL |
-| TERM-072 | Doom Marker | маркер Рока | Маркер фракции | да | CANONICAL |
+| TERM-072 | Doom Marker | маркер Рока | Маркер влияния | да | CANONICAL |
 | TERM-073 | Ritual of Annihilation Marker | маркер Ритуала Уничтожения | Маркер Судного дня | да | CANONICAL |
 | TERM-074 | Battle die | боевой кубик | Боевой кубик | да | CANONICAL |
 | TERM-075 | Call Slime Mold | призыв слизевика | Развёртывание роя | да | CANONICAL |
@@ -81,3 +81,5 @@
 | TERM-077 | Slime Loyalty Card | карта лояльности слизевиков | Карта Контроля сети | да | CANONICAL |
 | TERM-078 | Colour Gate event | эффект цветных врат | Карта события | да | CANONICAL |
 | TERM-080 | — | — | Основное действие | нет | CANONICAL |
+| TERM-081 | Unique Ability | — | Уникальная способность фракции | да | CANONICAL |
+| TERM-082 | Protector / Protected (Capture) | — | Прикрытие | да | CANONICAL |

@@ -12,7 +12,7 @@
 | ICON-008 | {FACTORY_SPECIAL} | Особая фабрика | Colour Gate | WONTFIX |
 | ICON-009 | {INFANTRY} | Пехотинец | Cultist | WONTFIX |
 | ICON-010 | {RECRUIT} | Рекрут | Acolyte | WONTFIX |
-| ICON-011 | {COLONEL} | Полковник | High Priest | WONTFIX |
+| ICON-011 | {COLONEL} | Специалист | High Priest | WONTFIX |
 | ICON-012 | {ENGRAM} | Энграмма | Brain Cylinder | WONTFIX |
 | ICON-013 | {MACHINE} | Боевая машина | Monster | WONTFIX |
 | ICON-014 | {MECH} | Мех | Terror | WONTFIX |
